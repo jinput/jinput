@@ -80,7 +80,7 @@ public class LinuxDevice extends AbstractController {
     private int[] absAxesData;
     /** A guess at the device type.
      */    
-    private Type typeGuess;
+    private Type typeGuess = Type.UNKNOWN;
     /** An array of the list of axes this device has
      */    
     private ArrayList axesArray = new ArrayList();
@@ -179,6 +179,14 @@ public class LinuxDevice extends AbstractController {
     public PortType getPortType() {
         return portType;
     }
+
+    /**
+     * Returns the type of the Controller.
+     * @return The controller type.
+     */
+    public Type getType() {
+    	return typeGuess;
+    }
     
     /** Create the buttons for the device
      * @param numButtons The number of buttons the device has
@@ -263,57 +271,6 @@ public class LinuxDevice extends AbstractController {
             //axesArray.add(hats[i]);
         }
     }
-    
-    /*private void guessType() {
-        int joystickCharacteristic=0;
-        int gamepadCharacteristic=0;
-
-        int supportedButtons[] = new int[numButtons];
-        getSupportedButtons(supportedButtons);
-
-        for(int i=0;i<numButtons;i++) {
-            switch (supportedButtons[i]) {
-                case NativeDefinitions.BTN_TRIGGER : 
-                case NativeDefinitions.BTN_THUMB : 
-                case NativeDefinitions.BTN_THUMB2 : 
-                case NativeDefinitions.BTN_TOP : 
-                case NativeDefinitions.BTN_TOP2 : 
-                case NativeDefinitions.BTN_PINKIE : 
-                case NativeDefinitions.BTN_BASE : 
-                case NativeDefinitions.BTN_BASE2 : 
-                case NativeDefinitions.BTN_BASE3 : 
-                case NativeDefinitions.BTN_BASE4 : 
-                case NativeDefinitions.BTN_BASE5 : 
-                case NativeDefinitions.BTN_BASE6 : 
-                case NativeDefinitions.BTN_DEAD : 
-                    joystickCharacteristic++;
-                    break;
-                case NativeDefinitions.BTN_A : 
-                case NativeDefinitions.BTN_B : 
-                case NativeDefinitions.BTN_C : 
-                case NativeDefinitions.BTN_X : 
-                case NativeDefinitions.BTN_Y : 
-                case NativeDefinitions.BTN_Z : 
-                case NativeDefinitions.BTN_TL : 
-                case NativeDefinitions.BTN_TR : 
-                case NativeDefinitions.BTN_TL2 : 
-                case NativeDefinitions.BTN_TR2 : 
-                case NativeDefinitions.BTN_SELECT : 
-                case NativeDefinitions.BTN_MODE : 
-                case NativeDefinitions.BTN_THUMBL : 
-                case NativeDefinitions.BTN_THUMBR :
-                    gamepadCharacteristic++;
-                    break;
-                default:
-                    // no sweat, it's non of the above, erg                    
-            }
-        }
-        if(joystickCharacteristic > gamepadCharacteristic) {
-            typeGuess = Type.STICK;
-        } else {
-            typeGuess = Type.GAMEPAD;
-        }
-    }*/
     
     /** Take a guess at the device type.
      */    
@@ -429,6 +386,12 @@ public class LinuxDevice extends AbstractController {
             // a LinuxMouse object, but you never know
             typeGuess = Type.MOUSE;
         }
+	if(typeGuess == Type.STICK) {
+	    String tempName = getName().toLowerCase();
+	    if((tempName.indexOf("gamepad") > -1) || (tempName.indexOf("game pad") > -1)) {
+	        typeGuess = Type.GAMEPAD;
+	    }
+	}
     }
     
     /** Create an button for the device
