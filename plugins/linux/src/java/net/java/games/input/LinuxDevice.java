@@ -355,22 +355,26 @@ public class LinuxDevice extends AbstractController {
                     // no sweat, it's non of the above, erg                    
             }
         }
-        if((joystickCharacteristic >= digitiserCharacteristic) && 
+        if((joystickCharacteristic > 0) &&
+	   (joystickCharacteristic >= digitiserCharacteristic) && 
            (joystickCharacteristic >= gamepadCharacteristic) &&
            (joystickCharacteristic >= miscCharacteristic) &&
            (joystickCharacteristic >= mouseCharacteristic)) {
             typeGuess = Type.STICK;
-        } else if((gamepadCharacteristic >= digitiserCharacteristic) && 
+        } else if((gamepadCharacteristic > 0) &&
+	          (gamepadCharacteristic >= digitiserCharacteristic) && 
                   (gamepadCharacteristic >= joystickCharacteristic) &&
                   (gamepadCharacteristic >= miscCharacteristic) &&
                   (gamepadCharacteristic >= mouseCharacteristic)) {
             typeGuess = Type.GAMEPAD;
-        } else if((digitiserCharacteristic >= gamepadCharacteristic) && 
+        } else if((digitiserCharacteristic > 0) &&
+	          (digitiserCharacteristic >= gamepadCharacteristic) && 
                   (digitiserCharacteristic >= joystickCharacteristic) &&
                   (digitiserCharacteristic >= miscCharacteristic) &&
                   (digitiserCharacteristic >= mouseCharacteristic)) {
             typeGuess = Type.TRACKPAD;
-        } else if((miscCharacteristic >= gamepadCharacteristic) && 
+        } else if((miscCharacteristic > 0) &&
+	          (miscCharacteristic >= gamepadCharacteristic) && 
                   (miscCharacteristic >= joystickCharacteristic) &&
                   (miscCharacteristic >= miscCharacteristic) &&
                   (miscCharacteristic >= mouseCharacteristic)) {
@@ -378,7 +382,8 @@ public class LinuxDevice extends AbstractController {
             // wise a LinuxKeyboard would have been constructed, so assume its
             // some kind of stick;
             typeGuess = Type.STICK;
-        } else if((mouseCharacteristic >= digitiserCharacteristic) && 
+        } else if((mouseCharacteristic > 0) &&
+	          (mouseCharacteristic >= digitiserCharacteristic) && 
                   (mouseCharacteristic >= joystickCharacteristic) &&
                   (mouseCharacteristic >= miscCharacteristic) &&
                   (mouseCharacteristic >= gamepadCharacteristic)) {
