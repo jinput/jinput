@@ -29,6 +29,14 @@
             <!--<os family="unix" />-->
             <os name="linux" />
         </condition>
+		
+		<!-- If we are running in Mac OS X, set osx property to true -->
+		<condition property="osx" >
+			<and>
+				<os family="mac" />
+				<os family="unix" />
+			</and>
+		</condition>
     </target>
 
     <target name="core" depends="init">
@@ -51,6 +59,10 @@
         <!-- up to compile to a different filesystem in the same way; see Compiler Types: -->
          <ant dir="plugins/linux" /> 
     </target>
+	
+    <target name="OSX_plugin" depends="core" if="osx" >
+         <ant dir="plugins/OSX" /> 
+    </target>
 
     <target name="javadoc" depends="init">
         <!-- Both srcdir and destdir should be package roots. -->
@@ -59,9 +71,10 @@
         <ant dir="coreAPI" target="javadoc"/>
         <ant dir="plugins/DX8" target="javadoc"/>
         <ant dir="plugins/linux" target="javadoc"/>
+		<ant dir="plugins/OSX" target="javadoc"/>
     </target>
     
-    <target name="compile" depends="core,windows_plugin,linux_plugin" />
+    <target name="compile" depends="core,windows_plugin,linux_plugin,OSX_plugin" />
     
     <target name="all" depends="init,compile" description="Build everything.">
         <echo message="Application built. Hello ${hello}!"/>
@@ -70,6 +83,7 @@
     <target name="clean" depends="init" description="Clean all build products.">
         <ant dir="plugins/DX8" target="clean"/>
         <ant dir="plugins/linux" target="clean"/>
+		<ant dir="plugins/OSX" target="clean"/>
         <ant dir="coreAPI" target="clean"/>
         <delete failonerror="no">
             <fileset dir="dist">
