@@ -25,35 +25,15 @@
  */
 package net.java.games.input;
 
+import java.util.HashMap;
+
 /** Class that represents a keyboard under linux
  * @author Jeremy Booth (jeremy@newdawnsoftware.com)
  */
 public class LinuxKeyboard extends StandardKeyboard {
     
-    /** Values for the keys
-     */    
-    private int keyData[];
-    /** Needed for the polling methods
-     */    
-    private int dummyRelAxesData[];
-    /** Needed for the polling methods
-     */    
-    private int dummyAbsAxesData[];
-    /** Map of native key numbers from jinput key id key indexes.
-     */    
-    private int keyMap[];
-    /** List of keys this keyboard supports
-     */    
-    private int supportedKeys[];
-    /** Number of keys this keyboard has
-     */    
-    private int numKeys;
-    /** Port type that this keyboard is connected to.
-     */    
-    private PortType portType;
-    /** The native device id
-     */    
-    private int nativeID;
+    private HashMap keyMap = new HashMap();
+    private LinuxDevice realController;
     
     /** Creates a new instance of LinuxKeyboard
      * @param nativeID Native device id
@@ -62,34 +42,11 @@ public class LinuxKeyboard extends StandardKeyboard {
      * @param numRelAxes Number of relative axes (you never know)
      * @param numAbsAxes Number of absolute axes (you never know)
      */
-    public LinuxKeyboard(int nativeID, String name, int numButtons, int numRelAxes, int numAbsAxes) {
-        super(name);
-        
-        children = NO_CONTROLLERS;
-        rumblers = NO_RUMBLERS;
-        
-        if((numRelAxes > 0) || (numAbsAxes > 0)) {
-            children = new Controller[1];
-            children[0] = new LinuxDevice(nativeID, name + " axis", 0, numRelAxes, numAbsAxes);
-        }
-
-        this.nativeID = nativeID;
-        
-        portType = LinuxNativeTypesMap.getPortType(getNativePortType(nativeID));
-        
-        dummyRelAxesData = new int[numRelAxes];
-        dummyAbsAxesData = new int[numAbsAxes];
-        
-        this.numKeys = numButtons;
-        keyData = new int[numButtons+1];
-        supportedKeys = new int[numButtons+1];
-        keyMap = new int[KeyID.LAST.getKeyIndex()];
-        
-        getSupportedButtons(supportedKeys);
-        supportedKeys[numKeys] = NativeDefinitions.KEY_UNKNOWN;
+    public LinuxKeyboard(LinuxDevice realController) {
+        super(realController.getName());
+	this.realController = realController;
         
         setupKeyMap();
-        renameKeys();
     }
     
     /** Returns whether or not the given key has been pressed since the last
@@ -98,19 +55,8 @@ public class LinuxKeyboard extends StandardKeyboard {
      * @return the value fo the key
      */
     protected boolean isKeyPressed(Key key) {
-        /*if(((Keyboard.KeyID) key.getIdentifier()).getKeyIndex() == StandardKeyboard.KeyID.ESCAPE.getKeyIndex()) {
-            System.out.println("Asked if key " + key + " was pressed");
-            System.out.println("key id " + key.getIdentifier());
-            System.out.println("keyIndex " + ((Keyboard.KeyID) key.getIdentifier()).getKeyIndex());
-            System.out.println("keyMap for index is " + keyMap[((Keyboard.KeyID) key.getIdentifier()).getKeyIndex()]);
-            System.out.println("name for supportedKeys index is " + LinuxNativeTypesMap.getButtonName(supportedKeys[keyMap[((Keyboard.KeyID) key.getIdentifier()).getKeyIndex()]]));
-            System.out.println("id for supportedKeys index is " + LinuxNativeTypesMap.getButtonID(supportedKeys[keyMap[((Keyboard.KeyID) key.getIdentifier()).getKeyIndex()]]));
-            System.out.flush();
-        }*/
-        if(keyData[keyMap[((Keyboard.KeyID) key.getIdentifier()).getKeyIndex()]] > 0) {
-            return true;
-        }
-        return false;
+        Axis button = (Axis)keyMap.get(key.getIdentifier());
+	if(button.getPollData()!=0) return true; else return false;
     }
     
     /** Polls axes for data.  Returns false if the controller is no longer valid.
@@ -118,82 +64,19 @@ public class LinuxKeyboard extends StandardKeyboard {
      * @return False if this device is invalid.
      */
     public boolean poll() {
-        int retval = nativePoll(nativeID, keyData, dummyRelAxesData, dummyAbsAxesData);
-        if(retval>=0) return true;
-        return false;
+        return realController.poll();
     }
     
     /** Goes through every key to initialise the key map
      */    
     private void setupKeyMap() {
-        for(int i=0;i<KeyID.LAST.getKeyIndex();i++) {
-            keyMap[i] = numKeys;
-        }
-        for(int i=0;i<numKeys;i++) {
-            int tempNativeID = supportedKeys[i];
-            Keyboard.KeyID tempKeyID = StandardKeyboard.KeyID.VOID;
-            try {
-                tempKeyID = (Keyboard.KeyID)LinuxNativeTypesMap.getButtonID(tempNativeID);                
-            } catch (ClassCastException e) {
-                System.out.println("LinuxNativeTypesMap.getButtonID() returned " + LinuxNativeTypesMap.getButtonID(tempNativeID).getClass().toString());
-            }            
-            if(tempKeyID.getKeyIndex() < keyMap.length) {
-                keyMap[tempKeyID.getKeyIndex()] = i;
-                //System.out.println("keyMap[" + (tempKeyID.getKeyIndex()) + "] (" + tempKeyID + ") set to index " + i + " (" + LinuxNativeTypesMap.getButtonName(supportedKeys[i]) + ")");
-            } else {
-                //System.out.println("Linux key " + LinuxNativeTypesMap.getButtonName(tempNativeID) + " isn't supported by jinput");
-            }
-        }
+    	Axis[] allButtons = realController.getButtons();
+	for(int i=0;i<allButtons.length;i++) {
+	    Axis tempButton = allButtons[i];
+	    keyMap.put(tempButton.getIdentifier(), tempButton);
+	}
     }
     
-    /** Renames all the keys based on what information we have about them (number/name)
-     */    
-    private void renameKeys() {
-        Axis tempAxes[] = getAxes();
-        // Do this one by hand as it's a special case
-        //((AbstractAxis)tempAxes[0]).setName("Unknown");
-        for(int i=0;i<tempAxes.length;i++) {
-            Axis tempAxis = tempAxes[i];
-            int nativeKeyID = supportedKeys[keyMap[((Keyboard.KeyID) tempAxis.getIdentifier()).getKeyIndex()]];
-            //System.out.println("key " + tempAxis + " map: " + nativeKeyID);
-            if(nativeKeyID != NativeDefinitions.KEY_UNKNOWN) {
-                String tempName = LinuxNativeTypesMap.getButtonName(nativeKeyID);
-                ((AbstractAxis)tempAxis).setName(tempName);
-
-                /*System.out.println("axis id is " + (Keyboard.KeyID) tempAxis.getIdentifier());
-                System.out.println("keyMap[id] is " + keyMap[((Keyboard.KeyID) tempAxis.getIdentifier()).getKeyIndex()]);
-                System.out.println("nativeKeyID is: " + nativeKeyID);             
-                System.out.println("Set name of key " + ((Keyboard.KeyID) tempAxis.getIdentifier()).getKeyIndex() + " to " + tempName);*/
-            }
-        }
-    }
-    
-    /** Gets all the supported keys for this device
-     * @param supportedButtons The array if key types to populate
-     */    
-    private void getSupportedButtons(int supportedButtons[]) {
-        getNativeSupportedButtons(nativeID, supportedButtons);
-    }
-
-    /** Gets the supported key types for a particular native device
-     * @param deviceID The device ID
-     * @param supportedButtons The array to populate with teh supported key ids
-     */    
-    private native void getNativeSupportedButtons(int deviceID, int supportedButtons[]);
-    /** Calls the native library to poll the device
-     * @param deviceID The device ID
-     * @param buttonData Aray to populate with button values
-     * @param relAxesData Array to populate with relative axis values
-     * @param absAxesData Array to populate with absolute axes values
-     * @return <0 if soething went wrong
-     */    
-    private native int nativePoll(int deviceID, int buttonData[], int relAxesData[], int absAxesData[]);
-    /** Gets the port type from the native library for a particular keyboard
-     * @param deviceID The keybaord id
-     * @return native port ype
-     */    
-    private native int getNativePortType(int deviceID);
-
     /** Linux specific key ID's
      * @author Jeremy Booth (jeremy@newdawnsoftware.com)
      */    

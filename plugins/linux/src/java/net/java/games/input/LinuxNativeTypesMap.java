@@ -782,7 +782,6 @@ public class LinuxNativeTypesMap {
     public static Axis.Identifier getButtonID(int nativeID) {
         Axis.Identifier retval = INSTANCE.buttonIDs[nativeID];
         if(retval == null) {
-            //System.out.println("Creating new KeyID for nativeID " + nativeID);
             retval = new LinuxKeyboard.KeyID(nativeID, getButtonName(nativeID));
             INSTANCE.buttonIDs[nativeID] = retval;
         }

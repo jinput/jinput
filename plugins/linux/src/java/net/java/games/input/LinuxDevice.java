@@ -407,6 +407,10 @@ public class LinuxDevice extends AbstractController {
     private LinuxAxis createButton(int buttonNumber, int nativeButtonType) {
         Axis.Identifier id = LinuxNativeTypesMap.getButtonID(nativeButtonType);
         String name = LinuxNativeTypesMap.getButtonName(nativeButtonType);
+	System.out.println("native button type: " + nativeButtonType + " id: " + id + " name: " + name);
+	if(id!=null) {
+	    System.out.println("id.name: " + id.getName());
+	}
         if(name == null) {
             name = "Uknown button";
             id = new ButtonID(name);
@@ -462,6 +466,12 @@ public class LinuxDevice extends AbstractController {
      */    
     private LinuxHat createHat(String name, int xAxisID, int yAxisID) {
         return new LinuxHat(this, name, xAxisID, yAxisID);
+    }
+
+    public Axis[] getButtons() {
+        Axis[] buttonsCopy = new Axis[buttons.length];
+    	System.arraycopy(buttons, 0, buttonsCopy, 0, buttons.length);
+	return buttonsCopy;
     }
     
     /** Polls axes for data.  Returns false if the controller is no longer valid.
