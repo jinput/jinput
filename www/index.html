@@ -1,6 +1,6 @@
 <html>
   <body>
-<div align="center"><font color="#990000" size="+2">Welcome to the Java Game Technology Utilities Project! </font> </div>
+<div align="center"><font color="#990000" size="+2">Welcome to the Java Input API Project!  </font> </div>
 <table width="100%" border="0" cellspacing="1" cellpadding="0">
   <tr> 
     <td width="66%" valign="top"> <table width="100%" height="358" border="0" cellpadding="5" cellspacing="1">
@@ -11,11 +11,18 @@
               </tr>
               <tr> 
                 <td valign="top" bgcolor="#FFFFFF"><div align="justify"> 
-                    <p>The JUtils Project hosts an implementation of a set of APIs 
-		       utilized by other Java Game Technology Group projects (eg JInput,JOAl, JOGL).  
-		       Some of those other projects may have build and/or run-time dependancies on
-		       the jutils.jar file which is built from the source hosted here.
-                     </p>
+                    <p>The JInput Project hosts an implementation of an API for game controller 
+                     discovery and polled input.  It is part of a suite of open-source technologies 
+                      initiated by the Game Technology Group at Sun Microsystems with intention of
+                      making the development of high performance games in Java a reality.</p>
+                    <p>The API itself is pure Java and presents a platform-neutral 
+		      completely portable model of controller discovery and polling.
+                      It can handle arbitrary controllers and returns both human and
+                      machine understandable descriptions of the inputs available.</p>
+                    <p>The implementation hosted here also includes plug-ins to allow
+                     the API to adapt to various specific platforms.  These plug-ins
+                     often contain a native code portion to interface to the host system.
+                    </p>
                   </div></td>
               </tr>
             </table></td>
@@ -27,14 +34,14 @@
                     Status</strong></font></div></td>
               </tr>
               <tr> 
-                <td bgcolor="#FFFFFF"><div align="justify">The intial implementation 
-                    of the JUtils library is available 
-                    for download from <a href=" http://jutils.dev.java.net/source/browse/jutils/ ">CVS</a>. 
-                    <p>The initial release contains support classes for a plug-in system that handles
-		    an arbitrary number of arbitrarily complex plugins that each consist of a JAR
-		    file and support files (other jar files, native libs, etc.) </p>
+                <td bgcolor="#FFFFFF"><div align="justify">The intial implementation
+                    of the Java Input API is available for download from 
+                    <a href=" http://jinput.dev.java.net/source/browse/jinput/ ">CVS</a>.
+                    The initial release only contains a plug-in for Win32.
+                    Plug-ins for other platforms (eg Linux, Mac, etc.)  are expected to be
+                    forthcoming either from the Java Game Technology Group or other project 
+                    contributors. </div></td>
 
-		    <p>For more information, see the docs for the Plugins class in the CVS tree.</p>
               </tr>
             </table></td>
         </tr>
@@ -56,10 +63,15 @@
                         <li>binutils 2.13.90</li>
                         <li> w32api-2.2</li>
                         <li> mingw-runtime-2.4</li>
+			<li> "Peter Puck's" DirectX8 binding "dx8libs.zip" at <a href="http://www.urebelscum.speedhost.com/download.html" target= " _blank"> www.urebelscum.speedhost.com/download.html</a> </li>
                       </ul>
                     </li>
                     <li> ANT 1.4.1 (available at <a href=" http://www.apache.org " target="_blank">www.apache.org</a>)</li>
-	          </ul></td>
+                    <p>This project requires that the Java Utils library (jutil.jar) be built and placed
+                    in this project's lib directories.  See the README for more detail.  For the
+                    Java Utils library itself see 
+                    <a href="http://jutils.dev.java.net" target="_blank"> jutils.dev.java.net </a>
+                  </p></ul></td>
               </tr>
             </table></td>
         </tr>
