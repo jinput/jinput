@@ -202,6 +202,26 @@ public abstract class Mouse extends AbstractController {
         protected Button middle;
         
         /**
+         * Side button; should be initialized by subclasses
+         */
+        protected Button side;
+        
+        /**
+         * Extra button; should be initialized by subclasses
+         */
+        protected Button extra;
+        
+        /**
+         * Forward button; should be initialized by subclasses
+         */
+        protected Button forward;
+        
+        /**
+         * Back button; should be initialized by subclasses
+         */
+        protected Button back;
+        
+        /**
          * Protected constructor
          */
         protected Buttons(String name) {
@@ -239,6 +259,38 @@ public abstract class Mouse extends AbstractController {
         }
         
         /**
+         * Returns the side or 4th mouse button, null if the mouse has
+         * fewer than 4 buttons.
+         */
+        public Button getSide() {
+            return side;
+        }
+        
+        /**
+         * Returns the extra or 5th mouse button, null if the mouse has
+         * fewer than 5 buttons.
+         */
+        public Button getExtra() {
+            return extra;
+        }
+        
+        /**
+         * Returns the forward mouse button, null if the mouse hasn't
+         * got one.
+         */
+        public Button getForward() {
+            return forward;
+        }
+        
+        /**
+         * Returns the back mouse button, null if the mouse hasn't
+         * got one.
+         */
+        public Button getBack() {
+            return back;
+        }
+        
+        /**
          * Returns the axes on this controller, in order of assignment priority.
          * Overridden to return the the primary or leftmost mouse button,
          * followed by the secondary or rightmost mouse button (if present),
@@ -252,8 +304,16 @@ public abstract class Mouse extends AbstractController {
                     axes = new Axis[] { left };
                 } else if (middle == null) {
                     axes = new Axis[] { left, right };
-                } else {
+                } else if (side == null) {
                     axes = new Axis[] { left, right, middle };
+                } else if (extra == null) {
+                    axes = new Axis[] { left, right, middle, side };
+                } else if (forward == null) {
+                    axes = new Axis[] { left, right, middle, side, extra };
+                } else if (back == null) {
+                    axes = new Axis[] { left, right, middle, side, extra, forward };
+                } else {
+                    axes = new Axis[] { left, right, middle, side, extra, forward, back };
                 }
             }
             return axes;
@@ -311,5 +371,26 @@ public abstract class Mouse extends AbstractController {
          * mouse has fewer than three buttons.
          */
         public static final ButtonID MIDDLE = new ButtonID("middle");
+        
+        /**
+         * Returns the side mouse button.
+         */
+        public static final ButtonID SIDE = new ButtonID("side");
+        
+        /**
+         * Returns the extra mouse button.
+         */
+        public static final ButtonID EXTRA = new ButtonID("extra");
+        
+        /**
+         * Returns the forward mouse button.
+         */
+        public static final ButtonID FORWARD = new ButtonID("forward");
+        
+        /**
+         * Returns the back mouse button.
+         */
+        public static final ButtonID BACK = new ButtonID("back");
+        
     } // class Mouse.ButtonID
 } // class Mouse
