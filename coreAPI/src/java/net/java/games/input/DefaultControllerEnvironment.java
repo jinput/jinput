@@ -161,10 +161,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
     private void scanControllers() {
         String pluginPathName = System.getProperty("jinput.controllerPluginPath");
         if(pluginPathName == null) {
-            System.out.println("Using default controller plugin path");
             pluginPathName = "controller";
-        } else {
-            System.out.println("Using specified controller plugin path (" + pluginPathName + ")");
         }
         
         scanControllersAt(System.getProperty("java.home") +
