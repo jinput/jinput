@@ -166,8 +166,12 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
     }
     
     private void scanControllersAt(String path) {
+        File file = new File(path);
+        if (!file.exists()) {
+            return;
+        }
         try {
-            Plugins plugins = new Plugins(new File(path));
+            Plugins plugins = new Plugins(file);
             Class[] envClasses = plugins.getExtends(ControllerEnvironment.class);
             for(int i=0;i<envClasses.length;i++){
                 try {
