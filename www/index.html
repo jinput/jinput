@@ -10,20 +10,20 @@
 </MAP>
 <div align="center"><font color="#990000" size="+2">Welcome to the Java Input API Project!  </font> </div>
 <table width="100%" border="0" cellspacing="1" cellpadding="0">
-  <tr> 
+  <tr>
     <td width="66%" valign="top"> <table width="100%" height="358" border="0" cellpadding="5" cellspacing="1">
-        <tr> 
+        <tr>
           <td valign="top"><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#990000">
-              <tr> 
+              <tr>
                 <td width="589" valign="top" bgcolor="#990000"><div align="left"><font color="#FFFFFF"><strong>Overview</strong></font></div></td>
               </tr>
-              <tr> 
-                <td valign="top" bgcolor="#FFFFFF"><div align="justify"> 
-                    <p>The JInput Project hosts an implementation of an API for game controller 
-                     discovery and polled input.  It is part of a suite of open-source technologies 
+              <tr>
+                <td valign="top" bgcolor="#FFFFFF"><div align="justify">
+                    <p>The JInput Project hosts an implementation of an API for game controller
+                     discovery and polled input.  It is part of a suite of open-source technologies
                       initiated by the Game Technology Group at Sun Microsystems with intention of
                       making the development of high performance games in Java a reality.</p>
-                    <p>The API itself is pure Java and presents a platform-neutral 
+                    <p>The API itself is pure Java and presents a platform-neutral
 		      completely portable model of controller discovery and polling.
                       It can handle arbitrary controllers and returns both human and
                       machine understandable descriptions of the inputs available.</p>
@@ -35,49 +35,59 @@
               </tr>
             </table></td>
         </tr>
-        <tr> 
+        <tr>
           <td><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#990000">
-              <tr> 
-                <td width="589" bgcolor="#990000"><div align="left"><font color="#FFFFFF"><strong>Project 
+              <tr>
+                <td width="589" bgcolor="#990000"><div align="left"><font color="#FFFFFF"><strong>Project
                     Status</strong></font></div></td>
               </tr>
-              <tr> 
+              <tr>
                 <td bgcolor="#FFFFFF"><div align="justify">The intial implementation
-                    of the Java Input API is available for download from 
+                    of the Java Input API is available for download from
                     <a href=" http://jinput.dev.java.net/source/browse/jinput/ ">CVS</a>.
                     The initial release only contains a plug-in for Win32.
                     Plug-ins for other platforms (eg Linux, Mac, etc.)  are expected to be
-                    forthcoming either from the Java Game Technology Group or other project 
+                    forthcoming either from the Java Game Technology Group or other project
                     contributors. </div></td>
 
               </tr>
             </table></td>
         </tr>
-        <tr> 
+        <tr>
           <td><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#990000">
-              <tr> 
-                <td width="589" bgcolor="#990000"><div align="left"><font color="#FFFFFF"><strong>Getting 
+              <tr>
+                <td width="589" bgcolor="#990000"><div align="left"><font color="#FFFFFF"><strong>Getting
                     Started </strong></font></div></td>
               </tr>
-              <tr> 
-                <td valign="top" bgcolor="#FFFFFF"><p>This project has been built 
+              <tr>
+                <td valign="top" bgcolor="#FFFFFF"><p>This project has been built
                     in the following environment:</p>
                   <ul>
                     <li> Win32 (Win 2000 in the case of our machine)</li>
                     <li> Sun J2SDK 1.4.2 (available at <a href=" http://java.sun.com " target="_blank">java.sun.com</a>)</li>
-                    <li> MinGW 2.0.0 plus the following updates: (all available 
-                      at <a href=" http://www.mingw.org " target="_blank">www.mingw.org</a>) 
+                    <li> MinGW 2.0.0 plus the following updates: (all available
+                      at <a href=" http://www.mingw.org " target="_blank">www.mingw.org</a>)
                       <ul>
                         <li>binutils 2.13.90</li>
                         <li> w32api-2.2</li>
                         <li> mingw-runtime-2.4</li>
-			<li> "Peter Puck's" DirectX8 binding "dx8libs.zip" at <a href="http://www.urebelscum.speedhost.com/download.html" target= " _blank"> www.urebelscum.speedhost.com/download.html</a> </li>
+			<li> "Peter Puck's" DirectX8 binding "dx8libs.zip" at
+			<a href="http://www.urebelscum.speedhost.com/download.html" target= " _blank">
+			www.urebelscum.speedhost.com/download.html</a>
+			(Copy all his .a files into your MinGW installation's "lib" directory.)
+			</li>
+			<li> The DirectX9 SDK available at
+			<a href="http://www.microsoft.com/directx" target= " _blank">
+			www.microsoft.com/directx</a>
+			(The ant script expects this to be in c:\dx9.  If you
+			install elsewhere you will need to modify the Win32 plugin's
+			build.xml file.)
                       </ul>
                     </li>
                     <li> ANT 1.4.1 (available at <a href=" http://www.apache.org " target="_blank">www.apache.org</a>)</li>
                     <p>This project requires that the Java Utils library (jutil.jar) be built and placed
                     in this project's lib directories.  See the README for more detail.  For the
-                    Java Utils library itself see 
+                    Java Utils library itself see
                     <a href="http://jutils.dev.java.net" target="_blank"> jutils.dev.java.net </a>
                   </p></ul></td>
               </tr>
@@ -85,21 +95,21 @@
         </tr>
       </table>
       <p>&nbsp;</p></td>
-    <td valign="top"> 
+    <td valign="top">
       <table width="100%" border="0" cellspacing="1" cellpadding="5">
         <tr>
           <td><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#990000">
-              <tr> 
-                <td valign="top" bgcolor="#990000"><div align="left"><font color="#FFFFFF"><strong>Useful 
+              <tr>
+                <td valign="top" bgcolor="#990000"><div align="left"><font color="#FFFFFF"><strong>Useful
                     Links</strong></font></div></td></tr>
               <tr><td valign="top" bgcolor="#FFFFFF">
                     <a
 href="http://games-core.dev.java.net/sun_contrib_051903_javagames.pdf">
 Developer Agreement </a></td>
               </tr>
-              <tr> 
+              <tr>
                 <td valign="top" bgcolor="#FFFFFF"><ul>
-                  
+
                 </ul></td>
               </tr>
             </table></td>
@@ -112,4 +122,4 @@ Developer Agreement </a></td>
 </table>
 
 </body>
-</html> 
+</html>
