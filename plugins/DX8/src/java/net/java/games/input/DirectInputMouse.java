@@ -71,7 +71,7 @@ class DirectInputMouse extends Mouse {
     /**
      * Mouse data
      */
-    private byte[] mouseData = new byte[16];
+    private byte[] mouseData = new byte[20];
     
     /**
      * Private constructor
@@ -84,9 +84,9 @@ class DirectInputMouse extends Mouse {
     private DirectInputMouse(long lpDevice, int subtype, String productName,
         String instanceName) {
         super(productName + " " + instanceName);
+        this.lpDevice = lpDevice;
         buttons = new ButtonsImpl();
         ball = new BallImpl();
-        this.lpDevice = lpDevice;
         switch(subtype) {
             case DIDEVTYPEMOUSE_FINGERSTICK:
                 type = Type.FINGERSTICK; break;
@@ -151,15 +151,20 @@ class DirectInputMouse extends Mouse {
      * Implementation class representing the mouse ball
      */
     class BallImpl extends Ball {
-        
+
+        private int numAxes;        
+
         /**
          * Public constructor
          */
         public BallImpl() {
             super(DirectInputMouse.this.getName() + " ball");
+            numAxes = getNumAxes(lpDevice);
             x = new BallAxis(Axis.Identifier.X);
             y = new BallAxis(Axis.Identifier.Y);
-            wheel = new BallAxis(Axis.Identifier.SLIDER);
+            if(numAxes > 2) {
+                wheel = new BallAxis(Axis.Identifier.SLIDER);
+            }
         }
     } // class DirectInputMouse.BallImpl
     
@@ -167,15 +172,32 @@ class DirectInputMouse extends Mouse {
      * Implementation class representing the mouse buttons
      */
     class ButtonsImpl extends Buttons {
-        
+   
+        private int numButtons;        
+
         /**
          * Public constructor
          */
         public ButtonsImpl() {
             super(DirectInputMouse.this.getName() + " buttons");
+            numButtons = getNumButtons(lpDevice);
             left = new ButtonImpl(ButtonID.LEFT);
             right = new ButtonImpl(ButtonID.RIGHT);
-            middle = new ButtonImpl(ButtonID.MIDDLE);
+            if(numButtons>2) {
+                middle = new ButtonImpl(ButtonID.MIDDLE);
+            }
+            if(numButtons>3) {
+                side = new ButtonImpl(ButtonID.SIDE);
+            }
+            if(numButtons>4) {
+                extra = new ButtonImpl(ButtonID.EXTRA);
+            }
+            if(numButtons>5) {
+                forward = new ButtonImpl(ButtonID.FORWARD);
+            }
+            if(numButtons>6) {
+                back = new ButtonImpl(ButtonID.BACK);
+            }
         }
     } // class DirectInputMouse.ButtonsImpl
     
@@ -188,6 +210,16 @@ class DirectInputMouse extends Mouse {
      * Renames the axes with the name provided by DirectInput
      */
     private native boolean renameAxes(long lpDevice);
+
+    // another Endolf special
+    /**
+     * Gets the number of buttons the mouse supports
+     */
+    private native int getNumButtons(long lpDevice);
+    /**
+     * Gets the number of axes the mouse supports
+     */
+    private native int getNumAxes(long lpDevice);
     
     /**
      * Mouse button axis implementation
@@ -211,6 +243,14 @@ class DirectInputMouse extends Mouse {
                 index = 13;
             } else if (id == ButtonID.MIDDLE) {
                 index = 14;
+            } else if (id == ButtonID.SIDE) {
+                index = 15;
+            } else if (id == ButtonID.EXTRA) {
+                index = 16;
+            } else if (id == ButtonID.FORWARD) {
+                index = 17;
+            } else if (id == ButtonID.BACK) {
+                index = 18;
             } else {
                 throw new RuntimeException("Unknown button");
             }
@@ -270,26 +310,18 @@ class DirectInputMouse extends Mouse {
             }
         }
         
+        // Endolf changed this comment, we *are* a mouse axis if we are in here,
+        // and mouse axes no longer are normalised at all
         /** Returns the data from the last time the control has been polled.
-         * If this axis is a button, the value returned will be either 0.0f or 1.0f.
-         * If this axis is normalized, the value returned will be between -1.0f and
-         * 1.0f.
-         * @return  data.  (Note that mice queue state in DX8 so what
-         * is returned is the next stae in the queue, not
-         * necessarily the most current one.)
+         *
+         * @return data The total mouse axis change since the last poll
          */
         public float getPollData() {
-            int data = ((int)mouseData[index] << 12) |
+            int data = ((int)mouseData[index+3] << 24) |
+                ((int)mouseData[index + 2] << 16) |
                 ((int)mouseData[index + 1] << 8) |
-                ((int)mouseData[index + 2] << 4) |
-                ((int)mouseData[index + 3]);
-            if (data == -1) {
-                return -1.0f;
-            } else if (data >= 1) {
-                return 1.0f;
-            } else {
-                return 0.0f;
-            }
+                ((int)mouseData[index]);
+            return (float)data;
         }
         
         /** Returns <code>true</code> if data returned from <code>poll</code>
@@ -307,5 +339,14 @@ class DirectInputMouse extends Mouse {
         public boolean isAnalog() {
             return true;
         }
+
+        /** Returns whether or not data polled from this axis is normalized between the values of -1.0f and 1.0f.
+         *
+         * @return true if normalized, otherwise false.
+         */
+        public boolean isNormalized() {
+            return false;
+        }
+
     } // class DirectInputMouse.MouseBallAxis
 } // class DirectInputMouse

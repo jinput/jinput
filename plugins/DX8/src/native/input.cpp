@@ -43,6 +43,10 @@ jfieldID FID_POV = NULL;
 jfieldID FID_Left = NULL;
 jfieldID FID_Right = NULL;
 jfieldID FID_Middle = NULL;
+jfieldID FID_Extra = NULL;
+jfieldID FID_Side = NULL;
+jfieldID FID_Forward = NULL;
+jfieldID FID_Back = NULL;
 
 const char* FD_AxisIdentifier = "Lnet/java/games/input/Axis$Identifier;";
 const char* FD_ButtonIdentifier = "Lnet/java/games/input/Mouse$ButtonID;";
@@ -51,7 +55,9 @@ const char* FD_ButtonIdentifier = "Lnet/java/games/input/Mouse$ButtonID;";
 const TCHAR* DUMMY_WINDOW_NAME = "InputControllerWindow";
 HWND hwndDummy = NULL;
 // Buffer size
-const DWORD BUFFER_SIZE = 16;
+// Endolf changed the name as it is specific to the mouse
+// Endolf increased the size as he kept making it go pop
+const DWORD MOUSE_BUFFER_SIZE = 32;
 
 // Class for handing device data to the callback for EnumDevices
 class DeviceParamData {
@@ -213,6 +219,28 @@ BOOL InitIDs(JNIEnv* env) {
     if (FID_Middle == NULL) {
         return FALSE;
     }
+// Endolf
+    FID_Side = env->GetStaticFieldID(CLASS_ButtonIdentifier, "SIDE",
+        FD_ButtonIdentifier);
+    if (FID_Side == NULL) {
+        return FALSE;
+    }
+    FID_Extra = env->GetStaticFieldID(CLASS_ButtonIdentifier, "EXTRA",
+        FD_ButtonIdentifier);
+    if (FID_Extra == NULL) {
+        return FALSE;
+    }
+    FID_Forward = env->GetStaticFieldID(CLASS_ButtonIdentifier, "FORWARD",
+        FD_ButtonIdentifier);
+    if (FID_Forward == NULL) {
+        return FALSE;
+    }
+    FID_Back = env->GetStaticFieldID(CLASS_ButtonIdentifier, "BACK",
+        FD_ButtonIdentifier);
+    if (FID_Back == NULL) {
+        return FALSE;
+    }
+
     CLASS_DirectInputEnvironmentPlugin =
         env->FindClass("net/java/games/input/DirectInputEnvironmentPlugin");
     if (CLASS_DirectInputEnvironmentPlugin == NULL) {
@@ -337,108 +365,6 @@ Java_net_java_games_input_DirectInputEnvironmentPlugin_directInputCreate
  * returns DIENUM_CONTINUE or DIENUM_STOP
  */
 
-/** mikes old enum callback
-BOOL CALLBACK EnumDeviceCallback(LPCDIDEVICEINSTANCE lpddi, LPVOID pvRef)
-{
-    DeviceParamData* pData = (DeviceParamData*)pvRef;
-    LPDIRECTINPUT8 lpDirectInput = pData->lpDirectInput;
-    JNIEnv* env = pData->env;
-    jobject obj = pData->obj;
-    jobject list = pData->list;
-    LPDIRECTINPUTDEVICE8 lpDevice = NULL;
-    LPUNKNOWN pUnknown = NULL;
-
-    // Create the device object
-    HRESULT res = lpDirectInput->CreateDevice(lpddi->guidInstance, &lpDevice,
-        pUnknown);
-    if (res != DI_OK) {
-        PrintDIError("CreateDevice", res);
-        return DIENUM_STOP;
-    }
-
-    LPDIRECTINPUTDEVICE8 lpDevice2 = NULL;
-    // Get the IDirectDrawDevice8 interface from the object
-    res = lpDevice->QueryInterface(IID_IDirectInputDevice8,
-        (void**)&lpDevice2);
-    if (res != DI_OK) {
-        PrintDIError("QueryInterface DID2", res);
-        lpDevice->Release();
-        return DIENUM_STOP;
-    }
-
-    // Set the data format
-    DWORD category = GET_DIDEVICE_TYPE(lpddi->dwDevType);
-    LPCDIDATAFORMAT lpDataFormat = &c_dfDIJoystick;
-    if (category == DI8DEVTYPE_MOUSE) {
-        lpDataFormat = &c_dfDIMouse;
-    } else if (category == DI8DEVTYPE_KEYBOARD) {
-        lpDataFormat = &c_dfDIKeyboard;
-    }
-    res = lpDevice2->SetDataFormat(lpDataFormat);
-    if (res != DI_OK) {
-        PrintDIError("SetDataFormat", res);
-        lpDevice2->Release();
-        lpDevice->Release();
-        return DIENUM_STOP;
-    }
-
-    // If we are the mouse, we have to buffer the data
-    if (category == DI8DEVTYPE_MOUSE) {
-        DIPROPDWORD dipropdw;
-        dipropdw.diph.dwSize = sizeof(DIPROPDWORD);
-        dipropdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-        dipropdw.diph.dwObj = 0;
-        dipropdw.diph.dwHow = DIPH_DEVICE;
-        dipropdw.dwData = BUFFER_SIZE;
-        res = lpDevice2->SetProperty(DIPROP_BUFFERSIZE, &dipropdw.diph);
-        if (res != DI_OK) {
-            PrintDIError("SetProperty", res);
-            lpDevice2->Release();
-            lpDevice->Release();
-            return DIENUM_STOP;
-        }
-    }
-
-    // Set the cooperative level
-    res = lpDevice2->SetCooperativeLevel(hwndDummy,
-        DISCL_NONEXCLUSIVE | DISCL_BACKGROUND);
-    if (res != DI_OK) {
-        PrintDIError("SetCooperativeLevel", res);
-        lpDevice2->Release();
-        lpDevice->Release();
-        return DIENUM_STOP;
-    }
-
-    // Acquire the device
-    res = lpDevice2->Acquire();
-    if (res != DI_OK && res != S_FALSE) {
-        PrintDIError("Acquire", res);
-        lpDevice2->Release();
-        lpDevice->Release();
-        return DIENUM_STOP;
-    }
-
-    // Set the variables for the Java callback
-    jint type = (jint)lpddi->dwDevType;
-    jstring productName = env->NewStringUTF(lpddi->tszProductName);
-    if (productName == NULL) {
-        lpDevice2->Release();
-        lpDevice->Release();
-        return DIENUM_STOP;
-    }
-    jstring instanceName = env->NewStringUTF(lpddi->tszInstanceName);
-    if (instanceName == NULL) {
-        lpDevice2->Release();
-        lpDevice->Release();
-        return DIENUM_STOP;
-    }
-
-    // Add the device into the list
-    env->CallVoidMethod(obj, MID_AddDevice, list, (jlong)(long)lpDevice2, type,
-        productName, instanceName);
-    return DIENUM_CONTINUE;
-}
-*/
 /** jeff's new enum callback */
 BOOL CALLBACK EnumDeviceCallback(LPCDIDEVICEINSTANCE lpddi, LPVOID pvRef)
 {
@@ -480,14 +406,14 @@ BOOL CALLBACK EnumDeviceCallback(LPCDIDEVICEINSTANCE lpddi, LPVOID pvRef)
         break;
         case DI8DEVTYPE_MOUSE: 
             //printf("found mouse\n");
-            lpDataFormat = &c_dfDIMouse;
+            lpDataFormat = &c_dfDIMouse2;
             // set up buffering
             DIPROPDWORD dipropdw;
             dipropdw.diph.dwSize = sizeof(DIPROPDWORD);
             dipropdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
             dipropdw.diph.dwObj = 0;
             dipropdw.diph.dwHow = DIPH_DEVICE;
-            dipropdw.dwData = BUFFER_SIZE;
+            dipropdw.dwData = MOUSE_BUFFER_SIZE;
             if (FAILED(
                 res = lpDevice->SetProperty(DIPROP_BUFFERSIZE, 
                         &dipropdw.diph))) {
@@ -789,6 +715,62 @@ Java_net_java_games_input_DirectInputKeyboard_renameKeys
  */
 
 /*
+ * Class: org_java_games_input_DirectInputMouse
+ * Method: getNumAxes
+ * Signature: (J)I
+ */
+extern "C" JNIEXPORT jint JNICALL
+Java_net_java_games_input_DirectInputMouse_getNumAxes
+    (JNIEnv* env, jobject obj, jlong lDevice)
+{
+    LPDIRECTINPUTDEVICE8 lpDevice = (LPDIRECTINPUTDEVICE8)(long)lDevice;
+    // Reacquire the device
+    HRESULT res = lpDevice->Acquire();
+    if (res != DI_OK && res != S_FALSE) {
+        PrintDIError("Acquire", res);
+        return 0;
+    }
+    DIDEVCAPS deviceCaps;
+    // Allocate space for all the device's objects (axes, buttons, POVS)
+    ZeroMemory( &deviceCaps, sizeof(DIDEVCAPS) );
+    deviceCaps.dwSize = sizeof(DIDEVCAPS);
+    res = lpDevice->GetCapabilities(&deviceCaps);
+    if(res != DI_OK) {
+        PrintDIError("GetCapabilities", res);
+        return JNI_FALSE;
+    }
+    return deviceCaps.dwAxes;
+}
+
+/*
+ * Class: org_java_games_input_DirectInputMouse
+ * Method: getNumButtons
+ * Signature: (J)I
+ */
+extern "C" JNIEXPORT jint JNICALL
+Java_net_java_games_input_DirectInputMouse_getNumButtons
+    (JNIEnv* env, jobject obj, jlong lDevice)
+{
+    LPDIRECTINPUTDEVICE8 lpDevice = (LPDIRECTINPUTDEVICE8)(long)lDevice;
+    // Reacquire the device
+    HRESULT res = lpDevice->Acquire();
+    if (res != DI_OK && res != S_FALSE) {
+        PrintDIError("Acquire", res);
+        return 0;
+    }
+    DIDEVCAPS deviceCaps;
+    // Allocate space for all the device's objects (axes, buttons, POVS)
+    ZeroMemory( &deviceCaps, sizeof(DIDEVCAPS) );
+    deviceCaps.dwSize = sizeof(DIDEVCAPS);
+    res = lpDevice->GetCapabilities(&deviceCaps);
+    if(res != DI_OK) {
+        PrintDIError("GetCapabilities", res);
+        return JNI_FALSE;
+    }
+    return deviceCaps.dwButtons;
+}
+
+/*
  * Class:     org_java_games_input_DirectInputMouse
  * Method:    pollNative
  * Signature: (J[B)Z
@@ -805,12 +787,101 @@ Java_net_java_games_input_DirectInputMouse_pollNative
         return JNI_FALSE;
     }
     // Get the data
-    DIMOUSESTATE data;
+    DIMOUSESTATE2 data;
     res = lpDevice->GetDeviceState(sizeof(data), &data);
     if (res != DI_OK) {
         PrintDIError("GetDeviceState", res);
         return JNI_FALSE;
     }
+    
+    // Endolf woz here
+    // Set the axis data to 0, we only want the buttons for this second
+    data.lX = 0;
+    data.lY = 0;
+    data.lZ = 0;
+
+    DIDEVICEOBJECTDATA dataBuffer[MOUSE_BUFFER_SIZE];
+    DWORD numEvents = MOUSE_BUFFER_SIZE;
+    HRESULT res2 = lpDevice->GetDeviceData(sizeof(DIDEVICEOBJECTDATA), dataBuffer, &numEvents, 0);
+    switch(res2) {
+        case DIERR_INPUTLOST:
+            printf("DIERR_INPUTLOST\n");
+            break;
+        case DIERR_INVALIDPARAM:
+            printf("DIERR_INVALIDPARAM\n");
+            break;
+        case DIERR_NOTACQUIRED:
+            printf("DIERR_NOTACQUIRED\n");
+            break;
+        case DIERR_NOTBUFFERED:
+            printf("DIERR_NOTBUFFERED\n");
+            break;
+        case DIERR_NOTINITIALIZED:
+            printf("DIERR_NOTINITIALIZED\n");
+            break;
+        case DI_BUFFEROVERFLOW:
+            printf("DI_BUFFEROVERFLOW\n");
+            break;
+    }
+    int i=0;
+    for(i=0;i<numEvents;i++) {
+      switch(dataBuffer[i].dwOfs) {
+          case DIMOFS_BUTTON0:
+              if(dataBuffer[i].dwData == 0x80) {
+                  data.rgbButtons[0] = 0x80;
+              }
+              break;
+          case DIMOFS_BUTTON1:
+              if(dataBuffer[i].dwData == 0x80) {
+                  data.rgbButtons[1] = 0x80;
+              }
+              break;
+          case DIMOFS_BUTTON2:
+              if(dataBuffer[i].dwData == 0x80) {
+                  data.rgbButtons[2] = 0x80;
+              }
+              break;
+          case DIMOFS_BUTTON3:
+              if(dataBuffer[i].dwData == 0x80) {
+                  data.rgbButtons[3] = 0x80;
+              }
+              break;
+          case DIMOFS_BUTTON4:
+              if(dataBuffer[i].dwData == 0x80) {
+                  data.rgbButtons[4] = 0x80;
+              }
+              break;
+          case DIMOFS_BUTTON5:
+              if(dataBuffer[i].dwData == 0x80) {
+                  data.rgbButtons[5] = 0x80;
+              }
+              break;
+          case DIMOFS_BUTTON6:
+              if(dataBuffer[i].dwData == 0x80) {
+                  data.rgbButtons[6] = 0x80;
+              }
+              break;
+          case DIMOFS_BUTTON7:
+              if(dataBuffer[i].dwData == 0x80) {
+                  data.rgbButtons[7] = 0x80;
+              }
+              break;
+          case DIMOFS_X:
+              data.lX += dataBuffer[i].dwData;
+              break;
+          case DIMOFS_Y:
+              data.lY += dataBuffer[i].dwData;
+              break;
+          case DIMOFS_Z:
+              data.lZ += dataBuffer[i].dwData;
+              break;
+          default:
+              printf("Uknown data offset (%d)\n", dataBuffer[i].dwOfs);
+      }
+    }
+
+	//printf("axis data in native at poll end is x: %d, y: %d, z: %d\n", data.lX, data.lY, data.lZ);
+
     // Set the data in our array
     env->SetByteArrayRegion(baData, 0, (jsize)sizeof(data), (jbyte*)&data);
     return JNI_TRUE;
@@ -855,6 +926,21 @@ BOOL CALLBACK RenameAxesCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi,
                 FID_Middle);
             break;
         case DIMOFS_BUTTON3:
+            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+                FID_Side);
+            break;
+        case DIMOFS_BUTTON4:
+            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+                FID_Extra);
+            break;
+        case DIMOFS_BUTTON5:
+            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+                FID_Forward);
+            break;
+        case DIMOFS_BUTTON6:
+            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+                FID_Back);
+            break;
         default:
             return DIENUM_CONTINUE; // Not an axis we know
     }
