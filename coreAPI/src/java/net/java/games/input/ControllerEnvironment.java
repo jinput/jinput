@@ -49,9 +49,9 @@ import java.util.Iterator;
  * In this reference implementation, this class can also be used to register
  * controllers with the default environment as "plug-ins".  A plug-in is
  * created by subclassing ControllerEnvironment with a class that has a public
- * no-argument constructor, implements the org.java.games.util.plugins.Plugin
+ * no-argument constructor, implements the net.java.games.util.plugins.Plugin
  * interface and has a name ending in "Plugin".  
- * (See org.java.games.input.DirectInputEnvironmentPlugin in the DXplugin
+ * (See net.java.games.input.DirectInputEnvironmentPlugin in the DXplugin
  *  part of the source tree for an example.)
  *
  * When the DefaultControllerEnvrionment is instanced it uses the plugin library
@@ -61,7 +61,7 @@ import java.util.Iterator;
  * Java app.
  *
  * For more information on the organization of plugins within the controller
- * root directories, see org.java.games.util.plugins.Plugins (Note the
+ * root directories, see net.java.games.util.plugins.Plugins (Note the
  * plural -- "Plugins" not "Plugin" which is just a marker interface.)
  *
  */
