@@ -422,14 +422,17 @@ public class OSXEnvironmentPlugin extends ControllerEnvironment implements Plugi
                                         boolean hasPreferredState,
                                         boolean hasNullState)
     {
-        InputControllerElement element = new InputControllerElement( elementCookie, usagePage, usage, usagePage,
+        InputControllerElement element = new InputControllerElement( elementCookie, elementType, usage, usagePage,
                                                                      rawMin, rawMax, scaledMin, scaledMax,
                                                                      dataBitSize, isRelative, isWrapping, isNonLinear,
                                                                      hasPreferredState, hasNullState );
 
 
         InputController inputController = (InputController)devices.get( new Long( lpDevice) );
-        inputController.addControllerElement( element );
+        if ( inputController != null )
+        {
+            inputController.addControllerElement( element );
+        }
     }
 
 
