@@ -46,6 +46,7 @@ import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import net.java.games.util.plugins.*;
 
 /**
@@ -109,6 +110,25 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
                     return DefaultControllerEnvironment.this;
                 }
             });
+            //Check the properties for specified controller classes
+            String pluginClasses = System.getProperty("jinput.plugins", "") + System.getProperty("net.java.games.input.plugins", "");
+            if(!pluginClasses.equals("")) {
+                ArrayList pluginClassList = new ArrayList();
+                StringTokenizer pluginClassTok = new StringTokenizer(pluginClasses, " \t\n\r\f,;:");
+                while(pluginClassTok.hasMoreTokens()) {
+                    String className = pluginClassTok.nextToken();
+                    try {
+                        ControllerEnvironment ce = (ControllerEnvironment) Class.forName(className).newInstance();
+                        addControllers(ce.getControllers());
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
         Controller[] ret = new Controller[controllers.size()];
         Iterator it = controllers.iterator();
