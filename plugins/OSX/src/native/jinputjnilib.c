@@ -740,11 +740,12 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_OSXEnvironmentPlugin_pollDevice
     queue = (IOHIDQueueInterface **)(long)lpQueue;
 
     AbsoluteTime zeroTime = {0,0};
+    IOReturn ioReturnValue = kIOReturnSuccess;
 
-    HRESULT result = (*queue)->getNextEvent(queue, &event, zeroTime, 0);
-    if ( result )
+    ioReturnValue = (*queue)->getNextEvent(queue, &event, zeroTime, 0);
+    if ( ioReturnValue == kIOReturnSuccess )
     {
-        printf("Queue getNextEvent result: %lx\n", result );
+        printf("Queue getNextEvent return value: %ld\n", (long)ioReturnValue );
     }
     else
     {
@@ -769,10 +770,12 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_OSXEnvironmentPlugin_pollElemen
 
     IOHIDEventStruct event;
 
-    HRESULT result = (*hidDeviceInterface)->getElementValue(hidDeviceInterface, cookie, &event);
-    if ( result )
+    IOReturn ioReturnValue = kIOReturnSuccess;
+
+    ioReturnValue = (*hidDeviceInterface)->getElementValue(hidDeviceInterface, cookie, &event);
+    if ( ioReturnValue == kIOReturnSuccess )
     {
-        printf("Queue getNextEvent result: %lx\n", result );
+        printf("Queue getNextEvent return value: %ld\n", (long)ioReturnValue );
     }
     else
     {
@@ -795,11 +798,12 @@ JNIEXPORT void JNICALL Java_net_java_games_input_OSXEnvironmentPlugin_registerDe
     queue = (IOHIDQueueInterface **)(long)lpQueue;
 
     IOHIDElementCookie cookie = (IOHIDElementCookie)(long)hidCookie;
+    IOReturn ioReturnValue = kIOReturnSuccess;
 
-    HRESULT result = (*queue)->addElement(queue, cookie, 0);
-    if ( result )
+    ioReturnValue = (*queue)->addElement(queue, cookie, 0);
+    if ( ioReturnValue == kIOReturnSuccess )
     {
-        printf("Added pollElement: %ld\n", (long)cookie );
+        printf("Registered pollElement: %ld\n", (long)cookie );
     }
     else
     {
@@ -820,8 +824,10 @@ JNIEXPORT void JNICALL Java_net_java_games_input_OSXEnvironmentPlugin_deregister
 
     IOHIDElementCookie cookie = (IOHIDElementCookie)(long)hidCookie;
 
-    HRESULT result = (*queue)->removeElement(queue, cookie );
-    if ( result )
+    IOReturn ioReturnValue = kIOReturnSuccess;
+
+    ioReturnValue = (*queue)->removeElement(queue, cookie );
+    if ( ioReturnValue == kIOReturnSuccess )
     {
         printf("Removed pollElement: %ld\n", (long)cookie );
     }
