@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="all" name="AWT Plugin">
+
+    <target name="init">
+        <mkdir dir="classes"/>
+        <mkdir dir="bin"/>
+    </target>
+
+    <target depends="init" name="compile">
+        <javac debug="true" deprecation="true" destdir="classes" source="1.4" srcdir="src">
+            <classpath>
+                <pathelement location="../../coreAPI/bin/jinput.jar"/>
+                <pathelement location="../../coreAPI/lib/jutils.jar"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target depends="init,compile" name="jar">
+        <jar jarfile="bin/awtinput.jar" compress="true" basedir="classes">
+            <exclude name="**/*.java"/>
+            <exclude name="awtinput.jar"/>
+            <exclude name="apidoc"/>
+        </jar> 
+        <copy file="bin/awtinput.jar" todir="../../coreAPI/src/tests/controller" />
+    </target>
+
+    <target depends="jar" description="Build everything." name="all">
+        <echo message="Application built."/>
+    </target>
+
+    <target name="javadoc" depends="init" description="Javadoc for AWT plugin for JInput.">
+        <mkdir dir="apidocs"/>
+        <javadoc packagenames="net.java.games.input.*" 
+                 destdir="apidocs"
+                 additionalparam="-source 1.4"
+                 link="../../../coreAPI/apidocs">
+            <sourcepath>
+                <pathelement location="src"/>
+            </sourcepath>
+             <classpath>
+                <pathelement location="../../coreAPI/bin/jinput.jar"/>
+                <pathelement location="../../coreAPI/lib/jutils.jar"/>
+            </classpath>
+        </javadoc>
+    </target>
+
+    <target description="Clean all build products." name="clean">
+        <delete failonerror="no">
+            <fileset dir="classes">
+                <include name="**/*.class"/>
+            </fileset>
+        </delete>
+        <delete file="bin/awtinput.jar" failonerror="no"/>
+        <delete file="../../coreAPI/src/tests/controller/awtinput.jar" failonerror="no" />
+        <delete file="apidoc" failonerror="no"/>
+    </target>
+
+</project>
