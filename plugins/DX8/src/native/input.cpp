@@ -263,7 +263,7 @@ BOOL InitIDs(JNIEnv* env) {
         return FALSE;
     }
     MID_AddRumbler = env->GetMethodID(CLASS_DirectInputDevice, "addRumbler",
-        "(JLnet/java/games/input/Axis$Identifier;)V");
+        "(JLnet/java/games/input/Axis$Identifier;Ljava/lang/String;)V");
     if (MID_AddRumbler == NULL) {
         return FALSE;
     }
@@ -700,7 +700,7 @@ BOOL CALLBACK EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi,
 			return res;
 		}
 
-		env->CallVoidMethod(obj, MID_AddRumbler, (jlong)(long)g_pEffect, identifier);
+		env->CallVoidMethod(obj, MID_AddRumbler, (jlong)(long)g_pEffect, identifier, name);
 	}
     return DIENUM_CONTINUE;
 }

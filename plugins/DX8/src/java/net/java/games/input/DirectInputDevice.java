@@ -159,8 +159,8 @@ class DirectInputDevice extends AbstractController {
      * @param effect the natie effect id
      * @param axisID The axis ID
      */
-    private void addRumbler(long effect, Axis.Identifier axisID) {        
-        rumblerList.add(new DirectInputRumbler(this, effect, axisID));
+    private void addRumbler(long effect, Axis.Identifier axisID, String axisName) {        
+        rumblerList.add(new DirectInputRumbler(this, effect, axisID, axisName));
     }
     
     /** Polls axes for data.  Returns false if the controller is no longer valid.

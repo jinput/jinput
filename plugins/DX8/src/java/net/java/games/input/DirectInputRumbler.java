@@ -15,12 +15,22 @@ public class DirectInputRumbler implements net.java.games.input.Rumbler {
     private DirectInputDevice device;
     private long effect;
     private Axis.Identifier axisID;
+    private String axisName;
     
     /** Creates a new instance of DirectInputRumbler */
-    public DirectInputRumbler(DirectInputDevice device, long effect, Axis.Identifier axisID) {
+    public DirectInputRumbler(DirectInputDevice device, long effect, Axis.Identifier axisID, String axisName) {
         this.device = device;
         this.effect = effect;
         this.axisID = axisID;
+        this.axisName = axisName;
+    }
+    
+    public Axis.Identifier getAxisIdentifier() {
+        return axisID;
+    }
+    
+    public String getAxisName() {
+        return axisName;
     }
     
     public void rumble(float intensity) {
