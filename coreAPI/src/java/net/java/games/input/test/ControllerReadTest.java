@@ -105,15 +105,27 @@ class DigitalHatPanel extends AxisPanel {
         } else if ( data == Axis.POV.UP) {
             digitalState.setBackground(Color.green);
             digitalState.setText("UP");
+        } else if ( data == Axis.POV.UP_RIGHT) {
+            digitalState.setBackground(Color.green);
+            digitalState.setText("UP+RIGHT");
         } else if ( data == Axis.POV.RIGHT) {
             digitalState.setBackground(Color.green);
             digitalState.setText("RIGHT");
+        } else if ( data == Axis.POV.DOWN_RIGHT) {
+            digitalState.setBackground(Color.green);
+            digitalState.setText("DOWN+RIGHT");
         } else if ( data == Axis.POV.DOWN) {
             digitalState.setBackground(Color.green);
             digitalState.setText("DOWN");
+        } else if ( data == Axis.POV.DOWN_LEFT) {
+            digitalState.setBackground(Color.green);
+            digitalState.setText("DOWN+LEFT");
         } else if ( data == Axis.POV.LEFT) {
             digitalState.setBackground(Color.green);
             digitalState.setText("LEFT");    
+        } else if ( data == Axis.POV.UP_LEFT) {
+            digitalState.setBackground(Color.green);
+            digitalState.setText("UP+LEFT");
         }else { // shoudl never happen
             digitalState.setBackground(Color.red);
             digitalState.setText("ERR:"+data);

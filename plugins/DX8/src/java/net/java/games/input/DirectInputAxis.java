@@ -155,12 +155,20 @@ class DirectInputAxis extends AbstractAxis {
                 return Axis.POV.OFF;
             } else if (data == 0.0) {
                 return Axis.POV.UP;
+            } else if (data == 4500) {
+                return Axis.POV.UP_RIGHT;
             } else if (data == 9000) {
                 return Axis.POV.RIGHT;
+            } else if (data == 13500) {
+                return Axis.POV.DOWN_RIGHT;
             } else if (data == 18000) {
                 return Axis.POV.DOWN;
+            } else if (data == 22500) {
+                return Axis.POV.DOWN_LEFT;
             } else if (data == 27000) {
                 return Axis.POV.LEFT;
+            } else if (data == 31500) {
+                return Axis.POV.UP_LEFT;
             } else {
                 System.err.print("Unexpected value for DX8 HAT: "+data);
                 return Axis.POV.OFF;
