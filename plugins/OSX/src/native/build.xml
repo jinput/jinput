@@ -16,7 +16,7 @@
             <arg line="-c -I${java.home}/include jinputjnilib.c"/>
         </exec>
 		<exec dir="." executable="cc" os="Mac OS X">
-	       <arg line="-bundle -o ${dist}/libjinput.jnilib jinputjnilib.o -framework JavaVM -framework CoreFoundation -framework IOKit "/>
+	       <arg line="-bundle -o libjinput.jnilib jinputjnilib.o -framework JavaVM -framework CoreFoundation -framework IOKit "/>
      	</exec>
     </target>
 

@@ -75,6 +75,7 @@
 	
     <target name="compileNativeJinputLib" depends="init,createJNIHeaders" >
         <ant dir="src/native" target="compileNativeJinputLib"/>
+	<copy file="src/native/libjinput.jnilib" todir="${dist}" />
         <copy file="${dist}/libjinput.jnilib" todir="../../coreAPI/src/tests/controller" />
     </target>
 </project>
