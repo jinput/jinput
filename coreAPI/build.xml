@@ -85,6 +85,19 @@
             <!-- <arg file="myfile.txt"/> -->
         </java>
     </target>
+    <target name="rumbletest" depends="init,all" description="Try running it.">
+        <java classname="net.java.games.input.test.RumbleTest" 
+              fork="true" failonerror="true" dir="src/tests">
+            <classpath>
+                <pathelement location="bin/jinput.jar"/>
+                <pathelement location="${utils}"/>
+            </classpath>
+            <!-- Pass some args, perhaps: -->
+            <!-- <arg value="-myfile"/> -->
+            <!-- Will be given as an absolute path: -->
+            <!-- <arg file="myfile.txt"/> -->
+        </java>
+    </target>
     
     <target name="javadoc" depends="init" description="Javadoc for my API.">
         <javadoc packagenames="net.java.games.input.*" 
