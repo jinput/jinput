@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<project name="OS X Plugin, Native code" basedir="." default="compileNativeJinputLib">
+
+    <target name="init">
+        <mkdir dir="build"/>
+    </target>
+
+    <target name="compileNativeJinputLib" depends="init">
+        <exec dir="." executable="cc" os="Mac OS X">
+		
+            <arg line="-c -I${java.home}/include jinputjnilib.c"/>
+        </exec>
+		<exec dir="." executable="cc" os="Mac OS X">
+	       <arg line="-bundle -o libjinput.jnilib jinputjnilib.o -framework JavaVM -framework CoreFoundation -framework IOKit "/>
+     	</exec>
+    </target>
+
+</project>

@@ -1,0 +1,82 @@
+<?xml version="1.0" ?>
+<project basedir="." default="all" name="OSX Plugin">
+
+    <target name="init">
+        <property name="hello" value="world"/>
+        <mkdir dir="classes"/>
+        <mkdir dir="bin"/>
+    </target>
+
+    <target depends="init" name="compile">
+        <javac debug="true" deprecation="true" destdir="classes" source="1.4" srcdir="src/java">
+            <classpath>
+                <pathelement location="../../coreAPI/bin/jinput.jar"/>
+                <pathelement location="../../coreAPI/lib/jutils.jar"/>
+            </classpath>
+        </javac>
+    </target>
+
+	<target depends="init,compile" name="jar">
+        <jar jarfile="bin/HIDWrapper.jar" compress="true" basedir="classes">
+            <exclude name="**/*.java"/>
+            <exclude name="HIDWrapper.jar"/>
+            <exclude name="apidoc"/>
+        </jar> 
+        <copy file="bin/HIDWrapper.jar" todir="../../coreAPI/src/tests/controller" />
+    </target>
+
+    <target depends="compileNativeJinputLib,jar" description="Build everything." name="all">
+        <echo message="Application built. Hello ${hello}!"/>
+    </target>
+
+    <target name="javadoc" depends="init" description="Javadoc for OS X plugin for JInput.">
+        <mkdir dir="apidocs"/>
+        <javadoc packagenames="net.java.games.input.*" 
+                 destdir="apidocs"
+                 additionalparam="-source 1.4"
+                 link="../../../coreAPI/apidocs">
+            <sourcepath>
+                <pathelement location="src/java"/>
+            </sourcepath>
+             <classpath>
+                <pathelement location="../../coreAPI/bin/jinput.jar"/>
+                <pathelement location="../../coreAPI/lib/jutils.jar"/>
+            </classpath>
+        </javadoc>
+    </target>
+
+    <target description="Clean all build products." name="clean">
+        <delete failonerror="no">
+            <fileset dir="classes">
+                <include name="**/*.class"/>
+            </fileset>
+        </delete>
+		<delete file="bin/HIDWrapper.jar" failonerror="no"/>
+        <delete file="src/native/libjinput.jnilib" failonerror="no"/>
+        <delete file="../../coreAPI/src/tests/controller/HIDWrapper.jar" failonerror="no" />
+        <delete file="../../coreAPI/src/tests/controller/libjinput.jnilib" failonerror="no"/>
+        <delete file="apidoc" failonerror="no"/>
+    </target>
+
+    <target depends="init,compile" name="createJNIHeaders">
+        <javah destdir="src/native">
+            <classpath>
+                <pathelement path="classes"/>
+                <pathelement location="../../coreAPI/classes"/>
+            </classpath>
+            <class name="net.java.games.input.OSXEnvironmentPlugin"/>
+        </javah>
+		<!-- "net_java_games_input_OSXEnvironmentPlugin.h" -->
+    </target>
+
+	<!-- <target depends="init" name="createNativeDefinitions.java">
+        <exec dir="." executable="./getDefinitions" os="linux" output="src/java/net/java/games/input/NativeDefinitions.java">
+            <arg line="/usr/include/linux/input.h"/>
+        </exec>
+    </target> -->
+	
+    <target name="compileNativeJinputLib" depends="init,createJNIHeaders" >
+        <ant dir="src/native" target="compileNativeJinputLib"/>
+        <copy file="src/native/libjinput.jnilib" todir="../../coreAPI/src/tests/controller" />
+    </target>
+</project>
