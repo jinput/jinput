@@ -36,6 +36,8 @@
 #include "Device.h"
 #include "EventDevice.h"
 
+#include "logger.h"
+
 int evNumDevices;
 int eventInterfaceVersion;
 Device **evDeviceList;
@@ -103,6 +105,8 @@ int evInit() {
     if(tempDevice->isValidDevice()==1) {
       tempDeviceList[i] = tempDevice;
       evNumDevices++;
+    } else {
+      tempDeviceList[i] = NULL;
     }
   }
 
@@ -115,7 +119,7 @@ int evInit() {
       evTempDeviceCount++;
 	}
     evDeviceList[i] = tempDeviceList[evTempDeviceCount];
-	//printf("Copied device %d to %d\n", evTempDeviceCount, i);
+    LOG_TRACE("Copied temp event device %d to event device %d\n", evTempDeviceCount, i);
     evTempDeviceCount++;
   }
 

@@ -34,6 +34,8 @@
 #include <malloc.h>
 #include <errno.h>
 
+#include "logger.h"
+
 EventDevice::EventDevice(char *deviceFileName) {
   char tempName[Device::MAX_NAME_LENGTH-1] = "Unknown";
   int i;
@@ -56,6 +58,8 @@ EventDevice::EventDevice(char *deviceFileName) {
   int namelength=strlen(tempName);
   name = (char *)malloc(namelength+1);
   strncpy(name,tempName, namelength+1);
+
+  LOG_TRACE("Device name for device file %s is %s\n", deviceFileName, name);
 
   uint8_t evtype_bitmask[EV_MAX/8 + 1];
   memset(evtype_bitmask, 0, sizeof(evtype_bitmask));
@@ -213,6 +217,7 @@ int EventDevice::getNumberButtons(){
 }
 
 const char *EventDevice::getName(){ 
+  LOG_TRACE("EventDevice::getName()\n");
   return name;
 }
 
@@ -336,7 +341,7 @@ int EventDevice::poll(){
         // reveiced for things like numlock led change
         break;
       default:
-        fprintf(stderr, "Received event of type 0x%02X from %s, which I wasn't expecting, please report it to jinput@computerbooth.com\n", events[i].type, name);
+        fprintf(stderr, "Received event of type 0x%02X from %s, which I wasn't expecting, please report it to jinput forum at www.javagaming.org\n", events[i].type, name);
     }
   }
   return dataChanged;

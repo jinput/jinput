@@ -131,7 +131,9 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxEnvironmentPlugin_init
 JNIEXPORT jstring JNICALL Java_net_java_games_input_LinuxEnvironmentPlugin_getDeviceName
   (JNIEnv *env, jobject, jint deviceID) {
   
-  LOG_TRACE("Gettign device name for jinput device %d\n", deviceID);
+  LOG_TRACE("Gettign device name for jinput device %d.\n", deviceID);
+  LOG_TRACE("jinput device %d is %d\n", deviceID, jinputDeviceList[deviceID]);
+  LOG_TRACE("Gettign device name for jinput device %d, (%s)\n", deviceID, jinputDeviceList[deviceID]->getName());
   return env->NewStringUTF(jinputDeviceList[deviceID]->getName());
 }
 
@@ -143,7 +145,7 @@ JNIEXPORT jstring JNICALL Java_net_java_games_input_LinuxEnvironmentPlugin_getDe
 JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxEnvironmentPlugin_getNumAbsAxes
   (JNIEnv *env, jobject, jint deviceID) {
 
-  LOG_TRACE("Gettign number of absolute axes for jinput device %d\n", deviceID);
+  LOG_TRACE("Gettign number of absolute axes for jinput device %d (%d)\n", deviceID, jinputDeviceList[deviceID]->getNumberAbsAxes());
   return jinputDeviceList[deviceID]->getNumberAbsAxes();
 }
 
@@ -155,7 +157,7 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxEnvironmentPlugin_getNumAb
 JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxEnvironmentPlugin_getNumRelAxes
   (JNIEnv *env, jobject, jint deviceID) {
   
-  LOG_TRACE("Gettign number of relative axes for jinput device %d\n", deviceID);
+  LOG_TRACE("Gettign number of relative axes for jinput device %d (%d)\n", deviceID, jinputDeviceList[deviceID]->getNumberRelAxes());
   return jinputDeviceList[deviceID]->getNumberRelAxes();
 }
 
@@ -167,7 +169,7 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxEnvironmentPlugin_getNumRe
 JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxEnvironmentPlugin_getNumButtons
   (JNIEnv *, jobject, jint deviceID) {
 
-  LOG_TRACE("Gettign number of buttons for jinput device %d\n", deviceID);
+  LOG_TRACE("Gettign number of buttons for jinput device %d (%d)\n", deviceID, jinputDeviceList[deviceID]->getNumberButtons());
   return jinputDeviceList[deviceID]->getNumberButtons();
 }
 
@@ -224,7 +226,7 @@ JNIEXPORT void JNICALL Java_net_java_games_input_LinuxDevice_getNativeSupportedB
 
   jint *buttonDataElements = env->GetIntArrayElements(buttonData, 0);
   
-  LOG_TRACE("Getting suported buttons for jinput device %d\n", deviceID);
+  LOG_TRACE("Getting supported buttons for jinput device %d\n", deviceID);
   jinputDeviceList[deviceID]->getSupportedButtons(buttonDataElements);
 
   env->ReleaseIntArrayElements(buttonData, buttonDataElements, 0);

@@ -25,11 +25,7 @@
  */
 package net.java.games.input;
 
-import net.java.games.input.AbstractController;
-import net.java.games.input.Axis;
-import net.java.games.input.Controller;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Represents a device that is not a keyboard or mouse.
@@ -189,13 +185,15 @@ public class LinuxDevice extends AbstractController {
      */    
     private void createButtons(int numButtons) {
         
-        int supportedButtons[] = new int[numButtons];
-        getSupportedButtons(supportedButtons);
-        buttons = new LinuxAxis[numButtons];
-        for(int i=0;i<numButtons;i++) {
-            buttons[i] = createButton(i, supportedButtons[i]);
-            //axesArray.add(buttons[i]);
-        }
+	int supportedButtons[] = new int[numButtons];
+	buttons = new LinuxAxis[numButtons];
+	if(numButtons>0) {
+            getSupportedButtons(supportedButtons);
+            for(int i=0;i<numButtons;i++) {
+                buttons[i] = createButton(i, supportedButtons[i]);
+                //axesArray.add(buttons[i]);
+            }
+	}
     }
     
     /** Create the relative axes for the device
@@ -567,6 +565,9 @@ public class LinuxDevice extends AbstractController {
      * @param supportedButtons Array to populate
      */    
     private void getSupportedButtons(int supportedButtons[]) {
+    	if(supportedButtons.length==0) {
+	    return;
+	}
         getNativeSupportedButtons(nativeID, supportedButtons);
     }
 
