@@ -85,6 +85,18 @@ public class LinuxDevice extends AbstractController {
      */    
     private ArrayList axesArray = new ArrayList();
     
+	/** Creates a new instance of LinuxDevice
+	 * @param nativeID The native ID of this device
+	 * @param name The name of this device
+	 * @param numButtons The number of buttons the devices has
+	 * @param numRelAxes The number of raltive axes this device has
+	 * @param numAbsAxes The number of absolute axes this device has
+	 */
+	public LinuxDevice(int nativeID, String name, int numButtons, int numRelAxes, int numAbsAxes, Controller.Type type) {
+		this(nativeID, name, numButtons, numRelAxes, numAbsAxes);
+		typeGuess = type;
+	}
+
     /** Creates a new instance of LinuxDevice
      * @param nativeID The native ID of this device
      * @param name The name of this device
@@ -407,10 +419,6 @@ public class LinuxDevice extends AbstractController {
     private LinuxAxis createButton(int buttonNumber, int nativeButtonType) {
         Axis.Identifier id = LinuxNativeTypesMap.getButtonID(nativeButtonType);
         String name = LinuxNativeTypesMap.getButtonName(nativeButtonType);
-	System.out.println("native button type: " + nativeButtonType + " id: " + id + " name: " + name);
-	if(id!=null) {
-	    System.out.println("id.name: " + id.getName());
-	}
         if(name == null) {
             name = "Uknown button";
             id = new ButtonID(name);
@@ -466,12 +474,6 @@ public class LinuxDevice extends AbstractController {
      */    
     private LinuxHat createHat(String name, int xAxisID, int yAxisID) {
         return new LinuxHat(this, name, xAxisID, yAxisID);
-    }
-
-    public Axis[] getButtons() {
-        Axis[] buttonsCopy = new Axis[buttons.length];
-    	System.arraycopy(buttons, 0, buttonsCopy, 0, buttons.length);
-	return buttonsCopy;
     }
     
     /** Polls axes for data.  Returns false if the controller is no longer valid.
@@ -644,6 +646,8 @@ public class LinuxDevice extends AbstractController {
         public LinuxHat(LinuxDevice controller, String name, int xAxisID, int yAxisID) {
             super(name, Axis.Identifier.POV);
             
+            System.out.println("Creating a Hat for device " + controller.getName() + " named " + name + " from axis " + xAxisID + " and " + yAxisID);
+            
             this.controller = controller;
             this.xAxisID = xAxisID;
             this.yAxisID = yAxisID;
@@ -701,21 +705,21 @@ public class LinuxDevice extends AbstractController {
             
             if((newXAxisValue == 0) && (newYAxisValue == 0)) {
                 value = POV.OFF;
-            } else if((newXAxisValue == 32767) && (newYAxisValue == 32767)) {
+            } else if((newXAxisValue > 0) && (newYAxisValue < 0)) {
                 value = POV.UP_RIGHT;
-            } else if((newXAxisValue == 32767) && (newYAxisValue == 0)) {
+            } else if((newXAxisValue > 0) && (newYAxisValue == 0)) {
                 value = POV.RIGHT;
-            } else if((newXAxisValue == 32767) && (newYAxisValue == -32767)) {
+            } else if((newXAxisValue > 0) && (newYAxisValue > 0)) {
                 value = POV.DOWN_RIGHT;
-            } else if((newXAxisValue == 0) && (newYAxisValue == -32767)) {
+            } else if((newXAxisValue == 0) && (newYAxisValue > 0)) {
                 value = POV.DOWN;
-            } else if((newXAxisValue == -32767) && (newYAxisValue == -32767)) {
+            } else if((newXAxisValue < 0) && (newYAxisValue > 0)) {
                 value = POV.DOWN_LEFT;
-            } else if((newXAxisValue == -32767) && (newYAxisValue == 0)) {
+            } else if((newXAxisValue < 0) && (newYAxisValue == 0)) {
                 value = POV.LEFT;
-            } else if((newXAxisValue == -32767) && (newYAxisValue == 32767)) {
+            } else if((newXAxisValue < 0) && (newYAxisValue < 0)) {
                 value = POV.UP_LEFT;
-            } else if((newXAxisValue == 0) && (newYAxisValue == 32767)) {
+            } else if((newXAxisValue == 0) && (newYAxisValue < 0)) {
                 value = POV.UP;
             }
             
