@@ -181,18 +181,7 @@ public class OSXMouse extends Mouse implements InputController
          */
         public float getPollData()
         {
-/*            // Mouse button
-            byte data = mouseData[index];
-            if ((data & 0x80) != 0)
-            {
-                return 1.0f;
-            }
-            else
-            {
-                return 0.0f;
-            }*/
-
-            return 0.0f;
+            return (float) plugin.pollElement( lpDevice, hidCookie );
         }
 
         /** Returns <code>true</code> if data returned from <code>poll</code>
@@ -237,24 +226,7 @@ public class OSXMouse extends Mouse implements InputController
          */
         public float getPollData()
         {
-/*            int data = ((int) mouseData[index] << 12) |
-                    ((int) mouseData[index + 1] << 8) |
-                    ((int) mouseData[index + 2] << 4) |
-                    ((int) mouseData[index + 3]);
-            if (data == -1)
-            {
-                return -1.0f;
-            }
-            else if (data >= 1)
-            {
-                return 1.0f;
-            }
-            else
-            {
-                return 0.0f;
-            }*/
-
-            return 0.0f;
+            return (float) plugin.pollElement( lpDevice, hidCookie );
         }
 
         /** Returns <code>true</code> if data returned from <code>poll</code>

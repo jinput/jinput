@@ -677,7 +677,7 @@ JNIEXPORT jlong JNICALL Java_net_java_games_input_OSXEnvironmentPlugin_openDevic
         // create a queue and specify how deep they want the input queue to be
         //
         (*queue)->create( queue, 0, (int)queueDepth );
-        printf("InputQueue created %lx with depth %d \n", queue, (int)queueDepth );
+        printf("InputQueue created %lx with depth %d \n", (long) queue, (int)queueDepth );
 
         // todo - add the buttons/keys we want to receive from the queue
 
@@ -729,9 +729,9 @@ JNIEXPORT void JNICALL Java_net_java_games_input_OSXEnvironmentPlugin_closeDevic
 /*
  * Class:     net_java_games_input_OSXEnvironmentPlugin
  * Method:    pollDevice
- * Signature: (J)V
+ * Signature: (J)I
  */
-JNIEXPORT void JNICALL Java_net_java_games_input_OSXEnvironmentPlugin_pollDevice
+JNIEXPORT jint JNICALL Java_net_java_games_input_OSXEnvironmentPlugin_pollDevice
   (JNIEnv * env, jobject obj, jlong lpQueue)
 {
     IOHIDEventStruct event;
@@ -749,9 +749,86 @@ JNIEXPORT void JNICALL Java_net_java_games_input_OSXEnvironmentPlugin_pollDevice
     else
     {
         printf("Queue event[%lx] %ld\n", (unsigned long) event.elementCookie, event.value );
+    }  
+
+    return (jint) event.value;
+}
+
+/*
+ * Class:     net_java_games_input_OSXEnvironmentPlugin
+ * Method:    pollDevice
+ * Signature: (JJ)I
+ */
+JNIEXPORT jint JNICALL Java_net_java_games_input_OSXEnvironmentPlugin_pollElement
+  (JNIEnv * env, jobject obj, jlong lpDevice, jlong hidCookie)
+{
+    IOHIDDeviceInterface    **hidDeviceInterface = NULL;
+    hidDeviceInterface = (IOHIDDeviceInterface **) (long)lpDevice;
+
+    IOHIDElementCookie cookie = (IOHIDElementCookie)(long)hidCookie;
+
+    IOHIDEventStruct event;
+
+    HRESULT result = (*hidDeviceInterface)->getElementValue(hidDeviceInterface, cookie, &event);
+    if ( result )
+    {
+        printf("Queue getNextEvent result: %lx\n", result );
     }
-    
-    
+    else
+    {
+        printf("Queue event[%lx] %ld\n", (unsigned long) event.elementCookie, event.value );
+    }  
+ 
+    return (jint) event.value;
+}
+
+
+/*
+ * Class:     net_java_games_input_OSXEnvironmentPlugin
+ * Method:    registerDeviceElement
+ * Signature: (JJ)V
+ */
+JNIEXPORT void JNICALL Java_net_java_games_input_OSXEnvironmentPlugin_registerDeviceElement
+  (JNIEnv * env, jobject obj, jlong lpQueue, jlong hidCookie)
+{
+    IOHIDQueueInterface  **queue = NULL;
+    queue = (IOHIDQueueInterface **)(long)lpQueue;
+
+    IOHIDElementCookie cookie = (IOHIDElementCookie)(long)hidCookie;
+
+    HRESULT result = (*queue)->addElement(queue, cookie, 0);
+    if ( result )
+    {
+        printf("Added pollElement: %ld\n", (long)cookie );
+    }
+    else
+    {
+        printf("Failed to add poll element: %ld\n", (long)cookie );
+    }
+}
+
+/*
+ * Class:     net_java_games_input_OSXEnvironmentPlugin
+ * Method:    deregisterDeviceElement
+ * Signature: (JJ)V
+ */
+JNIEXPORT void JNICALL Java_net_java_games_input_OSXEnvironmentPlugin_deregisterDeviceElement
+  (JNIEnv * env, jobject obj, jlong lpQueue, jlong hidCookie)
+{
+    IOHIDQueueInterface  **queue = NULL;
+    queue = (IOHIDQueueInterface **)(long)lpQueue;
+
+    IOHIDElementCookie cookie = (IOHIDElementCookie)(long)hidCookie;
+
+    HRESULT result = (*queue)->removeElement(queue, cookie );
+    if ( result )
+    {
+        printf("Removed pollElement: %ld\n", (long)cookie );
+    }
+    else
+    {
+        printf("Failed to remove poll element: %ld\n", (long)cookie );
+    }
 }
 
 

@@ -53,21 +53,7 @@ import net.java.games.util.plugins.Plugin;
 */
 public class OSXEnvironmentPlugin extends ControllerEnvironment implements Plugin
 {
-    static
-    {
-        System.loadLibrary("jinput");
-    }
 
-    public native void hidCreate();
-    public native void hidDispose();
-    public native void enumDevices();
-
-    /**
-    * Opens an input device and returns the address of the input queue for that device
-    */
-    public native long openDevice( long lpDevice, int queueDepth );
-    public native void closeDevice( long lpDevice, long lpInputQueue );
-    public native void pollDevice( long lpInputQueue );
 
     public static final int HID_DEVICE_MOUSE                        = 0x02;
     public static final int HID_DEVICE_JOYSTICK                     = 0x04;
@@ -123,6 +109,34 @@ public class OSXEnvironmentPlugin extends ControllerEnvironment implements Plugi
 	public static final int HID_ELEMENTTYPE_OUTPUT                  = 129;
 	public static final int HID_ELEMENTTYPE_FEATURE                 = 257;
 	public static final int HID_ELEMENTTYPE_COLLECTION              = 513;
+
+
+    static
+    {
+        System.loadLibrary("jinput");
+    }
+
+    public native void hidCreate();
+    public native void hidDispose();
+    public native void enumDevices();
+
+    /**
+    * Opens an input device and returns the address of the input queue for that device
+    */
+    public native long openDevice( long lpDevice, int queueDepth );
+    public native void closeDevice( long lpDevice, long lpQueue );
+
+
+    /**
+     * Polls a device and returns the element top most on the input queue. The elements that
+     * are returned are only those that have had their hidCookies registered with registerDeviceElement.
+     * @param lpQueue
+     * @return
+     */
+    public native int pollDevice( long lpQueue );
+    public native int pollElement( long lpDevice, long hidCookie );
+    public native void registerDeviceElement( long lpQueue, long hidCookie );
+    public native void deregisterDeviceElement( long lpQueue, long hidCookie );
 
 
     private HashMap devices = new HashMap();
