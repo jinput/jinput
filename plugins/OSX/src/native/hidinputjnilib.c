@@ -1,11 +1,41 @@
 /*
- *  hidinputjnilib.c
- *  hidinput
+ * %W% %E%
  *
- *  Created by Gregory Pierce on Wed Jul 23 2003.
- *  Copyright (c) 2003 __MyCompanyName__. All rights reserved. 
- *
+ * Copyright 2002 Sun Microsystems, Inc. All rights reserved.
+ * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
+/*****************************************************************************
+* Copyright (c) 2003 Sun Microsystems, Inc.  All Rights Reserved.
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+* - Redistribution of source code must retain the above copyright notice,
+*   this list of conditions and the following disclaimer.
+*
+* - Redistribution in binary form must reproduce the above copyright notice,
+*   this list of conditions and the following disclaimer in the documentation
+*   and/or other materails provided with the distribution.
+*
+* Neither the name Sun Microsystems, Inc. or the names of the contributors
+* may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* This software is provided "AS IS," without a warranty of any kind.
+* ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING
+* ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
+* NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
+* ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
+* A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS 
+* DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
+* REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
+* INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
+* OF LIABILITY, ARISING OUT OF THE USE OF OUR INABILITY TO USE THIS SOFTWARE,
+* EVEN IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+*
+* You acknowledge that this software is not designed or intended for us in
+* the design, construction, operation or maintenance of any nuclear facility
+*
+*****************************************************************************/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,107 +53,59 @@
 #include <Carbon/Carbon.h>
 #include "JNIWrapper.h"
 
+Boolean init( JNIEnv * env );
 void createMasterPort();
 void disposeMasterPort();
-void enumDevices();
 
 Boolean showDictionaryElement (CFDictionaryRef dictionary, CFStringRef key);
 void showProperty(const void * key, const void * value);
 void displayCFProperty(CFStringRef object, CFTypeRef value);
 void CFObjectShow( CFTypeRef value );
 
-mach_port_t masterPort = NULL;
-io_iterator_t hidObjectIterator;
-int gElementIndex;
+jclass              CLASS_JNIWrapper = NULL;
+jmethodID           MID_AddDevice = NULL;
+mach_port_t         masterPort = NULL;
+io_iterator_t       hidObjectIterator;
+int                 gElementIndex;
+
+Boolean init(JNIEnv* env)
+{
+    CLASS_JNIWrapper = (*env)->FindClass(env,"JNIWrapper");
+    if ( CLASS_JNIWrapper == NULL )
+    {
+        printf("Class JNIWrapper not found... \n");
+        return FALSE;
+    }
+    
+    MID_AddDevice = (*env)->GetMethodID(env, CLASS_JNIWrapper, "addDevice", "(Ljava/util/ArrayList;JILjava/lang/String;)V");
+    if (MID_AddDevice == NULL)
+    {
+        printf("Method addDevice not found... \n");
+        return FALSE;
+    }
+    
+    return TRUE;
+}
 
 void createMasterPort()
 {
     IOReturn ioReturnValue = kIOReturnSuccess;
     
     //Get a Mach port to initiate communication with I/O Kit.
+    //
     ioReturnValue = IOMasterPort(bootstrap_port, &masterPort);
 }
 
 void disposeMasterPort()
 {
     //Free master port if we created one.
+    //
     if (masterPort)
     {
         mach_port_deallocate(mach_task_self(), masterPort);
     }
 }
 
-/**
- * Enumerate the devices attached to this machine.
- **/
-void enumDevices()
-{    
-    CFMutableDictionaryRef hidMatchDictionary = NULL;
-    IOReturn ioReturnValue = kIOReturnSuccess;
-    Boolean noMatchingDevices = false;
-    
-    // Set up a matching dictionary to search the I/O Registry by class
-    // name for all HID class devices
-    //
-    hidMatchDictionary = IOServiceMatching(kIOHIDDeviceKey);
-    
-    // Now search I/O Registry for matching devices.
-    //
-    ioReturnValue = IOServiceGetMatchingServices(masterPort, hidMatchDictionary, &hidObjectIterator);
-    
-    noMatchingDevices = ((ioReturnValue != kIOReturnSuccess) | (hidObjectIterator == NULL));
-    
-    // If search is unsuccessful, print message and hang.
-    //
-    if (noMatchingDevices)
-    {
-        printf("No matching HID class devices found.");
-    }
-    
-    // IOServiceGetMatchingServices consumes a reference to the
-    //   dictionary, so we don't need to release the dictionary ref.
-    //
-    hidMatchDictionary = NULL;    
-    
-    io_object_t             hidDevice = NULL;
-    CFMutableDictionaryRef  properties = 0;
-    char                    path[512];
-    kern_return_t           result;
-
-    
-    while ((hidDevice = IOIteratorNext(hidObjectIterator)))
-    {    
-        result = IORegistryEntryGetPath(hidDevice, kIOServicePlane, path);
-        
-        if ( result == KERN_SUCCESS )
-        {
-            result = IORegistryEntryCreateCFProperties(hidDevice,
-                                                       &properties,
-                                                       kCFAllocatorDefault,
-                                                       kNilOptions);
-        }
-        
-        if ((result == KERN_SUCCESS) && properties)
-        {
-            showDictionaryElement(properties, CFSTR(kIOHIDTransportKey));
-            //MyShowDictionaryElement(properties, CFSTR(kIOHIDVendorKey));
-            showDictionaryElement(properties, CFSTR(kIOHIDProductIDKey));
-            showDictionaryElement(properties, CFSTR(kIOHIDVersionNumberKey));
-            showDictionaryElement(properties, CFSTR(kIOHIDManufacturerKey));
-            showDictionaryElement(properties, CFSTR(kIOHIDProductKey));
-            showDictionaryElement(properties, CFSTR(kIOHIDSerialNumberKey));
-            showDictionaryElement(properties, CFSTR(kIOHIDLocationIDKey));
-            showDictionaryElement(properties, CFSTR(kIOHIDPrimaryUsageKey));
-            showDictionaryElement(properties, CFSTR(kIOHIDPrimaryUsagePageKey));
-            showDictionaryElement(properties, CFSTR(kIOHIDElementKey));
-            
-            //Release the properties dictionary
-            CFRelease(properties);
-        }        
-    }
-    
-    IOObjectRelease(hidObjectIterator);    
-}
 
 Boolean showDictionaryElement (CFDictionaryRef dictionary, CFStringRef key)
 {
@@ -194,7 +176,6 @@ void CFObjectShow( CFTypeRef value )
     {
         showDictionaryElement (value, CFSTR(kIOHIDElementCookieKey));
         showDictionaryElement (value, CFSTR(kIOHIDElementCollectionTypeKey));
-        //showUsageAndPageElement (object);
         showDictionaryElement (value, CFSTR(kIOHIDElementMinKey));
         showDictionaryElement (value, CFSTR(kIOHIDElementMaxKey));
         showDictionaryElement (value, CFSTR(kIOHIDElementScaledMinKey));
@@ -214,6 +195,8 @@ void CFObjectShow( CFTypeRef value )
         showDictionaryElement (value, CFSTR(kIOHIDElementUnitExponentKey));
         showDictionaryElement (value, CFSTR(kIOHIDElementNameKey));
         showDictionaryElement (value, CFSTR(kIOHIDElementKey));    
+        
+        printf("\n\n\n");
     }
     else if (type == CFNumberGetTypeID())
     {
@@ -256,7 +239,10 @@ void CFObjectShow( CFTypeRef value )
 JNIEXPORT void JNICALL Java_JNIWrapper_hidCreate
 (JNIEnv * env, jobject obj)
 {
-    createMasterPort();
+    if ( init( env ) )
+    {
+        createMasterPort();
+    }
 }
 
 /*
@@ -270,15 +256,94 @@ JNIEXPORT void JNICALL Java_JNIWrapper_hidDispose
     disposeMasterPort();
 }
 
+
 /*
  * Class:     JNIWrapper
  * Method:    enumDevices
- * Signature: ()V
+ * Signature: (Ljava/util/ArrayList;)V
  */
 JNIEXPORT void JNICALL Java_JNIWrapper_enumDevices
-(JNIEnv * env, jobject obj)
+(JNIEnv * env, jobject obj , jobject list)
 {
-    enumDevices();
+    CFMutableDictionaryRef hidMatchDictionary = NULL;
+    IOReturn ioReturnValue = kIOReturnSuccess;
+    Boolean noMatchingDevices = false;
+    
+    // Set up a matching dictionary to search the I/O Registry by class
+    // name for all HID class devices
+    //
+    hidMatchDictionary = IOServiceMatching(kIOHIDDeviceKey);
+    
+    // Now search I/O Registry for matching devices.
+    //
+    ioReturnValue = IOServiceGetMatchingServices(masterPort, hidMatchDictionary, &hidObjectIterator);
+    
+    noMatchingDevices = ((ioReturnValue != kIOReturnSuccess) | (hidObjectIterator == NULL));
+    
+    // If search is unsuccessful, print message and hang.
+    //
+    if (noMatchingDevices)
+    {
+        printf("No matching HID class devices found.");
+    }
+    
+    // IOServiceGetMatchingServices consumes a reference to the
+    //   dictionary, so we don't need to release the dictionary ref.
+    //
+    hidMatchDictionary = NULL;    
+    
+    io_object_t             hidDevice = NULL;
+    CFMutableDictionaryRef  properties = 0;
+    char                    path[512];
+    kern_return_t           result;
+    
+    
+    while ((hidDevice = IOIteratorNext(hidObjectIterator)))
+    {    
+        result = IORegistryEntryGetPath(hidDevice, kIOServicePlane, path);
+        
+        if ( result == KERN_SUCCESS )
+        {
+            result = IORegistryEntryCreateCFProperties(hidDevice,
+                                                       &properties,
+                                                       kCFAllocatorDefault,
+                                                       kNilOptions);
+        }
+        
+        if ((result == KERN_SUCCESS) && properties)
+        {
+            //showDictionaryElement(properties, CFSTR(kIOHIDTransportKey));
+            //showDictionaryElement(properties, CFSTR(kIOHIDVendorKey));
+            //printf("ProductID: "); showDictionaryElement(properties, CFSTR(kIOHIDProductIDKey));
+            //printf("VersionNumber: "); showDictionaryElement(properties, CFSTR(kIOHIDVersionNumberKey));
+            //printf("Manufacturer: "); showDictionaryElement(properties, CFSTR(kIOHIDManufacturerKey));
+            printf("ProductKey: "); showDictionaryElement(properties, CFSTR(kIOHIDProductKey));
+            //printf("SerialNumber: "); showDictionaryElement(properties, CFSTR(kIOHIDSerialNumberKey));
+            //showDictionaryElement(properties, CFSTR(kIOHIDLocationIDKey));
+            //printf("PrimaryUsage: "); showDictionaryElement(properties, CFSTR(kIOHIDPrimaryUsageKey));
+            //showDictionaryElement(properties, CFSTR(kIOHIDPrimaryUsagePageKey));
+            //showDictionaryElement(properties, CFSTR(kIOHIDElementKey));
+            
+            //printf("\n\n");
+            CFTypeRef object = CFDictionaryGetValue (properties, CFSTR(kIOHIDProductKey));
+
+            
+            
+            (*env)->CallVoidMethod(env, obj, MID_AddDevice, 
+                                   list, 
+                                   (jlong)(long)hidDevice, 
+                                   kIOHIDPrimaryUsageKey, 
+                                   (*env)->NewStringUTF( env, CFStringGetCStringPtr ( object, CFStringGetSystemEncoding ()) ) );
+            
+            
+            //Release the properties dictionary
+            CFRelease(properties);
+        }        
+    }
+
+    IOObjectRelease(hidObjectIterator);    
 }
+
+
 
 
