@@ -46,7 +46,7 @@
     </target>
 
     <target description="Clean all build products." name="clean">
-        <delete>
+        <delete failonerror="no">
             <fileset dir="classes">
                 <include name="**/*.class"/>
             </fileset>
