@@ -74,10 +74,11 @@ jmethodID           MID_AddController = NULL;
 jmethodID           MID_AddControllerElement = NULL;
 mach_port_t         masterPort = NULL;
 io_iterator_t       hidObjectIterator;
-int                 gElementIndex;
 
 long                elementCookie;
-long                collectionType;
+long                elementType;
+long                usage;
+long                usagePage;
 long                min;
 long                max;
 long                scaledMin;
@@ -91,6 +92,7 @@ jboolean            isNonLinear;
 JNIEnv *            lpEnv;
 jlong               lpDevice;
 jobject             lpObj;
+jboolean            completeElement = JNI_FALSE;
 
 
 
@@ -141,16 +143,10 @@ void CFObjectShow( CFTypeRef value )
     CFTypeID type = CFGetTypeID(value);
     if (type == CFArrayGetTypeID())
     {
-
-        printf("Array Type\n");
         CFRange range = {0, CFArrayGetCount (value)};
-        CFIndex savedIndex = gElementIndex;
         
         //Show an element array containing one or more element dictionaries
-        gElementIndex = 0; //Reset index to zero
         CFArrayApplyFunction (value, range, showCFArray, 0);
-        
-        gElementIndex = savedIndex;        
     }
     else if (type == CFBooleanGetTypeID())
     {
@@ -239,7 +235,7 @@ Boolean init(JNIEnv* env)
         return FALSE;
     }
 
-    MID_AddControllerElement = (*env)->GetMethodID(env, CLASS_JNIWrapper, "addControllerElement", "(JJILjava/lang/String;IIIIIZZZZZ)V");
+    MID_AddControllerElement = (*env)->GetMethodID(env, CLASS_JNIWrapper, "addControllerElement", "(JJIIIIIIIIZZZZZ)V");
     if (MID_AddControllerElement == NULL)
     {
         printf("Method addControllerElement not found... \n");
@@ -362,19 +358,14 @@ void CFObjectSend( CFTypeRef value )
     CFTypeID type = CFGetTypeID(value);
     if (type == CFArrayGetTypeID())
     {
-        printf("Array Type\n");
         CFRange range = {0, CFArrayGetCount (value)};
-        CFIndex savedIndex = gElementIndex;
         
         //Show an element array containing one or more element dictionaries
-        gElementIndex = 0; //Reset index to zero
         CFArrayApplyFunction (value, range, sendCFArray, 0);
-        
-        gElementIndex = savedIndex;        
     }
     else if (type == CFDictionaryGetTypeID())
     {
-        printf("Sending Map\n");
+//        printf("Sending Map\n");
 
 
         CFTypeRef val = CFDictionaryGetValue( value, CFSTR(kIOHIDElementCookieKey) );
@@ -384,91 +375,128 @@ void CFObjectSend( CFTypeRef value )
             printf("ElementCookie - 0x%lx (%ld) \n", elementCookie, elementCookie);
         }
 
-        val = CFDictionaryGetValue( value, CFSTR(kIOHIDElementCollectionTypeKey) );
+        val = CFDictionaryGetValue( value, CFSTR(kIOHIDElementTypeKey) );
         if ( val )
         {
-            CFNumberGetValue ( val, kCFNumberLongType, &collectionType);
-            printf("collection Type - 0x%lx (%ld) \n", collectionType, collectionType);
+            CFNumberGetValue ( val, kCFNumberLongType, &elementType);
+            printf("element Type - 0x%lx (%ld) \n", elementType, elementType);
+        }
+
+        val = CFDictionaryGetValue( value, CFSTR(kIOHIDElementUsageKey) );
+        if ( val )
+        {
+            CFNumberGetValue ( val, kCFNumberLongType, &usage);
+            printf("usage - 0x%lx (%ld) \n", usage, usage);
+        }
+
+        val = CFDictionaryGetValue( value, CFSTR(kIOHIDElementUsagePageKey) );
+        if ( val )
+        {
+            CFNumberGetValue ( val, kCFNumberLongType, &usagePage);
+            printf("usage page- 0x%lx (%ld) \n", usagePage, usagePage);
         }
 
         val = CFDictionaryGetValue( value, CFSTR(kIOHIDElementMinKey) );
         if ( val )
         {
             CFNumberGetValue ( val, kCFNumberLongType, &min);
-            printf("min - 0x%lx (%ld) \n", min, min);
+            //printf("min - 0x%lx (%ld) \n", min, min);
         }
 
         val = CFDictionaryGetValue( value, CFSTR(kIOHIDElementMaxKey) );
         if ( val )
         {
             CFNumberGetValue ( val, kCFNumberLongType, &max);
-            printf("max - 0x%lx (%ld) \n", max, max);
+            //printf("max - 0x%lx (%ld) \n", max, max);
         }
         
         val = CFDictionaryGetValue( value, CFSTR(kIOHIDElementScaledMinKey) );
         if ( val ) 
         {
             CFNumberGetValue ( val, kCFNumberLongType, &scaledMin);
-            printf("scaledMin - 0x%lx (%ld) \n", scaledMin, scaledMin);
+            //printf("scaledMin - 0x%lx (%ld) \n", scaledMin, scaledMin);
         }
 
         val = CFDictionaryGetValue( value, CFSTR(kIOHIDElementScaledMaxKey) );
         if ( val )
         {
             CFNumberGetValue ( val, kCFNumberLongType, &scaledMax);
-            printf("scaledMax - 0x%lx (%ld) \n", scaledMax, scaledMax);
+            //printf("scaledMax - 0x%lx (%ld) \n", scaledMax, scaledMax);
         }
 
         val = CFDictionaryGetValue( value, CFSTR(kIOHIDElementSizeKey) );
         if ( val )
         {
             CFNumberGetValue ( val, kCFNumberLongType, &size);
-            printf("Size - 0x%lx (%ld) \n", size, size);
+            //printf("Size - 0x%lx (%ld) \n", size, size);
         }
 
-        isRelative = JNI_FALSE;
-        isWrapping = JNI_FALSE;
-        isNonLinear = JNI_FALSE;
-        jboolean hasPreferredState = JNI_FALSE;
-        jboolean hasNullState = JNI_FALSE;
+        jboolean isRelative = JNI_FALSE;
+        val = CFDictionaryGetValue( value, CFSTR(kIOHIDElementIsRelativeKey) );
+        if ( val )
+        {
+            isRelative = (CFBooleanGetValue(val) ? JNI_TRUE : JNI_FALSE);
+        }
 
-        (*lpEnv)->CallVoidMethod(lpEnv, lpObj, MID_AddControllerElement, 
-                                lpDevice,
+
+        jboolean isWrapping = JNI_FALSE;
+        val = CFDictionaryGetValue( value, CFSTR(kIOHIDElementIsWrappingKey) );
+        if ( val )
+        {
+            isWrapping = (CFBooleanGetValue(val) ? JNI_TRUE : JNI_FALSE);
+        }
+
+
+        jboolean isNonLinear = JNI_FALSE;
+        val = CFDictionaryGetValue( value, CFSTR(kIOHIDElementIsNonLinearKey) );
+        if ( val )
+        {
+            isNonLinear = (CFBooleanGetValue(val) ? JNI_TRUE : JNI_FALSE);
+        }
+
+
+        jboolean hasPreferredState = JNI_FALSE;
+#ifdef kIOHIDElementHasPreferredStateKey
+        val = CFDictionaryGetValue( value, CFSTR(kIOHIDElementHasPreferredStateKey) );
+        if ( val )
+        {
+            hasPreferredState = (CFBooleanGetValue(val) ? JNI_TRUE : JNI_FALSE);
+        }
+#else
+        val = CFDictionaryGetValue( value, CFSTR(kIOHIDElementHasPreferedStateKey) );
+        if ( val )
+        {
+            hasPreferredState = (CFBooleanGetValue(val) ? JNI_TRUE : JNI_FALSE);
+        }
+#endif
+        
+        jboolean hasNullState = JNI_FALSE;
+        val = CFDictionaryGetValue( value, CFSTR(kIOHIDElementHasNullStateKey) );
+        if ( val )
+        {
+            hasNullState = (CFBooleanGetValue(val) ? JNI_TRUE : JNI_FALSE);
+        }
+
+        (*lpEnv)->CallVoidMethod(lpEnv, lpObj, MID_AddControllerElement,
+                                (jlong)(long)lpDevice,
                                 (jlong)(long)elementCookie,
-                                (jlong)(long)collectionType,
-                                (jlong)(long)min,
-                                (jlong)(long)max,
-                                (jlong)(long)scaledMin,
-                                (jlong)(long)scaledMax,
-                                (jlong)(long)size,
+                                (jint)(long)elementType,
+                                (jint)(long)usage,
+                                (jint)(long)usagePage,
+                                (jint)(long)min,
+                                (jint)(long)max,
+                                (jint)(long)scaledMin,
+                                (jint)(long)scaledMax,
+                                (jint)(long)size,
                                 (jboolean)isRelative,
                                 (jboolean)isWrapping,
                                 (jboolean)isNonLinear,
                                 (jboolean)hasPreferredState,
                                 (jboolean)hasNullState);
-        printf("End of element definition \n");
 
-/*
-
-        jboolean isRelative;
-        isRelative = (CFBooleanGetValue(value) ? JNI_TRUE : JNI_FALSE);
+//      printf("End of element definition \n");
 
 
-        jboolean isWrapping;
-        isWrapping = (CFBooleanGetValue(value) ? JNI_TRUE : JNI_FALSE);
-        
-        jboolean isNonLinear;
-        isNonLinear = (CFBooleanGetValue(value) ? JNI_TRUE : JNI_FALSE);
-*/
-#ifdef kIOHIDElementHasPreferredStateKey
-        //showDictionaryElement (value, CFSTR(kIOHIDElementHasPreferredStateKey));
-#else
-        //showDictionaryElement (value, CFSTR(kIOHIDElementHasPreferedStateKey));
-#endif
-        //showDictionaryElement (value, CFSTR(kIOHIDElementHasNullStateKey));
-        showDictionaryElement (value, CFSTR(kIOHIDElementVendorSpecificKey));
-
-        //showDictionaryElement (value, CFSTR(kIOHIDElementKey));
         
         CFTypeRef object = CFDictionaryGetValue (value, CFSTR(kIOHIDElementKey));
         if (object)
@@ -487,16 +515,8 @@ void addControllerElements( CFMutableDictionaryRef dictionary, CFStringRef key )
     CFTypeRef value = CFDictionaryGetValue (dictionary, key);
     if (value)
     {
-        CFTypeID type = CFGetTypeID(value);
-
         CFRange range = {0, CFArrayGetCount (value)};
-        CFIndex savedIndex = gElementIndex;
-        
-        //Show an element array containing one or more element dictionaries
-        gElementIndex = 0; //Reset index to zero
         CFArrayApplyFunction (value, range, sendCFArray, 0);
-        
-        gElementIndex = savedIndex;
     }
 }
 

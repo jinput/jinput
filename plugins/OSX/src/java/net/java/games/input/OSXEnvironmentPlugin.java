@@ -69,10 +69,60 @@ public class OSXEnvironmentPlugin extends ControllerEnvironment implements Plugi
     public native void closeDevice( long lpDevice, long lpInputQueue );
     public native void pollDevice( long lpInputQueue );
 
-    private static final int HID_DEVICE_MOUSE = 0x02;
-    private static final int HID_DEVICE_JOYSTICK = 0x04;
-    private static final int HID_DEVICE_GAMEPAD = 0x05;
-    private static final int HID_DEVICE_KEYBOARD = 0x06;
+    public static final int HID_DEVICE_MOUSE                        = 0x02;
+    public static final int HID_DEVICE_JOYSTICK                     = 0x04;
+    public static final int HID_DEVICE_GAMEPAD                      = 0x05;
+    public static final int HID_DEVICE_KEYBOARD                     = 0x06;
+
+
+    public static final int HID_USAGE_POINTER                       = 0x01;
+    public static final int HID_USAGE_XAXIS                         = 0x30;
+    public static final int HID_USAGE_YAXIS                         = 0x31;
+    public static final int HID_USAGE_ZAXIS                         = 0x32;
+    public static final int HID_USAGE_XAXIS_ROTATION                = 0x33;
+    public static final int HID_USAGE_YAXIS_ROTATION                = 0x34;
+    public static final int HID_USAGE_ZAXIS_ROTATION                = 0x35;
+    public static final int HID_USAGE_SLIDER                        = 0x36;
+    public static final int HID_USAGE_DIAL                          = 0x37;
+    public static final int HID_USAGE_WHEEL                         = 0x38;
+    public static final int HID_USAGE_HAT                           = 0x39;
+    public static final int HID_USAGE_DPAD_UP                       = 0x90;
+    public static final int HID_USAGE_DPAD_DOWN                     = 0x91;
+    public static final int HID_USAGE_DPAD_LEFT                     = 0x92;
+    public static final int HID_USAGE_DPAD_RIGHT                    = 0x93;
+
+    public static final int HID_USAGEPAGE_UNDEFINED	                = 0x00;
+    public static final int HID_USAGEPAGE_GENERICDESKTOP	        = 0x01;
+    public static final int HID_USAGEPAGE_SIMULATION                = 0x02;
+    public static final int HID_USAGEPAGE_VR	                    = 0x03;
+    public static final int HID_USAGEPAGE_SPORT	                    = 0x04;
+    public static final int HID_USAGEPAGE_GAME	                    = 0x05;
+    public static final int HID_USAGEPAGE_KEYBOARD	                = 0x07;	/* USB Device Class Definition for Human Interface Devices (HID). Note: the usage type for all key codes is Selector (Sel). */
+    public static final int HID_USAGEPAGE_LED	                    = 0x08;
+    public static final int HID_USAGEPAGE_BUTTON	                = 0x09;
+    public static final int HID_USAGEPAGE_ORDINAL	                = 0x0A;
+    public static final int HID_USAGEPAGE_TELEPHONY	                = 0x0B;
+    public static final int HID_USAGEPAGE_CONSUMER	                = 0x0C;
+    public static final int HID_USAGEPAGE_DIGITIZER	                = 0x0D;
+    public static final int HID_USAGEPAGE_PID	                    = 0x0F;	/* USB Physical Interface Device definitions for force feedback and related devices. */
+    public static final int HID_USAGEPAGE_UNICODE	                = 0x10;
+    public static final int HID_USAGEPAGE_ALPHANUMERIC_DISPLAY      = 0x14;
+    public static final int HID_USAGEPAGE_POWERDEVICE               = 0x84; 				/* Power Device Page */
+    public static final int HID_USAGEPAGE_BATTERY_SYSTEM            = 0x85; 				/* Battery System Page */
+    public static final int HID_USAGEPAGE_BARCODE_SCANNER           = 0x8C;	/* (Point of Sale) USB Device Class Definition for Bar Code Scanner Devices */
+    public static final int HID_USAGEPAGE_SCALE                     = 0x8D;	/* (Point of Sale) USB Device Class Definition for Scale Devices */
+    public static final int HID_USAGEPAGE_CAMERA_CONTROL            = 0x90;	/* USB Device Class Definition for Image Class Devices */
+    public static final int HID_USAGEPAGE_ARCADE                    = 0x91;	/* OAAF Definitions for arcade and coinop related Devices */
+    public static final int HID_USAGEPAGE_VENDOR_DEFINED_START      = 0xFF00;
+
+
+	public static final int HID_ELEMENTTYPE_INPUT_MISC              = 1;
+	public static final int HID_ELEMENTTYPE_INPUT_BUTTON            = 2;
+	public static final int HID_ELEMENTTYPE_INPUT_AXIS              = 3;
+	public static final int HID_ELEMENTTYPE_INPUT_SCANCODES         = 4;
+	public static final int HID_ELEMENTTYPE_OUTPUT                  = 129;
+	public static final int HID_ELEMENTTYPE_FEATURE                 = 257;
+	public static final int HID_ELEMENTTYPE_COLLECTION              = 513;
 
 
     private HashMap devices = new HashMap();
@@ -88,66 +138,90 @@ public class OSXEnvironmentPlugin extends ControllerEnvironment implements Plugi
         return (Controller[])devices.values().toArray();
     }
 
-    public InputController createController( long lpDevice,
-                                             String productName,
-                                             int usage )
+    public Controller createController( long lpDevice, String productName, int usage )
     {
 
         switch (usage)
         {
             case (HID_DEVICE_MOUSE):
-                System.out.println("Found mouse [" + productName + "]");
-                return new OSXMouse( this, lpDevice, productName, usage );
+                System.out.println("Found mouse [" + productName + "] device address [" + lpDevice + "]");
+                return new OSXMouse( this, lpDevice, productName );
             case (HID_DEVICE_JOYSTICK):
-                System.out.println("Found joystick [" + productName + "]");
-                return new OSXJoystick( this, lpDevice, productName, usage );
+                System.out.println("Found joystick [" + productName + "] device address [" + lpDevice + "]");
+                return new OSXJoystick( this, lpDevice, productName );
             case (HID_DEVICE_GAMEPAD):
-                System.out.println("Found gamepad [" + productName + "]");
-                return new OSXGamepad( this, lpDevice, productName, usage );
+                System.out.println("Found gamepad [" + productName + "] device address [" + lpDevice + "]");
+                return new OSXGamepad( this, lpDevice, productName );
             case (HID_DEVICE_KEYBOARD):
-                System.out.println("Found keyboard [" + productName + "]");
-                return new OSXKeyboard( this, lpDevice, productName, usage );
+                System.out.println("Found keyboard [" + productName + "] device address [" + lpDevice + "]");
+                return new OSXKeyboard( this, lpDevice, productName );
+
             default:
-                System.out.println("Found device of unknown type [" + usage + "],[" + productName + "] - ignoring");
+                System.out.println("Found device of unknown or unsupported type. Usage[" + usage + "], ProductName[" + productName + "] - ignoring");
                 return null;
         }
     }
 
-    private void addController( long lpDevice,
-                                 String productName,
-                                 int usage )
+    /**
+     * Add a controller to the device list
+     * @param lpDevice
+     * @param productName
+     * @param usage
+     */
+    private void addController( long lpDevice, String productName, int usage )
     {
-        InputController controller = null;
+        Controller controller = null;
 
         controller = createController( lpDevice, productName, usage );
 
         if ( controller != null )
         {
-            devices.put( productName, controller );
+            devices.put( new Long(lpDevice), controller );
         }
     }
 
+    /**
+     * Adds an InputControllerElement to a device. This method is invoked from native code.
+     * @param lpDevice
+     * @param elementCookie
+     * @param elementType
+     * @param usage
+     * @param usagePage
+     * @param rawMin
+     * @param rawMax
+     * @param scaledMin
+     * @param scaledMax
+     * @param dataBitSize
+     * @param isRelative
+     * @param isWrapping
+     * @param isNonLinear
+     * @param hasPreferredState
+     * @param hasNullState
+     */
     private void addControllerElement(  long lpDevice,
-                                        long hidCookie,
+                                        long elementCookie,
                                         int elementType,
-                                        String elementName,
+                                        int usage,
+                                        int usagePage,
                                         int rawMin,
                                         int rawMax,
-                                          int scaledMin,
-                                          int scaledMax,
-                                          int dataBitSize,
-                                          boolean relative,
-                                          boolean wrapping,
-                                          boolean nonLinear,
-                                          boolean hasPreferredState,
-                                          boolean hasNullState)
+                                        int scaledMin,
+                                        int scaledMax,
+                                        int dataBitSize,
+                                        boolean isRelative,
+                                        boolean isWrapping,
+                                        boolean isNonLinear,
+                                        boolean hasPreferredState,
+                                        boolean hasNullState)
     {
-
-        System.out.println("Added new element [" + hidCookie + "] to controller [" + lpDevice + "]");
-        InputControllerElement element = new InputControllerElement( hidCookie, elementType, elementName,
+        InputControllerElement element = new InputControllerElement( elementCookie, usagePage, usage, usagePage,
                                                                      rawMin, rawMax, scaledMin, scaledMax,
-                                                                     dataBitSize, relative, wrapping, nonLinear,
+                                                                     dataBitSize, isRelative, isWrapping, isNonLinear,
                                                                      hasPreferredState, hasNullState );
+
+
+        InputController inputController = (InputController)devices.get( new Long( lpDevice) );
+        inputController.addControllerElement( element );
     }
 
 

@@ -11,7 +11,8 @@ public class InputControllerElement
 {
     private long                hidCookie;
     private int                 elementType;
-    private String              elementName;
+    private int                 usagePage;
+    private int                 usage;
 
     private int                 rawMin;
     private int                 rawMax;
@@ -30,22 +31,23 @@ public class InputControllerElement
     {
     }
 
-    public InputControllerElement(long hidCookie, int elementType, String elementName,
+    public InputControllerElement(long hidCookie, int elementType, int usage, int usagePage,
                                   int rawMin, int rawMax, int scaledMin, int scaledMax,
-                                  int dataBitSize, boolean relative, boolean wrapping,
-                                  boolean nonLinear, boolean hasPreferredState, boolean hasNullState )
+                                  int dataBitSize, boolean isRelative, boolean isWrapping,
+                                  boolean isNonLinear, boolean hasPreferredState, boolean hasNullState )
     {
         this.hidCookie = hidCookie;
         this.elementType = elementType;
-        this.elementName = elementName;
+        this.usage = usage;
+        this.usagePage = usagePage;
         this.rawMin = rawMin;
         this.rawMax = rawMax;
         this.scaledMin = scaledMin;
         this.scaledMax = scaledMax;
         this.dataBitSize = dataBitSize;
-        isRelative = relative;
-        isWrapping = wrapping;
-        isNonLinear = nonLinear;
+        this.isRelative = isRelative;
+        this.isWrapping = isWrapping;
+        this.isNonLinear = isNonLinear;
         this.hasPreferredState = hasPreferredState;
         this.hasNullState = hasNullState;
     }
@@ -70,14 +72,24 @@ public class InputControllerElement
         this.elementType = elementType;
     }
 
-    public String getElementName()
+    public int getUsagePage()
     {
-        return elementName;
+        return usagePage;
     }
 
-    public void setElementName(String elementName)
+    public void setUsagePage(int usagePage)
     {
-        this.elementName = elementName;
+        this.usagePage = usagePage;
+    }
+
+    public int getUsage()
+    {
+        return usage;
+    }
+
+    public void setUsage(int usage)
+    {
+        this.usage = usage;
     }
 
     public int getRawMin()

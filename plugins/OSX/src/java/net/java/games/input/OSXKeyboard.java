@@ -7,20 +7,89 @@ package net.java.games.input;
  * Time: 3:57:58 PM
  * To change this template use Options | File Templates.
  */
-public class OSXKeyboard extends InputController
+public class OSXKeyboard extends StandardKeyboard implements InputController
 {
-    public OSXKeyboard( OSXEnvironmentPlugin plugin )
+    private OSXEnvironmentPlugin            plugin;
+    private long                            lpDevice;
+    private long                            lpQueue;
+
+    public OSXKeyboard( OSXEnvironmentPlugin plugin, long lpDevice, String productName )
     {
-        super( plugin );
+        super( productName );
+
+        this.plugin = plugin;
+        this.lpDevice = lpDevice;
+
+        openDevice();
     }
 
-    public OSXKeyboard( OSXEnvironmentPlugin plugin, long lpDevice, String productName, int usage )
+    public void openDevice()
     {
-        super( plugin, lpDevice, productName, usage );
+        this.lpQueue = plugin.openDevice( this.lpDevice, 32 );
     }
 
-    public OSXKeyboard( OSXEnvironmentPlugin plugin, long lpDevice, String transportKey, int vendorID, int productID, int version, String manufacturer, String productName, String serialNumber, int usbLocationID, int usagePage, int usage)
+    public void closeDevice()
     {
-        super( plugin, lpDevice, transportKey, vendorID, productID, version, manufacturer, productName, serialNumber, usbLocationID, usagePage, usage );
+        plugin.closeDevice( this.lpDevice, this.lpQueue );
+    }
+
+    public void pollDevice()
+    {
+        plugin.pollDevice( this.lpQueue );
+    }
+
+    public void addControllerElement(InputControllerElement element)
+    {
+/*
+        switch ( element.getElementType() )
+        {
+            case OSXEnvironmentPlugin.HID_ELEMENTTYPE_INPUT_MISC:
+                System.out.println("*Adding misc component");
+                break;
+
+            case OSXEnvironmentPlugin.HID_ELEMENTTYPE_INPUT_BUTTON:
+                System.out.println("*Adding button");
+                break;
+
+            case OSXEnvironmentPlugin.HID_ELEMENTTYPE_INPUT_AXIS:
+                System.out.println("*Adding axis");
+                break;
+
+            case OSXEnvironmentPlugin.HID_ELEMENTTYPE_INPUT_SCANCODES:
+                System.out.println("*Adding scancode");
+                break;
+
+            case OSXEnvironmentPlugin.HID_ELEMENTTYPE_OUTPUT:
+                System.out.println("*Adding forcefeedback");
+                break;
+
+            case OSXEnvironmentPlugin.HID_ELEMENTTYPE_FEATURE:
+
+                System.out.println("*Adding feature");
+                break;
+
+            case OSXEnvironmentPlugin.HID_ELEMENTTYPE_COLLECTION:
+                System.out.println("*Adding collection");
+                break;
+
+            default:
+                break;
+        }
+
+        System.out.println("Cookie [" + element.getHidCookie() + "]");
+*/
+    }
+
+    public boolean poll()
+    {
+        plugin.pollDevice( lpQueue );
+
+
+        return true;
+    }
+
+    protected boolean isKeyPressed(Keyboard.Key key)
+    {
+        return false;
     }
 }

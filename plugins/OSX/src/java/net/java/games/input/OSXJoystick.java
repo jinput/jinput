@@ -7,20 +7,77 @@ package net.java.games.input;
  * Time: 3:58:45 PM
  * To change this template use Options | File Templates.
  */
-public class OSXJoystick extends InputController
+public class OSXJoystick extends AbstractController implements InputController
 {
-    public OSXJoystick( OSXEnvironmentPlugin plugin )
+    private OSXEnvironmentPlugin            plugin;
+    private long                            lpDevice;
+    private long                            lpQueue;
+
+    public OSXJoystick( OSXEnvironmentPlugin plugin, long lpDevice, String productName )
     {
-        super( plugin );
+        super( productName );
+
+        this.plugin = plugin;
+        this.lpDevice = lpDevice;
+
+        openDevice();
     }
 
-    public OSXJoystick( OSXEnvironmentPlugin plugin, long lpDevice, String productName, int usage )
+    public boolean poll()
     {
-        super( plugin, lpDevice, productName, usage );
+        plugin.pollDevice( lpQueue );
+
+        return true;
     }
 
-    public OSXJoystick( OSXEnvironmentPlugin plugin, long lpDevice, String transportKey, int vendorID, int productID, int version, String manufacturer, String productName, String serialNumber, int usbLocationID, int usagePage, int usage)
+    public void openDevice()
     {
-        super( plugin, lpDevice, transportKey, vendorID, productID, version, manufacturer, productName, serialNumber, usbLocationID, usagePage, usage );
+        this.lpQueue = plugin.openDevice( this.lpDevice, 32 );
+    }
+
+    public void closeDevice()
+    {
+        plugin.closeDevice( this.lpDevice, this.lpQueue );
+    }
+
+    public void pollDevice()
+    {
+        plugin.pollDevice( this.lpQueue );
+    }
+
+    public void addControllerElement(InputControllerElement element)
+    {
+        switch ( element.getElementType() )
+        {
+            case OSXEnvironmentPlugin.HID_ELEMENTTYPE_INPUT_MISC:
+                System.out.println("*Adding misc component");
+                break;
+
+            case OSXEnvironmentPlugin.HID_ELEMENTTYPE_INPUT_BUTTON:
+                System.out.println("*Adding button");
+                break;
+
+            case OSXEnvironmentPlugin.HID_ELEMENTTYPE_INPUT_AXIS:
+                System.out.println("*Adding axis");
+                break;
+
+            case OSXEnvironmentPlugin.HID_ELEMENTTYPE_INPUT_SCANCODES:
+                System.out.println("*Adding scancode");
+                break;
+
+            case OSXEnvironmentPlugin.HID_ELEMENTTYPE_OUTPUT:
+                System.out.println("*Adding forcefeedback");
+                break;
+
+            case OSXEnvironmentPlugin.HID_ELEMENTTYPE_FEATURE:
+
+                System.out.println("*Adding feature");
+                break;
+
+            case OSXEnvironmentPlugin.HID_ELEMENTTYPE_COLLECTION:
+                System.out.println("*Adding collection");
+                break;
+
+        }
     }
 }
