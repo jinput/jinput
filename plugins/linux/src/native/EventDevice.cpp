@@ -40,9 +40,11 @@ EventDevice::EventDevice(char *deviceFileName) {
 
   fd = open(deviceFileName, O_RDWR | O_NONBLOCK);
   if(fd<0) {
-    char errorMessage[512];
+    /*char errorMessage[512];
     sprintf(errorMessage, "Error opening device %s\n", deviceFileName);
-    perror(errorMessage);
+    perror(errorMessage);*/
+	inited = 0;
+	return;
   }
 
   if(ioctl(fd, EVIOCGNAME(sizeof(tempName)), tempName) < 0) {
@@ -189,6 +191,10 @@ EventDevice::EventDevice(char *deviceFileName) {
   }
 
   inited = 1;
+}
+
+int EventDevice::isValidDevice() {
+  return inited; 
 }
 
 int EventDevice::getNumberRelAxes(){

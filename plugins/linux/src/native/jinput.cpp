@@ -52,11 +52,11 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxEnvironmentPlugin_init
   (JNIEnv *, jobject) {
 
   if(evInit()!=0) {
-    fprintf(stderr, "Failed to init native jinput\n");
+    fprintf(stderr, "Failed to init native event interface\n");
     return -1;
   }
   if(jsInit()!=0) {
-    fprintf(stderr, "Failed to init native jinput\n");
+    fprintf(stderr, "Failed to init native joystick interface\n");
     return -1;
   }
 

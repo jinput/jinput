@@ -102,10 +102,17 @@ int jsInit() {
     }
   }
 
+  int highDeviceCountNumber = i;
+  int jsTempDeviceCount = 0;
   // Now we know for certain which devices are open, we can take notes
   jsDeviceList = (Device **)malloc(jsNumDevices * sizeof(Device *));
   for(i=0;i<jsNumDevices;i++) {
-    jsDeviceList[i] = tempDeviceList[i];
+    while(tempDeviceList[jsTempDeviceCount] == NULL) {
+      jsTempDeviceCount++;
+	}
+    jsDeviceList[i] = tempDeviceList[jsTempDeviceCount];
+	//printf("Copied joystick %d to %d\n", jsTempDeviceCount, i);
+    jsTempDeviceCount++;
   }
 
   jsInited=1;

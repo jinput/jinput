@@ -79,6 +79,7 @@ class EventDevice : public Device {
     int getAbsAxisMinimum(int axisNumber);
     int getAbsAxisMaximum(int axisNumber);
     int getAbsAxisFuzz(int axisNumber);
+    int isValidDevice();
 
 };
 

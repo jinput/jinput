@@ -95,16 +95,24 @@ int evInit() {
  
   evNumDevices = 0;
   for(i=0;i<numDeviceFiles;i++) {
-    tempDeviceList[i] = new EventDevice(deviceFileNames[i]);
-    if(tempDeviceList[i]->getBusType()!=-1) {
+    EventDevice *tempDevice = new EventDevice(deviceFileNames[i]);
+    if(tempDevice->isValidDevice()==1) {
+      tempDeviceList[i] = tempDevice;
       evNumDevices++;
     }
   }
 
+  int highDeviceCountNumber = i;
+  int evTempDeviceCount = 0;
   // Now we know for certain which devices are open, we can take notes
   evDeviceList = (Device **)malloc(evNumDevices * sizeof(Device *));
   for(i=0;i<evNumDevices;i++) {
-    evDeviceList[i] = tempDeviceList[i];
+    while(tempDeviceList[evTempDeviceCount] == NULL) {
+      evTempDeviceCount++;
+	}
+    evDeviceList[i] = tempDeviceList[evTempDeviceCount];
+	//printf("Copied device %d to %d\n", evTempDeviceCount, i);
+    evTempDeviceCount++;
   }
 
   evInited=1;
