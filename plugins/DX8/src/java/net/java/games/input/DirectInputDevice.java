@@ -86,6 +86,9 @@ class DirectInputDevice extends AbstractController {
      * @see DirectInputAxis for a breakdown of this structure
      */
    int[] data = new int[32];
+   
+   /** Array list of rumblers */
+   private ArrayList rumblerList = new ArrayList();
     
     /**
      * Private constructor
@@ -150,6 +153,16 @@ class DirectInputDevice extends AbstractController {
         list.add(DirectInputAxis.createAxis(this, id, didft, name));
     }
     
+    /**
+     * Callback called by enumDevice to add a rumbler
+     *
+     * @param effect the natie effect id
+     * @param axisID The axis ID
+     */
+    private void addRumbler(long effect, Axis.Identifier axisID) {        
+        rumblerList.add(new DirectInputRumbler(this, effect, axisID));
+    }
+    
     /** Polls axes for data.  Returns false if the controller is no longer valid.
      * Polling reflects the current state of the device when polled, and is
      * unbuffered.
@@ -172,6 +185,13 @@ class DirectInputDevice extends AbstractController {
     public int getPortNumber() {
         // REMIND : We may be able to parse this from the name string
         return 0;
+    }
+    
+    /**
+     * Returns the rumbler array
+     */
+    public Rumbler[] getRumblers() {
+        return (Rumbler[]) rumblerList.toArray(new Rumbler[0]);
     }
     
     /**

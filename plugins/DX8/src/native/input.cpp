@@ -29,6 +29,7 @@ jclass CLASS_DirectInputKeyboard = NULL;
 jclass CLASS_DirectInputMouse = NULL;
 jmethodID MID_AddDevice = NULL;
 jmethodID MID_AddAxis = NULL;
+jmethodID MID_AddRumbler = NULL;
 jmethodID MID_RenameKey = NULL;
 jmethodID MID_RenameAxis = NULL;
 jfieldID FID_X = NULL;
@@ -261,6 +262,11 @@ BOOL InitIDs(JNIEnv* env) {
     if (MID_AddAxis == NULL) {
         return FALSE;
     }
+    MID_AddRumbler = env->GetMethodID(CLASS_DirectInputDevice, "addRumbler",
+        "(JLnet/java/games/input/Axis$Identifier;)V");
+    if (MID_AddRumbler == NULL) {
+        return FALSE;
+    }
     CLASS_DirectInputKeyboard =
         env->FindClass("net/java/games/input/DirectInputKeyboard");
     if (CLASS_DirectInputKeyboard == NULL) {
@@ -359,6 +365,19 @@ Java_net_java_games_input_DirectInputEnvironmentPlugin_directInputCreate
     return (jlong)(long)lpDirectInput;
 }
 
+BOOL CALLBACK CountFFAxesCallback( const DIDEVICEOBJECTINSTANCE* pdidoi,
+                                VOID* pContext )
+{
+    DWORD* pdwNumForceFeedbackAxis = (DWORD*) pContext;
+
+    if( (pdidoi->dwFlags & DIDOI_FFACTUATOR) != 0 ) {
+		//printf("%s is ff enabled\n", pdidoi->tszName);
+        (*pdwNumForceFeedbackAxis)++;
+	}
+
+    return DIENUM_CONTINUE;
+}
+
 /*
  * Enumeration callback for devices
  *
@@ -396,6 +415,14 @@ BOOL CALLBACK EnumDeviceCallback(LPCDIDEVICEINSTANCE lpddi, LPVOID pvRef)
     }
     */
 
+	//find out if this device is ff enabled
+	DWORD numForceFeedbackAxis = 0;
+	res = lpDevice->EnumObjects( CountFFAxesCallback, 
+                                              (VOID*)&numForceFeedbackAxis, DIDFT_AXIS );
+	if(FAILED(res)) {
+		PrintDIError("getting ff devices", res);
+	}
+
        // Set the data format
     LPCDIDATAFORMAT lpDataFormat;
     DWORD category = GET_DIDEVICE_TYPE(lpddi->dwDevType)&0xFF;
@@ -417,10 +444,10 @@ BOOL CALLBACK EnumDeviceCallback(LPCDIDEVICEINSTANCE lpddi, LPVOID pvRef)
             if (FAILED(
                 res = lpDevice->SetProperty(DIPROP_BUFFERSIZE, 
                         &dipropdw.diph))) {
-            PrintDIError("SetProperty", res);
-            lpDevice->Release();
-            return DIENUM_STOP;
-        }
+				PrintDIError("SetProperty", res);
+				lpDevice->Release();
+				return DIENUM_STOP;
+			}
         break;
         case DI8DEVTYPE_JOYSTICK:
         default:
@@ -435,13 +462,23 @@ BOOL CALLBACK EnumDeviceCallback(LPCDIDEVICEINSTANCE lpddi, LPVOID pvRef)
         return DIENUM_STOP;
     }
 
-    // Set the cooperative level
-    if(FAILED(res = lpDevice->SetCooperativeLevel(hwndDummy,
-        DISCL_NONEXCLUSIVE | DISCL_BACKGROUND))){
-        PrintDIError("SetCooperativeLevel", res);
-        lpDevice->Release();
-        return DIENUM_STOP;
-    }
+	if(numForceFeedbackAxis>0) {
+		// Set the cooperative level
+		if(FAILED(res = lpDevice->SetCooperativeLevel(hwndDummy,
+			DISCL_EXCLUSIVE | DISCL_BACKGROUND))){
+			PrintDIError("SetCooperativeLevel", res);
+			lpDevice->Release();
+			return DIENUM_STOP;
+		}
+	} else {
+		// Set the cooperative level
+		if(FAILED(res = lpDevice->SetCooperativeLevel(hwndDummy,
+			DISCL_NONEXCLUSIVE | DISCL_BACKGROUND))){
+			PrintDIError("SetCooperativeLevel", res);
+			lpDevice->Release();
+			return DIENUM_STOP;
+		}
+	}
 
     // get polling
     DIDEVCAPS didc;
@@ -567,6 +604,8 @@ BOOL CALLBACK EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi,
     jobject obj = pData->obj;
     jobject list = pData->list;
     jobject identifier = NULL;
+	char ffEnabled = 0;
+
     HRESULT res;
     if (lpddoi->guidType == GUID_XAxis) {
         identifier = env->GetStaticObjectField(CLASS_AxisIdentifier, FID_X);
@@ -606,13 +645,109 @@ BOOL CALLBACK EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi,
               res=lpDevice->SetProperty(DIPROP_RANGE,&joy_axis_range.diph))){
             PrintDIError("SetProperty", res);
         }
+
+		//check if this axis is ff enabled
+		if( (lpddoi->dwFlags & DIDOI_FFACTUATOR) != 0 ) {
+			//printf("%s is ff enabled\n", lpddoi->tszName);
+			ffEnabled = 1;
+		}
     }
-    jint didft = (jint)lpddoi->dwType;
+
+	jint didft = (jint)lpddoi->dwType;
     jstring name = env->NewStringUTF(lpddoi->tszName);
     // Add the axis into our list
     env->CallVoidMethod(obj, MID_AddAxis, list, identifier, didft,
         name);
+
+	if(ffEnabled) {
+		// This application needs only one effect: Applying raw forces.
+		DWORD           rgdwAxes;
+		LONG            rglDirection = 0;
+		if(lpddoi->guidType == GUID_XAxis) {
+			//printf("effect is in the x axis\n");
+			rgdwAxes = DIJOFS_X;
+		} else if(lpddoi->guidType == GUID_YAxis) {
+			//printf("effect is in the y axis\n");
+			rgdwAxes = DIJOFS_Y;
+		}
+
+		DICONSTANTFORCE cf              = { DI_FFNOMINALMAX };
+
+		DIEFFECT eff;
+		ZeroMemory( &eff, sizeof(eff) );
+		eff.dwSize                  = sizeof(DIEFFECT);
+		eff.dwFlags                 = DIEFF_CARTESIAN | DIEFF_OBJECTOFFSETS;
+		eff.dwDuration              = INFINITE;
+		eff.dwSamplePeriod          = 0;
+		eff.dwGain                  = DI_FFNOMINALMAX;
+		eff.dwTriggerButton         = DIEB_NOTRIGGER;
+		eff.dwTriggerRepeatInterval = 0;
+		eff.cAxes                   = 1;
+		eff.rgdwAxes                = &rgdwAxes;
+		eff.rglDirection            = &rglDirection;
+		eff.lpEnvelope              = 0;
+		eff.cbTypeSpecificParams    = sizeof(DICONSTANTFORCE);
+		eff.lpvTypeSpecificParams   = &cf;
+		eff.dwStartDelay            = 0;
+		cf.lMagnitude = (long) (0);
+
+		LPDIRECTINPUTEFFECT g_pEffect;
+		// Create the prepared effect
+		if( FAILED( res = lpDevice->CreateEffect( GUID_ConstantForce, 
+												  &eff, &g_pEffect, NULL ) ) )
+		{
+			PrintDIError("Create effect", res);
+			return res;
+		}
+
+		env->CallVoidMethod(obj, MID_AddRumbler, (jlong)(long)g_pEffect, identifier);
+	}
     return DIENUM_CONTINUE;
+}
+
+/*
+ * Class:    org_java_games_input_DirectInputRumbler
+ * Method    setRumble
+ * Signature (JF)Z
+ */
+extern "C" JNIEXPORT jboolean JNICALL
+Java_net_java_games_input_DirectInputRumbler_setRumble
+    (JNIEnv *env, jobject obj, jlong effect, jfloat value)
+{
+	LPDIRECTINPUTEFFECT g_pEffect = (LPDIRECTINPUTEFFECT)(long)effect;
+	float force = (float)value;
+	HRESULT hr;
+
+	DICONSTANTFORCE cf              = { DI_FFNOMINALMAX };
+
+	DIEFFECT eff;
+	ZeroMemory( &eff, sizeof(eff) );
+	eff.dwSize                  = sizeof(DIEFFECT);
+	eff.cbTypeSpecificParams    = sizeof(DICONSTANTFORCE);
+	eff.lpvTypeSpecificParams   = &cf;
+	cf.lMagnitude = (long) (((float)DI_FFNOMINALMAX)*force);
+
+	//printf("force: %f, mag: %d\n", force, cf.lMagnitude);
+
+	hr = g_pEffect->SetParameters( &eff, DIEP_TYPESPECIFICPARAMS );
+	if (FAILED(hr)) {
+		PrintDIError("set parameters", hr);
+		return hr;
+	}
+
+	if(force!=0) {
+		hr = g_pEffect->Start(1,0);
+		if (FAILED(hr)) {
+			PrintDIError("start", hr);
+		    return hr;
+		}
+	} else {
+		hr = g_pEffect->Stop();
+		if (FAILED(hr)) {
+			PrintDIError("stop", hr);
+		    return hr;
+		}
+	}
 }
 
 /*
