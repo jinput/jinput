@@ -10,7 +10,7 @@
     <target depends="init" name="compile">
         <javac debug="true" deprecation="true" destdir="classes" source="1.4" srcdir="src/java">
             <classpath>
-                <pathelement location="../../coreAPI/bin/controller.jar"/>
+                <pathelement location="../../coreAPI/bin/jinput.jar"/>
                 <pathelement location="../../coreAPI/lib/jutils.jar"/>
             </classpath>
         </javac>
@@ -39,7 +39,7 @@
                 <pathelement location="src/java"/>
             </sourcepath>
              <classpath>
-                <pathelement location="../../coreAPI/bin/controller.jar"/>
+                <pathelement location="../../coreAPI/bin/jinput.jar"/>
                 <pathelement location="../../coreAPI/lib/jutils.jar"/>
             </classpath>
         </javadoc>
@@ -62,7 +62,7 @@
         <javah>
             <classpath>
                 <pathelement path="src/java"/>
-                <pathelement location="controller.jar"/>
+                <pathelement location="jinput.jar"/>
             </classpath>
             <class name="net.java.games.input.LinuxDevice"/>
             <class name="net.java.games.input.LinuxEnvironmentPlugin"/>

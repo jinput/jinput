@@ -29,7 +29,7 @@
         <javac srcdir="src/java" destdir="classes" debug="true" deprecation="true" source="1.4">
             <!-- To add something to the classpath: -->
             <classpath>
-                <pathelement location="lib/controller.jar"/>
+                <pathelement location="lib/jinput.jar"/>
                 <pathelement location="lib/jutils.jar"/>
             </classpath>
             <!-- To exclude some files: -->
@@ -81,7 +81,7 @@
                 <pathelement location="src/java"/>
             </sourcepath>
              <classpath>
-                <pathelement location="lib/controller.jar"/>
+                <pathelement location="lib/jinput.jar"/>
                 <pathelement location="lib/jutils.jar"/>
             </classpath>
         </javadoc>

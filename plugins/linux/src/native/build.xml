@@ -32,7 +32,7 @@
         <javah>
             <classpath>
                 <pathelement path="."/>
-                <pathelement location="controller.jar"/>
+                <pathelement location="jinput.jar"/>
             </classpath>
             <class name="net.java.games.input.LinuxDevice"/>
             <class name="net.java.games.input.LinuxEnvironmentPlugin"/>
