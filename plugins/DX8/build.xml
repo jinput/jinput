@@ -38,7 +38,7 @@
             <exclude name="com/foo/somepackage/"/>
             -->
         </javac>
-        <exec dir="." executable="g++" os="Windows 2000, Windows XP">
+        <exec dir="." executable="g++" os="Windows 2000, Windows XP, Windows 98">
             <arg line=" -D_STRICT_ANSI -D_JNI_IMPLEMENTATION_"/> 
             <arg line=" -I'${java.home}/../include' -I'${java.home}/../include/win32' -Ic:/dx9/include"/>
             <arg line=" -o bin/dxinput.dll src/native/input.cpp  -Wl,--export-all-symbols"/>
