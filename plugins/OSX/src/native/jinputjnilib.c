@@ -70,7 +70,7 @@ void CFObjectShow( CFTypeRef value );
 void CFObjectSend( CFTypeRef value );
 
 jclass              CLASS_JNIWrapper = NULL;
-jmethodID           MID_AddDevice = NULL;
+jmethodID           MID_AddController = NULL;
 jmethodID           MID_AddControllerElement = NULL;
 mach_port_t         masterPort = NULL;
 io_iterator_t       hidObjectIterator;
@@ -90,6 +90,7 @@ jboolean            isNonLinear;
 
 JNIEnv *            lpEnv;
 jlong               lpDevice;
+jobject             lpObj;
 
 
 
@@ -231,15 +232,15 @@ Boolean init(JNIEnv* env)
         return FALSE;
     }
     
-    MID_AddDevice = (*env)->GetMethodID(env, CLASS_JNIWrapper, "addController", "(JLjava/lang/String;I)V");
-    if (MID_AddDevice == NULL)
+    MID_AddController = (*env)->GetMethodID(env, CLASS_JNIWrapper, "addController", "(JLjava/lang/String;I)V");
+    if (MID_AddController == NULL)
     {
         printf("Method addController not found... \n");
         return FALSE;
     }
 
     MID_AddControllerElement = (*env)->GetMethodID(env, CLASS_JNIWrapper, "addControllerElement", "(JJILjava/lang/String;IIIIIZZZZZ)V");
-    if (MID_AddDeviceElement == NULL)
+    if (MID_AddControllerElement == NULL)
     {
         printf("Method addControllerElement not found... \n");
         return FALSE;
@@ -278,10 +279,10 @@ void createHIDDevice( io_object_t hidDevice, IOHIDDeviceInterface ***hidDeviceIn
     ioReturnValue = IOObjectGetClass(hidDevice, className);
     if ( ioReturnValue != kIOReturnSuccess )
     {
-        printf("Failed to getIOObject class name.");
+        printf("Failed to get IOObject class name.");
     }
     
-    printf("Found device type %s\n", className);
+    printf("Found device type [%s]\n", className);
     
     ioReturnValue = IOCreatePlugInInterfaceForService(hidDevice,
                                                       kIOHIDDeviceUserClientTypeID,
@@ -293,6 +294,7 @@ void createHIDDevice( io_object_t hidDevice, IOHIDDeviceInterface ***hidDeviceIn
     {
         //Call a method of the intermediate plug-in to create the device 
         //interface
+        //
         plugInResult = (*plugInInterface)->QueryInterface(plugInInterface,
                                                           CFUUIDGetUUIDBytes(kIOHIDDeviceInterfaceID),
                                                           (LPVOID) hidDeviceInterface);
@@ -345,26 +347,6 @@ IOReturn closeDevice(IOHIDDeviceInterface ***hidDeviceInterface)
     return ioReturnValue;
 }
 
-void addControllerElements( CFMutableDictionaryRef dictionary, CFStringRef key )
-{
-    printf("Adding controller elements\n");
-
-    CFTypeRef value = CFDictionaryGetValue (dictionary, key);
-    if (value)
-    {
-        CFTypeID type = CFGetTypeID(value);
-
-        CFRange range = {0, CFArrayGetCount (value)};
-        CFIndex savedIndex = gElementIndex;
-        
-        //Show an element array containing one or more element dictionaries
-        gElementIndex = 0; //Reset index to zero
-        CFArrayApplyFunction (value, range, sendCFArray, 0);
-        
-        gElementIndex = savedIndex;
-    }
-}
-
 static void sendCFArray(const void * value, void * parameter)
 {
     if (CFGetTypeID (value) != CFDictionaryGetTypeID ())
@@ -380,7 +362,6 @@ void CFObjectSend( CFTypeRef value )
     CFTypeID type = CFGetTypeID(value);
     if (type == CFArrayGetTypeID())
     {
-
         printf("Array Type\n");
         CFRange range = {0, CFArrayGetCount (value)};
         CFIndex savedIndex = gElementIndex;
@@ -445,7 +426,26 @@ void CFObjectSend( CFTypeRef value )
             printf("Size - 0x%lx (%ld) \n", size, size);
         }
 
+        isRelative = JNI_FALSE;
+        isWrapping = JNI_FALSE;
+        isNonLinear = JNI_FALSE;
+        jboolean hasPreferredState = JNI_FALSE;
+        jboolean hasNullState = JNI_FALSE;
 
+        (*lpEnv)->CallVoidMethod(lpEnv, lpObj, MID_AddControllerElement, 
+                                lpDevice,
+                                (jlong)(long)elementCookie,
+                                (jlong)(long)collectionType,
+                                (jlong)(long)min,
+                                (jlong)(long)max,
+                                (jlong)(long)scaledMin,
+                                (jlong)(long)scaledMax,
+                                (jlong)(long)size,
+                                (jboolean)isRelative,
+                                (jboolean)isWrapping,
+                                (jboolean)isNonLinear,
+                                (jboolean)hasPreferredState,
+                                (jboolean)hasNullState);
         printf("End of element definition \n");
 
 /*
@@ -466,11 +466,9 @@ void CFObjectSend( CFTypeRef value )
         //showDictionaryElement (value, CFSTR(kIOHIDElementHasPreferedStateKey));
 #endif
         //showDictionaryElement (value, CFSTR(kIOHIDElementHasNullStateKey));
-        //showDictionaryElement (value, CFSTR(kIOHIDElementVendorSpecificKey));
+        showDictionaryElement (value, CFSTR(kIOHIDElementVendorSpecificKey));
 
         //showDictionaryElement (value, CFSTR(kIOHIDElementKey));
-
-        //showDictionaryElement (value, CFSTR(kIOHIDElementKey));    
         
         CFTypeRef object = CFDictionaryGetValue (value, CFSTR(kIOHIDElementKey));
         if (object)
@@ -479,6 +477,26 @@ void CFObjectSend( CFTypeRef value )
         }
 
         printf("\n\n\n");
+    }
+}
+
+void addControllerElements( CFMutableDictionaryRef dictionary, CFStringRef key )
+{
+    printf("Adding controller elements\n");
+
+    CFTypeRef value = CFDictionaryGetValue (dictionary, key);
+    if (value)
+    {
+        CFTypeID type = CFGetTypeID(value);
+
+        CFRange range = {0, CFArrayGetCount (value)};
+        CFIndex savedIndex = gElementIndex;
+        
+        //Show an element array containing one or more element dictionaries
+        gElementIndex = 0; //Reset index to zero
+        CFArrayApplyFunction (value, range, sendCFArray, 0);
+        
+        gElementIndex = savedIndex;
     }
 }
 
@@ -515,6 +533,10 @@ JNIEXPORT void JNICALL Java_net_java_games_input_OSXEnvironmentPlugin_hidDispose
 JNIEXPORT void JNICALL Java_net_java_games_input_OSXEnvironmentPlugin_enumDevices
   (JNIEnv * env, jobject obj)
 {
+
+    lpEnv = env;
+    lpObj = obj;
+
     CFMutableDictionaryRef hidMatchDictionary = NULL;
     IOReturn ioReturnValue = kIOReturnSuccess;
     Boolean noMatchingDevices = false;
@@ -593,7 +615,7 @@ JNIEXPORT void JNICALL Java_net_java_games_input_OSXEnvironmentPlugin_enumDevice
             
             if ( hidDeviceInterface != NULL )
             {                
-                (*env)->CallVoidMethod(env, obj, MID_AddDevice, 
+                (*env)->CallVoidMethod(env, obj, MID_AddController, 
                                        (jlong)(long)hidDeviceInterface,
                                        (*env)->NewStringUTF( env, CFStringGetCStringPtr( productName, CFStringGetSystemEncoding()) ),
                                        (jint)usage );

@@ -142,6 +142,8 @@ public class OSXEnvironmentPlugin extends ControllerEnvironment implements Plugi
                                           boolean hasPreferredState,
                                           boolean hasNullState)
     {
+
+        System.out.println("Added new element [" + hidCookie + "] to controller [" + lpDevice + "]");
         InputControllerElement element = new InputControllerElement( hidCookie, elementType, elementName,
                                                                      rawMin, rawMax, scaledMin, scaledMax,
                                                                      dataBitSize, relative, wrapping, nonLinear,
