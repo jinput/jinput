@@ -113,7 +113,7 @@ public class LinuxEnvironmentPlugin extends ControllerEnvironment implements Plu
         if((mouseCharacteristic > keyboardCharacteristic) && (mouseCharacteristic > joystickCharacteristic)) {
             device = new LinuxMouse(new LinuxDevice(deviceNumber, name, numButtons, numRelAxes, numAbsAxes));
         } else if((keyboardCharacteristic > mouseCharacteristic) && (keyboardCharacteristic > joystickCharacteristic)) {
-            device = new LinuxKeyboard(new LinuxDevice(deviceNumber, name, numButtons, numRelAxes, numAbsAxes));
+            device = new LinuxDevice(deviceNumber, name, numButtons, numRelAxes, numAbsAxes, Controller.Type.KEYBOARD);
         } else if((joystickCharacteristic > keyboardCharacteristic) && (joystickCharacteristic > mouseCharacteristic)) {
             device = new LinuxDevice(deviceNumber, name, numButtons, numRelAxes, numAbsAxes);
         } else {
