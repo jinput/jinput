@@ -1,13 +1,13 @@
 Project: net.java.games.*
 Purpose: Open source game libraries
-Authors: 
+Authors:
     -- input API design:
-            Michael Martak, Sun Microsystems	
+            Michael Martak, Sun Microsystems
             Thomas Daniel, Sony Computer Entertainment
-    -- input API original author: 
+    -- input API original author:
             Michael Martak,Sun Microsystems
-    -- input API original release author:  
-            Jeff Kesselman, Game Technology Architect, 
+    -- input API original release author:
+            Jeff Kesselman, Game Technology Architect,
             Advanced Software Technologies Group,
             Sun Microsystems.
     -- this file updated on 06/06/2003 by Jeff Kesselman
@@ -24,16 +24,22 @@ Note: This build depends on there being a jutils.jar in the lib directories
 of both the coreAPI and the plug-ins.  If you install the JGI Jutils project
 at the same root as this project and build it first it will put jars in the
 right places.
- 
+
 This project has been built in the follwing environment.
  -- Win32 (Win 2000 in the case of our machine)
  -- Sun J2SDK 1.4 (available at java.sun.com)
- -- MinGW 2.0.0  plus the following updates: (all available at www.mingw.org) 
+ -- MinGW 2.0.0  plus the following updates: (all available at www.mingw.org)
      -- binutils 2.13.90
      -- w32api-2.2
      -- mingw-runtime-2.4
-     -- "Peter Puck's" directx8 binding 
+     -- "Peter Puck's" directx8 binding
 	(http://www.urebelscum.speedhost.com/download.html, file: dx8libs.zip
+	(Copy all of his *.a library files into the MingW "lib" directory)
+     -- The DirectX9 SDK available at the microsoft directX site.
+	(http://www.microsoft.com/directx)
+	The Win32 plug-in build.xml file expects this to be installed in
+	c:\dx9.  You can install it elsewher but then you will have to modify
+	the reference in that build.xml ant script.
  -- ANT 1.4.1 (available at apache.org)
 
 
@@ -49,7 +55,7 @@ Build instructions:
 To clean: ant clean
 To build:  ant all (or just ant)
 To build docs: ant javadoc
-To test: 
+To test:
 	First cd to coreAPI.  There are currently 2 tests there.
 		Textest: A simple discovery test that dumps
 			the data about the discovered controllers to stdout
@@ -61,7 +67,7 @@ To test:
 			 place on the screen so yo uwill have to move them to
 			 see them all.)
 			To run: ant readtest
-    
+
 Release Info:
     Initial Release:  This release contains an implementation of the input
         API designed by Mike Martak of Sun and Thomas (?) of Sony CEA for
