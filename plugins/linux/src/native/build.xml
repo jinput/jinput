@@ -23,7 +23,7 @@
     </target>
     
     <target name="createNativeDefinitions.java" depends="init">
-        <exec dir="." executable="./getDefinitions" os="linux" output="../java/net/java/games/input/NativeDefinitions.java">
+        <exec dir="." executable="./getDefinitions" os="Linux" output="../java/net/java/games/input/NativeDefinitions.java">
             <arg line="/usr/include/linux/input.h"/>
         </exec>
     </target>
