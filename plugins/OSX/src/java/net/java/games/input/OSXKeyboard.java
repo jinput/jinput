@@ -168,27 +168,38 @@ public class OSXKeyboard extends StandardKeyboard implements InputController
 
     public void addControllerElement(InputControllerElement element)
     {
-        //System.out.println("Adding keyboard elements usage page[" + element.getUsagePage() + "] usage [" + element.getUsage() + "] type [" + element.getElementType() + "]" );
+        System.out.println("Adding keyboard elements usage page[" + element.getUsagePage() + "] usage [" + element.getUsage() + "] type [" + element.getElementType() + "]" );
 
         switch( element.getUsagePage() )
         {
             case OSXEnvironmentPlugin.HID_USAGEPAGE_KEYBOARD:
 
-                //System.out.println("Found keyboard element");
+                System.out.println("Found keyboard element");
 
                 if ( element.getElementType() == OSXEnvironmentPlugin.HID_ELEMENTTYPE_INPUT_BUTTON )
                 {
-                    System.out.println("Adding key [" + element.getUsage() + "]");
-
                     // register this key with the queue system as all buttons are retrieved from the
                     // input controllers queue
                     //
-                    plugin.registerDeviceElement( lpQueue, element.getHidCookie() );
+					System.out.println("Registering button-key (usage page [" + element.getUsagePage() + "], usage[" + element.getUsage() + "],  elementType [" + element.getElementType() + "], hidCookie [" + element.getHidCookie() + "])");
 
-                    //TODO: Optimize this - put the usages in another array the same size as the crosstable so the hidCookies
-                    // can be retrieved directly without the Long creation
-                    keys.put( new Long( element.getUsage()), element );
+					
+					if ( keys.get( new Long( element.getUsage() )) == null )
+					{
+						plugin.registerDeviceElement( lpQueue, element.getHidCookie() );
+					
+						keys.put( new Long( element.getUsage() ), element );
+						System.out.println("Registered key [" + element.getHidCookie() + "]");
+					}
+					else
+					{
+						System.out.println("Ignoring key [" + element.getHidCookie() + "] already enumerated.");
+					}
                 }
+				else
+				{
+					System.out.println("Ignoring non-button-key (usage page [" + element.getUsagePage() + "], usage[" + element.getUsage() + "],  elementType [" + element.getElementType() + "], hidCookie [" + element.getHidCookie() + "])");				
+				}
                 break;
 
             default:
