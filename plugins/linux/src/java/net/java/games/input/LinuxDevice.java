@@ -459,10 +459,10 @@ public class LinuxDevice extends AbstractController {
         String name = LinuxNativeTypesMap.getRelAxisName(nativeType);
         
         // This is done to be like the windows version
-        return new LinuxAxis(this, axisNumber, name, id, 0, true, true, 0, 0);
+        // return new LinuxAxis(this, axisNumber, name, id, 0, true, true, 0, 0);
         
-        //this is what should be done
-        // return new LinuxAxis(this, axisNumber, name, id, 0, true, false, true);
+        // this is what should be done
+        return new LinuxAxis(this, axisNumber, name, id, 0, true, false, true);
     }
     
     /** Create an absolute axis for the device
