@@ -58,10 +58,6 @@
          <copy file="dist/jinput.jar" todir="../plugins/DX8/lib" />
     </target>
 
-    <target name="all" depends="init,jar" description="Build everything.">
-        <echo message="Build complete. JInput distribution located in /dist"/>
-    </target>
-
     <target name="texttest" depends="init,all" description="Try running it.">
         <java classname="net.java.games.input.test.ControllerTextTest" 
               fork="true" failonerror="true" dir="src/tests">
