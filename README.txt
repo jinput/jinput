@@ -20,6 +20,11 @@ client game programming APIs.
 
 Build Requirements:
 
+Note: This build depends on there being a jutils.jar in the lib directories
+of both the coreAPI and the plug-ins.  If you install the JGI Jutils project
+at the same root as this project and build it first it will put jars in the
+right places.
+ 
 This project has been built in the follwing environment.
  -- Win32 (Win 2000 in the case of our machine)
  -- Sun J2SDK 1.4 (available at java.sun.com)
