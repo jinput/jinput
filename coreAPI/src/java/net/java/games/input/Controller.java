@@ -249,5 +249,16 @@ public interface Controller {
          * Serial port
          */
         public static final PortType SERIAL = new PortType("Serial port");
+        
+        /**
+         * i8042
+         */
+        public static final PortType I8042 = new PortType("i8042 (PS/2)");
+        
+        /**
+         * Parallel port
+         */
+        public static final PortType PARALLEL = new PortType("Parallel port");
+        
     } // class Controller.PortType
 } // interface Controller
