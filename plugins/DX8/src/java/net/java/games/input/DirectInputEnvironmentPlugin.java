@@ -162,7 +162,10 @@ public class DirectInputEnvironmentPlugin extends ControllerEnvironment
             c = DirectInputKeyboard.createKeyboard(lpDevice, subtype,
                 productName, instanceName);
         } else {
-            assert category == DI8DEVTYPE_JOYSTICK;
+            // commented out the assert as we have already got devices that are
+            // gamepad type, but wr are still going to create them as
+            // DirectInputDevices
+            //assert category == DI8DEVTYPE_JOYSTICK;
             c = DirectInputDevice.createDevice(lpDevice, subtype, productName,
                 instanceName,polled);
         }

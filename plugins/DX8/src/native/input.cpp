@@ -534,7 +534,9 @@ Java_net_java_games_input_DirectInputDevice_pollNative
     // Poll the device
     if (pollme == JNI_TRUE) {
         res = lpDevice->Poll();
-        if (res != DI_OK) {
+		// Changed this to FAILED(res) instead of res != DI_OK as it was
+		// causeing problems and the dx samples check for FAILED too.
+        if ( FAILED(res) ) {
             PrintDIError("Poll", res);
             return JNI_FALSE;
         }
