@@ -572,11 +572,12 @@ JNIEXPORT void JNICALL Java_net_java_games_input_OSXEnvironmentPlugin_enumDevice
     
     noMatchingDevices = ((ioReturnValue != kIOReturnSuccess) | (hidObjectIterator == NULL));
     
-    // If search is unsuccessful, print message and hang.
+    // If search is unsuccessful, print message .
     //
     if (noMatchingDevices)
     {
         printf("No matching HID class devices found.");
+		return;
     }
     
     // IOServiceGetMatchingServices consumes a reference to the
@@ -678,9 +679,6 @@ JNIEXPORT jlong JNICALL Java_net_java_games_input_OSXEnvironmentPlugin_openDevic
         //
         (*queue)->create( queue, 0, (int)queueDepth );
         printf("InputQueue created %lx with depth %d \n", (long) queue, (int)queueDepth );
-
-        // todo - add the buttons/keys we want to receive from the queue
-
 
         // start the input queue
         //
