@@ -47,7 +47,12 @@ public class JNIWrapper
 
     public native void hidCreate();
     public native void hidDispose();
-    public native void enumDevices( ArrayList list );     
+    public native void enumDevices( ArrayList list );  
+    
+    private static final int HID_DEVICE_MOUSE = 0x02;
+    private static final int HID_DEVICE_JOYSTICK = 0x04;
+    private static final int HID_DEVICE_GAMEPAD = 0x05;
+    private static final int HID_DEVICE_KEYBOARD = 0x06;
     
     
     private ArrayList            devices = new ArrayList();
@@ -70,7 +75,26 @@ public class JNIWrapper
     
     private void addDevice( ArrayList list, long lpDevice, int type, String productName )
     {
-        System.out.println("Found device [" + productName + "] of type [" + type + "]");
+        //System.out.println("Found device [" + productName + "] of type [" + type + "]");
+        switch (type)
+        {
+            case (HID_DEVICE_MOUSE):
+                System.out.println("Found mouse [" + productName + "]");
+                break;
+            case (HID_DEVICE_JOYSTICK):
+                System.out.println("Found joystick [" + productName + "]");
+                break;
+            case (HID_DEVICE_GAMEPAD):
+                System.out.println("Found gamepad [" + productName + "]");
+                break;
+            case (HID_DEVICE_KEYBOARD):
+                System.out.println("Found keyboard [" + productName + "]");
+                break;
+            default:
+                System.out.println("Found device of unknown type [" + type + "] - ignoring");
+        }
+        
+        System.out.println("Address of device [" + lpDevice + "]");
     }
     
     public static void main (String args[]) 

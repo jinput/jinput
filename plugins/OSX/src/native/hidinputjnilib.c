@@ -56,6 +56,7 @@
 Boolean init( JNIEnv * env );
 void createMasterPort();
 void disposeMasterPort();
+void createHIDDevice(io_object_t hidDevice, IOHIDDeviceInterface ***hidDeviceInterface);
 
 Boolean showDictionaryElement (CFDictionaryRef dictionary, CFStringRef key);
 void showProperty(const void * key, const void * value);
@@ -106,6 +107,71 @@ void disposeMasterPort()
     }
 }
 
+void createHIDDevice( io_object_t hidDevice, IOHIDDeviceInterface ***hidDeviceInterface )
+{
+    io_name_t               className;
+    IOCFPlugInInterface     **plugInInterface = NULL;
+    HRESULT                 plugInResult = S_OK;
+    SInt32                  score = 0;
+    IOReturn                ioReturnValue = kIOReturnSuccess;
+    
+    ioReturnValue = IOObjectGetClass(hidDevice, className);
+    if ( ioReturnValue != kIOReturnSuccess )
+    {
+        printf("Failed to get class name.");
+    }
+    
+    printf("Found device type %s\n", className);
+    
+    ioReturnValue = IOCreatePlugInInterfaceForService(hidDevice,
+                                                      kIOHIDDeviceUserClientTypeID,
+                                                      kIOCFPlugInInterfaceID,
+                                                      &plugInInterface,
+                                                      &score);
+    
+    if (ioReturnValue == kIOReturnSuccess)
+    {
+        //Call a method of the intermediate plug-in to create the device 
+        //interface
+        plugInResult = (*plugInInterface)->QueryInterface(plugInInterface,
+                                                          CFUUIDGetUUIDBytes(kIOHIDDeviceInterfaceID),
+                                                          (LPVOID) hidDeviceInterface);
+        if ( plugInResult != S_OK )
+        {
+            printf("Couldn't create HID class device interface");
+        }
+                    
+        (*plugInInterface)->Release(plugInInterface);
+    }
+    
+    //todo, change this to be controlled from the java layer at each device
+    //
+    ioReturnValue = (**hidDeviceInterface)->open(*hidDeviceInterface, 0 );
+    if ( ioReturnValue != kIOReturnSuccess )
+    {
+        printf("Unable to open device - return [%d]\n", ioReturnValue );
+    }
+    else
+    {
+        printf("Successfully opened device \n");
+    }
+    
+    ioReturnValue = (**hidDeviceInterface)->close(*hidDeviceInterface);
+    if ( ioReturnValue != kIOReturnSuccess )
+    {
+        printf("Unable to close device - return [%d]\n", ioReturnValue );
+    }
+    else
+    {
+        printf("Successfully closed device \n");
+    }
+    
+    // release the device interface
+    //
+    (**hidDeviceInterface)->Release(*hidDeviceInterface);
+    
+    
+}
 
 Boolean showDictionaryElement (CFDictionaryRef dictionary, CFStringRef key)
 {
@@ -293,6 +359,7 @@ JNIEXPORT void JNICALL Java_JNIWrapper_enumDevices
     hidMatchDictionary = NULL;    
     
     io_object_t             hidDevice = NULL;
+    IOHIDDeviceInterface    **hidDeviceInterface = NULL;
     CFMutableDictionaryRef  properties = 0;
     char                    path[512];
     kern_return_t           result;
@@ -320,25 +387,36 @@ JNIEXPORT void JNICALL Java_JNIWrapper_enumDevices
             printf("ProductKey: "); showDictionaryElement(properties, CFSTR(kIOHIDProductKey));
             //printf("SerialNumber: "); showDictionaryElement(properties, CFSTR(kIOHIDSerialNumberKey));
             //showDictionaryElement(properties, CFSTR(kIOHIDLocationIDKey));
-            //printf("PrimaryUsage: "); showDictionaryElement(properties, CFSTR(kIOHIDPrimaryUsageKey));
+            printf("PrimaryUsage: "); showDictionaryElement(properties, CFSTR(kIOHIDPrimaryUsageKey));
             //showDictionaryElement(properties, CFSTR(kIOHIDPrimaryUsagePageKey));
             //showDictionaryElement(properties, CFSTR(kIOHIDElementKey));
             
             //printf("\n\n");
             CFTypeRef object = CFDictionaryGetValue (properties, CFSTR(kIOHIDProductKey));
-
             
             
-            (*env)->CallVoidMethod(env, obj, MID_AddDevice, 
-                                   list, 
-                                   (jlong)(long)hidDevice, 
-                                   kIOHIDPrimaryUsageKey, 
-                                   (*env)->NewStringUTF( env, CFStringGetCStringPtr ( object, CFStringGetSystemEncoding ()) ) );
+            long number;
+            CFNumberGetValue ( CFDictionaryGetValue( properties, CFSTR(kIOHIDPrimaryUsageKey) ), kCFNumberLongType, &number);
             
+            createHIDDevice( hidDevice, &hidDeviceInterface );
+            
+            IOObjectRelease( hidDevice );
+            
+            if ( hidDeviceInterface != NULL )
+            {
+                printf("Ready to use this device \n");
+                
+                (*env)->CallVoidMethod(env, obj, MID_AddDevice, 
+                                       list, 
+                                       (jlong)(long)hidDeviceInterface, 
+                                       (jint)number, 
+                                       (*env)->NewStringUTF( env, CFStringGetCStringPtr ( object, CFStringGetSystemEncoding ()) ) );
+            }            
             
             //Release the properties dictionary
             CFRelease(properties);
         }        
+
     }
 
     IOObjectRelease(hidObjectIterator);    
