@@ -33,8 +33,10 @@ import net.java.games.util.plugins.Plugin;
 public class LinuxEnvironmentPlugin extends ControllerEnvironment implements Plugin {
     
     static {
-        System.loadLibrary("jinput");
-    }
+        if(isSupported()) {
+            System.loadLibrary("jinput");
+        }
+    }    
 
     /** List of controllers
      */    
@@ -42,9 +44,23 @@ public class LinuxEnvironmentPlugin extends ControllerEnvironment implements Plu
     
     /** Creates a new instance of LinuxEnvironmentPlugin */
     public LinuxEnvironmentPlugin() {
-        LinuxNativeTypesMap.init();
-        init();
-        createControllers();
+        if(isSupported()) {
+	        LinuxNativeTypesMap.init();
+	        init();
+	        createControllers();
+        } else {
+            controllers = new Controller[0];
+        }
+    }
+    
+    public static boolean isSupported() {
+        System.out.println("OS name is: " + System.getProperty("os.name"));
+        if(System.getProperty("os.name").indexOf("Linux")!=-1) {
+            System.out.println("Linux plugin is supported");
+            return true;
+        }
+        System.out.println("Linux plugin is not supported");
+        return false;
     }
     
     /** Returns a list of all controllers available to this environment,
@@ -61,10 +77,24 @@ public class LinuxEnvironmentPlugin extends ControllerEnvironment implements Plu
     private void createControllers() {
         int numDevices = getNumberOfDevices();
         
-        controllers = new Controller[numDevices];
+        Controller[] tempControllers = new Controller[numDevices];
         
+        int numRealDevices = 0;
+        Controller tempController;
         for(int i=0;i<numDevices;i++) {
-            controllers[i] = createDevice(i);
+            tempController = createDevice(i);
+            if(tempController!=null) {
+                if(tempController.getComponents().length>0 || tempController.getControllers().length>0) {
+                    tempControllers[numRealDevices] = tempController;
+                    numRealDevices++;
+                }
+            }
+        }
+        
+        controllers = new Controller[numRealDevices];
+        
+        for(int i=0;i<numRealDevices;i++) {
+            controllers[i] = tempControllers[i];
         }
     }
     

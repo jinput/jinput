@@ -26,14 +26,14 @@
 
 package net.java.games.input;
 
-import net.java.games.input.AbstractAxis;
+import net.java.games.input.AbstractComponent;
 import net.java.games.input.LinuxDevice;
 
 /** Represents an Axis absolute or relative
  *
  * @author Jeremy Booth (jeremy@newdawnsoftware.com)
  */
-public class LinuxAxis extends AbstractAxis {
+public class LinuxAxis extends AbstractComponent {
     
     /** The controller this axis is part of */
     private LinuxDevice controller;

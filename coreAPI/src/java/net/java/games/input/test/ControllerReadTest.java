@@ -42,17 +42,28 @@ package net.java.games.input.test;
  * @author  administrator
  */
 
-import net.java.games.input.*;
-import javax.swing.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.awt.*;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+import net.java.games.input.Component;
+import net.java.games.input.Controller;
+import net.java.games.input.ControllerEnvironment;
 
 abstract class AxisPanel extends JPanel{
-    Axis axis;
+    Component axis;
     float data;
     
-    public AxisPanel(Axis ax){
+    public AxisPanel(Component ax){
         axis = ax;
         setLayout(new BorderLayout());
         add(new JLabel(ax.getName()+"("+ax.getIdentifier()+")"),
@@ -70,7 +81,7 @@ abstract class AxisPanel extends JPanel{
 class DigitalAxisPanel extends AxisPanel {
     JLabel digitalState = new JLabel("<unread>");
     
-    public DigitalAxisPanel(Axis ax) {
+    public DigitalAxisPanel(Component ax) {
         super(ax);
         add(digitalState,BorderLayout.CENTER);
     }
@@ -93,37 +104,37 @@ class DigitalAxisPanel extends AxisPanel {
 class DigitalHatPanel extends AxisPanel {
     JLabel digitalState = new JLabel("<unread>");
     
-    public DigitalHatPanel(Axis ax) {
+    public DigitalHatPanel(Component ax) {
         super(ax);
         add(digitalState,BorderLayout.CENTER);
     }
     
     protected void renderData(){
-        if (data == Axis.POV.OFF){
+        if (data == Component.POV.OFF){
             digitalState.setBackground(getBackground());
             digitalState.setText("OFF");
-        } else if ( data == Axis.POV.UP) {
+        } else if ( data == Component.POV.UP) {
             digitalState.setBackground(Color.green);
             digitalState.setText("UP");
-        } else if ( data == Axis.POV.UP_RIGHT) {
+        } else if ( data == Component.POV.UP_RIGHT) {
             digitalState.setBackground(Color.green);
             digitalState.setText("UP+RIGHT");
-        } else if ( data == Axis.POV.RIGHT) {
+        } else if ( data == Component.POV.RIGHT) {
             digitalState.setBackground(Color.green);
             digitalState.setText("RIGHT");
-        } else if ( data == Axis.POV.DOWN_RIGHT) {
+        } else if ( data == Component.POV.DOWN_RIGHT) {
             digitalState.setBackground(Color.green);
             digitalState.setText("DOWN+RIGHT");
-        } else if ( data == Axis.POV.DOWN) {
+        } else if ( data == Component.POV.DOWN) {
             digitalState.setBackground(Color.green);
             digitalState.setText("DOWN");
-        } else if ( data == Axis.POV.DOWN_LEFT) {
+        } else if ( data == Component.POV.DOWN_LEFT) {
             digitalState.setBackground(Color.green);
             digitalState.setText("DOWN+LEFT");
-        } else if ( data == Axis.POV.LEFT) {
+        } else if ( data == Component.POV.LEFT) {
             digitalState.setBackground(Color.green);
             digitalState.setText("LEFT");    
-        } else if ( data == Axis.POV.UP_LEFT) {
+        } else if ( data == Component.POV.UP_LEFT) {
             digitalState.setBackground(Color.green);
             digitalState.setText("UP+LEFT");
         }else { // shoudl never happen
@@ -136,7 +147,7 @@ class DigitalHatPanel extends AxisPanel {
 class AnalogAxisPanel extends AxisPanel {
     JLabel analogState = new JLabel("<unread>");
     
-    public AnalogAxisPanel(Axis ax) {
+    public AnalogAxisPanel(Component ax) {
         super(ax);
         add(analogState,BorderLayout.CENTER);
     }
@@ -160,14 +171,14 @@ class ControllerWindow extends JFrame {
         this.ca = ca;
         Container c = this.getContentPane();
         c.setLayout(new BorderLayout());
-        Axis[] axis = ca.getAxes();
-        System.out.println("Axis count = "+axis.length);
-        if (axis.length>0) {
-            int width = (int)Math.ceil(Math.sqrt(axis.length));
+        Component[] components = ca.getComponents();
+        System.out.println("Component count = "+components.length);
+        if (components.length>0) {
+            int width = (int)Math.ceil(Math.sqrt(components.length));
             JPanel p = new JPanel();
             p.setLayout(new GridLayout(width,0));
-            for(int j=0;j<axis.length;j++){
-                addAxis(p,axis[j]);
+            for(int j=0;j<components.length;j++){
+                addAxis(p,components[j]);
             }  
             c.add(new JScrollPane(p),BorderLayout.CENTER);
         }
@@ -192,12 +203,12 @@ class ControllerWindow extends JFrame {
         repaint();
     }
     
-    private void addAxis(JPanel p, Axis ax){
+    private void addAxis(JPanel p, Component ax){
         JPanel p2;
         if (ax.isAnalog()) {
             p2 = new AnalogAxisPanel(ax);
         } else {
-            if (ax.getIdentifier() == Axis.Identifier.POV) {
+            if (ax.getIdentifier() == Component.Identifier.Axis.POV) {
                 p2 = new DigitalHatPanel(ax);
             } else {     
                 p2 = new DigitalAxisPanel(ax);

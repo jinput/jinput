@@ -25,8 +25,6 @@
  */
 package net.java.games.input;
 
-import net.java.games.input.Component.Identifier;
-
 /**
  * @author Jeremy
  *

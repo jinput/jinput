@@ -96,7 +96,7 @@
     <delete file="bin/dxinput.jar" failonerror="no"/>
     <delete file="bin/dxinput.dll" failonerror="no"/>
     <delete file="../../coreAPI/src/tests/controller/dxinput.jar" failonerror="no" />
-    <delete file="../../coreAPI/src/test/controller/dxinput.dll" failonerror="no"/>
+    <delete file="../../coreAPI/src/tests/controller/dxinput.dll" failonerror="no"/>
     <delete dir="../../docs/input/win32/apidoc" failonerror="no"/>
     </target>
 

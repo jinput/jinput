@@ -173,7 +173,7 @@ public class LinuxDevice extends AbstractController {
                 axesArray.add(buttons[i]);
             }
         }
-        axes = (Axis[]) axesArray.toArray(axes);
+        components = (Component[]) axesArray.toArray(components);
         
         guessType();
     }
@@ -417,11 +417,11 @@ public class LinuxDevice extends AbstractController {
      * @return The new button
      */    
     private LinuxAxis createButton(int buttonNumber, int nativeButtonType) {
-        Axis.Identifier id = LinuxNativeTypesMap.getButtonID(nativeButtonType);
+        Component.Identifier id = LinuxNativeTypesMap.getButtonID(nativeButtonType);
         String name = LinuxNativeTypesMap.getButtonName(nativeButtonType);
         if(name == null) {
             name = "Uknown button";
-            id = new ButtonID(name);
+            id = Component.Identifier.Button.UNKNOWN;
         }
         
         return new LinuxAxis(this, buttonNumber, name, id, 0, false, true, false);
@@ -433,7 +433,7 @@ public class LinuxDevice extends AbstractController {
      * @return The new axis
      */    
     private LinuxAxis createRelAxis(int axisNumber, int nativeType) {
-        Axis.Identifier id = LinuxNativeTypesMap.getRelAxisID(nativeType);
+        Component.Identifier id = LinuxNativeTypesMap.getRelAxisID(nativeType);
         String name = LinuxNativeTypesMap.getRelAxisName(nativeType);
         
         // This is done to be like the windows version
@@ -449,15 +449,15 @@ public class LinuxDevice extends AbstractController {
      * @return The new axis
      */    
     private LinuxAxis createAbsAxis(int axisNumber, int nativeType) {
-        Axis.Identifier id = LinuxNativeTypesMap.getAbsAxisID(nativeType);
+        Component.Identifier id = LinuxNativeTypesMap.getAbsAxisID(nativeType);
         String name = LinuxNativeTypesMap.getAbsAxisName(nativeType);
         
         // Work around for a kernel level (I think) bug that incorrectly reports
         // the third axis as a rudder not a throttle on analog (gameport) 3 axis
         // 4 button sticks
         if((getName().equals("Analog 3-axis 4-button joystick")) && (portType == Controller.PortType.GAME)) {
-            if((id == Axis.Identifier.RZ) && (name.equals("Rudder"))) {
-                id = Axis.Identifier.SLIDER;
+            if((id == Component.Identifier.Axis.RZ) && (name.equals("Rudder"))) {
+                id = Component.Identifier.Axis.SLIDER;
                 name = "Throttle";
             }
         }
@@ -616,7 +616,7 @@ public class LinuxDevice extends AbstractController {
      * A device that represents a joystick coolie hat.
      * @author Jeremy Booth (jeremy@newdawnsoftware.com)
      */
-    public static class LinuxHat extends AbstractAxis {
+    public static class LinuxHat extends AbstractComponent {
         
         /** The parent controller
          */        
@@ -644,7 +644,7 @@ public class LinuxDevice extends AbstractController {
          * @param yAxisID The Y axis native axis ID
          */
         public LinuxHat(LinuxDevice controller, String name, int xAxisID, int yAxisID) {
-            super(name, Axis.Identifier.POV);
+            super(name, Component.Identifier.Axis.POV);
             
             System.out.println("Creating a Hat for device " + controller.getName() + " named " + name + " from axis " + xAxisID + " and " + yAxisID);
             
@@ -725,213 +725,6 @@ public class LinuxDevice extends AbstractController {
             
             //System.err.println("new value: " + value);
             //System.err.flush();
-        }
-        
-    }
-    
-    /** Some button ID's specific to linux devices
-     * @author Jeremy Booth (jeremy@computerbooth.com)
-     */    
-    public static class ButtonID extends Axis.Identifier {
-        
-        /** First device button
-         */        
-        public static final ButtonID BTN_0 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_0));
-        
-        /** Second device button
-         */        
-        public static final ButtonID BTN_1 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_1));
-        
-        /** Thrid device button
-         */        
-        public static final ButtonID BTN_2 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_2));
-        
-        /** Fourth device button
-         */        
-        public static final ButtonID BTN_3 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_3));
-        
-        /** Fifth device button
-         */        
-        public static final ButtonID BTN_4 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_4));
-        
-        /** Sixth device button
-         */        
-        public static final ButtonID BTN_5 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_5));
-        
-        /** Seventh device button
-         */        
-        public static final ButtonID BTN_6 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_6));
-        
-        /** Eighth (had to check that spelling on dictionary.com) device button
-         */        
-        public static final ButtonID BTN_7 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_7));
-        
-        /** Ninth device button
-         */        
-        public static final ButtonID BTN_8 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_8));
-        
-        /** 10th device button
-         */        
-        public static final ButtonID BTN_9 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_9));
-        
-        /** Joystick trigger button
-         */        
-        public static final ButtonID BTN_TRIGGER = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_TRIGGER));
-        
-        /** Joystick thumb button
-         */        
-        public static final ButtonID BTN_THUMB = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_THUMB));
-        
-        /** Second joystick thumb button
-         */        
-        public static final ButtonID BTN_THUMB2 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_THUMB2));
-        
-        /** Joystick top button
-         */        
-        public static final ButtonID BTN_TOP = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_TOP));
-        
-        /** Second joystick top button
-         */        
-        public static final ButtonID BTN_TOP2 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_TOP2));
-        
-        /** The joystick button you play with with you little finger (Pinkie on *that* side
-         * of the pond :P)
-         */        
-        public static final ButtonID BTN_PINKIE = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_PINKIE));
-        
-        /** Joystick button on the base of the device
-         */        
-        public static final ButtonID BTN_BASE = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_BASE));
-        
-        /** Second joystick button on the base of the device
-         */        
-        public static final ButtonID BTN_BASE2 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_BASE2));
-        
-        /** Thrid joystick button on the base of the device
-         */        
-        public static final ButtonID BTN_BASE3 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_BASE3));
-        
-        /** Fourth joystick button on the base of the device
-         */        
-        public static final ButtonID BTN_BASE4 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_BASE4));
-        
-        /** Fifth joystick button on the base of the device
-         */        
-        public static final ButtonID BTN_BASE5 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_BASE5));
-        
-        /** Sixth joystick button on the base of the device
-         */        
-        public static final ButtonID BTN_BASE6 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_BASE6));
-        
-        /** erm, dunno, but it's in the defines so it might exist.
-         */        
-        public static final ButtonID BTN_DEAD = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_DEAD));
-        
-        /** 'A' button on a gamepad
-         */        
-        public static final ButtonID BTN_A = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_A));
-        
-        /** 'B' button on a gamepad
-         */        
-        public static final ButtonID BTN_B = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_B));
-        
-        /** 'C' button on a gamepad
-         */        
-        public static final ButtonID BTN_C = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_C));
-        
-        /** 'X' button on a gamepad
-         */        
-        public static final ButtonID BTN_X = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_X));
-        
-        /** 'Y' button on a gamepad
-         */        
-        public static final ButtonID BTN_Y = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_Y));
-        
-        /** 'Z' button on a gamepad
-         */        
-        public static final ButtonID BTN_Z = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_Z));
-        
-        /** Left thumb button on a gamepad
-         */        
-        public static final ButtonID BTN_TL = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_TL));
-        
-        /** Right thumb button on a gamepad
-         */        
-        public static final ButtonID BTN_TR = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_TR));
-        
-        /** Second left thumb button on a gamepad
-         */        
-        public static final ButtonID BTN_TL2 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_TL2));
-        
-        /** Second right thumb button on a gamepad
-         */        
-        public static final ButtonID BTN_TR2 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_TR2));
-        
-        /** 'Select' button on a gamepad
-         */        
-        public static final ButtonID BTN_SELECT = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_SELECT));
-        
-        /** 'Mode' button on a gamepad
-         */        
-        public static final ButtonID BTN_MODE = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_MODE));
-        
-        /** Another left thumb button on a gamepad (how many thumbs do you have??)
-         */        
-        public static final ButtonID BTN_THUMBL = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_THUMBL));
-        
-        /** Another right thumb button on a gamepad
-         */        
-        public static final ButtonID BTN_THUMBR = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_THUMBR));
-        
-        /** Digitiser pen tool button
-         */        
-        public static final ButtonID BTN_TOOL_PEN = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_TOOL_PEN));
-        
-        /** Digitiser rubber (eraser) tool button
-         */        
-        public static final ButtonID BTN_TOOL_RUBBER = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_TOOL_RUBBER));
-        
-        /** Digitiser brush tool button
-         */        
-        public static final ButtonID BTN_TOOL_BRUSH = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_TOOL_BRUSH));
-        
-        /** Digitiser pencil tool button
-         */        
-        public static final ButtonID BTN_TOOL_PENCIL = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_TOOL_PENCIL));
-        
-        /** Digitiser airbrush tool button
-         */        
-        public static final ButtonID BTN_TOOL_AIRBRUSH = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_TOOL_AIRBRUSH));
-        
-        /** Digitiser finger tool button
-         */        
-        public static final ButtonID BTN_TOOL_FINGER = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_TOOL_FINGER));
-        
-        /** Digitiser mouse tool button
-         */        
-        public static final ButtonID BTN_TOOL_MOUSE = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_TOOL_MOUSE));
-        
-        /** Digitiser lens tool button
-         */        
-        public static final ButtonID BTN_TOOL_LENS = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_TOOL_LENS));
-        
-        /** Digitiser touch button
-         */        
-        public static final ButtonID BTN_TOUCH = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_TOUCH));
-        
-        /** Digitiser stylus button
-         */        
-        public static final ButtonID BTN_STYLUS = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_STYLUS));
-        
-        /** Second digitiser stylus button
-         */        
-        public static final ButtonID BTN_STYLUS2 = new ButtonID(LinuxNativeTypesMap.getButtonName(NativeDefinitions.BTN_STYLUS2));
-        
-        /** Create a new Button.Identidier with the passed name
-         * @param name The name for the new identifier
-         */        
-        private ButtonID(String name) {
-            super(name);
         }
         
     }

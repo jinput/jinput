@@ -42,10 +42,10 @@ public class LinuxMouse extends Mouse {
         super(device.getName());
         
         this.device = device;
-        Axis[] axes = device.getAxes();
-        Axis x = null;
-        Axis y = null;
-        Axis wheel = null;
+        Component[] components = device.getComponents();
+        Component x = null;
+        Component y = null;
+        Component wheel = null;
         Button left = null;
         Button right = null;
         Button middle = null;
@@ -55,30 +55,30 @@ public class LinuxMouse extends Mouse {
         Button back = null;
         
         // start from the back, that way the first one is it
-        for(int i = (axes.length -1);i>=0;i--) {
-            Axis tempAxis = axes[i];
+        for(int i = (components.length -1);i>=0;i--) {
+            Component tempAxis = components[i];
             if(tempAxis.isRelative()) {
-                if(tempAxis.getIdentifier() == Axis.Identifier.X) {
+                if(tempAxis.getIdentifier() == Component.Identifier.Axis.X) {
                     x = tempAxis;
-                } else if(tempAxis.getIdentifier() == Axis.Identifier.Y) {
+                } else if(tempAxis.getIdentifier() == Component.Identifier.Axis.Y) {
                     y = tempAxis;
-                } else if(tempAxis.getIdentifier() == Axis.Identifier.SLIDER) {
+                } else if(tempAxis.getIdentifier() == Component.Identifier.Axis.SLIDER) {
                     wheel = tempAxis;
                 }
             } else if(!(tempAxis.isAnalog())) {
-                if(tempAxis.getIdentifier() == Mouse.ButtonID.LEFT) {
+                if(tempAxis.getIdentifier() == Component.Identifier.Button.LEFT) {
                     left = new LinuxMouseButton(tempAxis);
-                } else if(tempAxis.getIdentifier() == Mouse.ButtonID.RIGHT) {
+                } else if(tempAxis.getIdentifier() == Component.Identifier.Button.RIGHT) {
                     right = new LinuxMouseButton(tempAxis);
-                } else if(tempAxis.getIdentifier() == Mouse.ButtonID.MIDDLE) {
+                } else if(tempAxis.getIdentifier() == Component.Identifier.Button.MIDDLE) {
                     middle = new LinuxMouseButton(tempAxis);
-                } else if(tempAxis.getIdentifier() == Mouse.ButtonID.SIDE) {
+                } else if(tempAxis.getIdentifier() == Component.Identifier.Button.SIDE) {
                     side = new LinuxMouseButton(tempAxis);
-                } else if(tempAxis.getIdentifier() == Mouse.ButtonID.EXTRA) {
+                } else if(tempAxis.getIdentifier() == Component.Identifier.Button.EXTRA) {
                     extra = new LinuxMouseButton(tempAxis);
-                } else if(tempAxis.getIdentifier() == Mouse.ButtonID.FORWARD) {
+                } else if(tempAxis.getIdentifier() == Component.Identifier.Button.FORWARD) {
                     forward = new LinuxMouseButton(tempAxis);
-                } else if(tempAxis.getIdentifier() == Mouse.ButtonID.BACK) {
+                } else if(tempAxis.getIdentifier() == Component.Identifier.Button.BACK) {
                     back = new LinuxMouseButton(tempAxis);
                 }
             }
@@ -104,7 +104,7 @@ public class LinuxMouse extends Mouse {
          * @param y The y axis
          * @param wheel The mouse wheel axis
          */        
-        public LinuxMouseBall(Axis x, Axis y, Axis wheel) {
+        public LinuxMouseBall(Component x, Component y, Component wheel) {
             super(LinuxMouse.this.getName() + " ball");
             this.x = x;
             this.y = y;
@@ -141,13 +141,13 @@ public class LinuxMouse extends Mouse {
     private class LinuxMouseButton extends Mouse.Button {
         /** The real Axis
          */        
-        private Axis realAxis;
+        private Component realAxis;
         
         /** Construct a linux mouse button fro mthe given axis
          * @param axis The axis that holds the data
          */        
-        public LinuxMouseButton(Axis axis) {
-            super(axis.getName(), (Mouse.ButtonID)axis.getIdentifier());
+        public LinuxMouseButton(Component axis) {
+            super(axis.getName(), (Component.Identifier.Button)axis.getIdentifier());
             this.realAxis = axis;
         }
         

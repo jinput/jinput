@@ -38,8 +38,8 @@
  *****************************************************************************/
 package net.java.games.input;
 
-import net.java.games.input.AbstractAxis;
-import net.java.games.input.Axis;
+import net.java.games.input.AbstractComponent;
+import net.java.games.input.Component;
 import net.java.games.input.StandardKeyboard;
 
 /**
@@ -143,8 +143,8 @@ class DirectInputKeyboard extends StandardKeyboard {
         for (; CROSSTABLE[keyIndex] > index; keyIndex--)
             ;
         if (CROSSTABLE[keyIndex] == index) {
-            Axis[] axes = getAxes();
-            AbstractAxis key = (AbstractAxis)axes[index];
+            Component[] components = getComponents();
+            AbstractComponent key = (AbstractComponent)components[index];
             if (name != null && name.length() > 0) {
                 //System.out.println("Renaming key " + key.getName() +
                 //    " to " + name + " index=" +
@@ -173,7 +173,7 @@ class DirectInputKeyboard extends StandardKeyboard {
      * @return true if this key has changed state since last read of its state, false otherwise.
      */
     protected boolean isKeyPressed(Key key) {
-        KeyID id = (KeyID)key.getIdentifier();
+        Component.Identifier.Key id = (Component.Identifier.Key)key.getIdentifier();
         int keyIndex = id.getKeyIndex();
         int crossIndex = CROSSTABLE[keyIndex];
         return ((keyData[crossIndex] & 0x80) != 0);

@@ -38,8 +38,8 @@
  *****************************************************************************/
 package net.java.games.input;
 
-import net.java.games.input.AbstractAxis;
-import net.java.games.input.Axis;
+import net.java.games.input.AbstractComponent;
+import net.java.games.input.Component;
 import net.java.games.input.Mouse;
 
 /**
@@ -105,12 +105,12 @@ class DirectInputMouse extends Mouse {
     /**
      * Callback to rename a given axis by type, name
      */
-    private void renameAxis(Axis.Identifier id, String name) {
-        AbstractAxis axis;
-        if (id instanceof ButtonID) {
-            axis = (AbstractAxis)getButtons().getAxis(id);
+    private void renameAxis(Component.Identifier id, String name) {
+        AbstractComponent axis;
+        if (id instanceof Component.Identifier.Button) {
+            axis = (AbstractComponent)getButtons().getComponent(id);
         } else {
-            axis = (AbstractAxis)getBall().getAxis(id);
+            axis = (AbstractComponent)getBall().getComponent(id);
         }
         axis.setName(name);
         //System.out.println("Renaming " + name);
@@ -160,10 +160,10 @@ class DirectInputMouse extends Mouse {
         public BallImpl() {
             super(DirectInputMouse.this.getName() + " ball");
             numAxes = getNumAxes(lpDevice);
-            x = new BallAxis(Axis.Identifier.X);
-            y = new BallAxis(Axis.Identifier.Y);
+            x = new BallAxis(Component.Identifier.Axis.X);
+            y = new BallAxis(Component.Identifier.Axis.Y);
             if(numAxes > 2) {
-                wheel = new BallAxis(Axis.Identifier.SLIDER);
+                wheel = new BallAxis(Component.Identifier.Axis.SLIDER);
             }
         }
     } // class DirectInputMouse.BallImpl
@@ -181,22 +181,22 @@ class DirectInputMouse extends Mouse {
         public ButtonsImpl() {
             super(DirectInputMouse.this.getName() + " buttons");
             numButtons = getNumButtons(lpDevice);
-            left = new ButtonImpl(ButtonID.LEFT);
-            right = new ButtonImpl(ButtonID.RIGHT);
+            left = new ButtonImpl(Component.Identifier.Button.LEFT);
+            right = new ButtonImpl(Component.Identifier.Button.RIGHT);
             if(numButtons>2) {
-                middle = new ButtonImpl(ButtonID.MIDDLE);
+                middle = new ButtonImpl(Component.Identifier.Button.MIDDLE);
             }
             if(numButtons>3) {
-                side = new ButtonImpl(ButtonID.SIDE);
+                side = new ButtonImpl(Component.Identifier.Button.SIDE);
             }
             if(numButtons>4) {
-                extra = new ButtonImpl(ButtonID.EXTRA);
+                extra = new ButtonImpl(Component.Identifier.Button.EXTRA);
             }
             if(numButtons>5) {
-                forward = new ButtonImpl(ButtonID.FORWARD);
+                forward = new ButtonImpl(Component.Identifier.Button.FORWARD);
             }
             if(numButtons>6) {
-                back = new ButtonImpl(ButtonID.BACK);
+                back = new ButtonImpl(Component.Identifier.Button.BACK);
             }
         }
     } // class DirectInputMouse.ButtonsImpl
@@ -235,21 +235,21 @@ class DirectInputMouse extends Mouse {
          * @param id An ID of a button to create an obejct to represent.
          *
          */
-        public ButtonImpl(ButtonID id) {
+        public ButtonImpl(Component.Identifier.Button id) {
             super(id.getName(), id);
-            if (id == ButtonID.LEFT) {
+            if (id == Component.Identifier.Button.LEFT) {
                 index = 12;
-            } else if (id == ButtonID.RIGHT) {
+            } else if (id == Component.Identifier.Button.RIGHT) {
                 index = 13;
-            } else if (id == ButtonID.MIDDLE) {
+            } else if (id == Component.Identifier.Button.MIDDLE) {
                 index = 14;
-            } else if (id == ButtonID.SIDE) {
+            } else if (id == Component.Identifier.Button.SIDE) {
                 index = 15;
-            } else if (id == ButtonID.EXTRA) {
+            } else if (id == Component.Identifier.Button.EXTRA) {
                 index = 16;
-            } else if (id == ButtonID.FORWARD) {
+            } else if (id == Component.Identifier.Button.FORWARD) {
                 index = 17;
-            } else if (id == ButtonID.BACK) {
+            } else if (id == Component.Identifier.Button.BACK) {
                 index = 18;
             } else {
                 throw new RuntimeException("Unknown button");
@@ -287,7 +287,7 @@ class DirectInputMouse extends Mouse {
     /**
      * Mouse ball axis implementation
      */
-    class BallAxis extends AbstractAxis {
+    class BallAxis extends AbstractComponent {
         
         /**
          * Starting index into the mouseData array
@@ -299,11 +299,11 @@ class DirectInputMouse extends Mouse {
          */
         public BallAxis(Identifier id) {
             super(id.getName(), id);
-            if (id == Identifier.X) {
+            if (id == Identifier.Axis.X) {
                 index = 0;
-            } else if (id == Identifier.Y) {
+            } else if (id == Identifier.Axis.Y) {
                 index = 4;
-            } else if (id == Identifier.SLIDER) {
+            } else if (id == Identifier.Axis.SLIDER) {
                 index = 8;
             } else {
                 throw new RuntimeException("Unknown mouse axis");

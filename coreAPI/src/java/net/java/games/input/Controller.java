@@ -61,21 +61,21 @@ public interface Controller {
     public abstract Type getType();
 
     /**
-     * Returns the axes on this controller, in order of assignment priority.
+     * Returns the components on this controller, in order of assignment priority.
      * For example, the button controller on a mouse returns an array containing
      * the primary or leftmost mouse button, followed by the secondary or
      * rightmost mouse button (if present), followed by the middle mouse button
      * (if present).
-     * The array returned is an empty array if this controller contains no axes
+     * The array returned is an empty array if this controller contains no components
      * (such as a logical grouping of child controllers).
      */
-    public abstract Axis[] getAxes();
+    public abstract Component[] getComponents();
 
     /**
      * Returns a single axis based on its type, or null
      * if no axis with the specified type could be found.
      */
-    public abstract Axis getAxis(Axis.Identifier id);
+    public abstract Component getComponent(Component.Identifier id);
 
     /**
      * Returns the rumblers for sending feedback to this controller, or an

@@ -41,7 +41,7 @@ package net.java.games.input;
 /**
  * Skeleton implementation of a named axis.
  */
-public abstract class AbstractAxis implements Axis {
+public abstract class AbstractComponent implements Component {
 
     /**
      * Human-readable name for this Axis
@@ -62,7 +62,7 @@ public abstract class AbstractAxis implements Axis {
      * Protected constructor
      * @param name A name for the axis
      */
-    protected AbstractAxis(String name, Identifier id) {
+    protected AbstractComponent(String name, Identifier id) {
         this.name = name;
         this.id = id;
         this.polling = true;

@@ -30,8 +30,6 @@ import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
 
-import net.java.games.input.Keyboard.Key;
-
 /**
  * @author Jeremy
  *
@@ -50,7 +48,7 @@ public class AWTKeyboard extends StandardKeyboard implements AWTEventListener {
     protected AWTKeyboard(String name) {
         super(name);
         
-        buttonValues = new boolean[getAxes().length];
+        buttonValues = new boolean[getComponents().length];
         buttonMap = new int[65535]; //has to be this big, as the values of KeyEvent keys are large
         
         buttonMap[KeyEvent.VK_0] = Component.Identifier.Key._0.getKeyIndex();

@@ -38,15 +38,15 @@
  *****************************************************************************/
 package net.java.games.input;
 
-import net.java.games.input.AbstractAxis;
-import net.java.games.input.Axis;
+import net.java.games.input.AbstractComponent;
+import net.java.games.input.Component;
 
 /**
  *
  * @author  martak
  * @version 
  */
-class DirectInputAxis extends AbstractAxis {
+class DirectInputAxis extends AbstractComponent {
 
     /**
      * DIDFT_ constants and macros defined in dinput.h
@@ -106,31 +106,31 @@ class DirectInputAxis extends AbstractAxis {
     private int bitmask = 0xffffffff;
     private int bitshift = 0;
     
-    private DirectInputAxis(DirectInputDevice device, Axis.Identifier id,
+    private DirectInputAxis(DirectInputDevice device, Component.Identifier id,
         int didft, String name) {
         super(name, id);
         this.device = device;
         this.type = DIDFT_GETTYPE(didft);
         this.instance = DIDFT_GETINSTANCE(didft);
-        if (id == Axis.Identifier.X) {
+        if (id == Component.Identifier.Axis.X) {
             offset = 0;
-        } else if (id == Axis.Identifier.Y) {
+        } else if (id == Component.Identifier.Axis.Y) {
             offset = 1;
-        } else if (id == Axis.Identifier.Z) {
+        } else if (id == Component.Identifier.Axis.Z) {
             offset = 2;
-        } else if (id == Axis.Identifier.RX) {
+        } else if (id == Component.Identifier.Axis.RX) {
             offset = 3;
-        } else if (id == Axis.Identifier.RY) {
+        } else if (id == Component.Identifier.Axis.RY) {
             offset = 4;
-        } else if (id == Axis.Identifier.RZ) {
+        } else if (id == Component.Identifier.Axis.RZ) {
             offset = 5;
-        } else if (id == Axis.Identifier.SLIDER) {
+        } else if (id == Component.Identifier.Axis.SLIDER) {
             //System.out.println("Slider on "+name+" instance = "+instance);
             offset = 6 + (instance>>2);
-        } else if (id == Axis.Identifier.POV) {
+        } else if (id == Component.Identifier.Axis.POV) {
             //System.out.println("POV on "+name+" instance = "+instance);
             offset = 8 + instance;
-        } else if (id == Axis.Identifier.BUTTON) {
+        } else if (id instanceof Component.Identifier.Button) {
             //System.out.println("Button on "+name+" instance = "+instance);
             offset = 12 + (instance/4);
             bitshift = (instance%4)*8;
@@ -152,26 +152,26 @@ class DirectInputAxis extends AbstractAxis {
             return ((float)data)/32768;
         } else if ((type&DIDFT_POV)!=0) {
             if (data == -1) {
-                return Axis.POV.OFF;
+                return Component.POV.OFF;
             } else if (data == 0.0) {
-                return Axis.POV.UP;
+                return Component.POV.UP;
             } else if (data == 4500) {
-                return Axis.POV.UP_RIGHT;
+                return Component.POV.UP_RIGHT;
             } else if (data == 9000) {
-                return Axis.POV.RIGHT;
+                return Component.POV.RIGHT;
             } else if (data == 13500) {
-                return Axis.POV.DOWN_RIGHT;
+                return Component.POV.DOWN_RIGHT;
             } else if (data == 18000) {
-                return Axis.POV.DOWN;
+                return Component.POV.DOWN;
             } else if (data == 22500) {
-                return Axis.POV.DOWN_LEFT;
+                return Component.POV.DOWN_LEFT;
             } else if (data == 27000) {
-                return Axis.POV.LEFT;
+                return Component.POV.LEFT;
             } else if (data == 31500) {
-                return Axis.POV.UP_LEFT;
+                return Component.POV.UP_LEFT;
             } else {
                 System.err.print("Unexpected value for DX8 HAT: "+data);
-                return Axis.POV.OFF;
+                return Component.POV.OFF;
             }
         } else { // return raw value
             return (float)data;
@@ -213,7 +213,7 @@ class DirectInputAxis extends AbstractAxis {
      * @param id The identifier for the device
      */
     public static DirectInputAxis createAxis(DirectInputDevice device,
-        Axis.Identifier id, int didft, String name) {
+        Component.Identifier id, int didft, String name) {
         return new DirectInputAxis(device, id, didft, name);
     }
 }

@@ -39,8 +39,7 @@
 package net.java.games.input;
 
 import net.java.games.input.AbstractController;
-import net.java.games.input.Axis;
-import net.java.games.input.Controller;
+import net.java.games.input.Component;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -120,21 +119,21 @@ class DirectInputDevice extends AbstractController {
             default:
                 type = Type.STICK; break;
         }
-        axes = initDirectInputAxes();
+        components = initDirectInputAxes();
     }
     
     /**
      * Used instead of overriding initAxes because it needs the
      * pointer to the IDirectInputDevice
      */
-    private Axis[] initDirectInputAxes() {
+    private Component[] initDirectInputAxes() {
         ArrayList list = new ArrayList();
         enumObjects(lpDevice, list);
-        Axis[] ret = new Axis[list.size()];
+        Component[] ret = new Component[list.size()];
         Iterator it = list.iterator();
         int i = 0;
         while (it.hasNext()) {
-            ret[i] = (Axis)it.next();
+            ret[i] = (Component)it.next();
             i++;
         }
         return ret;
@@ -148,7 +147,7 @@ class DirectInputDevice extends AbstractController {
      * instance number of the axis.
      * @param name The name to call the axis.
      */
-    private void addAxis(ArrayList list, Axis.Identifier id, int didft,
+    private void addAxis(ArrayList list, Component.Identifier id, int didft,
         String name) {
         list.add(DirectInputAxis.createAxis(this, id, didft, name));
     }
@@ -159,7 +158,7 @@ class DirectInputDevice extends AbstractController {
      * @param effect the natie effect id
      * @param axisID The axis ID
      */
-    private void addRumbler(long effect, Axis.Identifier axisID, String axisName) {        
+    private void addRumbler(long effect, Component.Identifier axisID, String axisName) {        
         rumblerList.add(new DirectInputRumbler(this, effect, axisID, axisName));
     }
     

@@ -38,7 +38,6 @@
  *****************************************************************************/
 package net.java.games.input;
 
-import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.Iterator;
 import net.java.games.input.Controller;
@@ -59,7 +58,9 @@ public class DirectInputEnvironmentPlugin extends ControllerEnvironment
         java.security.AccessController.doPrivileged(
             new LoadLibraryAction("jinput"));
          */
-        System.loadLibrary("dxinput");
+        if(isSupported()) {
+            System.loadLibrary("dxinput");
+        }
     }
 
     /**
@@ -109,8 +110,22 @@ public class DirectInputEnvironmentPlugin extends ControllerEnvironment
     
     /** Creates new DirectInputEnvironment */
     public DirectInputEnvironmentPlugin() {
-        lpDirectInput = directInputCreate();
-        enumControllers();
+        if(isSupported()) {
+            lpDirectInput = directInputCreate();
+            enumControllers();
+        } else {
+            controllers = new Controller[0];
+        }
+    }
+    
+    public static boolean isSupported() {
+        System.out.println("OS name is: " + System.getProperty("os.name"));
+        if(System.getProperty("os.name").indexOf("Windows")!=-1) {
+            System.out.println("DX8 plugin is supported");
+            return true;
+        }
+        System.out.println("DX8 plugin is not supported");
+        return false;
     }
 
     /** Returns a list of all controllers available to this environment,

@@ -62,18 +62,17 @@ public abstract class Keyboard extends AbstractController {
     }
 
     /**
-     * Returns the axis corresponding to a particular key on the keypad,
+     * Returns the component corresponding to a particular key on the keypad,
      * or null if a key with the specified ID could not be found.
      */
-    public Axis getAxis(Axis.Identifier id) {
-        assert axes != null;
+    public Component getComponent(Component.Identifier id) {
+        assert components != null;
         // Default implementation uses indices to lookup keys
         // in the array of axes
-        if (id instanceof KeyID) {
-            KeyID kid = (KeyID)id;
-            int index = kid.getKeyIndex();
-            assert axes.length > index;
-            return axes[index];
+        if(id instanceof Component.Identifier.Key) {
+	        int index = ((Component.Identifier.Key)id).getKeyIndex();
+	        assert components.length > index;
+	        return components[index];
         }
         return null;
     }
@@ -88,21 +87,21 @@ public abstract class Keyboard extends AbstractController {
      * Axis representing a single key.  By default, all keys are set to receive
      * polling data.
      */
-    public class Key extends AbstractAxis {
+    public class Key extends AbstractComponent {
         
         /**
          * Key identifier
          */
-        private final KeyID keyID;
+        private final Component.Identifier.Key keyID;
         
         /**
          * Construct a new key object
          */
-        public Key(KeyID keyID) {
+        public Key(Component.Identifier.Key keyID) {
             super(keyID.toString(), keyID);
             this.keyID = keyID;
         }
-
+    
         /**
          * Returns <code>true</code> if data returned from <code>poll</code>
          * is relative to the last call, or <code>false</code> if data
@@ -125,44 +124,4 @@ public abstract class Keyboard extends AbstractController {
             return (isKeyPressed(this) ? 1.0f : 0.0f);
         }
     } // class Keyboard.Key
-
-    /**
-     * Identifiers for physical keys.
-     */
-    public static class KeyID extends Axis.Identifier {
-        
-        /**
-         * Key string
-         */
-        private static final String NAME_KEY = "key";
-        
-        /**
-         * Index in the array of axes supplied to the keyboard contructor for
-         * this key.
-         */
-        protected final int keyIndex;
-        
-        /**
-         * Protected constructor
-         * @param keyIndex the index for looking up the key in the array of axes
-         */
-        protected KeyID(int keyIndex) {
-            super(NAME_KEY);
-            this.keyIndex = keyIndex;
-        }
-        
-        /**
-         * The index for this key for looking up the in the array of axes.
-         */
-        public int getKeyIndex() {
-            return keyIndex;
-        }
-        
-        /**
-         * Returns a non-localized string description of this control type.
-         */
-        public String toString() {
-            return super.toString() + " " + Integer.toString(keyIndex);
-        }
-    } // class Keyboard.KeyID
 } // class Keyboard

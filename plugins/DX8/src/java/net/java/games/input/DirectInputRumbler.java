@@ -37,7 +37,7 @@ public class DirectInputRumbler implements Rumbler {
     /** The native effect */
     private long effect;
     /** The identifier of the axis we are attached too */
-    private Axis.Identifier axisID;
+    private Component.Identifier axisID;
     /** The name of the axis this rumbler is attached too */
     private String axisName;
     
@@ -49,7 +49,7 @@ public class DirectInputRumbler implements Rumbler {
      * @param axisID The id of the axis this rumbler is attached too
      * @param axisName The name of the axis this rumbler is attached too
      */
-    public DirectInputRumbler(DirectInputDevice device, long effect, Axis.Identifier axisID, String axisName) {
+    public DirectInputRumbler(DirectInputDevice device, long effect, Component.Identifier axisID, String axisName) {
         this.device = device;
         this.effect = effect;
         this.axisID = axisID;
@@ -61,7 +61,7 @@ public class DirectInputRumbler implements Rumbler {
      *
      * @return The axis id
      */
-    public Axis.Identifier getAxisIdentifier() {
+    public Component.Identifier getAxisIdentifier() {
         return axisID;
     }
     

@@ -61,7 +61,7 @@ public interface Rumbler {
      *
      * @return The axis identifier
      */
-    public Axis.Identifier getAxisIdentifier();
+    public Component.Identifier getAxisIdentifier();
     
     
 } // interface Rumbler

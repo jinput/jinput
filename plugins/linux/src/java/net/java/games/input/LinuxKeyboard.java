@@ -104,7 +104,7 @@ public class LinuxKeyboard extends StandardKeyboard {
             System.out.println("id for supportedKeys index is " + LinuxNativeTypesMap.getButtonID(supportedKeys[keyMap[((Keyboard.KeyID) key.getIdentifier()).getKeyIndex()]]));
             System.out.flush();
         }*/
-        if(keyData[keyMap[((Keyboard.KeyID) key.getIdentifier()).getKeyIndex()]] > 0) {
+        if(keyData[keyMap[((Component.Identifier.Key) key.getIdentifier()).getKeyIndex()]] > 0) {
             return true;
         }
         return false;
@@ -123,14 +123,14 @@ public class LinuxKeyboard extends StandardKeyboard {
     /** Goes through every key to initialise the key map
      */    
     private void setupKeyMap() {
-        for(int i=0;i<KeyID.LAST.getKeyIndex();i++) {
+        for(int i=0;i<Component.Identifier.Key.LAST.getKeyIndex();i++) {
             keyMap[i] = numKeys;
         }
         for(int i=0;i<numKeys;i++) {
             int tempNativeID = supportedKeys[i];
-            Keyboard.KeyID tempKeyID = StandardKeyboard.KeyID.VOID;
+            Component.Identifier.Key tempKeyID = Component.Identifier.Key.VOID;
             try {
-                tempKeyID = (Keyboard.KeyID)LinuxNativeTypesMap.getButtonID(tempNativeID);                
+                tempKeyID = (Component.Identifier.Key)LinuxNativeTypesMap.getButtonID(tempNativeID);                
             } catch (ClassCastException e) {
                 System.out.println("LinuxNativeTypesMap.getButtonID() returned " + LinuxNativeTypesMap.getButtonID(tempNativeID).getClass().toString());
             }            
@@ -146,16 +146,16 @@ public class LinuxKeyboard extends StandardKeyboard {
     /** Renames all the keys based on what information we have about them (number/name)
      */    
     private void renameKeys() {
-        Axis tempAxes[] = getAxes();
+        Component tempAxes[] = getComponents();
         // Do this one by hand as it's a special case
         //((AbstractAxis)tempAxes[0]).setName("Unknown");
         for(int i=0;i<tempAxes.length;i++) {
-            Axis tempAxis = tempAxes[i];
-            int nativeKeyID = supportedKeys[keyMap[((Keyboard.KeyID) tempAxis.getIdentifier()).getKeyIndex()]];
+            Component tempAxis = tempAxes[i];
+            int nativeKeyID = supportedKeys[keyMap[((Component.Identifier.Key) tempAxis.getIdentifier()).getKeyIndex()]];
             //System.out.println("key " + tempAxis + " map: " + nativeKeyID);
             if(nativeKeyID != NativeDefinitions.KEY_UNKNOWN) {
                 String tempName = LinuxNativeTypesMap.getButtonName(nativeKeyID);
-                ((AbstractAxis)tempAxis).setName(tempName);
+                ((AbstractComponent)tempAxis).setName(tempName);
 
                 /*System.out.println("axis id is " + (Keyboard.KeyID) tempAxis.getIdentifier());
                 System.out.println("keyMap[id] is " + keyMap[((Keyboard.KeyID) tempAxis.getIdentifier()).getKeyIndex()]);
@@ -189,41 +189,5 @@ public class LinuxKeyboard extends StandardKeyboard {
      * @param deviceID The keybaord id
      * @return native port ype
      */    
-    private native int getNativePortType(int deviceID);
-
-    /** Linux specific key ID's
-     * @author Jeremy Booth (jeremy@newdawnsoftware.com)
-     */    
-    public static class KeyID extends StandardKeyboard.KeyID {
-        
-        /** The Page up key id
-         */        
-        public static final KeyID PAGEUP = new KeyID(StandardKeyboard.KeyID.LAST.getKeyIndex()+1, "Page up");
-        /** Page down key id
-         */        
-        public static final KeyID PAGEDOWN = new KeyID(StandardKeyboard.KeyID.LAST.getKeyIndex()+1, "Page down");
-        /** The last defined key ID
-         */        
-        protected static final KeyID LAST = PAGEDOWN;
-        
-        /** The name of this key ID
-         */        
-        String name;
-        
-        /** Construct a new key ID from the passed arguments
-         * @param keyid The native ID of the key
-         * @param name The name fo the key
-         */        
-        public KeyID(int keyid, String name) {
-            super(keyid);
-            this.name = name;
-        }
-        
-        /** Returns a string representing this key ID
-         * @return String representing this key id
-         */        
-        public String toString() {
-            return super.toString() + " (" + name + ")";
-        }
-    }    
+    private native int getNativePortType(int deviceID);    
 }

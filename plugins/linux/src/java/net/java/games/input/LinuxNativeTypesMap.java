@@ -47,13 +47,13 @@ public class LinuxNativeTypesMap {
     private String absAxesNames[];
     /** Indexed array of relative axis ID's
      */    
-    private Axis.Identifier relAxesIDs[];
+    private Component.Identifier relAxesIDs[];
     /** Indexed array of absoulte axis ID's
      */    
-    private Axis.Identifier absAxesIDs[];
+    private Component.Identifier absAxesIDs[];
     /** Indexed array of button axis ID's
      */    
-    private Axis.Identifier buttonIDs[];
+    private Component.Identifier buttonIDs[];
     
     /** create an empty, uninitialsed map
      */    
@@ -338,125 +338,125 @@ public class LinuxNativeTypesMap {
         keyNames[NativeDefinitions.BTN_STYLUS] = "Digitiser Stylus Button ";
         keyNames[NativeDefinitions.BTN_STYLUS2] = "Second Digitiser Stylus Button ";
 
-        buttonIDs = new Axis.Identifier[NativeDefinitions.KEY_MAX];
-        buttonIDs[NativeDefinitions.KEY_ESC] = StandardKeyboard.KeyID.ESCAPE;
-        buttonIDs[NativeDefinitions.KEY_1] = StandardKeyboard.KeyID._1;
-        buttonIDs[NativeDefinitions.KEY_2] = StandardKeyboard.KeyID._2;
-        buttonIDs[NativeDefinitions.KEY_3] = StandardKeyboard.KeyID._3;
-        buttonIDs[NativeDefinitions.KEY_4] = StandardKeyboard.KeyID._4;
-        buttonIDs[NativeDefinitions.KEY_5] = StandardKeyboard.KeyID._5;
-        buttonIDs[NativeDefinitions.KEY_6] = StandardKeyboard.KeyID._6;
-        buttonIDs[NativeDefinitions.KEY_7] = StandardKeyboard.KeyID._7;
-        buttonIDs[NativeDefinitions.KEY_8] = StandardKeyboard.KeyID._8;
-        buttonIDs[NativeDefinitions.KEY_9] = StandardKeyboard.KeyID._9;
-        buttonIDs[NativeDefinitions.KEY_0] = StandardKeyboard.KeyID._0;
-        buttonIDs[NativeDefinitions.KEY_MINUS] = StandardKeyboard.KeyID.MINUS;
-        buttonIDs[NativeDefinitions.KEY_EQUAL] = StandardKeyboard.KeyID.EQUALS;
-        buttonIDs[NativeDefinitions.KEY_BACKSPACE] = StandardKeyboard.KeyID.BACK;
-        buttonIDs[NativeDefinitions.KEY_TAB] = StandardKeyboard.KeyID.TAB;
-        buttonIDs[NativeDefinitions.KEY_Q] = StandardKeyboard.KeyID.Q;
-        buttonIDs[NativeDefinitions.KEY_W] = StandardKeyboard.KeyID.W;
-        buttonIDs[NativeDefinitions.KEY_E] = StandardKeyboard.KeyID.E;
-        buttonIDs[NativeDefinitions.KEY_R] = StandardKeyboard.KeyID.R;
-        buttonIDs[NativeDefinitions.KEY_T] = StandardKeyboard.KeyID.T;
-        buttonIDs[NativeDefinitions.KEY_Y] = StandardKeyboard.KeyID.Y;
-        buttonIDs[NativeDefinitions.KEY_U] = StandardKeyboard.KeyID.U;
-        buttonIDs[NativeDefinitions.KEY_I] = StandardKeyboard.KeyID.I;
-        buttonIDs[NativeDefinitions.KEY_O] = StandardKeyboard.KeyID.O;
-        buttonIDs[NativeDefinitions.KEY_P] = StandardKeyboard.KeyID.P;
-        buttonIDs[NativeDefinitions.KEY_LEFTBRACE] = StandardKeyboard.KeyID.LBRACKET;
-        buttonIDs[NativeDefinitions.KEY_RIGHTBRACE] = StandardKeyboard.KeyID.RBRACKET;
-        buttonIDs[NativeDefinitions.KEY_ENTER] = StandardKeyboard.KeyID.RETURN;
-        buttonIDs[NativeDefinitions.KEY_LEFTCTRL] = StandardKeyboard.KeyID.LCONTROL;
-        buttonIDs[NativeDefinitions.KEY_A] = StandardKeyboard.KeyID.A;
-        buttonIDs[NativeDefinitions.KEY_S] = StandardKeyboard.KeyID.S;
-        buttonIDs[NativeDefinitions.KEY_D] = StandardKeyboard.KeyID.D;
-        buttonIDs[NativeDefinitions.KEY_F] = StandardKeyboard.KeyID.F;
-        buttonIDs[NativeDefinitions.KEY_G] = StandardKeyboard.KeyID.G;
-        buttonIDs[NativeDefinitions.KEY_H] = StandardKeyboard.KeyID.H;
-        buttonIDs[NativeDefinitions.KEY_J] = StandardKeyboard.KeyID.J;
-        buttonIDs[NativeDefinitions.KEY_K] = StandardKeyboard.KeyID.K;
-        buttonIDs[NativeDefinitions.KEY_L] = StandardKeyboard.KeyID.L;
-        buttonIDs[NativeDefinitions.KEY_SEMICOLON] = StandardKeyboard.KeyID.SEMICOLON;
-        buttonIDs[NativeDefinitions.KEY_APOSTROPHE] = StandardKeyboard.KeyID.APOSTROPHE;
-        buttonIDs[NativeDefinitions.KEY_GRAVE] = StandardKeyboard.KeyID.GRAVE;
-        buttonIDs[NativeDefinitions.KEY_LEFTSHIFT] = StandardKeyboard.KeyID.LSHIFT;
-        buttonIDs[NativeDefinitions.KEY_BACKSLASH] = StandardKeyboard.KeyID.BACKSLASH;
-        buttonIDs[NativeDefinitions.KEY_Z] = StandardKeyboard.KeyID.Z;
-        buttonIDs[NativeDefinitions.KEY_X] = StandardKeyboard.KeyID.X;
-        buttonIDs[NativeDefinitions.KEY_C] = StandardKeyboard.KeyID.C;
-        buttonIDs[NativeDefinitions.KEY_V] = StandardKeyboard.KeyID.V;
-        buttonIDs[NativeDefinitions.KEY_B] = StandardKeyboard.KeyID.B;
-        buttonIDs[NativeDefinitions.KEY_N] = StandardKeyboard.KeyID.N;
-        buttonIDs[NativeDefinitions.KEY_M] = StandardKeyboard.KeyID.M;
-        buttonIDs[NativeDefinitions.KEY_COMMA] = StandardKeyboard.KeyID.COMMA;
-        buttonIDs[NativeDefinitions.KEY_DOT] = StandardKeyboard.KeyID.PERIOD;
-        buttonIDs[NativeDefinitions.KEY_SLASH] = StandardKeyboard.KeyID.SLASH;
-        buttonIDs[NativeDefinitions.KEY_RIGHTSHIFT] = StandardKeyboard.KeyID.RSHIFT;
-        buttonIDs[NativeDefinitions.KEY_KPASTERISK] = StandardKeyboard.KeyID.MULTIPLY;
-        buttonIDs[NativeDefinitions.KEY_LEFTALT] = StandardKeyboard.KeyID.LALT;
-        buttonIDs[NativeDefinitions.KEY_SPACE] = StandardKeyboard.KeyID.SPACE;
-        buttonIDs[NativeDefinitions.KEY_CAPSLOCK] = StandardKeyboard.KeyID.CAPITAL;
-        buttonIDs[NativeDefinitions.KEY_F1] = StandardKeyboard.KeyID.F1;
-        buttonIDs[NativeDefinitions.KEY_F2] = StandardKeyboard.KeyID.F2;
-        buttonIDs[NativeDefinitions.KEY_F3] = StandardKeyboard.KeyID.F3;
-        buttonIDs[NativeDefinitions.KEY_F4] = StandardKeyboard.KeyID.F4;
-        buttonIDs[NativeDefinitions.KEY_F5] = StandardKeyboard.KeyID.F5;
-        buttonIDs[NativeDefinitions.KEY_F6] = StandardKeyboard.KeyID.F6;
-        buttonIDs[NativeDefinitions.KEY_F7] = StandardKeyboard.KeyID.F7;
-        buttonIDs[NativeDefinitions.KEY_F8] = StandardKeyboard.KeyID.F8;
-        buttonIDs[NativeDefinitions.KEY_F9] = StandardKeyboard.KeyID.F9;
-        buttonIDs[NativeDefinitions.KEY_F10] = StandardKeyboard.KeyID.F10;
-        buttonIDs[NativeDefinitions.KEY_NUMLOCK] = StandardKeyboard.KeyID.NUMLOCK;
-        buttonIDs[NativeDefinitions.KEY_SCROLLLOCK] = StandardKeyboard.KeyID.SCROLL;
-        buttonIDs[NativeDefinitions.KEY_KP7] = StandardKeyboard.KeyID.NUMPAD7;
-        buttonIDs[NativeDefinitions.KEY_KP8] = StandardKeyboard.KeyID.NUMPAD8;
-        buttonIDs[NativeDefinitions.KEY_KP9] = StandardKeyboard.KeyID.NUMPAD9;
-        buttonIDs[NativeDefinitions.KEY_KPMINUS] = StandardKeyboard.KeyID.SUBTRACT;
-        buttonIDs[NativeDefinitions.KEY_KP4] = StandardKeyboard.KeyID.NUMPAD4;
-        buttonIDs[NativeDefinitions.KEY_KP5] = StandardKeyboard.KeyID.NUMPAD5;
-        buttonIDs[NativeDefinitions.KEY_KP6] = StandardKeyboard.KeyID.NUMPAD6;
-        buttonIDs[NativeDefinitions.KEY_KPPLUS] = StandardKeyboard.KeyID.ADD;
-        buttonIDs[NativeDefinitions.KEY_KP1] = StandardKeyboard.KeyID.NUMPAD1;
-        buttonIDs[NativeDefinitions.KEY_KP2] = StandardKeyboard.KeyID.NUMPAD2;
-        buttonIDs[NativeDefinitions.KEY_KP3] = StandardKeyboard.KeyID.NUMPAD3;
-        buttonIDs[NativeDefinitions.KEY_KP0] = StandardKeyboard.KeyID.NUMPAD0;
-        buttonIDs[NativeDefinitions.KEY_KPDOT] = StandardKeyboard.KeyID.DECIMAL;
+        buttonIDs = new Component.Identifier[NativeDefinitions.KEY_MAX];
+        buttonIDs[NativeDefinitions.KEY_ESC] = Component.Identifier.Key.ESCAPE;
+        buttonIDs[NativeDefinitions.KEY_1] = Component.Identifier.Key._1;
+        buttonIDs[NativeDefinitions.KEY_2] = Component.Identifier.Key._2;
+        buttonIDs[NativeDefinitions.KEY_3] = Component.Identifier.Key._3;
+        buttonIDs[NativeDefinitions.KEY_4] = Component.Identifier.Key._4;
+        buttonIDs[NativeDefinitions.KEY_5] = Component.Identifier.Key._5;
+        buttonIDs[NativeDefinitions.KEY_6] = Component.Identifier.Key._6;
+        buttonIDs[NativeDefinitions.KEY_7] = Component.Identifier.Key._7;
+        buttonIDs[NativeDefinitions.KEY_8] = Component.Identifier.Key._8;
+        buttonIDs[NativeDefinitions.KEY_9] = Component.Identifier.Key._9;
+        buttonIDs[NativeDefinitions.KEY_0] = Component.Identifier.Key._0;
+        buttonIDs[NativeDefinitions.KEY_MINUS] = Component.Identifier.Key.MINUS;
+        buttonIDs[NativeDefinitions.KEY_EQUAL] = Component.Identifier.Key.EQUALS;
+        buttonIDs[NativeDefinitions.KEY_BACKSPACE] = Component.Identifier.Key.BACK;
+        buttonIDs[NativeDefinitions.KEY_TAB] = Component.Identifier.Key.TAB;
+        buttonIDs[NativeDefinitions.KEY_Q] = Component.Identifier.Key.Q;
+        buttonIDs[NativeDefinitions.KEY_W] = Component.Identifier.Key.W;
+        buttonIDs[NativeDefinitions.KEY_E] = Component.Identifier.Key.E;
+        buttonIDs[NativeDefinitions.KEY_R] = Component.Identifier.Key.R;
+        buttonIDs[NativeDefinitions.KEY_T] = Component.Identifier.Key.T;
+        buttonIDs[NativeDefinitions.KEY_Y] = Component.Identifier.Key.Y;
+        buttonIDs[NativeDefinitions.KEY_U] = Component.Identifier.Key.U;
+        buttonIDs[NativeDefinitions.KEY_I] = Component.Identifier.Key.I;
+        buttonIDs[NativeDefinitions.KEY_O] = Component.Identifier.Key.O;
+        buttonIDs[NativeDefinitions.KEY_P] = Component.Identifier.Key.P;
+        buttonIDs[NativeDefinitions.KEY_LEFTBRACE] = Component.Identifier.Key.LBRACKET;
+        buttonIDs[NativeDefinitions.KEY_RIGHTBRACE] = Component.Identifier.Key.RBRACKET;
+        buttonIDs[NativeDefinitions.KEY_ENTER] = Component.Identifier.Key.RETURN;
+        buttonIDs[NativeDefinitions.KEY_LEFTCTRL] = Component.Identifier.Key.LCONTROL;
+        buttonIDs[NativeDefinitions.KEY_A] = Component.Identifier.Key.A;
+        buttonIDs[NativeDefinitions.KEY_S] = Component.Identifier.Key.S;
+        buttonIDs[NativeDefinitions.KEY_D] = Component.Identifier.Key.D;
+        buttonIDs[NativeDefinitions.KEY_F] = Component.Identifier.Key.F;
+        buttonIDs[NativeDefinitions.KEY_G] = Component.Identifier.Key.G;
+        buttonIDs[NativeDefinitions.KEY_H] = Component.Identifier.Key.H;
+        buttonIDs[NativeDefinitions.KEY_J] = Component.Identifier.Key.J;
+        buttonIDs[NativeDefinitions.KEY_K] = Component.Identifier.Key.K;
+        buttonIDs[NativeDefinitions.KEY_L] = Component.Identifier.Key.L;
+        buttonIDs[NativeDefinitions.KEY_SEMICOLON] = Component.Identifier.Key.SEMICOLON;
+        buttonIDs[NativeDefinitions.KEY_APOSTROPHE] = Component.Identifier.Key.APOSTROPHE;
+        buttonIDs[NativeDefinitions.KEY_GRAVE] = Component.Identifier.Key.GRAVE;
+        buttonIDs[NativeDefinitions.KEY_LEFTSHIFT] = Component.Identifier.Key.LSHIFT;
+        buttonIDs[NativeDefinitions.KEY_BACKSLASH] = Component.Identifier.Key.BACKSLASH;
+        buttonIDs[NativeDefinitions.KEY_Z] = Component.Identifier.Key.Z;
+        buttonIDs[NativeDefinitions.KEY_X] = Component.Identifier.Key.X;
+        buttonIDs[NativeDefinitions.KEY_C] = Component.Identifier.Key.C;
+        buttonIDs[NativeDefinitions.KEY_V] = Component.Identifier.Key.V;
+        buttonIDs[NativeDefinitions.KEY_B] = Component.Identifier.Key.B;
+        buttonIDs[NativeDefinitions.KEY_N] = Component.Identifier.Key.N;
+        buttonIDs[NativeDefinitions.KEY_M] = Component.Identifier.Key.M;
+        buttonIDs[NativeDefinitions.KEY_COMMA] = Component.Identifier.Key.COMMA;
+        buttonIDs[NativeDefinitions.KEY_DOT] = Component.Identifier.Key.PERIOD;
+        buttonIDs[NativeDefinitions.KEY_SLASH] = Component.Identifier.Key.SLASH;
+        buttonIDs[NativeDefinitions.KEY_RIGHTSHIFT] = Component.Identifier.Key.RSHIFT;
+        buttonIDs[NativeDefinitions.KEY_KPASTERISK] = Component.Identifier.Key.MULTIPLY;
+        buttonIDs[NativeDefinitions.KEY_LEFTALT] = Component.Identifier.Key.LALT;
+        buttonIDs[NativeDefinitions.KEY_SPACE] = Component.Identifier.Key.SPACE;
+        buttonIDs[NativeDefinitions.KEY_CAPSLOCK] = Component.Identifier.Key.CAPITAL;
+        buttonIDs[NativeDefinitions.KEY_F1] = Component.Identifier.Key.F1;
+        buttonIDs[NativeDefinitions.KEY_F2] = Component.Identifier.Key.F2;
+        buttonIDs[NativeDefinitions.KEY_F3] = Component.Identifier.Key.F3;
+        buttonIDs[NativeDefinitions.KEY_F4] = Component.Identifier.Key.F4;
+        buttonIDs[NativeDefinitions.KEY_F5] = Component.Identifier.Key.F5;
+        buttonIDs[NativeDefinitions.KEY_F6] = Component.Identifier.Key.F6;
+        buttonIDs[NativeDefinitions.KEY_F7] = Component.Identifier.Key.F7;
+        buttonIDs[NativeDefinitions.KEY_F8] = Component.Identifier.Key.F8;
+        buttonIDs[NativeDefinitions.KEY_F9] = Component.Identifier.Key.F9;
+        buttonIDs[NativeDefinitions.KEY_F10] = Component.Identifier.Key.F10;
+        buttonIDs[NativeDefinitions.KEY_NUMLOCK] = Component.Identifier.Key.NUMLOCK;
+        buttonIDs[NativeDefinitions.KEY_SCROLLLOCK] = Component.Identifier.Key.SCROLL;
+        buttonIDs[NativeDefinitions.KEY_KP7] = Component.Identifier.Key.NUMPAD7;
+        buttonIDs[NativeDefinitions.KEY_KP8] = Component.Identifier.Key.NUMPAD8;
+        buttonIDs[NativeDefinitions.KEY_KP9] = Component.Identifier.Key.NUMPAD9;
+        buttonIDs[NativeDefinitions.KEY_KPMINUS] = Component.Identifier.Key.SUBTRACT;
+        buttonIDs[NativeDefinitions.KEY_KP4] = Component.Identifier.Key.NUMPAD4;
+        buttonIDs[NativeDefinitions.KEY_KP5] = Component.Identifier.Key.NUMPAD5;
+        buttonIDs[NativeDefinitions.KEY_KP6] = Component.Identifier.Key.NUMPAD6;
+        buttonIDs[NativeDefinitions.KEY_KPPLUS] = Component.Identifier.Key.ADD;
+        buttonIDs[NativeDefinitions.KEY_KP1] = Component.Identifier.Key.NUMPAD1;
+        buttonIDs[NativeDefinitions.KEY_KP2] = Component.Identifier.Key.NUMPAD2;
+        buttonIDs[NativeDefinitions.KEY_KP3] = Component.Identifier.Key.NUMPAD3;
+        buttonIDs[NativeDefinitions.KEY_KP0] = Component.Identifier.Key.NUMPAD0;
+        buttonIDs[NativeDefinitions.KEY_KPDOT] = Component.Identifier.Key.DECIMAL;
         buttonIDs[NativeDefinitions.KEY_103RD] = null;
-        buttonIDs[NativeDefinitions.KEY_F13] = StandardKeyboard.KeyID.F13;
+        buttonIDs[NativeDefinitions.KEY_F13] = Component.Identifier.Key.F13;
         buttonIDs[NativeDefinitions.KEY_102ND] = null;
-        buttonIDs[NativeDefinitions.KEY_F11] = StandardKeyboard.KeyID.F11;
-        buttonIDs[NativeDefinitions.KEY_F12] = StandardKeyboard.KeyID.F12;
-        buttonIDs[NativeDefinitions.KEY_F14] = StandardKeyboard.KeyID.F14;
-        buttonIDs[NativeDefinitions.KEY_F15] = StandardKeyboard.KeyID.F15;
+        buttonIDs[NativeDefinitions.KEY_F11] = Component.Identifier.Key.F11;
+        buttonIDs[NativeDefinitions.KEY_F12] = Component.Identifier.Key.F12;
+        buttonIDs[NativeDefinitions.KEY_F14] = Component.Identifier.Key.F14;
+        buttonIDs[NativeDefinitions.KEY_F15] = Component.Identifier.Key.F15;
         buttonIDs[NativeDefinitions.KEY_F16] = null;
         buttonIDs[NativeDefinitions.KEY_F17] = null;
         buttonIDs[NativeDefinitions.KEY_F18] = null;
         buttonIDs[NativeDefinitions.KEY_F19] = null;
         buttonIDs[NativeDefinitions.KEY_F20] = null;
-        buttonIDs[NativeDefinitions.KEY_KPENTER] = StandardKeyboard.KeyID.NUMPADENTER;
-        buttonIDs[NativeDefinitions.KEY_RIGHTCTRL] = StandardKeyboard.KeyID.RCONTROL;
-        buttonIDs[NativeDefinitions.KEY_KPSLASH] = StandardKeyboard.KeyID.DIVIDE;
-        buttonIDs[NativeDefinitions.KEY_SYSRQ] = StandardKeyboard.KeyID.SYSRQ;
-        buttonIDs[NativeDefinitions.KEY_RIGHTALT] = StandardKeyboard.KeyID.RALT;
+        buttonIDs[NativeDefinitions.KEY_KPENTER] = Component.Identifier.Key.NUMPADENTER;
+        buttonIDs[NativeDefinitions.KEY_RIGHTCTRL] = Component.Identifier.Key.RCONTROL;
+        buttonIDs[NativeDefinitions.KEY_KPSLASH] = Component.Identifier.Key.DIVIDE;
+        buttonIDs[NativeDefinitions.KEY_SYSRQ] = Component.Identifier.Key.SYSRQ;
+        buttonIDs[NativeDefinitions.KEY_RIGHTALT] = Component.Identifier.Key.RALT;
         buttonIDs[NativeDefinitions.KEY_LINEFEED] = null;
-        buttonIDs[NativeDefinitions.KEY_HOME] = StandardKeyboard.KeyID.HOME;
-        buttonIDs[NativeDefinitions.KEY_UP] = StandardKeyboard.KeyID.UP;
-        buttonIDs[NativeDefinitions.KEY_PAGEUP] = LinuxKeyboard.KeyID.PAGEUP;
-        buttonIDs[NativeDefinitions.KEY_LEFT] = StandardKeyboard.KeyID.LEFT;
-        buttonIDs[NativeDefinitions.KEY_RIGHT] = StandardKeyboard.KeyID.RIGHT;
-        buttonIDs[NativeDefinitions.KEY_END] = StandardKeyboard.KeyID.END;
-        buttonIDs[NativeDefinitions.KEY_DOWN] = StandardKeyboard.KeyID.DOWN;
-        buttonIDs[NativeDefinitions.KEY_PAGEDOWN] = LinuxKeyboard.KeyID.PAGEDOWN;
-        buttonIDs[NativeDefinitions.KEY_INSERT] = StandardKeyboard.KeyID.INSERT;
-        buttonIDs[NativeDefinitions.KEY_DELETE] = StandardKeyboard.KeyID.DELETE;
-        buttonIDs[NativeDefinitions.KEY_PAUSE] = StandardKeyboard.KeyID.PAUSE;
+        buttonIDs[NativeDefinitions.KEY_HOME] = Component.Identifier.Key.HOME;
+        buttonIDs[NativeDefinitions.KEY_UP] = Component.Identifier.Key.UP;
+        buttonIDs[NativeDefinitions.KEY_PAGEUP] = Component.Identifier.Key.PAGEUP;
+        buttonIDs[NativeDefinitions.KEY_LEFT] = Component.Identifier.Key.LEFT;
+        buttonIDs[NativeDefinitions.KEY_RIGHT] = Component.Identifier.Key.RIGHT;
+        buttonIDs[NativeDefinitions.KEY_END] = Component.Identifier.Key.END;
+        buttonIDs[NativeDefinitions.KEY_DOWN] = Component.Identifier.Key.DOWN;
+        buttonIDs[NativeDefinitions.KEY_PAGEDOWN] = Component.Identifier.Key.PAGEDOWN;
+        buttonIDs[NativeDefinitions.KEY_INSERT] = Component.Identifier.Key.INSERT;
+        buttonIDs[NativeDefinitions.KEY_DELETE] = Component.Identifier.Key.DELETE;
+        buttonIDs[NativeDefinitions.KEY_PAUSE] = Component.Identifier.Key.PAUSE;
 /*        buttonIDs[NativeDefinitions.KEY_MACRO] = "Macro";
         buttonIDs[NativeDefinitions.KEY_MUTE] = "Mute";
         buttonIDs[NativeDefinitions.KEY_VOLUMEDOWN] = "Volume Down";
         buttonIDs[NativeDefinitions.KEY_VOLUMEUP] = "Volume Up";
         buttonIDs[NativeDefinitions.KEY_POWER] = "Power";*/
-        buttonIDs[NativeDefinitions.KEY_KPEQUAL] = StandardKeyboard.KeyID.NUMPADEQUAL;
+        buttonIDs[NativeDefinitions.KEY_KPEQUAL] = Component.Identifier.Key.NUMPADEQUAL;
         //buttonIDs[NativeDefinitions.KEY_KPPLUSMINUS] = "KeyPad +/-";
 /*        buttonIDs[NativeDefinitions.KEY_F21] = "F21";
         buttonIDs[NativeDefinitions.KEY_F22] = "F22";
@@ -480,7 +480,7 @@ public class LinuxNativeTypesMap {
         buttonIDs[NativeDefinitions.KEY_MENU] = "Menu";
         buttonIDs[NativeDefinitions.KEY_CALC] = "Calculator";
         buttonIDs[NativeDefinitions.KEY_SETUP] = "Setup";*/
-        buttonIDs[NativeDefinitions.KEY_SLEEP] = StandardKeyboard.KeyID.SLEEP;
+        buttonIDs[NativeDefinitions.KEY_SLEEP] = Component.Identifier.Key.SLEEP;
         /*buttonIDs[NativeDefinitions.KEY_WAKEUP] = "Wakeup";
         buttonIDs[NativeDefinitions.KEY_FILE] = "File";
         buttonIDs[NativeDefinitions.KEY_SENDFILE] = "Send File";
@@ -543,74 +543,74 @@ public class LinuxNativeTypesMap {
         buttonIDs[NativeDefinitions.KEY_PROG4] = "Program 4";
         buttonIDs[NativeDefinitions.KEY_SUSPEND] = "Suspend";
         buttonIDs[NativeDefinitions.KEY_CLOSE] = "Close";*/
-        buttonIDs[NativeDefinitions.KEY_UNKNOWN] = StandardKeyboard.KeyID.UNLABELED;
+        buttonIDs[NativeDefinitions.KEY_UNKNOWN] = Component.Identifier.Key.UNLABELED;
         /*buttonIDs[NativeDefinitions.KEY_BRIGHTNESSDOWN] = "Brightness Down";
         buttonIDs[NativeDefinitions.KEY_BRIGHTNESSUP] = "Brightness Up";*/
         
         //Msic keys
-        buttonIDs[NativeDefinitions.BTN_0] = LinuxDevice.ButtonID.BTN_0;
-        buttonIDs[NativeDefinitions.BTN_1] = LinuxDevice.ButtonID.BTN_1;
-        buttonIDs[NativeDefinitions.BTN_2] = LinuxDevice.ButtonID.BTN_2;
-        buttonIDs[NativeDefinitions.BTN_3] = LinuxDevice.ButtonID.BTN_3;
-        buttonIDs[NativeDefinitions.BTN_4] = LinuxDevice.ButtonID.BTN_4;
-        buttonIDs[NativeDefinitions.BTN_5] = LinuxDevice.ButtonID.BTN_5;
-        buttonIDs[NativeDefinitions.BTN_6] = LinuxDevice.ButtonID.BTN_6;
-        buttonIDs[NativeDefinitions.BTN_7] = LinuxDevice.ButtonID.BTN_7;
-        buttonIDs[NativeDefinitions.BTN_8] = LinuxDevice.ButtonID.BTN_8;
-        buttonIDs[NativeDefinitions.BTN_9] = LinuxDevice.ButtonID.BTN_9;
+        buttonIDs[NativeDefinitions.BTN_0] = Component.Identifier.Button._0;
+        buttonIDs[NativeDefinitions.BTN_1] = Component.Identifier.Button._1;
+        buttonIDs[NativeDefinitions.BTN_2] = Component.Identifier.Button._2;
+        buttonIDs[NativeDefinitions.BTN_3] = Component.Identifier.Button._3;
+        buttonIDs[NativeDefinitions.BTN_4] = Component.Identifier.Button._4;
+        buttonIDs[NativeDefinitions.BTN_5] = Component.Identifier.Button._5;
+        buttonIDs[NativeDefinitions.BTN_6] = Component.Identifier.Button._6;
+        buttonIDs[NativeDefinitions.BTN_7] = Component.Identifier.Button._7;
+        buttonIDs[NativeDefinitions.BTN_8] = Component.Identifier.Button._8;
+        buttonIDs[NativeDefinitions.BTN_9] = Component.Identifier.Button._9;
         
         // Mouse
-        buttonIDs[NativeDefinitions.BTN_LEFT] = Mouse.ButtonID.LEFT;
-        buttonIDs[NativeDefinitions.BTN_RIGHT] = Mouse.ButtonID.RIGHT;
-        buttonIDs[NativeDefinitions.BTN_MIDDLE] = Mouse.ButtonID.MIDDLE;
-        buttonIDs[NativeDefinitions.BTN_SIDE] = Mouse.ButtonID.SIDE;
-        buttonIDs[NativeDefinitions.BTN_EXTRA] = Mouse.ButtonID.EXTRA;
-        buttonIDs[NativeDefinitions.BTN_FORWARD] = Mouse.ButtonID.FORWARD;
-        buttonIDs[NativeDefinitions.BTN_BACK] = Mouse.ButtonID.BACK;
+        buttonIDs[NativeDefinitions.BTN_LEFT] = Component.Identifier.Button.LEFT;
+        buttonIDs[NativeDefinitions.BTN_RIGHT] = Component.Identifier.Button.RIGHT;
+        buttonIDs[NativeDefinitions.BTN_MIDDLE] = Component.Identifier.Button.MIDDLE;
+        buttonIDs[NativeDefinitions.BTN_SIDE] = Component.Identifier.Button.SIDE;
+        buttonIDs[NativeDefinitions.BTN_EXTRA] = Component.Identifier.Button.EXTRA;
+        buttonIDs[NativeDefinitions.BTN_FORWARD] = Component.Identifier.Button.FORWARD;
+        buttonIDs[NativeDefinitions.BTN_BACK] = Component.Identifier.Button.BACK;
         
         // Joystick
-        buttonIDs[NativeDefinitions.BTN_TRIGGER] = LinuxDevice.ButtonID.BTN_TRIGGER;
-        buttonIDs[NativeDefinitions.BTN_THUMB] = LinuxDevice.ButtonID.BTN_THUMB;
-        buttonIDs[NativeDefinitions.BTN_THUMB2] = LinuxDevice.ButtonID.BTN_THUMB2;
-        buttonIDs[NativeDefinitions.BTN_TOP] = LinuxDevice.ButtonID.BTN_TOP;
-        buttonIDs[NativeDefinitions.BTN_TOP2] = LinuxDevice.ButtonID.BTN_TOP2;
-        buttonIDs[NativeDefinitions.BTN_PINKIE] = LinuxDevice.ButtonID.BTN_PINKIE;
-        buttonIDs[NativeDefinitions.BTN_BASE] = LinuxDevice.ButtonID.BTN_BASE;
-        buttonIDs[NativeDefinitions.BTN_BASE2] = LinuxDevice.ButtonID.BTN_BASE2;
-        buttonIDs[NativeDefinitions.BTN_BASE3] = LinuxDevice.ButtonID.BTN_BASE3;
-        buttonIDs[NativeDefinitions.BTN_BASE4] = LinuxDevice.ButtonID.BTN_BASE4;
-        buttonIDs[NativeDefinitions.BTN_BASE5] = LinuxDevice.ButtonID.BTN_BASE5;
-        buttonIDs[NativeDefinitions.BTN_BASE6] = LinuxDevice.ButtonID.BTN_BASE6;
-        buttonIDs[NativeDefinitions.BTN_DEAD] = LinuxDevice.ButtonID.BTN_DEAD;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER] = Component.Identifier.Button.TRIGGER;
+        buttonIDs[NativeDefinitions.BTN_THUMB] = Component.Identifier.Button.THUMB;
+        buttonIDs[NativeDefinitions.BTN_THUMB2] = Component.Identifier.Button.THUMB2;
+        buttonIDs[NativeDefinitions.BTN_TOP] = Component.Identifier.Button.TOP;
+        buttonIDs[NativeDefinitions.BTN_TOP2] = Component.Identifier.Button.TOP2;
+        buttonIDs[NativeDefinitions.BTN_PINKIE] = Component.Identifier.Button.PINKIE;
+        buttonIDs[NativeDefinitions.BTN_BASE] = Component.Identifier.Button.BASE;
+        buttonIDs[NativeDefinitions.BTN_BASE2] = Component.Identifier.Button.BASE2;
+        buttonIDs[NativeDefinitions.BTN_BASE3] = Component.Identifier.Button.BASE3;
+        buttonIDs[NativeDefinitions.BTN_BASE4] = Component.Identifier.Button.BASE4;
+        buttonIDs[NativeDefinitions.BTN_BASE5] = Component.Identifier.Button.BASE5;
+        buttonIDs[NativeDefinitions.BTN_BASE6] = Component.Identifier.Button.BASE6;
+        buttonIDs[NativeDefinitions.BTN_DEAD] = Component.Identifier.Button.DEAD;
         
         // Gamepad
-        buttonIDs[NativeDefinitions.BTN_A] = LinuxDevice.ButtonID.BTN_A;
-        buttonIDs[NativeDefinitions.BTN_B] = LinuxDevice.ButtonID.BTN_B;
-        buttonIDs[NativeDefinitions.BTN_C] = LinuxDevice.ButtonID.BTN_C;
-        buttonIDs[NativeDefinitions.BTN_X] = LinuxDevice.ButtonID.BTN_X;
-        buttonIDs[NativeDefinitions.BTN_Y] = LinuxDevice.ButtonID.BTN_Y;
-        buttonIDs[NativeDefinitions.BTN_Z] = LinuxDevice.ButtonID.BTN_Z;
-        buttonIDs[NativeDefinitions.BTN_TL] = LinuxDevice.ButtonID.BTN_TL;
-        buttonIDs[NativeDefinitions.BTN_TR] = LinuxDevice.ButtonID.BTN_TR;
-        buttonIDs[NativeDefinitions.BTN_TL2] = LinuxDevice.ButtonID.BTN_TL2;
-        buttonIDs[NativeDefinitions.BTN_TR2] = LinuxDevice.ButtonID.BTN_TR2;
-        buttonIDs[NativeDefinitions.BTN_SELECT] = LinuxDevice.ButtonID.BTN_SELECT;
-        buttonIDs[NativeDefinitions.BTN_MODE] = LinuxDevice.ButtonID.BTN_MODE;
-        buttonIDs[NativeDefinitions.BTN_THUMBL] = LinuxDevice.ButtonID.BTN_THUMBL;
-        buttonIDs[NativeDefinitions.BTN_THUMBR] = LinuxDevice.ButtonID.BTN_THUMBR;
+        buttonIDs[NativeDefinitions.BTN_A] = Component.Identifier.Button.A;
+        buttonIDs[NativeDefinitions.BTN_B] = Component.Identifier.Button.B;
+        buttonIDs[NativeDefinitions.BTN_C] = Component.Identifier.Button.C;
+        buttonIDs[NativeDefinitions.BTN_X] = Component.Identifier.Button.X;
+        buttonIDs[NativeDefinitions.BTN_Y] = Component.Identifier.Button.Y;
+        buttonIDs[NativeDefinitions.BTN_Z] = Component.Identifier.Button.Z;
+        buttonIDs[NativeDefinitions.BTN_TL] = Component.Identifier.Button.LEFT_THUMB;
+        buttonIDs[NativeDefinitions.BTN_TR] = Component.Identifier.Button.RIGHT_THUMB;
+        buttonIDs[NativeDefinitions.BTN_TL2] = Component.Identifier.Button.LEFT_THUMB2;
+        buttonIDs[NativeDefinitions.BTN_TR2] = Component.Identifier.Button.RIGHT_THUMB2;
+        buttonIDs[NativeDefinitions.BTN_SELECT] = Component.Identifier.Button.SELECT;
+        buttonIDs[NativeDefinitions.BTN_MODE] = Component.Identifier.Button.MODE;
+        buttonIDs[NativeDefinitions.BTN_THUMBL] = Component.Identifier.Button.LEFT_THUMB3;
+        buttonIDs[NativeDefinitions.BTN_THUMBR] = Component.Identifier.Button.RIGHT_THUMB3;
         
         // Digitiser
-        buttonIDs[NativeDefinitions.BTN_TOOL_PEN] = LinuxDevice.ButtonID.BTN_TOOL_PEN;
-        buttonIDs[NativeDefinitions.BTN_TOOL_RUBBER] = LinuxDevice.ButtonID.BTN_TOOL_RUBBER;
-        buttonIDs[NativeDefinitions.BTN_TOOL_BRUSH] = LinuxDevice.ButtonID.BTN_TOOL_BRUSH;
-        buttonIDs[NativeDefinitions.BTN_TOOL_PENCIL] = LinuxDevice.ButtonID.BTN_TOOL_PENCIL;
-        buttonIDs[NativeDefinitions.BTN_TOOL_AIRBRUSH] = LinuxDevice.ButtonID.BTN_TOOL_AIRBRUSH;
-        buttonIDs[NativeDefinitions.BTN_TOOL_FINGER] = LinuxDevice.ButtonID.BTN_TOOL_FINGER;
-        buttonIDs[NativeDefinitions.BTN_TOOL_MOUSE] = LinuxDevice.ButtonID.BTN_TOOL_MOUSE;
-        buttonIDs[NativeDefinitions.BTN_TOOL_LENS] = LinuxDevice.ButtonID.BTN_TOOL_LENS;
-        buttonIDs[NativeDefinitions.BTN_TOUCH] = LinuxDevice.ButtonID.BTN_TOUCH;
-        buttonIDs[NativeDefinitions.BTN_STYLUS] = LinuxDevice.ButtonID.BTN_STYLUS;
-        buttonIDs[NativeDefinitions.BTN_STYLUS2] = LinuxDevice.ButtonID.BTN_STYLUS2;
+        buttonIDs[NativeDefinitions.BTN_TOOL_PEN] = Component.Identifier.Button.TOOL_PEN;
+        buttonIDs[NativeDefinitions.BTN_TOOL_RUBBER] = Component.Identifier.Button.TOOL_RUBBER;
+        buttonIDs[NativeDefinitions.BTN_TOOL_BRUSH] = Component.Identifier.Button.TOOL_BRUSH;
+        buttonIDs[NativeDefinitions.BTN_TOOL_PENCIL] = Component.Identifier.Button.TOOL_PENCIL;
+        buttonIDs[NativeDefinitions.BTN_TOOL_AIRBRUSH] = Component.Identifier.Button.TOOL_AIRBRUSH;
+        buttonIDs[NativeDefinitions.BTN_TOOL_FINGER] = Component.Identifier.Button.TOOL_FINGER;
+        buttonIDs[NativeDefinitions.BTN_TOOL_MOUSE] = Component.Identifier.Button.TOOL_MOUSE;
+        buttonIDs[NativeDefinitions.BTN_TOOL_LENS] = Component.Identifier.Button.TOOL_LENS;
+        buttonIDs[NativeDefinitions.BTN_TOUCH] = Component.Identifier.Button.TOUCH;
+        buttonIDs[NativeDefinitions.BTN_STYLUS] = Component.Identifier.Button.STYLUS;
+        buttonIDs[NativeDefinitions.BTN_STYLUS2] = Component.Identifier.Button.STYLUS2;
         
         relAxesNames = new String[NativeDefinitions.REL_MAX];
         relAxesNames[NativeDefinitions.REL_X] = "X axis";
@@ -621,15 +621,15 @@ public class LinuxNativeTypesMap {
         relAxesNames[NativeDefinitions.REL_WHEEL] = "Vertical wheel";
         relAxesNames[NativeDefinitions.REL_MISC] = "Miscellaneous";
         
-        relAxesIDs = new Axis.Identifier[NativeDefinitions.REL_MAX];
-        relAxesIDs[NativeDefinitions.REL_X] = Axis.Identifier.X;
-        relAxesIDs[NativeDefinitions.REL_Y] = Axis.Identifier.Y;
-        relAxesIDs[NativeDefinitions.REL_Z] = Axis.Identifier.Z;
-        relAxesIDs[NativeDefinitions.REL_WHEEL] = Axis.Identifier.SLIDER;
+        relAxesIDs = new Component.Identifier[NativeDefinitions.REL_MAX];
+        relAxesIDs[NativeDefinitions.REL_X] = Component.Identifier.Axis.X;
+        relAxesIDs[NativeDefinitions.REL_Y] = Component.Identifier.Axis.Y;
+        relAxesIDs[NativeDefinitions.REL_Z] = Component.Identifier.Axis.Z;
+        relAxesIDs[NativeDefinitions.REL_WHEEL] = Component.Identifier.Axis.SLIDER;
         // There are guesses as I have no idea what they would be used for
-        relAxesIDs[NativeDefinitions.REL_HWHEEL] = Axis.Identifier.SLIDER;
-        relAxesIDs[NativeDefinitions.REL_DIAL] = Axis.Identifier.SLIDER;
-        relAxesIDs[NativeDefinitions.REL_MISC] = Axis.Identifier.SLIDER;
+        relAxesIDs[NativeDefinitions.REL_HWHEEL] = Component.Identifier.Axis.SLIDER;
+        relAxesIDs[NativeDefinitions.REL_DIAL] = Component.Identifier.Axis.SLIDER;
+        relAxesIDs[NativeDefinitions.REL_MISC] = Component.Identifier.Axis.SLIDER;
         
         absAxesNames = new String[NativeDefinitions.ABS_MAX];
         absAxesNames[NativeDefinitions.ABS_X] = "X axis";
@@ -658,27 +658,27 @@ public class LinuxNativeTypesMap {
         absAxesNames[NativeDefinitions.ABS_TILT_Y] = "Y axis tilt";
         absAxesNames[NativeDefinitions.ABS_MISC] = "Miscellaneous";
         
-        absAxesIDs = new Axis.Identifier[NativeDefinitions.ABS_MAX];
-        absAxesIDs[NativeDefinitions.ABS_X] = Axis.Identifier.X;
-        absAxesIDs[NativeDefinitions.ABS_Y] = Axis.Identifier.Y;
-        absAxesIDs[NativeDefinitions.ABS_Z] = Axis.Identifier.Z;
-        absAxesIDs[NativeDefinitions.ABS_RX] = Axis.Identifier.RX;
-        absAxesIDs[NativeDefinitions.ABS_RY] = Axis.Identifier.RY;
-        absAxesIDs[NativeDefinitions.ABS_RZ] = Axis.Identifier.RZ;
-        absAxesIDs[NativeDefinitions.ABS_THROTTLE] = Axis.Identifier.SLIDER;
-        absAxesIDs[NativeDefinitions.ABS_RUDDER] = Axis.Identifier.RZ;
-        absAxesIDs[NativeDefinitions.ABS_WHEEL] = Axis.Identifier.Y;
-        absAxesIDs[NativeDefinitions.ABS_GAS] = Axis.Identifier.SLIDER;
-        absAxesIDs[NativeDefinitions.ABS_BRAKE] = Axis.Identifier.SLIDER;
+        absAxesIDs = new Component.Identifier[NativeDefinitions.ABS_MAX];
+        absAxesIDs[NativeDefinitions.ABS_X] = Component.Identifier.Axis.X;
+        absAxesIDs[NativeDefinitions.ABS_Y] = Component.Identifier.Axis.Y;
+        absAxesIDs[NativeDefinitions.ABS_Z] = Component.Identifier.Axis.Z;
+        absAxesIDs[NativeDefinitions.ABS_RX] = Component.Identifier.Axis.RX;
+        absAxesIDs[NativeDefinitions.ABS_RY] = Component.Identifier.Axis.RY;
+        absAxesIDs[NativeDefinitions.ABS_RZ] = Component.Identifier.Axis.RZ;
+        absAxesIDs[NativeDefinitions.ABS_THROTTLE] = Component.Identifier.Axis.SLIDER;
+        absAxesIDs[NativeDefinitions.ABS_RUDDER] = Component.Identifier.Axis.RZ;
+        absAxesIDs[NativeDefinitions.ABS_WHEEL] = Component.Identifier.Axis.Y;
+        absAxesIDs[NativeDefinitions.ABS_GAS] = Component.Identifier.Axis.SLIDER;
+        absAxesIDs[NativeDefinitions.ABS_BRAKE] = Component.Identifier.Axis.SLIDER;
         // Hats are done this way as they are mapped from two axis down to one
-        absAxesIDs[NativeDefinitions.ABS_HAT0X] = Axis.Identifier.POV;
-        absAxesIDs[NativeDefinitions.ABS_HAT0Y] = Axis.Identifier.POV;
-        absAxesIDs[NativeDefinitions.ABS_HAT1X] = Axis.Identifier.POV;
-        absAxesIDs[NativeDefinitions.ABS_HAT1Y] = Axis.Identifier.POV;
-        absAxesIDs[NativeDefinitions.ABS_HAT2X] = Axis.Identifier.POV;
-        absAxesIDs[NativeDefinitions.ABS_HAT2Y] = Axis.Identifier.POV;
-        absAxesIDs[NativeDefinitions.ABS_HAT3X] = Axis.Identifier.POV;
-        absAxesIDs[NativeDefinitions.ABS_HAT3Y] = Axis.Identifier.POV;
+        absAxesIDs[NativeDefinitions.ABS_HAT0X] = Component.Identifier.Axis.POV;
+        absAxesIDs[NativeDefinitions.ABS_HAT0Y] = Component.Identifier.Axis.POV;
+        absAxesIDs[NativeDefinitions.ABS_HAT1X] = Component.Identifier.Axis.POV;
+        absAxesIDs[NativeDefinitions.ABS_HAT1Y] = Component.Identifier.Axis.POV;
+        absAxesIDs[NativeDefinitions.ABS_HAT2X] = Component.Identifier.Axis.POV;
+        absAxesIDs[NativeDefinitions.ABS_HAT2Y] = Component.Identifier.Axis.POV;
+        absAxesIDs[NativeDefinitions.ABS_HAT3X] = Component.Identifier.Axis.POV;
+        absAxesIDs[NativeDefinitions.ABS_HAT3Y] = Component.Identifier.Axis.POV;
         // erm, yeah
         absAxesIDs[NativeDefinitions.ABS_PRESSURE] = null;
         absAxesIDs[NativeDefinitions.ABS_DISTANCE] = null;
@@ -753,10 +753,10 @@ public class LinuxNativeTypesMap {
      * @param nativeID The axis type ID
      * @return The jinput id
      */    
-    public static Axis.Identifier getRelAxisID(int nativeID) {
-        Axis.Identifier retval = INSTANCE.relAxesIDs[nativeID];
+    public static Component.Identifier getRelAxisID(int nativeID) {
+        Component.Identifier retval = INSTANCE.relAxesIDs[nativeID];
         if(retval == null) {
-            retval = Axis.Identifier.SLIDER_VELOCITY;
+            retval = Component.Identifier.Axis.SLIDER_VELOCITY;
             INSTANCE.relAxesIDs[nativeID] = retval;
         }
         return retval;
@@ -766,10 +766,10 @@ public class LinuxNativeTypesMap {
      * @param nativeID The native axis type id
      * @return The jinput id
      */    
-    public static Axis.Identifier getAbsAxisID(int nativeID) {
-        Axis.Identifier retval = INSTANCE.absAxesIDs[nativeID];
+    public static Component.Identifier getAbsAxisID(int nativeID) {
+        Component.Identifier retval = INSTANCE.absAxesIDs[nativeID];
         if(retval == null) {
-            retval = Axis.Identifier.SLIDER;
+            retval = Component.Identifier.Axis.SLIDER;
             INSTANCE.absAxesIDs[nativeID] = retval;
         }
         return retval;
@@ -779,10 +779,10 @@ public class LinuxNativeTypesMap {
      * @param nativeID The native button type id
      * @return The jinput id
      */    
-    public static Axis.Identifier getButtonID(int nativeID) {
-        Axis.Identifier retval = INSTANCE.buttonIDs[nativeID];
+    public static Component.Identifier getButtonID(int nativeID) {
+        Component.Identifier retval = INSTANCE.buttonIDs[nativeID];
         if(retval == null) {
-            retval = new LinuxKeyboard.KeyID(nativeID, getButtonName(nativeID));
+            retval = Component.Identifier.Key.UNKNOWN;
             INSTANCE.buttonIDs[nativeID] = retval;
         }
         return retval;

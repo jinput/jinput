@@ -105,17 +105,17 @@ public abstract class Mouse extends AbstractController {
         /**
          * X-axis; should be initialized by subclasses
          */
-        protected Axis x;
+        protected Component x;
         
         /**
          * Y-axis; should be initialized by subclasses
          */
-        protected Axis y;
+        protected Component y;
         
         /**
          * Mouse wheel; should be initialized by subclasses
          */
-        protected Axis wheel;
+        protected Component wheel;
         
         /**
          * Protected constructor
@@ -134,40 +134,40 @@ public abstract class Mouse extends AbstractController {
         /**
          * Returns the x-axis for the mouse ball, never null.
          */
-        public Axis getX() {
+        public Component getX() {
             return x;
         }
         
         /**
          * Returns the y-axis for the mouse ball, never null.
          */
-        public Axis getY() {
+        public Component getY() {
             return y;
         }
         
         /**
          * Returns the mouse wheel, or null if no mouse wheel is present.
          */
-        public Axis getWheel() {
+        public Component getWheel() {
             return wheel;
         }
         
         /**
-         * Returns the axes on this controller, in order of assignment priority.
+         * Returns the components on this controller, in order of assignment priority.
          * Overridden to return the x-axis, followed by the y-axes, followed by
          * the wheel (if present).
          * The array returned is an empty array if this controller contains no
          * axes (such as a logical grouping of child controllers).
          */
-        public Axis[] getAxes() {
-            if (axes.length == 0 && x != null && y != null) {
+        public Component[] getComponents() {
+            if (components.length == 0 && x != null && y != null) {
                 if (wheel == null) {
-                    axes = new Axis[] { x, y };
+                    components = new Component[] { x, y };
                 } else {
-                    axes = new Axis[] { x, y, wheel };
+                    components = new Component[] { x, y, wheel };
                 }
             }
-            return axes;
+            return components;
         }
 
         /**
@@ -291,32 +291,32 @@ public abstract class Mouse extends AbstractController {
         }
         
         /**
-         * Returns the axes on this controller, in order of assignment priority.
+         * Returns the components on this controller, in order of assignment priority.
          * Overridden to return the the primary or leftmost mouse button,
          * followed by the secondary or rightmost mouse button (if present),
          * followed by the middle mouse button (if present).
          * The array returned is an empty array if this controller contains no
          * axes (such as a logical grouping of child controllers).
          */
-        public Axis[] getAxes() {
-            if (axes.length == 0 && left != null) {
+        public Component[] getComponents() {
+            if (components.length == 0 && left != null) {
                 if (right == null) {
-                    axes = new Axis[] { left };
+                    components = new Component[] { left };
                 } else if (middle == null) {
-                    axes = new Axis[] { left, right };
+                    components = new Component[] { left, right };
                 } else if (side == null) {
-                    axes = new Axis[] { left, right, middle };
+                    components = new Component[] { left, right, middle };
                 } else if (extra == null) {
-                    axes = new Axis[] { left, right, middle, side };
+                    components = new Component[] { left, right, middle, side };
                 } else if (forward == null) {
-                    axes = new Axis[] { left, right, middle, side, extra };
+                    components = new Component[] { left, right, middle, side, extra };
                 } else if (back == null) {
-                    axes = new Axis[] { left, right, middle, side, extra, forward };
+                    components = new Component[] { left, right, middle, side, extra, forward };
                 } else {
-                    axes = new Axis[] { left, right, middle, side, extra, forward, back };
+                    components = new Component[] { left, right, middle, side, extra, forward, back };
                 }
             }
-            return axes;
+            return components;
         }
 
         /**
@@ -333,64 +333,13 @@ public abstract class Mouse extends AbstractController {
     /**
      * Mouse button axis
      */
-    public abstract class Button extends AbstractAxis {
+    public abstract class Button extends AbstractComponent {
         
         /**
          * Protected constructor
          */
-        protected Button(String name, ButtonID id) {
+        protected Button(String name, Component.Identifier.Button id) {
             super(name, id);
         }
     } // class Mouse.Button
-
-    /**
-     * Identifier for types of mouse buttons
-     */
-    public static class ButtonID extends Axis.Identifier {
-
-        /**
-         * Protected constructor
-         */
-        protected ButtonID(String name) {
-            super(name);
-        }
-
-        /**
-         * The primary or leftmost mouse button.
-         */
-        public static final ButtonID LEFT = new ButtonID("left");
-
-        /**
-         * The secondary or rightmost mouse button, not present if
-         * the mouse is a single-button mouse.
-         */
-        public static final ButtonID RIGHT = new ButtonID("right");
-
-        /**
-         * Returns the middle mouse button, not present if the
-         * mouse has fewer than three buttons.
-         */
-        public static final ButtonID MIDDLE = new ButtonID("middle");
-        
-        /**
-         * Returns the side mouse button.
-         */
-        public static final ButtonID SIDE = new ButtonID("side");
-        
-        /**
-         * Returns the extra mouse button.
-         */
-        public static final ButtonID EXTRA = new ButtonID("extra");
-        
-        /**
-         * Returns the forward mouse button.
-         */
-        public static final ButtonID FORWARD = new ButtonID("forward");
-        
-        /**
-         * Returns the back mouse button.
-         */
-        public static final ButtonID BACK = new ButtonID("back");
-        
-    } // class Mouse.ButtonID
 } // class Mouse

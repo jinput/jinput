@@ -49,8 +49,8 @@ jfieldID FID_Side = NULL;
 jfieldID FID_Forward = NULL;
 jfieldID FID_Back = NULL;
 
-const char* FD_AxisIdentifier = "Lnet/java/games/input/Axis$Identifier;";
-const char* FD_ButtonIdentifier = "Lnet/java/games/input/Mouse$ButtonID;";
+const char* FD_AxisIdentifier = "Lnet/java/games/input/Component$Identifier$Axis;";
+const char* FD_ButtonIdentifier = "Lnet/java/games/input/Component$Identifier$Button;";
 // Dummy input window.  This is needed because DirectX evidently needs a window
 // to do anything, such as setting the cooperative level for a device.
 const TCHAR* DUMMY_WINDOW_NAME = "InputControllerWindow";
@@ -151,7 +151,7 @@ break;
  */
 BOOL InitIDs(JNIEnv* env) {
     CLASS_AxisIdentifier =
-        env->FindClass("net/java/games/input/Axis$Identifier");
+        env->FindClass("net/java/games/input/Component$Identifier$Axis");
     if (CLASS_AxisIdentifier == NULL) {
         return FALSE;
     }
@@ -190,18 +190,18 @@ BOOL InitIDs(JNIEnv* env) {
     if (FID_Slider == NULL) {
         return FALSE;
     }
-    FID_Button = env->GetStaticFieldID(CLASS_AxisIdentifier, "BUTTON",
+/*    FID_Button = env->GetStaticFieldID(CLASS_AxisIdentifier, "BUTTON",
         FD_AxisIdentifier);
     if (FID_Button == NULL) {
         return FALSE;
-    }
+    }*/
     FID_POV = env->GetStaticFieldID(CLASS_AxisIdentifier, "POV",
         FD_AxisIdentifier);
     if (FID_POV == NULL) {
         return FALSE;
     }
     CLASS_ButtonIdentifier =
-        env->FindClass("net/java/games/input/Mouse$ButtonID");
+        env->FindClass("net/java/games/input/Component$Identifier$Button");
     if (CLASS_ButtonIdentifier == NULL) {
         return FALSE;
     }
@@ -258,12 +258,12 @@ BOOL InitIDs(JNIEnv* env) {
         return FALSE;
     }
     MID_AddAxis = env->GetMethodID(CLASS_DirectInputDevice, "addAxis",
-        "(Ljava/util/ArrayList;Lnet/java/games/input/Axis$Identifier;ILjava/lang/String;)V");
+        "(Ljava/util/ArrayList;Lnet/java/games/input/Component$Identifier;ILjava/lang/String;)V");
     if (MID_AddAxis == NULL) {
         return FALSE;
     }
     MID_AddRumbler = env->GetMethodID(CLASS_DirectInputDevice, "addRumbler",
-        "(JLnet/java/games/input/Axis$Identifier;Ljava/lang/String;)V");
+        "(JLnet/java/games/input/Component$Identifier;Ljava/lang/String;)V");
     if (MID_AddRumbler == NULL) {
         return FALSE;
     }
@@ -283,7 +283,7 @@ BOOL InitIDs(JNIEnv* env) {
         return FALSE;
     }
     MID_RenameAxis = env->GetMethodID(CLASS_DirectInputMouse, "renameAxis",
-        "(Lnet/java/games/input/Axis$Identifier;Ljava/lang/String;)V");
+        "(Lnet/java/games/input/Component$Identifier;Ljava/lang/String;)V");
     if (MID_RenameAxis == NULL) {
         return FALSE;
     }

@@ -55,19 +55,19 @@ public class ControllerTextTest {
         for(int i =0;i<ca.length;i++){
             System.out.println(ca[i].getName());
             System.out.println("Type: "+ca[i].getType().toString());
-            Axis[] axis = ca[i].getAxes();
-            System.out.println("Axis Count: "+axis.length);
-            for(int j=0;j<axis.length;j++){
-                System.out.println("Axis "+j+": "+axis[j].getName());
+            Component[] components = ca[i].getComponents();
+            System.out.println("Component Count: "+components.length);
+            for(int j=0;j<components.length;j++){
+                System.out.println("Component "+j+": "+components[j].getName());
                 System.out.println("    Identifier: "+
-                    axis[j].getIdentifier().getName());
-                System.out.print("    AxisType: ");
-                if (axis[j].isRelative()) {
+                        components[j].getIdentifier().getName());
+                System.out.print("    ComponentType: ");
+                if (components[j].isRelative()) {
                     System.out.print("Relative");
                 } else {
                     System.out.print("Absolute");
                 }
-                if (axis[j].isAnalog()) {
+                if (components[j].isAnalog()) {
                     System.out.print(" Analog");
                 } else {
                     System.out.print(" Digital");

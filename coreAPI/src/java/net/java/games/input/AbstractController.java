@@ -47,7 +47,7 @@ public abstract class AbstractController implements Controller {
     /**
      * Null array representing no axes
      */
-    protected static final Axis[] NO_AXES = {};
+    protected static final Component[] NO_COMPONENTS = {};
     
     /**
      * Null array representing no child controllers
@@ -65,9 +65,9 @@ public abstract class AbstractController implements Controller {
     private final String name;
     
     /**
-     * Array of axes
+     * Array of components
      */
-    protected Axis[] axes;
+    protected Component[] components;
     
     /**
      * Array of child controllers
@@ -85,21 +85,21 @@ public abstract class AbstractController implements Controller {
      * @param name The name for the controller
      */
     protected AbstractController(String name) {
-        this(name, NO_AXES, NO_CONTROLLERS, NO_RUMBLERS);
+        this(name, NO_COMPONENTS, NO_CONTROLLERS, NO_RUMBLERS);
     }
     
     /**
      * Protected constructor for a controller containing the specified
      * axes, child controllers, and rumblers
      * @param name name for the controller
-     * @param axes axes for the controller
+     * @param components components for the controller
      * @param children child controllers for the controller
      * @param rumblers rumblers for the controller
      */
-    protected AbstractController(String name, Axis[] axes,
+    protected AbstractController(String name, Component[] components,
         Controller[] children, Rumbler[] rumblers) {
         this.name = name;
-        this.axes = axes;
+        this.components = components;
         this.children = children;
         this.rumblers = rumblers;
     }
@@ -115,33 +115,33 @@ public abstract class AbstractController implements Controller {
     }
 
     /**
-     * Returns the axes on this controller, in order of assignment priority.
+     * Returns the components on this controller, in order of assignment priority.
      * For example, the button controller on a mouse returns an array containing
      * the primary or leftmost mouse button, followed by the secondary or
      * rightmost mouse button (if present), followed by the middle mouse button
      * (if present).
-     * The array returned is an empty array if this controller contains no axes
+     * The array returned is an empty array if this controller contains no components
      * (such as a logical grouping of child controllers).
      */
-    public Axis[] getAxes() {
-        return axes;
+    public Component[] getComponents() {
+        return components;
     }
 
     /**
-     * Returns a single axis based on its identifier, or null
-     * if no axis with the specified type could be found.
-     * By default, AbstractController calls getAxes in this method so that
-     * subclasses may lazily initialize the array of axes, if necessary.
+     * Returns a single component based on its identifier, or null
+     * if no component with the specified type could be found.
+     * By default, AbstractController calls getComponents in this method so that
+     * subclasses may lazily initialize the array of components, if necessary.
      */
-    public Axis getAxis(Axis.Identifier id) {
+    public Component getComponent(Component.Identifier id) {
         // Calls getAxes() so that subclasses may lazily set the array of axes.
-        Axis[] axes = getAxes();
-        if (axes.length == 0) {
+        Component[] components = getComponents();
+        if (components.length == 0) {
             return null;
         }
-        for (int i = 0; i < axes.length; i++) {
-            if (axes[i].getIdentifier() == id) {
-                return axes[i];
+        for (int i = 0; i < components.length; i++) {
+            if (components[i].getIdentifier() == id) {
+                return components[i];
             }
         }
         return null;
