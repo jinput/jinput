@@ -81,15 +81,19 @@ int jsInit() {
   }
   
   if ((fd = open(deviceFileNames[0], O_RDONLY)) <0) {
-    return -1;
+    jsNumDevices = 0;
+    jsInited=1;
+    return 0;
   }
 
   if (ioctl(fd, JSIOCGVERSION, &joystickInterfaceVersion)) {
     close(fd);
-    return -1;
+    jsNumDevices = 0;
+    jsInited=1;
+    return 0;
   }
 
-  close(fd);
+  if(fd>=0) {close(fd);}
 
   Device *tempDeviceList[numDeviceFiles];
  
@@ -109,9 +113,9 @@ int jsInit() {
   for(i=0;i<jsNumDevices;i++) {
     while(tempDeviceList[jsTempDeviceCount] == NULL) {
       jsTempDeviceCount++;
-	}
+    }
     jsDeviceList[i] = tempDeviceList[jsTempDeviceCount];
-	//printf("Copied joystick %d to %d\n", jsTempDeviceCount, i);
+    //printf("Copied joystick %d to %d\n", jsTempDeviceCount, i);
     jsTempDeviceCount++;
   }
 

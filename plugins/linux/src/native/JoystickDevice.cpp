@@ -35,10 +35,13 @@
 #include <malloc.h>
 #include <errno.h>
 
+#include "logger.h"
+
 JoystickDevice::JoystickDevice(char *deviceFileName) {
   char tempName[Device::MAX_NAME_LENGTH-1] = "Unknown";
   int i;
 
+  LOG_TRACE("Trying to open %s\n", deviceFileName);
   fd = open(deviceFileName, O_RDWR | O_NONBLOCK);
   /*if(fd<0) {
     char errorMessage[512];
@@ -47,7 +50,9 @@ JoystickDevice::JoystickDevice(char *deviceFileName) {
   }*/
 
   if(fd>0){
+    LOG_TRACE("Opened %s, trying to get device name\n", deviceFileName);
     if(ioctl(fd, JSIOCGNAME(sizeof(tempName)), tempName) < 0) {
+      LOG_TRACE("Failed to get device name for %s\n", deviceFileName);
       char errorMessage[512];
       sprintf(errorMessage, "Error reading device %s\n", deviceFileName);
       perror(errorMessage);
@@ -59,6 +64,7 @@ JoystickDevice::JoystickDevice(char *deviceFileName) {
 
     char tempNumButtons;
     char tempNumAxes;
+    LOG_TRACE("Getting button and axes information for %s\n", deviceFileName);
     ioctl (fd, JSIOCGBUTTONS, &tempNumButtons);
     ioctl (fd, JSIOCGAXES, &tempNumAxes);
 
@@ -72,7 +78,11 @@ JoystickDevice::JoystickDevice(char *deviceFileName) {
     //absAxesData = (int *)malloc(numAbsAxes * sizeof(int));
     absAxesData = new int[numAbsAxes];
 
+    LOG_TRACE("Initialisation of %s completed\n", deviceFileName);
     inited = 1;
+  } else {
+    LOG_TRACE("Failed to open device %s\n", deviceFileName);
+    inited = 0;
   }
 }
 

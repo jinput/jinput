@@ -81,15 +81,19 @@ int evInit() {
   }
   
   if ((fd = open(deviceFileNames[0], O_RDONLY)) <0) {
-    return -1;
+    evNumDevices=0;
+    evInited=1;
+    return 0;
   }
 
   if (ioctl(fd, EVIOCGVERSION, &eventInterfaceVersion)) {
     close(fd);
-    return -1;
+    evNumDevices=0;
+    evInited=1;
+    return 0;
   }
 
-  close(fd);
+  if(fd>=0) {close(fd);}
 
   Device *tempDeviceList[numDeviceFiles];
  
