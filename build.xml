@@ -71,7 +71,26 @@
         <ant dir="plugins/DX8" target="clean"/>
         <ant dir="plugins/linux" target="clean"/>
         <ant dir="coreAPI" target="clean"/>
+        <delete failonerror="no">
+            <fileset dir="dist">
+                <include name="**/*"/>
+            </fileset>
+        </delete>
     </target>
     
-
+    <target name="dist" depends="init,compile" description="Build the distribution file for this system">
+        <mkdir dir="dist"/>
+        <mkdir dir="dist/controller"/>
+        <copy file="coreAPI/bin/jinput.jar" todir="dist"/>
+        <copy file="coreAPI/lib/jutils.jar" todir="dist"/>
+        <copy todir="dist/controller">
+            <fileset dir="coreAPI/src/tests/controller/">
+                <include name="**/*"/>
+            </fileset>
+        </copy>
+        <zip destfile="dist/jinput_${os.name}_dist.zip" 
+            basedir="dist"
+            excludes="*.zip"
+            />
+    </target>
 </project>
