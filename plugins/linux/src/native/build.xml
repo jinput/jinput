@@ -41,14 +41,14 @@
     </target>
 
     <target name="compileNativeEventLib" depends="init">
-        <exec dir="." executable="g++" os="linux">
+        <exec dir="." executable="g++" os="Linux">
             <arg line="--shared -o libeventInterface.so eventInterface.cpp EventDevice.cpp"/>
         </exec>
     </target>
 
     <target name="compileNativeJinputLib" depends="init">
-        <exec dir="." executable="g++">
-            <arg line="-I$JAVA_HOME/include -I$JAVA_HOME/include/linux --shared -o libjinput.so jinput.cpp eventInterface.cpp EventDevice.cpp joystickInterface.cpp JoystickDevice.cpp MixedDevice.cpp"/>
+        <exec dir="." executable="g++" os="Linux">
+            <arg line="-I${java.home}/include -I${java.home}/include/linux --shared -o libjinput.so jinput.cpp eventInterface.cpp EventDevice.cpp joystickInterface.cpp JoystickDevice.cpp MixedDevice.cpp"/>
         </exec>
     </target>
 </project>
