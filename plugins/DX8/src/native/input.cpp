@@ -669,6 +669,9 @@ BOOL CALLBACK EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi,
 		} else if(lpddoi->guidType == GUID_YAxis) {
 			//printf("effect is in the y axis\n");
 			rgdwAxes = DIJOFS_Y;
+		} else if(lpddoi->guidType == GUID_ZAxis) {
+			//printf("effect is in the z axis\n");
+			rgdwAxes = DIJOFS_Z;
 		}
 
 		DICONSTANTFORCE cf              = { DI_FFNOMINALMAX };
