@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="all" name="Linux Plugin">
+
+    <target name="init">
+        <property name="hello" value="world"/>
+        <mkdir dir="classes"/>
+        <mkdir dir="bin"/>
+    </target>
+
+    <target depends="init" name="compile">
+        <javac debug="true" deprecation="true" destdir="classes" source="1.4" srcdir="src/java">
+            <classpath>
+                <pathelement location="../../coreAPI/bin/controller.jar"/>
+                <pathelement location="../../coreAPI/lib/jutils.jar"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target depends="init,compile" name="jar">
+        <jar jarfile="bin/linux.jar" compress="true" basedir="classes">
+            <exclude name="**/*.java"/>
+            <exclude name="linux.jar"/>
+            <exclude name="apidoc"/>
+        </jar> 
+        <copy file="bin/linux.jar" todir="../../coreAPI/src/tests/controller" />
+    </target>
+
+    <target depends="compileNativeJinputLib,jar" description="Build everything." name="all">
+        <echo message="Application built. Hello ${hello}!"/>
+    </target>
+
+    <target name="javadoc" depends="init" description="Javadoc for Linux plugin for JInput.">
+        <mkdir dir="apidocs"/>
+        <javadoc packagenames="net.java.games.input.*" 
+                 destdir="apidocs"
+                 additionalparam="-source 1.4"
+                 link="../../../coreAPI/apidocs">
+            <sourcepath>
+                <pathelement location="src/java"/>
+            </sourcepath>
+             <classpath>
+                <pathelement location="../../coreAPI/bin/controller.jar"/>
+                <pathelement location="../../coreAPI/lib/jutils.jar"/>
+            </classpath>
+        </javadoc>
+    </target>
+
+    <target description="Clean all build products." name="clean">
+        <delete>
+            <fileset dir="classes">
+                <include name="**/*.class"/>
+            </fileset>
+        </delete>
+        <delete file="bin/linux.jar" failonerror="no"/>
+        <delete file="src/native/libjinput.so" failonerror="no"/>
+        <delete file="../../coreAPI/src/tests/controller/linux.jar" failonerror="no" />
+        <delete file="../../coreAPI/src/tests/controller/libjinput.so" failonerror="no"/>
+        <delete file="apidoc" failonerror="no"/>
+    </target>
+
+    <target depends="init,compile" name="createJNIHeaders">
+        <javah>
+            <classpath>
+                <pathelement path="src/java"/>
+                <pathelement location="controller.jar"/>
+            </classpath>
+            <class name="net.java.games.input.LinuxDevice"/>
+            <class name="net.java.games.input.LinuxEnvironmentPlugin"/>
+            <class name="net.java.games.input.LinuxKeyboard"/>
+        </javah>
+    </target>
+    
+    <target depends="init" name="createNativeDefinitions.java">
+        <exec dir="." executable="./getDefinitions" os="linux" output="src/java/net/java/games/input/NativeDefinitions.java">
+            <arg line="/usr/include/linux/input.h"/>
+        </exec>
+    </target>
+    
+    <target depends="init" name="compileNativeJinputLib">
+        <ant dir="src/native" target="compileNativeJinputLib"/>
+        <copy file="src/native/libjinput.so" todir="../../coreAPI/src/tests/controller" />
+    </target>
+</project>

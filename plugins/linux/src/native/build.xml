@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+<!-- Written to assume that classpath is rooted in the current directory. -->
+<!-- So this should be OK if you make this script in the root of a filesystem. -->
+<!-- If not, you may prefer to adjust the basedir, or move some directories around. -->
+<!-- The idea is that both Ant and NetBeans have to know what the package root is -->
+<!-- for the classes in your application. -->
+<project name="JInput Linux port, Native code" basedir="." default="all">
+
+    <!-- Don't worry if you don't know the Ant syntax completely or need help on some tasks! -->
+    <!-- The standard Ant documentation is bundled. See Help | Help Sets | Ant 1.4.1 Manual. -->
+
+    <target name="init">
+        <!-- You can set up any variables you want used throughout the script here. -->
+        <!-- property name="hello" value="world"/-->
+        <!-- To use e.g. Jikes, uncomment this line. -->
+        <!-- (Or make the same change in Tools | Options | Ant Settings | Properties.) -->
+        <!-- <property name="build.compiler" value="jikes"/> -->
+        <!-- You might like to set up some overridable paths, etc.: -->
+        <!-- <property name="mylib" value="../lib/mylib.jar"/> -->
+        <mkdir dir="build"/>
+        <mkdir dir="apidoc"/>
+    </target>
+    
+    <target name="createNativeDefinitions.java" depends="init">
+        <exec dir="." executable="./getDefinitions" os="linux" output="../java/net/java/games/input/NativeDefinitions.java">
+            <arg line="/usr/include/linux/input.h"/>
+        </exec>
+    </target>
+
+    <target name="createJNIHeaders" depends="init">
+        <javah>
+            <classpath>
+                <pathelement path="."/>
+                <pathelement location="controller.jar"/>
+            </classpath>
+            <class name="net.java.games.input.LinuxDevice"/>
+            <class name="net.java.games.input.LinuxEnvironmentPlugin"/>
+            <class name="net.java.games.input.LinuxKeyboard"/>
+        </javah>
+    </target>
+
+    <target name="compileNativeEventLib" depends="init">
+        <exec dir="." executable="g++" os="linux">
+            <arg line="--shared -o libeventInterface.so eventInterface.cpp EventDevice.cpp"/>
+        </exec>
+    </target>
+
+    <target name="compileNativeJinputLib" depends="init">
+        <exec dir="." executable="g++">
+            <arg line="-I$JAVA_HOME/include -I$JAVA_HOME/include/linux --shared -o libjinput.so jinput.cpp eventInterface.cpp EventDevice.cpp joystickInterface.cpp JoystickDevice.cpp MixedDevice.cpp"/>
+        </exec>
+    </target>
+</project>
+
