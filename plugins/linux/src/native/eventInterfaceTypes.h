@@ -13,12 +13,15 @@ struct input_devinfo {
         uint16_t version;
 };
 
+
+/** removed for compatability with input.h --JPK
 struct input_absinfo {
-  int curr_value;
-  int min_value;
-  int max_value;
+  int value;
+  int minimum;
+  int maximum;
   int fuzz;
   int flat;
 };
+*/
 
 #endif //eventInterfaceTypes_h

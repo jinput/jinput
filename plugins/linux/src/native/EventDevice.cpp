@@ -190,7 +190,7 @@ EventDevice::EventDevice(char *deviceFileName) {
         sprintf(errorMessage, "Error reading device %s\n", deviceFileName);
         perror(errorMessage);
       }
-      absAxesData[i] = abs_features[i].curr_value;
+      absAxesData[i] = abs_features[i].value;
     }
   }
 
@@ -334,9 +334,6 @@ int EventDevice::poll(){
         //printf("abs axis %d translates to abs axis %d on this device\n", events[i].code, axisIndex);
         break;
       }
-      case EV_RST:
-        // not sure what to do here, doing nothing seems to work :)
-        break;
       case EV_LED:
         // reveiced for things like numlock led change
         break;
@@ -363,11 +360,11 @@ void EventDevice::getPolledData(int relAxesData[], int absAxesData[], int button
 }
 
 int EventDevice::getAbsAxisMinimum(int axisNumber) {
-  return abs_features[axisNumber].min_value;
+  return abs_features[axisNumber].minimum;
 }
 
 int EventDevice::getAbsAxisMaximum(int axisNumber) {
-  return abs_features[axisNumber].max_value;
+  return abs_features[axisNumber].maximum;
 }
 
 int EventDevice::getAbsAxisFuzz(int axisNumber) {
