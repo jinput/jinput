@@ -313,6 +313,9 @@ int EventDevice::poll(){
   int numEventsRead = (int) (read_bytes / sizeof(struct input_event));
   for(i=0;i<numEventsRead;i++) {
     switch(events[i].type) {
+      case EV_SYN:
+	// not sure what to do with it, ignore for now -- JPK
+	break;
       case EV_KEY: {
         dataChanged = 1;
         int buttonIndex = buttonLookup[events[i].code];
