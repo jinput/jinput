@@ -40,7 +40,7 @@ EventDevice::EventDevice(char *deviceFileName) {
   char tempName[Device::MAX_NAME_LENGTH-1] = "Unknown";
   int i;
 
-  fd = open(deviceFileName, O_RDWR | O_NONBLOCK);
+  fd = open(deviceFileName, O_RDONLY | O_NONBLOCK);
   if(fd<0) {
     /*char errorMessage[512];
     sprintf(errorMessage, "Error opening device %s\n", deviceFileName);
@@ -313,9 +313,10 @@ int EventDevice::poll(){
   int numEventsRead = (int) (read_bytes / sizeof(struct input_event));
   for(i=0;i<numEventsRead;i++) {
     switch(events[i].type) {
-      case EV_SYN:
-	// not sure what to do with it, ignore for now -- JPK
-	break;
+      case EV_SYN: 
+      case EV_MSC:
+		// not sure what to do with it, ignore for now -- JPK
+		break;
       case EV_KEY: {
         dataChanged = 1;
         int buttonIndex = buttonLookup[events[i].code];
