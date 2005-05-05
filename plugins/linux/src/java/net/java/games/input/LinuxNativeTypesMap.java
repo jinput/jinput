@@ -767,7 +767,13 @@ public class LinuxNativeTypesMap {
      * @return The jinput id
      */    
     public static Component.Identifier getAbsAxisID(int nativeID) {
-        Component.Identifier retval = INSTANCE.absAxesIDs[nativeID];
+		Component.Identifier retval = null;
+		try {
+			retval = INSTANCE.absAxesIDs[nativeID];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			System.out.println("INSTANCE.absAxesIDs is only " + INSTANCE.absAxesIDs.length + " long, so " + nativeID + " not contained");
+			//ignore, pretend it was null
+		}
         if(retval == null) {
             retval = Component.Identifier.Axis.SLIDER;
             INSTANCE.absAxesIDs[nativeID] = retval;
