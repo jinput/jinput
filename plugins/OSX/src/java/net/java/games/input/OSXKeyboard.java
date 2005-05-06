@@ -222,7 +222,7 @@ public class OSXKeyboard extends StandardKeyboard implements InputController
      */
     protected boolean isKeyPressed(Keyboard.Key key)
     {
-        KeyID id = (KeyID)key.getIdentifier();
+        Component.Identifier.Key id = (Component.Identifier.Key) key.getIdentifier();
         int keyIndex = id.getKeyIndex();
 
         // get that key code out of the crosstable and find the proper InputControllerElement/button for that key

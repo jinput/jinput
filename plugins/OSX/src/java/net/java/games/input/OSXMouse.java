@@ -105,17 +105,17 @@ public class OSXMouse extends Mouse implements InputController
 
         public void addXAxis( InputControllerElement element )
         {
-            x = new BallAxis( Axis.Identifier.X, element );
+            x = new BallAxis(Component.Identifier.Axis.X, element );
         }
 
         public void addYAxis( InputControllerElement element )
         {
-            y = new BallAxis( Axis.Identifier.Y, element );
+            y = new BallAxis( Component.Identifier.Axis.Y, element );
         }
 
         public void addWheelAxis( InputControllerElement element )
         {
-            wheel = new BallAxis( Axis.Identifier.SLIDER, element );
+            wheel = new BallAxis( Component.Identifier.Axis.SLIDER, element );
         }
     }
 
@@ -137,15 +137,15 @@ public class OSXMouse extends Mouse implements InputController
         {
             if ( left == null )
             {
-                left = new ButtonImpl( ButtonID.LEFT, element );
+                left = new ButtonImpl( Component.Identifier.Button.LEFT, element );
             }
             else if ( right == null )
             {
-                right = new ButtonImpl( ButtonID.RIGHT, element );
+                right = new ButtonImpl( Component.Identifier.Button.RIGHT, element );
             }
             else if ( middle == null )
             {
-                middle = new ButtonImpl( ButtonID.MIDDLE, element );
+                middle = new ButtonImpl( Component.Identifier.Button.MIDDLE, element );
             }
         }
     }
@@ -164,7 +164,7 @@ public class OSXMouse extends Mouse implements InputController
          * @param id An ID of a button to create an obejct to represent.
          *
          */
-        public ButtonImpl(ButtonID id, InputControllerElement element)
+        public ButtonImpl(Component.Identifier.Button id, InputControllerElement element)
         {
             super(id.getName(), id);
             this.hidCookie = element.getHidCookie();
@@ -199,7 +199,7 @@ public class OSXMouse extends Mouse implements InputController
     /**
      * Mouse ball axis implementation
      */
-    class BallAxis extends AbstractAxis
+    class BallAxis extends AbstractComponent
     {
 
         private long hidCookie;
@@ -208,7 +208,7 @@ public class OSXMouse extends Mouse implements InputController
         /** Public constructor
          * @param id  An ID for a mouse axis to create an object to represent.
          */
-        public BallAxis(Identifier id, InputControllerElement element)
+        public BallAxis(Component.Identifier.Axis id, InputControllerElement element)
         {
             super(id.getName(), id);
 
