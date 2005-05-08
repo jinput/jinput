@@ -40,13 +40,21 @@ EventDevice::EventDevice(char *deviceFileName) {
   char tempName[Device::MAX_NAME_LENGTH-1] = "Unknown";
   int i;
 
-  fd = open(deviceFileName, O_RDONLY | O_NONBLOCK);
+  fd = open(deviceFileName, O_RDWR | O_NONBLOCK);
   if(fd<0) {
-    /*char errorMessage[512];
-    sprintf(errorMessage, "Error opening device %s\n", deviceFileName);
-    perror(errorMessage);*/
-	inited = 0;
-	return;
+  	  
+		char errorMessage[512];
+		sprintf(errorMessage, "Error opening device %s read/write, Force Feedback disabled for this device\n", deviceFileName);
+		perror(errorMessage);
+  	  
+	  fd = open(deviceFileName, O_RDONLY | O_NONBLOCK);
+	  if(fd<0) {
+	    /*char errorMessage[512];
+	    sprintf(errorMessage, "Error opening device %s\n", deviceFileName);
+	    perror(errorMessage);*/
+		inited = 0;
+		return;
+	  }
   }
 
   if(ioctl(fd, EVIOCGNAME(sizeof(tempName)), tempName) < 0) {
