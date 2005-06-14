@@ -48,7 +48,7 @@
 
     <target name="compileNativeJinputLib" depends="init">
         <exec dir="." executable="g++" os="Linux">
-            <arg line="-I${java.home}/include -I${java.home}/include/linux --shared -DLOGTRACE -o libjinput.so jinput.cpp eventInterface.cpp EventDevice.cpp joystickInterface.cpp JoystickDevice.cpp MixedDevice.cpp"/>
+            <arg line="-I${java.home}/include -I${java.home}/include/linux -I${java.home}/../include -I${java.home}/../include/linux --shared -DLOGTRACE -o libjinput.so jinput.cpp eventInterface.cpp EventDevice.cpp joystickInterface.cpp JoystickDevice.cpp MixedDevice.cpp"/>
         </exec>
     </target>
 </project>
