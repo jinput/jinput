@@ -190,19 +190,19 @@ BOOL InitIDs(JNIEnv* env) {
     if (FID_Slider == NULL) {
         return FALSE;
     }
-/*    FID_Button = env->GetStaticFieldID(CLASS_AxisIdentifier, "BUTTON",
-        FD_AxisIdentifier);
-    if (FID_Button == NULL) {
-        return FALSE;
-    }*/
-    FID_POV = env->GetStaticFieldID(CLASS_AxisIdentifier, "POV",
-        FD_AxisIdentifier);
-    if (FID_POV == NULL) {
-        return FALSE;
-    }
     CLASS_ButtonIdentifier =
         env->FindClass("net/java/games/input/Component$Identifier$Button");
     if (CLASS_ButtonIdentifier == NULL) {
+        return FALSE;
+    }
+    FID_Button = env->GetStaticFieldID(CLASS_ButtonIdentifier, "UNKNOWN",
+        FD_ButtonIdentifier);
+    if (FID_Button == NULL) {
+        return FALSE;
+    }
+    FID_POV = env->GetStaticFieldID(CLASS_AxisIdentifier, "POV",
+        FD_AxisIdentifier);
+    if (FID_POV == NULL) {
         return FALSE;
     }
     FID_Left = env->GetStaticFieldID(CLASS_ButtonIdentifier, "LEFT",
@@ -622,7 +622,7 @@ BOOL CALLBACK EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi,
     } else if (lpddoi->guidType == GUID_Slider) {
         identifier = env->GetStaticObjectField(CLASS_AxisIdentifier, FID_Slider);
     } else if (lpddoi->guidType == GUID_Button) {
-        identifier = env->GetStaticObjectField(CLASS_AxisIdentifier, FID_Button);
+        identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier, FID_Button);
     } else if (lpddoi->guidType == GUID_POV) {
         identifier = env->GetStaticObjectField(CLASS_AxisIdentifier, FID_POV);
     } else {
