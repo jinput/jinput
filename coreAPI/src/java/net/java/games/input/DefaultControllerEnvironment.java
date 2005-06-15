@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -89,6 +90,8 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
      * Plug-in class loader.
      */
     private PluginClassLoader pluginLoader = new PluginClassLoader();
+	
+	private Collection loadedPlugins = new ArrayList();
     
     /**
      * Public no-arg constructor.
@@ -111,15 +114,30 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
                 }
             });
             //Check the properties for specified controller classes
-            String pluginClasses = System.getProperty("jinput.plugins", "") + System.getProperty("net.java.games.input.plugins", "");
+            String pluginClasses = System.getProperty("jinput.plugins", "") + " " + System.getProperty("net.java.games.input.plugins", "");
+			if(!System.getProperty("jinput.useDefaultPlugin", "true").toLowerCase().trim().equals("false") && !System.getProperty("net.java.games.input.useDefaultPlugin", "true").toLowerCase().trim().equals("false")) {
+				String osName = System.getProperty("os.name", "").trim();
+				if(osName.equals("Linux")) {
+					pluginClasses = pluginClasses + "net.java.games.input.LinuxEnvironmentPlugin";
+				} else if(osName.equals("Mac OS X")) {
+					pluginClasses = pluginClasses + "net.java.games.input.OSXEnvironmentPlugin";
+				} else if(osName.equals("Windows 98") || osName.equals("Windows 2000") || osName.equals("Windows XP")) {
+					pluginClasses = pluginClasses + "net.java.games.input.DirectInputEnvironmentPlugin";
+				} else {
+					System.out.println("Trying to use default plugin, OS name " + osName +" not recognised");
+				}
+			}
             if(!pluginClasses.equals("")) {
                 ArrayList pluginClassList = new ArrayList();
                 StringTokenizer pluginClassTok = new StringTokenizer(pluginClasses, " \t\n\r\f,;:");
                 while(pluginClassTok.hasMoreTokens()) {
-                    String className = pluginClassTok.nextToken();
+                    String className = pluginClassTok.nextToken();					
                     try {
-                        ControllerEnvironment ce = (ControllerEnvironment) Class.forName(className).newInstance();
-                        addControllers(ce.getControllers());
+						Class ceClass = Class.forName(className);
+						if(!loadedPlugins.contains(ceClass)) {
+	                        ControllerEnvironment ce = (ControllerEnvironment) ceClass.newInstance();
+	                        addControllers(ce.getControllers());
+						}
                     } catch (InstantiationException e) {
                         e.printStackTrace();
                     } catch (IllegalAccessException e) {
@@ -206,8 +224,9 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
                             +" loaded by "+envClasses[i].getClassLoader());
                     }
                     ControllerEnvironment ce = (ControllerEnvironment)
-                        envClasses[i].newInstance();                    
+                        envClasses[i].newInstance();      					
                     addControllers(ce.getControllers());
+					loadedPlugins.add(ce.getClass());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
