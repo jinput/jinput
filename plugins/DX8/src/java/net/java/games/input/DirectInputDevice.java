@@ -84,7 +84,7 @@ class DirectInputDevice extends AbstractController {
      * Data when polling, as per the DIJOYSTATE structure in dinput.h;
      * @see DirectInputAxis for a breakdown of this structure
      */
-   int[] data = new int[32];
+   int[] data = new int[38];
    
    /** Array list of rumblers */
    private ArrayList rumblerList = new ArrayList();
