@@ -139,7 +139,7 @@
 			<fileset dir="coreAPI/classes">
 				<include name="**/*.class"/>
 			</fileset>
-			<fileset dir="plugins/linux/classes">
+			<fileset dir="plugins/DX8/classes">
 				<include name="**/*.class"/>
 			</fileset>
 			<zipfileset src="coreAPI/lib/jutils.jar" includes="**/*.class"/>
