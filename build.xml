@@ -107,4 +107,73 @@
             excludes="*.zip"
             />
     </target>
+	
+	<target name="simple_dist" depends="init,compile,simple_windows,simple_linux,simple_osx" description="Build the simple jars for each platform"/>
+	
+	<target name="simple_linux" depends="init,compile" description="Build the simple linux jar" if="linux">
+		<delete failonerror="no" file="jinput.jar"/>
+		<delete failonerror="no" file="jinput_linux.tgz"/>
+		<jar jarfile="jinput.jar" compress="true">
+			<fileset dir="coreAPI/classes">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="plugins/linux/classes">
+				<include name="**/*.class"/>
+			</fileset>
+			<zipfileset src="coreAPI/lib/jutils.jar" includes="**/*.class"/>
+		</jar>
+		<tar destfile="jinput_linux.tgz" compression="gzip">
+			<tarfileset dir=".">
+				<include name="jinput.jar"/>
+			</tarfileset>
+			<tarfileset dir="plugins/linux/src/native">
+				<include name="*.so"/>
+			</tarfileset>
+		</tar>
+		<delete failonerror="no" file="jinput.jar"/>
+	</target>
+	<target name="simple_windows" depends="init,compile" description="Build the simple windows jar" if="dx8">
+		<delete failonerror="no" file="jinput.jar"/>
+		<delete failonerror="no" file="jinput_windows.zip"/>
+		<jar jarfile="jinput.jar" compress="true">
+			<fileset dir="coreAPI/classes">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="plugins/linux/classes">
+				<include name="**/*.class"/>
+			</fileset>
+			<zipfileset src="coreAPI/lib/jutils.jar" includes="**/*.class"/>
+		</jar>
+		<zip destfile="jinput_windows.zip">
+			<zipfileset dir=".">
+				<include name="jinput.jar"/>
+			</zipfileset>
+			<zipfileset dir="plugins/DX8/bin">
+				<include name="*.dll"/>
+			</zipfileset>
+		</zip>
+		<delete failonerror="no" file="jinput.jar"/>
+	</target>
+	<target name="simple_osx" depends="init,compile" description="Build the simple osx jar" if="osx">
+		<delete failonerror="no" file="jinput.jar"/>
+		<delete failonerror="no" file="jinput_osx.tgz"/>
+		<jar jarfile="jinput.jar" compress="true">
+			<fileset dir="coreAPI/classes">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="plugins/OSX/classes">
+				<include name="**/*.class"/>
+			</fileset>
+			<zipfileset src="coreAPI/lib/jutils.jar" includes="**/*.class"/>
+		</jar>
+		<tar destfile="jinput_osx.tgz" compression="gzip">
+			<tarfileset dir=".">
+				<include name="jinput.jar"/>
+			</tarfileset>
+			<tarfileset dir="plugins/OSX/src/native">
+				<include name="*.jnilib"/>
+			</tarfileset>
+		</tar>
+		<delete failonerror="no" file="jinput.jar"/>
+	</target>
 </project>
