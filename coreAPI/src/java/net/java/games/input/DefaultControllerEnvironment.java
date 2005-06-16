@@ -118,11 +118,11 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 			if(!System.getProperty("jinput.useDefaultPlugin", "true").toLowerCase().trim().equals("false") && !System.getProperty("net.java.games.input.useDefaultPlugin", "true").toLowerCase().trim().equals("false")) {
 				String osName = System.getProperty("os.name", "").trim();
 				if(osName.equals("Linux")) {
-					pluginClasses = pluginClasses + "net.java.games.input.LinuxEnvironmentPlugin";
+					pluginClasses = pluginClasses + " net.java.games.input.LinuxEnvironmentPlugin";
 				} else if(osName.equals("Mac OS X")) {
-					pluginClasses = pluginClasses + "net.java.games.input.OSXEnvironmentPlugin";
+					pluginClasses = pluginClasses + " net.java.games.input.OSXEnvironmentPlugin";
 				} else if(osName.equals("Windows 98") || osName.equals("Windows 2000") || osName.equals("Windows XP")) {
-					pluginClasses = pluginClasses + "net.java.games.input.DirectInputEnvironmentPlugin";
+					pluginClasses = pluginClasses + " net.java.games.input.DirectInputEnvironmentPlugin";
 				} else {
 					System.out.println("Trying to use default plugin, OS name " + osName +" not recognised");
 				}
@@ -133,8 +133,8 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
                 while(pluginClassTok.hasMoreTokens()) {
                     String className = pluginClassTok.nextToken();					
                     try {
-						Class ceClass = Class.forName(className);
-						if(!loadedPlugins.contains(ceClass)) {
+						if(!loadedPlugins.contains(className)) {
+							Class ceClass = Class.forName(className);
 	                        ControllerEnvironment ce = (ControllerEnvironment) ceClass.newInstance();
 	                        addControllers(ce.getControllers());
 						}
@@ -226,7 +226,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
                     ControllerEnvironment ce = (ControllerEnvironment)
                         envClasses[i].newInstance();      					
                     addControllers(ce.getControllers());
-					loadedPlugins.add(ce.getClass());
+					loadedPlugins.add(ce.getClass().getName());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
