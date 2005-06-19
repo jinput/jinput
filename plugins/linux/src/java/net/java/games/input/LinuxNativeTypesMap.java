@@ -743,7 +743,7 @@ public class LinuxNativeTypesMap {
     public static String getAbsAxisName(int nativeID) {
         String retval = INSTANCE.absAxesNames[nativeID];
         if(retval == null) {
-            retval = "Unknown absolute axis id";
+            retval = "Unknown absolute axis id " + nativeID;
             INSTANCE.absAxesNames[nativeID] = retval;
         }
         return retval;
