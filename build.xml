@@ -84,6 +84,7 @@
         <ant dir="plugins/DX8" target="clean"/>
         <ant dir="plugins/linux" target="clean"/>
 		<ant dir="plugins/OSX" target="clean"/>
+    	<ant dir="plugins/awt" target="clean"/>
         <ant dir="coreAPI" target="clean"/>
         <delete failonerror="no">
             <fileset dir="dist">

@@ -52,9 +52,9 @@
             </fileset>
         </delete>
         <delete file="bin/linux.jar" failonerror="no"/>
-        <delete file="src/native/libjinput.so" failonerror="no"/>
+        <delete file="src/native/libjinput-linux.so" failonerror="no"/>
         <delete file="../../coreAPI/src/tests/controller/linux.jar" failonerror="no" />
-        <delete file="../../coreAPI/src/tests/controller/libjinput.so" failonerror="no"/>
+        <delete file="../../coreAPI/src/tests/controller/libjinput-linux.so" failonerror="no"/>
         <delete file="apidoc" failonerror="no"/>
     </target>
 
@@ -78,6 +78,6 @@
     
     <target depends="init" name="compileNativeJinputLib">
         <ant dir="src/native" target="compileNativeJinputLib"/>
-        <copy file="src/native/libjinput.so" todir="../../coreAPI/src/tests/controller" />
+        <copy file="src/native/libjinput-linux.so" todir="../../coreAPI/src/tests/controller" />
     </target>
 </project>

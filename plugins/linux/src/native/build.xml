@@ -5,7 +5,7 @@
 <!-- If not, you may prefer to adjust the basedir, or move some directories around. -->
 <!-- The idea is that both Ant and NetBeans have to know what the package root is -->
 <!-- for the classes in your application. -->
-<project name="JInput Linux port, Native code" basedir="." default="all">
+<project name="JInput Linux port, Native code" basedir="." default="compileNativeJinputLib">
 
     <!-- Don't worry if you don't know the Ant syntax completely or need help on some tasks! -->
     <!-- The standard Ant documentation is bundled. See Help | Help Sets | Ant 1.4.1 Manual. -->
@@ -48,7 +48,7 @@
 
     <target name="compileNativeJinputLib" depends="init">
         <exec dir="." executable="g++" os="Linux">
-            <arg line="-I${java.home}/include -I${java.home}/include/linux -I${java.home}/../include -I${java.home}/../include/linux --shared -DLOGTRACE -o libjinput.so jinput.cpp eventInterface.cpp EventDevice.cpp joystickInterface.cpp JoystickDevice.cpp MixedDevice.cpp"/>
+            <arg line="-I${java.home}/include -I${java.home}/include/linux -I${java.home}/../include -I${java.home}/../include/linux --shared -DLOGTRACE -o libjinput-linux.so jinput.cpp eventInterface.cpp EventDevice.cpp joystickInterface.cpp JoystickDevice.cpp MixedDevice.cpp"/>
         </exec>
     </target>
 </project>

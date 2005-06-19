@@ -34,7 +34,7 @@ public class LinuxEnvironmentPlugin extends ControllerEnvironment implements Plu
     
     static {
         if(isSupported()) {
-            System.loadLibrary("jinput");
+            System.loadLibrary("jinput-linux");
         }
     }    
 
