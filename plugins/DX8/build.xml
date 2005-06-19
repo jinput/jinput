@@ -41,10 +41,10 @@
         <exec dir="." executable="g++" os="Windows 2000, Windows XP, Windows 98">
             <arg line=" -D_STRICT_ANSI -D_JNI_IMPLEMENTATION_"/> 
             <arg line=" -I'${java.home}/../include' -I'${java.home}/../include/win32' -Ic:/dx9/include"/>
-            <arg line=" -o bin/dxinput.dll src/native/input.cpp  -Wl,--export-all-symbols"/>
+            <arg line=" -o bin/jinput-dxplugin.dll src/native/input.cpp  -Wl,--export-all-symbols"/>
             <arg line=" -shared -Wl,--kill-at  -ldxguid -ldinput -ldinput8"/>
         </exec>   
-        <copy file="bin/dxinput.dll" todir="../../coreAPI/src/tests/controller" />           
+        <copy file="bin/jinput-dxplugin.dll" todir="../../coreAPI/src/tests/controller" />           
     </target>
 
     <target name="jar" depends="init,compile">
@@ -94,9 +94,9 @@
             </fileset>
         </delete>
     <delete file="bin/dxinput.jar" failonerror="no"/>
-    <delete file="bin/dxinput.dll" failonerror="no"/>
+    <delete file="bin/jinput-dxplugin.dll" failonerror="no"/>
     <delete file="../../coreAPI/src/tests/controller/dxinput.jar" failonerror="no" />
-    <delete file="../../coreAPI/src/tests/controller/dxinput.dll" failonerror="no"/>
+    <delete file="../../coreAPI/src/tests/controller/jinput-dxplugin.dll" failonerror="no"/>
     <delete dir="../../docs/input/win32/apidoc" failonerror="no"/>
     </target>
 

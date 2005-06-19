@@ -59,7 +59,7 @@ public class DirectInputEnvironmentPlugin extends ControllerEnvironment
             new LoadLibraryAction("jinput"));
          */
         if(isSupported()) {
-            System.loadLibrary("dxinput");
+            System.loadLibrary("jinput-dxplugin");
         }
     }
 
