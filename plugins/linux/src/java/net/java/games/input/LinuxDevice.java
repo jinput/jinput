@@ -176,6 +176,18 @@ public class LinuxDevice extends AbstractController {
         components = (Component[]) axesArray.toArray(components);
         
         guessType();
+		
+		if(getFFEnabled()) {
+			System.out.println("Java code thinks FF is enabled for device " + name);
+			Rumbler[] tempRumblers = rumblers;
+			rumblers = new Rumbler[rumblers.length+1];
+			System.arraycopy(tempRumblers,0,rumblers,0,tempRumblers.length);
+			rumblers[rumblers.length-1] = new LinuxDeviceRumbler(nativeID);
+			System.out.println("rumblers.length: " + rumblers.length);
+			System.out.println("getRumblers().length: " + getRumblers().length);
+		} else {
+			System.out.println("Java code thinks FF is disabled for device " + name);
+		}
     }
     
     /*public Axis[] getAxes(){
@@ -564,6 +576,13 @@ public class LinuxDevice extends AbstractController {
     private void getSupportedRelAxes(int supportedRelAxes[]) {
         getNativeSupportedRelAxes(nativeID, supportedRelAxes);
     }
+	
+	/** Returns the status of FF support for this device
+	 * 
+	 */
+	private boolean getFFEnabled() {
+		return getNativeFFEnabled(nativeID);
+	}
     
     /** Native call to get the supported absolute axes for a device
      * @param deviceID The native device number
@@ -611,6 +630,12 @@ public class LinuxDevice extends AbstractController {
      * @return The port type
      */    
     private native int getNativePortType(int deviceID);
+	
+	/** Gets the status of FF support for this device
+     * @param deviceID The device to get the port type for
+     * @return The port type
+	 */
+	private native boolean getNativeFFEnabled(int deviceID);
     
     /**
      * A device that represents a joystick coolie hat.

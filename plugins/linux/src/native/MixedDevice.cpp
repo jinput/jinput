@@ -113,3 +113,11 @@ int MixedDevice::getAbsAxisMaximum(int axisNumber) {
 int MixedDevice::getAbsAxisFuzz(int axisNumber) {
   return joystickDevice->getAbsAxisFuzz(axisNumber);
 }
+
+bool MixedDevice::getFFEnabled() {
+	return eventDevice->getFFEnabled();
+}
+
+void MixedDevice::rumble(float force) {
+	eventDevice->rumble(force);
+}

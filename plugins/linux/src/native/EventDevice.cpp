@@ -46,7 +46,7 @@ EventDevice::EventDevice(char *deviceFileName) {
 		char errorMessage[512];
 		sprintf(errorMessage, "Error opening device %s read/write, Force Feedback disabled for this device\n", deviceFileName);
 		perror(errorMessage);
-  	  
+		
 	  fd = open(deviceFileName, O_RDONLY | O_NONBLOCK);
 	  if(fd<0) {
 	    /*char errorMessage[512];
@@ -54,6 +54,27 @@ EventDevice::EventDevice(char *deviceFileName) {
 	    perror(errorMessage);*/
 		inited = 0;
 		return;
+	  }
+  } else {
+      if(ioctl(fd, EVIOCGBIT(EV_FF, sizeof(ff_bitmask)), ff_bitmask) < 0) {
+	    char errorMessage[512];
+	    sprintf(errorMessage, "Error reading device %s\n", deviceFileName);
+	    perror(errorMessage);
+	  }
+	  if(getBit(FF_RUMBLE, ff_bitmask)==1) {
+	  	ffSupported = 1;
+	  	//LOG_TRACE("Force feedback supported for %s\n", deviceFileName);
+		  int n_effects = 0;
+		  if (ioctl(fd, EVIOCGEFFECTS, &n_effects) == -1) {
+		  	char errorMessage[512];
+		  	sprintf(errorMessage, "Failed to get number of effects for device %s\n", deviceFileName);
+	        perror(errorMessage);
+	      }
+	      LOG_TRACE("Device %s supports %d simultanious effects\n", deviceFileName, n_effects);
+	      effect_playing = false;
+	  } else {
+	  	ffSupported = 0;
+	  	LOG_TRACE("Force feedback not supported for %s %d\n", deviceFileName, getBit(FF_RUMBLE, ff_bitmask));
 	  }
   }
 
@@ -105,9 +126,7 @@ EventDevice::EventDevice(char *deviceFileName) {
     numAbsAxes = 0;
   }
 
-  if(getBit(EV_FF, evtype_bitmask)) {
-    ffSupported = 1;
-  } else {
+  if(!getBit(EV_FF, evtype_bitmask)) {
     ffSupported = 0;
   }
 
@@ -381,4 +400,57 @@ int EventDevice::getAbsAxisMaximum(int axisNumber) {
 
 int EventDevice::getAbsAxisFuzz(int axisNumber) {
   return abs_features[axisNumber].fuzz;
+}
+
+bool EventDevice::getFFEnabled() {
+	if(ffSupported==1) {
+		//LOG_TRACE("FF is supported for %s\n", getName());
+		return true;
+	}
+	//LOG_TRACE("FF is not supported for %s\n", getName());
+	return false;
+}
+
+void EventDevice::rumble(float force) {
+	if(force>1) force=1;
+	if(force<-1) force=-1;
+	LOG_TRACE("Rumbling at %d%%, (shh, pretend)\n", (int)(force*100));
+	
+	if(effect_playing==true) {
+		stop.type=EV_FF;
+		stop.code = effect.id;
+		stop.value=0;
+		
+		if (ioctl(fd, EVIOCRMFF, effect.id) == -1) {
+		        perror("Remove effect");
+		}
+    
+	}
+	
+	effect.type=FF_RUMBLE;
+	effect.id=-1;
+	effect.u.rumble.strong_magnitude = (int)(0x8000*force);
+    effect.u.rumble.weak_magnitude = (int)(0xc000*force);
+    effect.replay.length = 5000;
+    effect.replay.delay = 0;
+
+    if (ioctl(fd, EVIOCSFF, &effect) == -1) {
+            perror("Upload effect");
+    }
+    
+    play.type = EV_FF;
+    play.code=effect.id;
+    play.value=1;
+    
+	if(effect_playing==true) {
+		if (write(fd, (const void*) &stop, sizeof(stop)) == -1) {
+	        perror("Failed to stop effect");
+	    }
+	}
+    if (write(fd, (const void*) &play, sizeof(play)) == -1) {
+        perror("Failed to play effect");
+    } else {
+    	effect_playing=true;
+    }
+    
 }

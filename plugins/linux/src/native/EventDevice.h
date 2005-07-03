@@ -56,10 +56,14 @@ class EventDevice : public Device {
     uint8_t key_bitmask[KEY_MAX/8 + 1];
     uint8_t rel_bitmask[REL_MAX/8 + 1];
     uint8_t abs_bitmask[ABS_MAX/8 + 1];
+    uint8_t ff_bitmask[16];
     struct input_absinfo *abs_features;
     int absAxisLookup[ABS_MAX];
     int relAxisLookup[REL_MAX];
     int buttonLookup[KEY_MAX];
+	struct ff_effect effect;
+	struct input_event play, stop;
+	bool effect_playing;
 
   public:
     EventDevice(char *deviceFilename);
@@ -80,7 +84,8 @@ class EventDevice : public Device {
     int getAbsAxisMaximum(int axisNumber);
     int getAbsAxisFuzz(int axisNumber);
     int isValidDevice();
-
+    bool getFFEnabled(); 
+	void rumble(float force);
 };
 
 #endif //eventInterface_eventDevice_h

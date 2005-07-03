@@ -186,3 +186,11 @@ int JoystickDevice::getAbsAxisMaximum(int axisNumber) {
 int JoystickDevice::getAbsAxisFuzz(int axisNumber) {
   return 0;
 }
+
+bool JoystickDevice::getFFEnabled() {
+	return false;
+}
+
+void JoystickDevice::rumble(float force) {
+	return;
+}

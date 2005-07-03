@@ -32,6 +32,7 @@
 #include "net_java_games_input_LinuxDevice.h"
 #include "net_java_games_input_LinuxEnvironmentPlugin.h"
 #include "net_java_games_input_LinuxKeyboard.h"
+#include "net_java_games_input_LinuxDeviceRumbler.h"
 
 #include "Device.h"
 #include "EventDevice.h"
@@ -302,7 +303,7 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxDevice_getNativePortType
   (JNIEnv *, jobject, jint deviceID) {
 
   LOG_TRACE("Getting bus type for device %d\n", deviceID);
-  jinputDeviceList[deviceID]->getBusType();
+  return jinputDeviceList[deviceID]->getBusType();
 }
 
 /* Inaccessible static: NO_RUMBLERS */
@@ -357,5 +358,32 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxKeyboard_getNativePortType
   (JNIEnv *, jobject, jint deviceID) {
 
   LOG_TRACE("Getting bus type for keyboard device %d\n", deviceID);
-  jinputDeviceList[deviceID]->getBusType();
+  return jinputDeviceList[deviceID]->getBusType();
+}
+
+/*
+ * Class:     net_java_games_input_LinuxDevice
+ * Method:    getFFEnabled
+ * Signature: (I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_net_java_games_input_LinuxDevice_getNativeFFEnabled
+  (JNIEnv *, jobject, jint deviceID) {
+  	
+  LOG_TRACE("Getting FFEnabled status for device %d\n", deviceID);
+  if(jinputDeviceList[deviceID]->getFFEnabled()) {
+  	//LOG_TRACE("jinput lib thinks device %d is ff enabled\n", deviceID);
+  	return JNI_TRUE;
+  }
+  	//LOG_TRACE("jinput lib thinks device %d is ff disabled\n", deviceID);
+  return JNI_FALSE;
+}
+
+/*
+ * Class:     net_java_games_input_LinuxRumblerDevice
+ * Method:    nativeRumble
+ * Signature: (IF)V
+ */
+JNIEXPORT void JNICALL Java_net_java_games_input_LinuxDeviceRumbler_nativeRumble
+  (JNIEnv *, jobject, jint deviceID, jfloat force) {
+  	jinputDeviceList[deviceID]->rumble(force);
 }

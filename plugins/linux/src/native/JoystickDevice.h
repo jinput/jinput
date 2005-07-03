@@ -62,7 +62,8 @@ class JoystickDevice : public Device {
     int getAbsAxisMaximum(int axisNumber);
     int getAbsAxisFuzz(int axisNumber);
     int isValidDevice();
-
+	bool getFFEnabled();
+	void rumble(float force);
 };
 
 #endif //eventInterface_eventDevice_h

@@ -73,6 +73,14 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxDevice_getNativeAbsAxisMin
  */
 JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxDevice_getNativePortType
   (JNIEnv *, jobject, jint);
+  
+/*
+ * Class:     net_java_games_input_LinuxDevice
+ * Method:    getFFEnabled
+ * Signature: (I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_net_java_games_input_LinuxDevice_getNativeFFEnabled
+  (JNIEnv *, jobject, jint);
 
 #ifdef __cplusplus
 }
