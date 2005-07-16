@@ -121,3 +121,8 @@ bool MixedDevice::getFFEnabled() {
 void MixedDevice::rumble(float force) {
 	eventDevice->rumble(force);
 }
+
+void MixedDevice::cleanup() {
+	joystickDevice->cleanup();
+	eventDevice->cleanup();
+}

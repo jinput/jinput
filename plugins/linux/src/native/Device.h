@@ -66,6 +66,7 @@ class Device {
     virtual int getAbsAxisFuzz(int axisNumber) = 0;
     virtual bool getFFEnabled() = 0;
     virtual void rumble(float force) = 0;
+    virtual void cleanup() = 0;
 };
 
 #endif //eventInterface_Device_h

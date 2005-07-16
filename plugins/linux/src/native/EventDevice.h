@@ -86,6 +86,7 @@ class EventDevice : public Device {
     int isValidDevice();
     bool getFFEnabled(); 
 	void rumble(float force);
+	void cleanup();
 };
 
 #endif //eventInterface_eventDevice_h

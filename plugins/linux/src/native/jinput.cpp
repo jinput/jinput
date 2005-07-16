@@ -387,3 +387,13 @@ JNIEXPORT void JNICALL Java_net_java_games_input_LinuxDeviceRumbler_nativeRumble
   (JNIEnv *, jobject, jint deviceID, jfloat force) {
   	jinputDeviceList[deviceID]->rumble(force);
 }
+
+/*
+ * Class:     net_java_games_input_LinuxRumblerDevice
+ * Method:    nativeCleanup
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_net_java_games_input_LinuxDeviceRumbler_nativeCleanup
+  (JNIEnv *, jobject, jint deviceID) {
+  	jinputDeviceList[deviceID]->cleanup();
+}

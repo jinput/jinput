@@ -64,6 +64,7 @@ class MixedDevice : public Device {
     int getAbsAxisFuzz(int axisNumber);
 	bool getFFEnabled();
 	void rumble(float force);
+	void cleanup();
 };
 
 #endif //eventInterface_eventDevice_h

@@ -14,6 +14,14 @@ extern "C" {
  */
 JNIEXPORT void JNICALL Java_net_java_games_input_LinuxDeviceRumbler_nativeRumble
   (JNIEnv *, jobject, jint, jfloat);
+
+/*
+ * Class:     net_java_games_input_LinuxDeviceRumbler
+ * Method:    nativeCleanup
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_net_java_games_input_LinuxDeviceRumbler_nativeCleanup
+  (JNIEnv *, jobject, jint);
 #ifdef __cplusplus
 }
 #endif

@@ -8,6 +8,12 @@ public class LinuxDeviceRumbler implements Rumbler {
 	
 	public LinuxDeviceRumbler(int deviceID) {
 		this.deviceID = deviceID;
+		
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				cleanup();
+			}
+		});			
 	}
 
 	public void rumble(float intensity) {
@@ -25,5 +31,12 @@ public class LinuxDeviceRumbler implements Rumbler {
 		return null;
 	}
 
+	private void cleanup() {
+		nativeCleanup(deviceID);
+	}
+
 	private native void nativeRumble(int deviceID, float intensity);
+	
+	private native void nativeCleanup(int deviceID);
+	
 }

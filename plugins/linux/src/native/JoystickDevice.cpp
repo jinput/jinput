@@ -194,3 +194,7 @@ bool JoystickDevice::getFFEnabled() {
 void JoystickDevice::rumble(float force) {
 	return;
 }
+
+void JoystickDevice::cleanup() {
+	close(fd);
+}

@@ -27,10 +27,10 @@
 #include "eventInterfaceTypes.h"
 #include "EventDevice.h"
 #include <stdio.h>
-#include <linux/input.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <string.h>
+#include <linux/input.h>
 #include <malloc.h>
 #include <errno.h>
 
@@ -56,7 +56,7 @@ EventDevice::EventDevice(char *deviceFileName) {
 		return;
 	  }
   } else {
-      if(ioctl(fd, EVIOCGBIT(EV_FF, sizeof(ff_bitmask)), ff_bitmask) < 0) {
+      if(ioctl(fd, EVIOCGBIT(EV_FF, sizeof(uint8_t) * 16), ff_bitmask) < 0) {
 	    char errorMessage[512];
 	    sprintf(errorMessage, "Error reading device %s\n", deviceFileName);
 	    perror(errorMessage);
@@ -71,7 +71,20 @@ EventDevice::EventDevice(char *deviceFileName) {
 	        perror(errorMessage);
 	      }
 	      LOG_TRACE("Device %s supports %d simultanious effects\n", deviceFileName, n_effects);
+	      
 	      effect_playing = false;
+	      effect.type=FF_RUMBLE;
+		  effect.id=-1;
+		  effect.u.rumble.strong_magnitude = (int)(0x8000);
+	      effect.u.rumble.weak_magnitude = (int)(0xc000);
+	      effect.replay.length = 5000;
+	      effect.replay.delay = 0;
+		  LOG_TRACE("Uploading effect %d\n", effect.id);
+		  if (ioctl(fd, EVIOCSFF, &effect) == -1) {
+		    perror("Upload effect");
+		  }
+	    
+	      
 	  } else {
 	  	ffSupported = 0;
 	  	LOG_TRACE("Force feedback not supported for %s %d\n", deviceFileName, getBit(FF_RUMBLE, ff_bitmask));
@@ -416,48 +429,34 @@ void EventDevice::rumble(float force) {
 	if(force<-1) force=-1;
 	//LOG_TRACE("Rumbling at %d%%, (shh, pretend)\n", (int)(force*100));
 	
-	if(effect_playing==true) {
+	if(effect_playing==true && force==0) {
 		stop.type=EV_FF;
 		stop.code = effect.id;
 		stop.value=0;
-		
-		LOG_TRACE("Removing effect %d\n", effect.id);
-		if (ioctl(fd, EVIOCRMFF, &effect) == -1) {
-		        perror("Remove effect");
-		}
-    
-	} else {
-		effect.id=-1;
-	}
-	
-	effect.type=FF_RUMBLE;
-	//effect.id=-1;
-	effect.u.rumble.strong_magnitude = (int)(0x8000*force);
-    effect.u.rumble.weak_magnitude = (int)(0xc000*force);
-    effect.replay.length = 15000;
-    effect.replay.delay = 0;
-
-	if(effect_playing==true) {
-		LOG_TRACE("Stoping %d\n", stop.code);
-		if (write(fd, (const void*) &stop, sizeof(stop)) == -1) {
+	    LOG_TRACE("Stopping effect %d\n", stop.code);
+	    if (write(fd, (const void*) &stop, sizeof(stop)) == -1) {
 	        perror("Failed to stop effect");
+	    } else {
+	    	effect_playing=false;
 	    }
-	    effect_playing=false;
 	}
-	LOG_TRACE("Uploading effect %d\n", effect.id);
-    if (ioctl(fd, EVIOCSFF, &effect) == -1) {
-            perror("Upload effect");
-    }
-    
-    play.type = EV_FF;
-    play.code=effect.id;
-    play.value=1;
-    
-    LOG_TRACE("Playing effect %d\n", play.code);
-    if (write(fd, (const void*) &play, sizeof(play)) == -1) {
-        perror("Failed to play effect");
-    } else {
-    	effect_playing=true;
-    }
-    
+	if(effect_playing==false && force!=0) {
+	    play.type = EV_FF;
+	    play.code=effect.id;
+	    play.value=1;
+	    
+	    LOG_TRACE("Playing effect %d\n", play.code);
+	    if (write(fd, (const void*) &play, sizeof(play)) == -1) {
+	        perror("Failed to play effect");
+	    } else {
+	    	effect_playing=true;
+	    }
+	}
+}
+
+void EventDevice::cleanup() {
+	char message[512];
+	sprintf(message, "Closing device %s\n", name);
+	LOG_TRACE(message); 
+	close(fd);
 }
