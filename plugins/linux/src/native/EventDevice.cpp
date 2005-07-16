@@ -414,26 +414,37 @@ bool EventDevice::getFFEnabled() {
 void EventDevice::rumble(float force) {
 	if(force>1) force=1;
 	if(force<-1) force=-1;
-	LOG_TRACE("Rumbling at %d%%, (shh, pretend)\n", (int)(force*100));
+	//LOG_TRACE("Rumbling at %d%%, (shh, pretend)\n", (int)(force*100));
 	
 	if(effect_playing==true) {
 		stop.type=EV_FF;
 		stop.code = effect.id;
 		stop.value=0;
 		
-		if (ioctl(fd, EVIOCRMFF, effect.id) == -1) {
+		LOG_TRACE("Removing effect %d\n", effect.id);
+		if (ioctl(fd, EVIOCRMFF, &effect) == -1) {
 		        perror("Remove effect");
 		}
     
+	} else {
+		effect.id=-1;
 	}
 	
 	effect.type=FF_RUMBLE;
-	effect.id=-1;
+	//effect.id=-1;
 	effect.u.rumble.strong_magnitude = (int)(0x8000*force);
     effect.u.rumble.weak_magnitude = (int)(0xc000*force);
-    effect.replay.length = 5000;
+    effect.replay.length = 15000;
     effect.replay.delay = 0;
 
+	if(effect_playing==true) {
+		LOG_TRACE("Stoping %d\n", stop.code);
+		if (write(fd, (const void*) &stop, sizeof(stop)) == -1) {
+	        perror("Failed to stop effect");
+	    }
+	    effect_playing=false;
+	}
+	LOG_TRACE("Uploading effect %d\n", effect.id);
     if (ioctl(fd, EVIOCSFF, &effect) == -1) {
             perror("Upload effect");
     }
@@ -442,11 +453,7 @@ void EventDevice::rumble(float force) {
     play.code=effect.id;
     play.value=1;
     
-	if(effect_playing==true) {
-		if (write(fd, (const void*) &stop, sizeof(stop)) == -1) {
-	        perror("Failed to stop effect");
-	    }
-	}
+    LOG_TRACE("Playing effect %d\n", play.code);
     if (write(fd, (const void*) &play, sizeof(play)) == -1) {
         perror("Failed to play effect");
     } else {
