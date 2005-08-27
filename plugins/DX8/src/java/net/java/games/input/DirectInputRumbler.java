@@ -54,6 +54,8 @@ public class DirectInputRumbler implements Rumbler {
         this.effect = effect;
         this.axisID = axisID;
         this.axisName = axisName;
+        
+        Runtime.getRuntime().addShutdownHook(new Thread(new ShutdownHook(this)));
     }
     
     /**
@@ -98,4 +100,22 @@ public class DirectInputRumbler implements Rumbler {
      * @param intensity The intensity of the rumble
      */
     private native void setRumble(long effect, float intensity);
+    
+    private class ShutdownHook implements Runnable {
+    	private DirectInputRumbler rumbler;
+    	public ShutdownHook(DirectInputRumbler rumbler) {
+    		this.rumbler = rumbler;
+    	}
+    	
+    	public void run() {
+    		if(rumbler!=null) {
+    			rumbler.rumble(0f);
+    			try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					//Ignore, we are quitting anyway
+				}
+    		}
+    	}
+    }
 }
