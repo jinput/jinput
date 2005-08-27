@@ -321,10 +321,23 @@ BOOL RegisterDummyWindow(HINSTANCE hInstance)
 }
 
 // Callback for finding out what effects a device supports
-BOOL CALLBACK DIEnumEffectsProc(LPCDIEFFECTINFO pei, LPVOID pv)
+BOOL CALLBACK DIEnumEffectsCallback(LPCDIEFFECTINFO pdei, 
+                                LPVOID pvRef)
 {
-    *((GUID *)pv) = pei->guid;
-    return DIENUM_STOP;  // one is enough
+    if(DIEFT_GETTYPE(pdei->dwEffType)==DIEFT_CONSTANTFORCE) {
+    	printf("Constant force ");
+    } else if(DIEFT_GETTYPE(pdei->dwEffType)==DIEFT_RAMPFORCE){
+    	printf("Ramp force ");
+    } else if(DIEFT_GETTYPE(pdei->dwEffType)==DIEFT_PERIODIC ){
+    	printf("Periodic force ");
+    } else if(DIEFT_GETTYPE(pdei->dwEffType)==DIEFT_CONDITION ){
+    	printf("Condition force ");
+    } else if(DIEFT_GETTYPE(pdei->dwEffType)==DIEFT_CUSTOMFORCE ){
+    	printf("Custom force ");
+    } else if(DIEFT_GETTYPE(pdei->dwEffType)==DIEFT_HARDWARE ){
+    	printf("Hardware force ");
+    }    	
+    return DIENUM_CONTINUE;  // one is enough
 }
 
 /*
@@ -670,15 +683,17 @@ BOOL CALLBACK EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi,
 		
 		HRESULT  hr;
 		GUID     guidEffect;
+		printf("Supported effects: ");
 		hr = lpDevice->EnumEffects(
-		                         (LPDIENUMEFFECTSCALLBACK) DIEnumEffectsProc,
+		                         (LPDIENUMEFFECTSCALLBACK) DIEnumEffectsCallback,
 		                          &guidEffect, 
-		                          DIEFT_PERIODIC);
+		                          DIEFT_ALL);
 		if (FAILED(hr))
 		{
 		    // Note that success does not mean that any effects were found,
 		    // only that the process went smoothly.
 		}
+		printf("\n");
 		
 		// This application needs only one effect: Applying raw forces.
 		DWORD           rgdwAxes;

@@ -109,6 +109,7 @@ public class DirectInputRumbler implements Rumbler {
     	
     	public void run() {
     		if(rumbler!=null) {
+                System.out.println("Reseting rumbler " + getAxisName() + " before exit");
     			rumbler.rumble(0f);
     			try {
 					Thread.sleep(1000);
