@@ -37,7 +37,7 @@ public class RumbleTest {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                 }
-                /*System.out.println("Fading rumble to -1");
+                System.out.println("Fading rumble to -1");
                 for(float k=1.0f;k>-1.0f;) {
                     long startTime = System.currentTimeMillis();
                     rumblers[j].rumble(k);
@@ -50,7 +50,7 @@ public class RumbleTest {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                }*/
+                }
                 System.out.println("Rumbling with intensity: " + 0.0f);
                 rumblers[j].rumble(0f);
                 try {
