@@ -320,6 +320,13 @@ BOOL RegisterDummyWindow(HINSTANCE hInstance)
 	return RegisterClassEx(&wcex);
 }
 
+// Callback for finding out what effects a device supports
+BOOL CALLBACK DIEnumEffectsProc(LPCDIEFFECTINFO pei, LPVOID pv)
+{
+    *((GUID *)pv) = pei->guid;
+    return DIENUM_STOP;  // one is enough
+}
+
 /*
  * Class:     org_java_games_input_DirectInputEnvironmentPlugin
  * Method:    directInputCreate
@@ -660,6 +667,19 @@ BOOL CALLBACK EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi,
         name);
 
 	if(ffEnabled) {
+		
+		HRESULT  hr;
+		GUID     guidEffect;
+		hr = lpDevice->EnumEffects(
+		                         (LPDIENUMEFFECTSCALLBACK) DIEnumEffectsProc,
+		                          &guidEffect, 
+		                          DIEFT_PERIODIC);
+		if (FAILED(hr))
+		{
+		    // Note that success does not mean that any effects were found,
+		    // only that the process went smoothly.
+		}
+		
 		// This application needs only one effect: Applying raw forces.
 		DWORD           rgdwAxes;
 		LONG            rglDirection = 0;
