@@ -699,14 +699,28 @@ BOOL CALLBACK EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi,
 		DWORD           rgdwAxes;
 		LONG            rglDirection = 0;
 		if(lpddoi->guidType == GUID_XAxis) {
-			//printf("effect is in the x axis\n");
+			printf("effect is in the x axis\n");
 			rgdwAxes = DIJOFS_X;
 		} else if(lpddoi->guidType == GUID_YAxis) {
-			//printf("effect is in the y axis\n");
+			printf("effect is in the y axis\n");
 			rgdwAxes = DIJOFS_Y;
 		} else if(lpddoi->guidType == GUID_ZAxis) {
-			//printf("effect is in the z axis\n");
+			printf("effect is in the z axis\n");
 			rgdwAxes = DIJOFS_Z;
+	    } else if (lpddoi->guidType == GUID_RxAxis) {
+	        printf("effect is in the rx axis\n");
+	    } else if (lpddoi->guidType == GUID_RyAxis) {
+	        printf("effect is in the ry axis\n");
+	    } else if (lpddoi->guidType == GUID_RzAxis) {
+	        printf("effect is in the rx axis\n");
+	    } else if (lpddoi->guidType == GUID_Slider) {
+	        printf("effect is in the slider axis\n");
+	    } else if (lpddoi->guidType == GUID_Button) {
+	        printf("effect is in the button axis\n");
+	    } else if (lpddoi->guidType == GUID_POV) {
+	        printf("effect is in the pov axis\n");
+	    } else {
+	    	printf("effect is in an unknown axis\n");
 		}
 
 		DICONSTANTFORCE cf              = { DI_FFNOMINALMAX };
