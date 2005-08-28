@@ -27,7 +27,7 @@
         <!-- Both srcdir and destdir should be package roots. -->
         <!-- They could be different of course; in that case NetBeans can also be set -->
         <!-- up to compile to a different filesystem in the same way; see Compiler Types: -->
-        <javac srcdir="src/java" destdir="classes" debug="true" deprecation="true" source="1.4">
+        <javac srcdir="src/java" destdir="classes" debug="true" deprecation="true" source="1.4" target="1.4">
             <include name="net/**"/>
             <!-- To add something to the classpath: -->
             <classpath>
