@@ -430,7 +430,7 @@ void EventDevice::rumble(float force) {
 	if(force<-1) force=-1;
 	//LOG_TRACE("Rumbling at %d%%, (shh, pretend)\n", (int)(force*100));
 	
-	if(effect_playing==true && force==0) {
+	if(effect_playing==true) {
 		stop.type=EV_FF;
 		stop.code = effect.id;
 		stop.value=0;
@@ -441,6 +441,24 @@ void EventDevice::rumble(float force) {
 	    	effect_playing=false;
 	    }
 	}
+	
+	if(force>0.666666) {
+		effect.u.rumble.strong_magnitude = (int)(0x8000*force);
+		effect.u.rumble.weak_magnitude = (int)(0xc000*force);
+	} else if(force>0.3333333) {
+		effect.u.rumble.strong_magnitude = (int)(0x8000*force);
+		effect.u.rumble.weak_magnitude = (int)(0xc000*0);
+	} else {
+		effect.u.rumble.strong_magnitude = (int)(0x8000*0);
+		effect.u.rumble.weak_magnitude = (int)(0xc000*force);
+	}		
+	
+	LOG_TRACE("Uploading effect %d\n", effect.id);
+	if (ioctl(fd, EVIOCSFF, &effect) == -1) {
+		perror("Upload effect");
+	}
+	LOG_TRACE("Uploaded effect %d\n", effect.id);
+	
 	if(effect_playing==false && force!=0) {
 	    play.type = EV_FF;
 	    play.code=effect.id;
