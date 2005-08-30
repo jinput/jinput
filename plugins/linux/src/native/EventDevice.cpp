@@ -83,6 +83,7 @@ EventDevice::EventDevice(char *deviceFileName) {
 		  if (ioctl(fd, EVIOCSFF, &effect) == -1) {
 		    perror("Upload effect");
 		  }
+		  LOG_TRACE("Uploaded effect %d\n", effect.id);
 	    
 	      
 	  } else {

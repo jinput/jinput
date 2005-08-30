@@ -29,10 +29,7 @@
 #include <malloc.h>
 #include <string.h>
 
-#include "net_java_games_input_LinuxDevice.h"
-#include "net_java_games_input_LinuxEnvironmentPlugin.h"
-#include "net_java_games_input_LinuxKeyboard.h"
-#include "net_java_games_input_LinuxDeviceRumbler.h"
+#include "net_java_games_input_JInputLibrary.h"
 
 #include "Device.h"
 #include "EventDevice.h"
@@ -46,12 +43,12 @@ Device **jinputDeviceList;
 int jinputNumDevices;
 
 /*
- * Class:     net_java_games_input_LinuxEnvironmentPlugin
- * Method:    init
+ * Class:     net_java_games_input_JInputLibrary
+ * Method:    nativeInit
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxEnvironmentPlugin_init
-  (JNIEnv *, jobject) {
+JNIEXPORT jint JNICALL Java_net_java_games_input_JInputLibrary_nativeInit
+  (JNIEnv *, jclass) {
 
   LOG_TRACE("Initing event interface\n");
   if(evInit()!=0) {
@@ -124,13 +121,12 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxEnvironmentPlugin_init
 }
 
 /*
- * Class:     net_java_games_input_LinuxEnvironmentPlugin
+ * Class:     net_java_games_input_JInputLibrary
  * Method:    getDeviceName
  * Signature: (I)Ljava/lang/String;
  */
-
-JNIEXPORT jstring JNICALL Java_net_java_games_input_LinuxEnvironmentPlugin_getDeviceName
-  (JNIEnv *env, jobject, jint deviceID) {
+JNIEXPORT jstring JNICALL Java_net_java_games_input_JInputLibrary_getDeviceName
+  (JNIEnv *env, jclass, jint deviceID) {
   
   LOG_TRACE("Gettign device name for jinput device %d.\n", deviceID);
   LOG_TRACE("jinput device %d is %d\n", deviceID, jinputDeviceList[deviceID]);
@@ -139,59 +135,59 @@ JNIEXPORT jstring JNICALL Java_net_java_games_input_LinuxEnvironmentPlugin_getDe
 }
 
 /*
- * Class:     net_java_games_input_LinuxEnvironmentPlugin
+ * Class:     net_java_games_input_JInputLibrary
  * Method:    getNumAbsAxes
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxEnvironmentPlugin_getNumAbsAxes
-  (JNIEnv *env, jobject, jint deviceID) {
+JNIEXPORT jint JNICALL Java_net_java_games_input_JInputLibrary_getNumAbsAxes
+  (JNIEnv *env, jclass, jint deviceID) {
 
   LOG_TRACE("Gettign number of absolute axes for jinput device %d (%d)\n", deviceID, jinputDeviceList[deviceID]->getNumberAbsAxes());
   return jinputDeviceList[deviceID]->getNumberAbsAxes();
 }
 
 /*
- * Class:     net_java_games_input_LinuxEnvironmentPlugin
+ * Class:     net_java_games_input_JInputLibrary
  * Method:    getNumRelAxes
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxEnvironmentPlugin_getNumRelAxes
-  (JNIEnv *env, jobject, jint deviceID) {
+JNIEXPORT jint JNICALL Java_net_java_games_input_JInputLibrary_getNumRelAxes
+  (JNIEnv *env, jclass, jint deviceID) {
   
   LOG_TRACE("Gettign number of relative axes for jinput device %d (%d)\n", deviceID, jinputDeviceList[deviceID]->getNumberRelAxes());
   return jinputDeviceList[deviceID]->getNumberRelAxes();
 }
 
 /*
- * Class:     net_java_games_input_LinuxEnvironmentPlugin
+ * Class:     net_java_games_input_JInputLibrary
  * Method:    getNumButtons
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxEnvironmentPlugin_getNumButtons
-  (JNIEnv *, jobject, jint deviceID) {
+JNIEXPORT jint JNICALL Java_net_java_games_input_JInputLibrary_getNumButtons
+  (JNIEnv *, jclass, jint deviceID) {
 
   LOG_TRACE("Gettign number of buttons for jinput device %d (%d)\n", deviceID, jinputDeviceList[deviceID]->getNumberButtons());
   return jinputDeviceList[deviceID]->getNumberButtons();
 }
 
 /*
- * Class:     net_java_games_input_LinuxEnvironmentPlugin
+ * Class:     net_java_games_input_JInputLibrary
  * Method:    getNumberOfDevices
  * Signature: ()I
  */
-JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxEnvironmentPlugin_getNumberOfDevices
-  (JNIEnv *, jobject) {
+JNIEXPORT jint JNICALL Java_net_java_games_input_JInputLibrary_getNumberOfDevices
+  (JNIEnv *, jclass) {
 
   return jinputNumDevices;
 }
 
 /*
- * Class:     net_java_games_input_LinuxDevice
- * Method:    getNativeSupportedAbsAxes
+ * Class:     net_java_games_input_JInputLibrary
+ * Method:    getSupportedAbsAxes
  * Signature: (I[I)V
  */
-JNIEXPORT void JNICALL Java_net_java_games_input_LinuxDevice_getNativeSupportedAbsAxes
-  (JNIEnv *env, jobject, jint deviceID, jintArray axesData) {
+JNIEXPORT void JNICALL Java_net_java_games_input_JInputLibrary_getSupportedAbsAxes
+  (JNIEnv *env, jclass, jint deviceID, jintArray axesData) {
 
   jint *axisReturns = env->GetIntArrayElements(axesData, 0);
   
@@ -202,12 +198,12 @@ JNIEXPORT void JNICALL Java_net_java_games_input_LinuxDevice_getNativeSupportedA
 }
 
 /*
- * Class:     net_java_games_input_LinuxDevice
- * Method:    getNativeSupportedRelAxes
+ * Class:     net_java_games_input_JInputLibrary
+ * Method:    getSupportedRelAxes
  * Signature: (I[I)V
  */
-JNIEXPORT void JNICALL Java_net_java_games_input_LinuxDevice_getNativeSupportedRelAxes
-  (JNIEnv *env, jobject, jint deviceID, jintArray axesData) {
+JNIEXPORT void JNICALL Java_net_java_games_input_JInputLibrary_getSupportedRelAxes
+  (JNIEnv *env, jclass, jint deviceID, jintArray axesData) {
 
   jint *axisReturns = env->GetIntArrayElements(axesData, 0);
   
@@ -218,12 +214,12 @@ JNIEXPORT void JNICALL Java_net_java_games_input_LinuxDevice_getNativeSupportedR
 }
 
 /*
- * Class:     net_java_games_input_LinuxDevice
- * Method:    getNativeSupportedButtons
+ * Class:     net_java_games_input_JInputLibrary
+ * Method:    getSupportedButtons
  * Signature: (I[I)V
  */
-JNIEXPORT void JNICALL Java_net_java_games_input_LinuxDevice_getNativeSupportedButtons
-  (JNIEnv *env, jobject, jint deviceID, jintArray buttonData) {
+JNIEXPORT void JNICALL Java_net_java_games_input_JInputLibrary_getSupportedButtons
+  (JNIEnv *env, jclass, jint deviceID, jintArray buttonData) {
 
   jint *buttonDataElements = env->GetIntArrayElements(buttonData, 0);
   
@@ -234,12 +230,12 @@ JNIEXPORT void JNICALL Java_net_java_games_input_LinuxDevice_getNativeSupportedB
 }
 
 /*
- * Class:     net_java_games_input_LinuxDevice
- * Method:    nativePoll
+ * Class:     net_java_games_input_JInputLibrary
+ * Method:    poll
  * Signature: (I[I[I[I)I
  */
-JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxDevice_nativePoll
-  (JNIEnv *env, jobject, jint deviceID, jintArray buttons, jintArray relAxes, jintArray absAxes) {
+JNIEXPORT jint JNICALL Java_net_java_games_input_JInputLibrary_poll
+  (JNIEnv *env, jclass, jint deviceID, jintArray buttons, jintArray relAxes, jintArray absAxes) {
 
   jint *buttonElements = env->GetIntArrayElements(buttons, 0);
   jint *relAxesElements = env->GetIntArrayElements(relAxes, 0);
@@ -258,24 +254,24 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxDevice_nativePoll
 }
 
 /*
- * Class:     net_java_games_input_LinuxDevice
- * Method:    getNativeAbsAxisFuzz
+ * Class:     net_java_games_input_JInputLibrary
+ * Method:    getAbsAxisFuzz
  * Signature: (II)I
  */
-JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxDevice_getNativeAbsAxisFuzz
-  (JNIEnv *, jobject, jint deviceID, jint axisID) {
+JNIEXPORT jint JNICALL Java_net_java_games_input_JInputLibrary_getAbsAxisFuzz
+  (JNIEnv *, jclass, jint deviceID, jint axisID) {
 
   LOG_TRACE("Getting fuzz data for axis %d on device %d\n", axisID, deviceID);
   return jinputDeviceList[deviceID]->getAbsAxisFuzz(axisID);
 }
 
 /*
- * Class:     net_java_games_input_LinuxDevice
- * Method:    getNativeAbsAxisMaximum
+ * Class:     net_java_games_input_JInputLibrary
+ * Method:    getAbsAxisMaximum
  * Signature: (II)I
  */
-JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxDevice_getNativeAbsAxisMaximum
-  (JNIEnv *, jobject, jint deviceID, jint axisID) {
+JNIEXPORT jint JNICALL Java_net_java_games_input_JInputLibrary_getAbsAxisMaximum
+  (JNIEnv *, jclass, jint deviceID, jint axisID) {
 
   LOG_TRACE("Getting absolute axes maximum value data for axis %d on device %d\n", axisID, deviceID);
   return jinputDeviceList[deviceID]->getAbsAxisMaximum(axisID);
@@ -283,91 +279,36 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxDevice_getNativeAbsAxisMax
 
 
 /*
- * Class:     net_java_games_input_LinuxDevice
- * Method:    getNativeAbsAxisMinimum
+ * Class:     net_java_games_input_JInputLibrary
+ * Method:    getAbsAxisMinimum
  * Signature: (II)I
  */
-JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxDevice_getNativeAbsAxisMinimum
-  (JNIEnv *, jobject, jint deviceID, jint axisID) {
+JNIEXPORT jint JNICALL Java_net_java_games_input_JInputLibrary_getAbsAxisMinimum
+  (JNIEnv *, jclass, jint deviceID, jint axisID) {
 
   LOG_TRACE("Getting absolute axes minimum value data for axis %d on device %d\n", axisID, deviceID);
   return jinputDeviceList[deviceID]->getAbsAxisMinimum(axisID);
 }
 
 /*
- * Class:     net_java_games_input_LinuxDevice
+ * Class:     net_java_games_input_JInputLibrary
  * Method:    getNativePortType
  * Signature: (I)I
  */
-JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxDevice_getNativePortType
-  (JNIEnv *, jobject, jint deviceID) {
+JNIEXPORT jint JNICALL Java_net_java_games_input_JInputLibrary_getNativePortType
+  (JNIEnv *, jclass, jint deviceID) {
 
   LOG_TRACE("Getting bus type for device %d\n", deviceID);
   return jinputDeviceList[deviceID]->getBusType();
 }
 
-/* Inaccessible static: NO_RUMBLERS */
-/* Inaccessible static: _00024assertionsDisabled */
-/* Inaccessible static: class_00024net_00024java_00024games_00024input_00024Keyboard */
 /*
- * Class:     net_java_games_input_LinuxKeyboard
- * Method:    getNativeSupportedButtons
- * Signature: (I[I)V
- */
-JNIEXPORT void JNICALL Java_net_java_games_input_LinuxKeyboard_getNativeSupportedButtons
-  (JNIEnv *env, jobject, jint deviceID, jintArray buttons) {
-
-  jint *buttonDataElements = env->GetIntArrayElements(buttons, 0);
-  
-  LOG_TRACE("Gettign number of buttons for jinput keyboard device %d\n", deviceID);
-  jinputDeviceList[deviceID]->getSupportedButtons(buttonDataElements);
-
-  env->ReleaseIntArrayElements(buttons, buttonDataElements, 0);
-}
-
-/*
- * Class:     net_java_games_input_LinuxKeyboard
- * Method:    nativePoll
- * Signature: (I[I[I[I)I
- */
-JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxKeyboard_nativePoll
-  (JNIEnv *env, jobject, jint deviceID, jintArray buttons, jintArray relAxes, jintArray absAxes) {
-
-  jint *buttonElements = env->GetIntArrayElements(buttons, 0);
-  jint *relAxesElements = env->GetIntArrayElements(relAxes, 0);
-  jint *absAxesElements = env->GetIntArrayElements(absAxes, 0);
-
-  LOG_POLL_TRACE("Polling jinput keyboard device %d\n", deviceID);
-  int retval = jinputDeviceList[deviceID]->poll();
-  LOG_POLL_TRACE("Getting polled data for keyboard device %d\n", deviceID);
-  jinputDeviceList[deviceID]->getPolledData(relAxesElements, absAxesElements, buttonElements);
-
-  env->ReleaseIntArrayElements(buttons, buttonElements, 0);
-  env->ReleaseIntArrayElements(relAxes, relAxesElements, 0);
-  env->ReleaseIntArrayElements(absAxes, absAxesElements, 0);
-
-  return retval;
-}
-
-/*
- * Class:     net_java_games_input_LinuxKeyboard
- * Method:    getNativePortType
- * Signature: (I)I
- */
-JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxKeyboard_getNativePortType
-  (JNIEnv *, jobject, jint deviceID) {
-
-  LOG_TRACE("Getting bus type for keyboard device %d\n", deviceID);
-  return jinputDeviceList[deviceID]->getBusType();
-}
-
-/*
- * Class:     net_java_games_input_LinuxDevice
+ * Class:     net_java_games_input_JInputLibrary
  * Method:    getFFEnabled
  * Signature: (I)Z
  */
-JNIEXPORT jboolean JNICALL Java_net_java_games_input_LinuxDevice_getNativeFFEnabled
-  (JNIEnv *, jobject, jint deviceID) {
+JNIEXPORT jboolean JNICALL Java_net_java_games_input_JInputLibrary_getFFEnabled
+  (JNIEnv *, jclass, jint deviceID) {
   	
   LOG_TRACE("Getting FFEnabled status for device %d\n", deviceID);
   if(jinputDeviceList[deviceID]->getFFEnabled()) {
@@ -379,21 +320,25 @@ JNIEXPORT jboolean JNICALL Java_net_java_games_input_LinuxDevice_getNativeFFEnab
 }
 
 /*
- * Class:     net_java_games_input_LinuxRumblerDevice
+ * Class:     net_java_games_input_JInputLibrary
  * Method:    nativeRumble
  * Signature: (IF)V
  */
-JNIEXPORT void JNICALL Java_net_java_games_input_LinuxDeviceRumbler_nativeRumble
-  (JNIEnv *, jobject, jint deviceID, jfloat force) {
+JNIEXPORT void JNICALL Java_net_java_games_input_JInputLibrary_nativeRumble
+  (JNIEnv *, jclass, jint deviceID, jfloat force) {
   	jinputDeviceList[deviceID]->rumble(force);
 }
 
 /*
- * Class:     net_java_games_input_LinuxRumblerDevice
+ * Class:     net_java_games_input_JInputLibrary
  * Method:    nativeCleanup
  * Signature: (I)V
  */
-JNIEXPORT void JNICALL Java_net_java_games_input_LinuxDeviceRumbler_nativeCleanup
-  (JNIEnv *, jobject, jint deviceID) {
-  	jinputDeviceList[deviceID]->cleanup();
+JNIEXPORT void JNICALL Java_net_java_games_input_JInputLibrary_nativeCleanup
+  (JNIEnv *, jclass, jint deviceID) {
+  	if(jinputDeviceList[deviceID]!=0) {
+	  	jinputDeviceList[deviceID]->cleanup();
+	  	free(jinputDeviceList);
+	  	jinputDeviceList[deviceID]=0;
+  	}
 }

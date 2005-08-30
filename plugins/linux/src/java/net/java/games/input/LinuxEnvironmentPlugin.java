@@ -32,35 +32,19 @@ import net.java.games.util.plugins.Plugin;
  */
 public class LinuxEnvironmentPlugin extends ControllerEnvironment implements Plugin {
     
-    static {
-        if(isSupported()) {
-            System.loadLibrary("jinput-linux");
-        }
-    }    
-
     /** List of controllers
      */    
     private Controller[] controllers;
     
     /** Creates a new instance of LinuxEnvironmentPlugin */
     public LinuxEnvironmentPlugin() {
-        if(isSupported()) {
-	        LinuxNativeTypesMap.init();
-	        init();
+        if(JInputLibrary.isSupported()) {
+            LinuxNativeTypesMap.init();
+            JInputLibrary.init();
 	        createControllers();
         } else {
             controllers = new Controller[0];
         }
-    }
-    
-    public static boolean isSupported() {
-        System.out.println("OS name is: " + System.getProperty("os.name"));
-        if(System.getProperty("os.name").indexOf("Linux")!=-1) {
-            System.out.println("Linux plugin is supported");
-            return true;
-        }
-        System.out.println("Linux plugin is not supported");
-        return false;
     }
     
     /** Returns a list of all controllers available to this environment,
@@ -75,7 +59,7 @@ public class LinuxEnvironmentPlugin extends ControllerEnvironment implements Plu
     /** Create the controllers
      */    
     private void createControllers() {
-        int numDevices = getNumberOfDevices();
+        int numDevices = JInputLibrary.getNumberOfDevices();
         
         Controller[] tempControllers = new Controller[numDevices];
         
@@ -102,12 +86,14 @@ public class LinuxEnvironmentPlugin extends ControllerEnvironment implements Plu
      * @param deviceNumber The device ID
      * @return The new device
      */    
-    private Controller createDevice(int deviceNumber) {
-        String name = getDeviceName(deviceNumber);
-        int numAbsAxes = getNumAbsAxes(deviceNumber);
-        int numRelAxes = getNumRelAxes(deviceNumber);
-        int numButtons = getNumButtons(deviceNumber);
+    private Controller createDevice(int deviceNumber) {        
+        String name = JInputLibrary.getDeviceName(deviceNumber);
+        int numAbsAxes = JInputLibrary.getNumAbsAxes(deviceNumber);
+        int numRelAxes = JInputLibrary.getNumRelAxes(deviceNumber);
+        int numButtons = JInputLibrary.getNumButtons(deviceNumber);
         Controller device = null;
+        
+        System.out.println("Java working on device " + name);
         
         int mouseCharacteristic = 0;
         int keyboardCharacteristic = 0;
@@ -152,34 +138,5 @@ public class LinuxEnvironmentPlugin extends ControllerEnvironment implements Plu
         }
         return device;
     }
-    
-    /** Get the name of a device from the native library
-     * @param deviceID The device id
-     * @return The devices name
-     */    
-    private native String getDeviceName(int deviceID);
-    /** Get the number of absolute axes for the requested device
-     * @param deviceID The device ID
-     * @return The number of abs axes
-     */    
-    private native int getNumAbsAxes(int deviceID);
-    /** Get the nmber or relative axes from the native library
-     * @param deviceID The native device ID
-     * @return The number of raltive axes for the device
-     */    
-    private native int getNumRelAxes(int deviceID);
-    /** Gets the number of buttons for the requested devce from the native library
-     * @param deviceID The device ID
-     * @return The number of buttons
-     */    
-    private native int getNumButtons(int deviceID);
-    /** Initialises the native library
-     * @return <0 if something went wrong
-     */    
-    private native int init();
-    /** Gets the number of devices the native library found
-     * @return Th number of devices
-     */    
-    private native int getNumberOfDevices();
     
 }

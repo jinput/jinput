@@ -112,7 +112,7 @@ public class LinuxDevice extends AbstractController {
 
         this.nativeID = nativeID;
         
-        portType = LinuxNativeTypesMap.getPortType(getNativePortType(nativeID));
+        portType = LinuxNativeTypesMap.getPortType(JInputLibrary.getNativePortType(nativeID));
         
         for(int i=0;i<8;i++) {
             hatAxisIDs[i] = -1;
@@ -493,7 +493,7 @@ public class LinuxDevice extends AbstractController {
      * @return false if the controller is no longer valid.
      */
     public boolean poll() {
-        int retval = nativePoll(nativeID, buttonData, relAxesData, absAxesData);
+        int retval = JInputLibrary.poll(nativeID, buttonData, relAxesData, absAxesData);
         if(retval>=0) return true;
         return false;
     }
@@ -532,7 +532,7 @@ public class LinuxDevice extends AbstractController {
      * @return The axis fuzz.
      */    
     public float getAbsAxisFuzz(int axisID) {
-        return (float) getNativeAbsAxisFuzz(nativeID, axisID);
+        return (float) JInputLibrary.getAbsAxisFuzz(nativeID, axisID);
     }
     
     /**
@@ -541,7 +541,7 @@ public class LinuxDevice extends AbstractController {
      * @return The maximum value
      */    
     public float getAbsAxisMaximum(int axisID) {
-        return (float) getNativeAbsAxisMaximum(nativeID, axisID);
+        return (float) JInputLibrary.getAbsAxisMaximum(nativeID, axisID);
     }
 
     /**
@@ -550,7 +550,7 @@ public class LinuxDevice extends AbstractController {
      * @return The minimum axis value
      */    
     public float getAbsAxisMinimum(int axisID) {
-        return (float) getNativeAbsAxisMinimum(nativeID, axisID);
+        return (float) JInputLibrary.getAbsAxisMinimum(nativeID, axisID);
     }
 
     /** Return the enumeration of supported button types for this device
@@ -560,82 +560,29 @@ public class LinuxDevice extends AbstractController {
     	if(supportedButtons.length==0) {
 	    return;
 	}
-        getNativeSupportedButtons(nativeID, supportedButtons);
+        JInputLibrary.getSupportedButtons(nativeID, supportedButtons);
     }
 
     /** Return the enumeration of supported absolute axis types for this device
      * @param suportedAbsAxes The array to populate
      */    
     private void getSupportedAbsAxes(int suportedAbsAxes[]) {
-        getNativeSupportedAbsAxes(nativeID, suportedAbsAxes);
+        JInputLibrary.getSupportedAbsAxes(nativeID, suportedAbsAxes);
     }
 
     /** Return the enumeration of supported relative axis types for this device
      * @param supportedRelAxes The array to populate
      */    
     private void getSupportedRelAxes(int supportedRelAxes[]) {
-        getNativeSupportedRelAxes(nativeID, supportedRelAxes);
+        JInputLibrary.getSupportedRelAxes(nativeID, supportedRelAxes);
     }
 	
 	/** Returns the status of FF support for this device
 	 * 
 	 */
 	private boolean getFFEnabled() {
-		return getNativeFFEnabled(nativeID);
+		return JInputLibrary.getFFEnabled(nativeID);
 	}
-    
-    /** Native call to get the supported absolute axes for a device
-     * @param deviceID The native device number
-     * @param supportedAbsAxes aray to populate
-     */    
-    private native void getNativeSupportedAbsAxes(int deviceID, int supportedAbsAxes[]);
-    /** Native call to get the supported relative axes for a device
-     * @param deviceID The native device ID
-     * @param supportedRelAxes the array to populate
-     */    
-    private native void getNativeSupportedRelAxes(int deviceID, int supportedRelAxes[]);
-    /** Native call to get the supported buttons for a device
-     * @param deviceID The native device ID
-     * @param supportedButtons The array to populate
-     */    
-    private native void getNativeSupportedButtons(int deviceID, int supportedButtons[]);
-    /** Call to poll the device at the native library
-     * @param deviceID The native device ID
-     * @param buttonData Array to populate with button values
-     * @param relAxesData Array to populate with relative axes values
-     * @param absAxesData Array to populate with absolute axes values
-     * @return the number of events read
-     */    
-    private native int nativePoll(int deviceID, int buttonData[], int relAxesData[], int absAxesData[]);
-    /** Returns the fuzz of an axis fro mthe native lib
-     * @param deviceID The native device id
-     * @param axisID The native axis ID
-     * @return The fuzz
-     */    
-    private native int getNativeAbsAxisFuzz(int deviceID, int axisID);
-    /** Gets the maximum value for an absloute axis fr omthe native library
-     * @param deviceID The native device ID
-     * @param axisID The native axis ID
-     * @return The Max value
-     */    
-    private native int getNativeAbsAxisMaximum(int deviceID, int axisID);
-    /** Gets the minimum value for an absloute axis from the native library
-     * @param deviceID The native device ID
-     * @param axisID The native axis number
-     * @return The min value
-     */    
-    private native int getNativeAbsAxisMinimum(int deviceID, int axisID);
-    /** Gets the port type from the native lib
-     * @param deviceID The device to get the port type for
-     * @return The port type
-     */    
-    private native int getNativePortType(int deviceID);
-	
-	/** Gets the status of FF support for this device
-     * @param deviceID The device to get the port type for
-     * @return The port type
-	 */
-	private native boolean getNativeFFEnabled(int deviceID);
     
     /**
      * A device that represents a joystick coolie hat.

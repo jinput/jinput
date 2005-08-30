@@ -123,6 +123,12 @@ void MixedDevice::rumble(float force) {
 }
 
 void MixedDevice::cleanup() {
-	joystickDevice->cleanup();
-	eventDevice->cleanup();
+	if(joystickDevice!=0 && eventDevice!=0) {
+		joystickDevice->cleanup();
+		eventDevice->cleanup();
+		free(joystickDevice);
+		free(eventDevice);
+		joystickDevice=0;
+		eventDevice=0;
+	}
 }

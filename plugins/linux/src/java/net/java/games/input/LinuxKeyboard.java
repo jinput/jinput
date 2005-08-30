@@ -115,7 +115,7 @@ public class LinuxKeyboard extends StandardKeyboard {
      * @return False if this device is invalid.
      */
     public boolean poll() {
-        int retval = nativePoll(nativeID, keyData, dummyRelAxesData, dummyAbsAxesData);
+        int retval = JInputLibrary.poll(nativeID, keyData, dummyRelAxesData, dummyAbsAxesData);
         if(retval>=0) return true;
         return false;
     }
@@ -169,25 +169,7 @@ public class LinuxKeyboard extends StandardKeyboard {
      * @param supportedButtons The array if key types to populate
      */    
     private void getSupportedButtons(int supportedButtons[]) {
-        getNativeSupportedButtons(nativeID, supportedButtons);
+        JInputLibrary.getSupportedButtons(nativeID, supportedButtons);
     }
 
-    /** Gets the supported key types for a particular native device
-     * @param deviceID The device ID
-     * @param supportedButtons The array to populate with teh supported key ids
-     */    
-    private native void getNativeSupportedButtons(int deviceID, int supportedButtons[]);
-    /** Calls the native library to poll the device
-     * @param deviceID The device ID
-     * @param buttonData Aray to populate with button values
-     * @param relAxesData Array to populate with relative axis values
-     * @param absAxesData Array to populate with absolute axes values
-     * @return <0 if soething went wrong
-     */    
-    private native int nativePoll(int deviceID, int buttonData[], int relAxesData[], int absAxesData[]);
-    /** Gets the port type from the native library for a particular keyboard
-     * @param deviceID The keybaord id
-     * @return native port ype
-     */    
-    private native int getNativePortType(int deviceID);    
 }

@@ -59,14 +59,12 @@
     </target>
 
     <target depends="init,compile" name="createJNIHeaders">
-        <javah>
+        <javah destdir="src/native">
             <classpath>
-                <pathelement path="src/java"/>
-                <pathelement location="jinput.jar"/>
+                <pathelement location="../../coreAPI/bin/jinput.jar"/>
+                <pathelement location="bin/linux.jar"/>
             </classpath>
-            <class name="net.java.games.input.LinuxDevice"/>
-            <class name="net.java.games.input.LinuxEnvironmentPlugin"/>
-            <class name="net.java.games.input.LinuxKeyboard"/>
+            <class name="net.java.games.input.JInputLibrary"/>
         </javah>
     </target>
     
