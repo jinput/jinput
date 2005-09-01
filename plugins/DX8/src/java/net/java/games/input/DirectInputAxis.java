@@ -148,8 +148,8 @@ class DirectInputAxis extends AbstractComponent {
         int data = 0;
         try {
             data = ((device.data[offset] >> bitshift)&bitmask);
-        } catch (ArrayIndexOutOfBoundsException) {
-            System.out.println("Tried to get data for axis: " + this.getName() + ", device.data[" + offset + "] does not exists as device.data is only " + device.data.length + " long.")
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Tried to get data for axis: " + this.getName() + ", device.data[" + offset + "] does not exists as device.data is only " + device.data.length + " long.");
         }
         if ((type&DIDFT_BUTTON) != 0 ) {
             return (float)((data&0x80)>>7);
