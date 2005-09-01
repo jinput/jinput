@@ -145,7 +145,12 @@ class DirectInputAxis extends AbstractComponent {
      * @return A float between -1.0 and 1.0
      */
     public float getPollData() {
-        int data = ((device.data[offset] >> bitshift)&bitmask);
+        int data = 0;
+        try {
+            data = ((device.data[offset] >> bitshift)&bitmask);
+        } catch (ArrayIndexOutOfBoundsException) {
+            System.out.println("Tried to get data for axis: " + this.getName() + ", device.data[" + offset + "] does not exists as device.data is only " + device.data.length + " long.")
+        }
         if ((type&DIDFT_BUTTON) != 0 ) {
             return (float)((data&0x80)>>7);
         }  else if ((type&DIDFT_AXIS)!=0){ // all axes are set for -32768 to 32738
