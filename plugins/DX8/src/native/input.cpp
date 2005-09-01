@@ -709,16 +709,22 @@ BOOL CALLBACK EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi,
 			rgdwAxes = DIJOFS_Z;
 	    } else if (lpddoi->guidType == GUID_RxAxis) {
 	        printf("effect is in the rx axis\n");
+	        rgdwAxes = DIJOFS_RX;
 	    } else if (lpddoi->guidType == GUID_RyAxis) {
 	        printf("effect is in the ry axis\n");
+	        rgdwAxes = DIJOFS_RY;
 	    } else if (lpddoi->guidType == GUID_RzAxis) {
-	        printf("effect is in the rx axis\n");
+	        printf("effect is in the rz axis\n");
+	        rgdwAxes = DIJOFS_RZ;
 	    } else if (lpddoi->guidType == GUID_Slider) {
 	        printf("effect is in the slider axis\n");
+	        rgdwAxes = DIJOFS_SLIDER(0);
 	    } else if (lpddoi->guidType == GUID_Button) {
 	        printf("effect is in the button axis\n");
+	        rgdwAxes = DIJOFS_BUTTON0;
 	    } else if (lpddoi->guidType == GUID_POV) {
 	        printf("effect is in the pov axis\n");
+	        rgdwAxes = DIJOFS_POV(0);
 	    } else {
 	    	printf("effect is in an unknown axis\n");
 		}
