@@ -51,9 +51,16 @@ int jsFileFilter(const struct direct *entry) {
 int jsGetDeviceFiles(char ***filenames) {
   struct direct **files;
   int num_files, i;
-  char dirName[] = {"/dev/input"};
+  char dirName[12];
+  
+  sprintf(dirName, "/dev/input");
 
   num_files = scandir(dirName, &files, &jsFileFilter, alphasort);
+  
+  if(num_files==0) {
+  	sprintf(dirName, "/dev");
+  	num_files = scandir(dirName, &files, &jsFileFilter, alphasort);
+  }
 
   *filenames = (char **)malloc(num_files * sizeof(char *));
 
@@ -80,6 +87,12 @@ int jsInit() {
     return -1;
   }
   
+  if(numDeviceFiles==0) {
+    jsNumDevices = 0;
+    jsInited=1;
+  	return 0;
+  }
+  
   if ((fd = open(deviceFileNames[0], O_RDONLY)) <0) {
     jsNumDevices = 0;
     jsInited=1;
@@ -100,13 +113,14 @@ int jsInit() {
   jsNumDevices = 0;
   for(i=0;i<numDeviceFiles;i++) {
     JoystickDevice *tempDevice = new JoystickDevice(deviceFileNames[i]); 
+    // The device has a copy of the name, free the memory
+    free(deviceFileNames[i]);
     if(tempDevice->isValidDevice()==1) {
       tempDeviceList[i] = tempDevice;
       jsNumDevices++;
     }
   }
 
-  int highDeviceCountNumber = i;
   int jsTempDeviceCount = 0;
   // Now we know for certain which devices are open, we can take notes
   jsDeviceList = (Device **)malloc(jsNumDevices * sizeof(Device *));
@@ -118,6 +132,9 @@ int jsInit() {
     //printf("Copied joystick %d to %d\n", jsTempDeviceCount, i);
     jsTempDeviceCount++;
   }
+  
+  // Free the file names array, which should now be free anyway.
+  free(deviceFileNames);
 
   jsInited=1;
 
