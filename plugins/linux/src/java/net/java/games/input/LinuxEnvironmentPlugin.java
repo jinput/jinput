@@ -45,6 +45,8 @@ public class LinuxEnvironmentPlugin extends ControllerEnvironment implements Plu
         } else {
             controllers = new Controller[0];
         }
+        
+        System.out.println("Linux plugin claims to have found " + controllers.length + " controllers");
     }
     
     /** Returns a list of all controllers available to this environment,

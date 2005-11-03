@@ -42,7 +42,7 @@ JoystickDevice::JoystickDevice(char *deviceFileName) {
   int i;
 
   LOG_TRACE("Trying to open %s\n", deviceFileName);
-  fd = open(deviceFileName, O_RDWR | O_NONBLOCK);
+  fd = open(deviceFileName, O_RDONLY | O_NONBLOCK);
   /*if(fd<0) {
     char errorMessage[512];
     sprintf(errorMessage, "Error opening device %s\n", deviceFileName);
