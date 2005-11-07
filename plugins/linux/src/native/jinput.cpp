@@ -78,7 +78,7 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_JInputLibrary_nativeInit
   int i;
   int j;
   int joystickPtr = 0;
-  jinputDeviceList = (Device **)malloc(numEventDevices * sizeof(Device *));
+  jinputDeviceList = (Device **)malloc((numEventDevices + numJoysticks) * sizeof(Device *));
   for(i=0;i<numEventDevices;i++) {
     EventDevice *eventDevice = eventDevices[i];
     int deviceCountCache = jinputNumDevices;
@@ -94,6 +94,7 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_JInputLibrary_nativeInit
           // The current event device is the curre joystick device too
           LOG_TRACE("Creating a mixed device with id %d, combining event device %d and joystick device %d\n", jinputNumDevices, i, j);
           jinputDeviceList[jinputNumDevices] = new MixedDevice(jsDevice, eventDevice);
+          jsDevices[j] = NULL;
           jinputNumDevices++;
           joystickPtr = j;
           j = numJoysticks;
@@ -115,6 +116,12 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_JInputLibrary_nativeInit
     }
   }
 
+  for(i=0;i<numJoysticks;i++) {
+  	if(jsDevices[i]!=NULL) {
+  		LOG_TRACE("Copying joystick device %d to jinput device list %d\n", i, jinputNumDevices);
+  		jinputDeviceList[jinputNumDevices] = jsDevices[i];
+  	}
+  }
 
   return(0);
 
