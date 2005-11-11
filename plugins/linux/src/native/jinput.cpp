@@ -120,6 +120,7 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_JInputLibrary_nativeInit
   	if(jsDevices[i]!=NULL) {
   		LOG_TRACE("Copying joystick device %d to jinput device list %d\n", i, jinputNumDevices);
   		jinputDeviceList[jinputNumDevices] = jsDevices[i];
+  		jinputNumDevices++;
   	}
   }
 
