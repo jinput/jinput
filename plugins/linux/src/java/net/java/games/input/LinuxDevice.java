@@ -493,7 +493,7 @@ public class LinuxDevice extends AbstractController {
      * @return false if the controller is no longer valid.
      */
     public boolean poll() {
-        int retval = JInputLibrary.poll(nativeID, buttonData, relAxesData, absAxesData);
+        int retval = JInputLibrary.safePoll(nativeID, buttonData, relAxesData, absAxesData);
         if(retval>=0) return true;
         return false;
     }

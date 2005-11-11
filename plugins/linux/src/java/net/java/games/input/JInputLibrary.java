@@ -142,6 +142,22 @@ public class JInputLibrary {
         }
     }
     
+    /** Call to poll the device at the native library
+     * @param deviceID The native device ID
+     * @param buttonData Array to populate with button values
+     * @param relAxesData Array to populate with relative axes values
+     * @param absAxesData Array to populate with absolute axes values
+     * @return the number of events read
+     */    
+    public static int safePoll(int deviceID, int buttonData[], int relAxesData[], int absAxesData[]) {
+        if(!shutdown) {
+            return poll(deviceID, buttonData, relAxesData, absAxesData);
+        }
+        
+        return 0;
+    }
+
+    
     /** Get the name of a device from the native library
      * @param deviceID The device id
      * @return The devices name

@@ -115,7 +115,7 @@ public class LinuxKeyboard extends StandardKeyboard {
      * @return False if this device is invalid.
      */
     public boolean poll() {
-        int retval = JInputLibrary.poll(nativeID, keyData, dummyRelAxesData, dummyAbsAxesData);
+        int retval = JInputLibrary.safePoll(nativeID, keyData, dummyRelAxesData, dummyAbsAxesData);
         if(retval>=0) return true;
         return false;
     }
