@@ -39,7 +39,39 @@ jfieldID FID_RX = NULL;
 jfieldID FID_RY = NULL;
 jfieldID FID_RZ = NULL;
 jfieldID FID_Slider = NULL;
-jfieldID FID_Button = NULL;
+jfieldID FID_Button0 = NULL;
+jfieldID FID_Button1 = NULL;
+jfieldID FID_Button2 = NULL;
+jfieldID FID_Button3 = NULL;
+jfieldID FID_Button4 = NULL;
+jfieldID FID_Button5 = NULL;
+jfieldID FID_Button6 = NULL;
+jfieldID FID_Button7 = NULL;
+jfieldID FID_Button8 = NULL;
+jfieldID FID_Button9 = NULL;
+jfieldID FID_Button10 = NULL;
+jfieldID FID_Button11 = NULL;
+jfieldID FID_Button12 = NULL;
+jfieldID FID_Button13 = NULL;
+jfieldID FID_Button14 = NULL;
+jfieldID FID_Button15 = NULL;
+jfieldID FID_Button16 = NULL;
+jfieldID FID_Button17 = NULL;
+jfieldID FID_Button18 = NULL;
+jfieldID FID_Button19 = NULL;
+jfieldID FID_Button20 = NULL;
+jfieldID FID_Button21 = NULL;
+jfieldID FID_Button22 = NULL;
+jfieldID FID_Button23 = NULL;
+jfieldID FID_Button24 = NULL;
+jfieldID FID_Button25 = NULL;
+jfieldID FID_Button26 = NULL;
+jfieldID FID_Button27 = NULL;
+jfieldID FID_Button28 = NULL;
+jfieldID FID_Button29 = NULL;
+jfieldID FID_Button30 = NULL;
+jfieldID FID_Button31 = NULL;
+jfieldID FID_UnknownButton = NULL;
 jfieldID FID_POV = NULL;
 jfieldID FID_Left = NULL;
 jfieldID FID_Right = NULL;
@@ -195,9 +227,169 @@ BOOL InitIDs(JNIEnv* env) {
     if (CLASS_ButtonIdentifier == NULL) {
         return FALSE;
     }
-    FID_Button = env->GetStaticFieldID(CLASS_ButtonIdentifier, "UNKNOWN",
+    FID_UnknownButton = env->GetStaticFieldID(CLASS_ButtonIdentifier, "UNKNOWN",
         FD_ButtonIdentifier);
-    if (FID_Button == NULL) {
+    if (FID_UnknownButton == NULL) {
+        return FALSE;
+    }
+    FID_Button0 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_0",
+        FD_ButtonIdentifier);
+    if (FID_Button0 == NULL) {
+        return FALSE;
+    }
+    FID_Button1 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_1",
+        FD_ButtonIdentifier);
+    if (FID_Button1 == NULL) {
+        return FALSE;
+    }
+    FID_Button2 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_2",
+        FD_ButtonIdentifier);
+    if (FID_Button2 == NULL) {
+        return FALSE;
+    }
+    FID_Button3 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_3",
+        FD_ButtonIdentifier);
+    if (FID_Button3 == NULL) {
+        return FALSE;
+    }
+    FID_Button4 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_4",
+        FD_ButtonIdentifier);
+    if (FID_Button4 == NULL) {
+        return FALSE;
+    }
+    FID_Button5 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_5",
+        FD_ButtonIdentifier);
+    if (FID_Button5 == NULL) {
+        return FALSE;
+    }
+    FID_Button6 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_6",
+        FD_ButtonIdentifier);
+    if (FID_Button6 == NULL) {
+        return FALSE;
+    }
+    FID_Button7 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_7",
+        FD_ButtonIdentifier);
+    if (FID_Button7 == NULL) {
+        return FALSE;
+    }
+    FID_Button8 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_8",
+        FD_ButtonIdentifier);
+    if (FID_Button8 == NULL) {
+        return FALSE;
+    }
+    FID_Button9 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_9",
+        FD_ButtonIdentifier);
+    if (FID_Button9 == NULL) {
+        return FALSE;
+    }
+    FID_Button10 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_10",
+        FD_ButtonIdentifier);
+    if (FID_Button10 == NULL) {
+        return FALSE;
+    }
+    FID_Button11 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_11",
+        FD_ButtonIdentifier);
+    if (FID_Button11 == NULL) {
+        return FALSE;
+    }
+    FID_Button12 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_12",
+        FD_ButtonIdentifier);
+    if (FID_Button12 == NULL) {
+        return FALSE;
+    }
+    FID_Button13 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_13",
+        FD_ButtonIdentifier);
+    if (FID_Button13 == NULL) {
+        return FALSE;
+    }
+    FID_Button14 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_14",
+        FD_ButtonIdentifier);
+    if (FID_Button14 == NULL) {
+        return FALSE;
+    }
+    FID_Button15 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_15",
+        FD_ButtonIdentifier);
+    if (FID_Button15 == NULL) {
+        return FALSE;
+    }
+    FID_Button16 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_16",
+        FD_ButtonIdentifier);
+    if (FID_Button16 == NULL) {
+        return FALSE;
+    }
+    FID_Button17 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_17",
+        FD_ButtonIdentifier);
+    if (FID_Button17 == NULL) {
+        return FALSE;
+    }
+    FID_Button18 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_18",
+        FD_ButtonIdentifier);
+    if (FID_Button18 == NULL) {
+        return FALSE;
+    }
+    FID_Button19 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_19",
+        FD_ButtonIdentifier);
+    if (FID_Button19 == NULL) {
+        return FALSE;
+    }
+    FID_Button20 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_20",
+        FD_ButtonIdentifier);
+    if (FID_Button20 == NULL) {
+        return FALSE;
+    }
+    FID_Button21 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_21",
+        FD_ButtonIdentifier);
+    if (FID_Button21 == NULL) {
+        return FALSE;
+    }
+    FID_Button22 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_22",
+        FD_ButtonIdentifier);
+    if (FID_Button22 == NULL) {
+        return FALSE;
+    }
+    FID_Button23 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_23",
+        FD_ButtonIdentifier);
+    if (FID_Button23 == NULL) {
+        return FALSE;
+    }
+    FID_Button24 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_24",
+        FD_ButtonIdentifier);
+    if (FID_Button24 == NULL) {
+        return FALSE;
+    }
+    FID_Button25 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_25",
+        FD_ButtonIdentifier);
+    if (FID_Button25 == NULL) {
+        return FALSE;
+    }
+    FID_Button26 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_26",
+        FD_ButtonIdentifier);
+    if (FID_Button26 == NULL) {
+        return FALSE;
+    }
+    FID_Button27 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_27",
+        FD_ButtonIdentifier);
+    if (FID_Button27 == NULL) {
+        return FALSE;
+    }
+    FID_Button28 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_28",
+        FD_ButtonIdentifier);
+    if (FID_Button28 == NULL) {
+        return FALSE;
+    }
+    FID_Button29 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_29",
+        FD_ButtonIdentifier);
+    if (FID_Button29 == NULL) {
+        return FALSE;
+    }
+    FID_Button30 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_30",
+        FD_ButtonIdentifier);
+    if (FID_Button30 == NULL) {
+        return FALSE;
+    }
+    FID_Button31 = env->GetStaticFieldID(CLASS_ButtonIdentifier, "_31",
+        FD_ButtonIdentifier);
+    if (FID_Button31 == NULL) {
         return FALSE;
     }
     FID_POV = env->GetStaticFieldID(CLASS_AxisIdentifier, "POV",
@@ -641,14 +833,147 @@ BOOL CALLBACK EnumObjectsCallback(LPCDIDEVICEOBJECTINSTANCE lpddoi,
         identifier = env->GetStaticObjectField(CLASS_AxisIdentifier, FID_RZ);
     } else if (lpddoi->guidType == GUID_Slider) {
         identifier = env->GetStaticObjectField(CLASS_AxisIdentifier, FID_Slider);
-    } else if (lpddoi->guidType == GUID_Button) {
-        identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier, FID_Button);
     } else if (lpddoi->guidType == GUID_POV) {
         identifier = env->GetStaticObjectField(CLASS_AxisIdentifier, FID_POV);
+    } else if (lpddoi->guidType == GUID_Button) {
+    	// Not sure why I have to add 15 here, but I do
+		switch (lpddoi->dwOfs+15) {
+	        case DIJOFS_BUTTON0:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button0);
+	            break;
+	        case DIJOFS_BUTTON1:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button1);
+	            break;
+	        case DIJOFS_BUTTON2:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button2);
+	            break;
+	        case DIJOFS_BUTTON3:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button3);
+	            break;
+	        case DIJOFS_BUTTON4:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button4);
+	            break;
+	        case DIJOFS_BUTTON5:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button5);
+	            break;
+	        case DIJOFS_BUTTON6:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button6);
+	            break;
+	        case DIJOFS_BUTTON7:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button7);
+	            break;
+	        case DIJOFS_BUTTON8:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button8);
+	            break;
+	        case DIJOFS_BUTTON9:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button9);
+	            break;
+	        case DIJOFS_BUTTON10:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button10);
+	            break;
+	        case DIJOFS_BUTTON11:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button11);
+	            break;
+	        case DIJOFS_BUTTON12:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button12);
+	            break;
+	        case DIJOFS_BUTTON13:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button13);
+	            break;
+	        case DIJOFS_BUTTON14:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button14);
+	            break;
+	        case DIJOFS_BUTTON15:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button15);
+	            break;
+	        case DIJOFS_BUTTON16:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button16);
+	            break;
+	        case DIJOFS_BUTTON17:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button17);
+	            break;
+	        case DIJOFS_BUTTON18:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button18);
+	            break;
+	        case DIJOFS_BUTTON19:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button19);
+	            break;
+	        case DIJOFS_BUTTON20:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button20);
+	            break;
+	        case DIJOFS_BUTTON21:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button21);
+	            break;
+	        case DIJOFS_BUTTON22:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button22);
+	            break;
+	        case DIJOFS_BUTTON23:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button23);
+	            break;
+	        case DIJOFS_BUTTON24:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button24);
+	            break;
+	        case DIJOFS_BUTTON25:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button25);
+	            break;
+	        case DIJOFS_BUTTON26:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button26);
+	            break;
+	        case DIJOFS_BUTTON27:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button27);
+	            break;
+	        case DIJOFS_BUTTON28:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button28);
+	            break;
+	        case DIJOFS_BUTTON29:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button29);
+	            break;
+	        case DIJOFS_BUTTON30:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button30);
+	            break;
+	        case DIJOFS_BUTTON31:
+	            identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_Button31);
+	            break;
+	        default:
+	            identifier = identifier = env->GetStaticObjectField(CLASS_ButtonIdentifier,
+	                FID_UnknownButton);	        
+	    }
     } else {
-        // Do not add this axis into the list, since we don't know what it is
-        return DIENUM_CONTINUE;
+    	return DIENUM_CONTINUE;
     }
+    
     if (identifier == NULL) {
         return DIENUM_STOP;
     }

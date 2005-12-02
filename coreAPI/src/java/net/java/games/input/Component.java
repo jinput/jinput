@@ -343,6 +343,28 @@ public interface Component {
             /** 10th device button
              */        
             public static final Button _9 = new Button("9");
+            public static final Button _10 = new Button("10");
+            public static final Button _11 = new Button("11");
+            public static final Button _12 = new Button("12");
+            public static final Button _13 = new Button("13");
+            public static final Button _14 = new Button("14");
+            public static final Button _15 = new Button("15");
+            public static final Button _16 = new Button("16");
+            public static final Button _17 = new Button("17");
+            public static final Button _18 = new Button("18");
+            public static final Button _19 = new Button("19");
+            public static final Button _20 = new Button("20");
+            public static final Button _21 = new Button("21");
+            public static final Button _22 = new Button("22");
+            public static final Button _23 = new Button("23");
+            public static final Button _24 = new Button("24");
+            public static final Button _25 = new Button("25");
+            public static final Button _26 = new Button("26");
+            public static final Button _27 = new Button("27");
+            public static final Button _28 = new Button("28");
+            public static final Button _29 = new Button("29");
+            public static final Button _30 = new Button("30");
+            public static final Button _31 = new Button("31");
             
             /** Joystick trigger button
              */        
