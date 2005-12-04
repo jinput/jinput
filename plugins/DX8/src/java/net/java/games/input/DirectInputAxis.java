@@ -135,6 +135,21 @@ class DirectInputAxis extends AbstractComponent {
             offset = 12 + (instance/4);
             bitshift = (instance%4)*8;
             bitmask=0xff;
+            
+            //Nasty cludge to get some similarities across platforms.
+            if(name.contains("A Button")) {
+                this.id = Component.Identifier.Button.A;
+            } else if(name.contains("B Button")) {
+                this.id = Component.Identifier.Button.B;
+            } else if(name.contains("C Button")) {
+                this.id = Component.Identifier.Button.C;
+            } else if(name.contains("X Button")) {
+                this.id = Component.Identifier.Button.X;
+            } else if(name.contains("Y Button")) {
+                this.id = Component.Identifier.Button.Y;
+            } else if(name.contains("Z Button")) {
+                this.id = Component.Identifier.Button.Z;
+            }
         }
     }
 
