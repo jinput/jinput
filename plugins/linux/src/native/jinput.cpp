@@ -95,6 +95,7 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_JInputLibrary_nativeInit
           LOG_TRACE("Creating a mixed device with id %d, combining event device %d and joystick device %d\n", jinputNumDevices, i, j);
           jinputDeviceList[jinputNumDevices] = new MixedDevice(jsDevice, eventDevice);
           jsDevices[j] = NULL;
+          j++;
           jinputNumDevices++;
           joystickPtr = j;
           j = numJoysticks;
