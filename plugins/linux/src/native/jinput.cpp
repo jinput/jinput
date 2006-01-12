@@ -335,7 +335,10 @@ JNIEXPORT jboolean JNICALL Java_net_java_games_input_JInputLibrary_getFFEnabled
  */
 JNIEXPORT void JNICALL Java_net_java_games_input_JInputLibrary_nativeRumble
   (JNIEnv *, jclass, jint deviceID, jfloat force) {
-  	jinputDeviceList[deviceID]->rumble(force);
+  	if(jinputDeviceList[deviceID]!=0) {
+  		LOG_TRACE("Setting rumble on device %d to %d\n", deviceID, force);
+	  	jinputDeviceList[deviceID]->rumble(force);
+  	}  	
 }
 
 /*
@@ -346,8 +349,9 @@ JNIEXPORT void JNICALL Java_net_java_games_input_JInputLibrary_nativeRumble
 JNIEXPORT void JNICALL Java_net_java_games_input_JInputLibrary_nativeCleanup
   (JNIEnv *, jclass, jint deviceID) {
   	if(jinputDeviceList[deviceID]!=0) {
+  		LOG_TRACE("Cleaning up device %d\n", deviceID);
 	  	jinputDeviceList[deviceID]->cleanup();
-	  	free(jinputDeviceList);
+	  	free(jinputDeviceList[deviceID]);
 	  	jinputDeviceList[deviceID]=0;
   	}
 }

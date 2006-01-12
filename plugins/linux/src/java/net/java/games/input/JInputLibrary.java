@@ -12,7 +12,7 @@ public class JInputLibrary {
     private static boolean shutdown = false;
     private static Object shutdownThreadMonitor = new Object();
     private static boolean cleanupDone = false;
-    private static int rumbler;
+    private static int rumbler = -1;
     private static float force;
 
     public static boolean isSupported() {
@@ -102,6 +102,9 @@ public class JInputLibrary {
         }
         System.out.println("Environment cleanup");
         for(int i=0;i<JInputLibrary.getNumberOfDevices();i++) {
+            if(JInputLibrary.getFFEnabled(i)) {
+                JInputLibrary.nativeRumble(i, 0f);
+            }
             JInputLibrary.nativeCleanup(i);
         }
     }
