@@ -66,7 +66,14 @@ import java.util.Iterator;
  *
  */
 public abstract class ControllerEnvironment {
-    
+    static void logln(String msg) {
+		log(msg + "\n");
+	}
+
+    static void log(String msg) {
+		System.out.print(msg);
+	}
+
     /**
      * The default controller environment
      */

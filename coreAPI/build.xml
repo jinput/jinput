@@ -1,104 +1,32 @@
 <?xml version="1.0"?>
 
-<!-- Written to assume that classpath is rooted in the current directory. -->
-<!-- So this should be OK if you make this script in the root of a filesystem. -->
-<!-- If not, you may prefer to adjust the basedir, or move some directories around. -->
-<!-- The idea is that both Ant and NetBeans have to know what the package root is -->
-<!-- for the classes in your application. -->
 <project name="Game Input API" basedir="." default="all">
-
-    <!-- Don't worry if you don't know the Ant syntax completely or need help on some tasks! -->
-    <!-- The standard Ant documentation is bundled. See Help | Help Sets | Ant 1.4.1 Manual. -->
-
     <target name="init">
-        <!-- You can set up any variables you want used throughout the script here. -->
-        <!-- property name="hello" value="world" -->
-        <!-- To use e.g. Jikes, uncomment this line. -->
-        <!-- (Or make the same change in Tools | Options | Ant Settings | Properties.) -->
-        <!-- <property name="build.compiler" value="jikes"/> -->
-        <!-- You might like to set up some overridable paths, etc.: -->
-        <property name="utils" value="lib/jutils.jar"/>    
+		<property name="utils" location="../lib/jutils.jar"/>    
         <mkdir dir="apidocs"/> 
         <mkdir dir="classes"/> 
         <mkdir dir="bin"/> 
     </target>
 
     <target name="compile" depends="init">
-        <!-- Both srcdir and destdir should be package roots. -->
-        <!-- They could be different of course; in that case NetBeans can also be set -->
-        <!-- up to compile to a different filesystem in the same way; see Compiler Types: -->
         <javac srcdir="src/java" destdir="classes" debug="true" deprecation="true" source="1.4" target="1.4">
             <include name="net/**"/>
             <!-- To add something to the classpath: -->
             <classpath>
                 <pathelement location="${utils}"/>
             </classpath>
-            <!-- To exclude some files: -->
-            <!--
-            <exclude name="com/foo/SomeFile.java"/>
-            <exclude name="com/foo/somepackage/"/>
-            -->
         </javac>
     </target>
 
     <target name="jar" depends="init,compile">
-        <!-- To make a standalone app: -->
-        <!-- 1. Create a myapp.mf manifest somewhere. -->
-        <!-- 2. Put in it: -->
-        <!--    Manifest-Version: 1.0 -->
-        <!--    Main-Class: com.foo.Main -->
-        <!-- 3. Pass to <jar>: manifest="myapp.mf" -->
-        <jar jarfile="bin/jinput.jar" compress="true" basedir="classes">
-            <include name="net/**"/>
-            <exclude name="**/*.java"/>
-            <exclude name="**/*.form"/>
-            <exclude name="myapp.mf"/>
-            <exclude name="myapp.jar"/>
+        <jar jarfile="bin/jinput-core.jar" compress="true" basedir="classes">
+			<include name="net/java/games/input/*class"/>
         </jar>
-         <copy file="bin/jinput.jar" todir="../plugins/DX8/lib" />
+        <jar jarfile="bin/jinput-test.jar" compress="true" basedir="classes">
+			<include name="net/java/games/input/test/*class"/>
+        </jar>
     </target>
 
-
-    <target name="texttest" depends="init,all" description="Try running it.">
-        <java classname="net.java.games.input.test.ControllerTextTest" 
-              fork="true" failonerror="true" dir="src/tests">
-            <classpath>
-                <pathelement location="bin/jinput.jar"/>
-                <pathelement location="${utils}"/>
-            </classpath>
-            <!-- Pass some args, perhaps: -->
-            <!-- <arg value="-myfile"/> -->
-            <!-- Will be given as an absolute path: -->
-            <!-- <arg file="myfile.txt"/> -->
-        </java>
-    </target>
-    <target name="readtest" depends="init,all" description="Try running it.">
-        <java classname="net.java.games.input.test.ControllerReadTest" 
-              fork="true" failonerror="true" dir="src/tests">
-            <classpath>
-                <pathelement location="bin/jinput.jar"/>
-                <pathelement location="${utils}"/>
-            </classpath>
-            <!-- Pass some args, perhaps: -->
-            <!-- <arg value="-myfile"/> -->
-            <!-- Will be given as an absolute path: -->
-            <!-- <arg file="myfile.txt"/> -->
-        </java>
-    </target>
-    <target name="rumbletest" depends="init,all" description="Try running it.">
-        <java classname="net.java.games.input.test.RumbleTest" 
-              fork="true" failonerror="true" dir="src/tests">
-            <classpath>
-                <pathelement location="bin/jinput.jar"/>
-                <pathelement location="${utils}"/>
-            </classpath>
-            <!-- Pass some args, perhaps: -->
-            <!-- <arg value="-myfile"/> -->
-            <!-- Will be given as an absolute path: -->
-            <!-- <arg file="myfile.txt"/> -->
-        </java>
-    </target>
-    
     <target name="javadoc" depends="init" description="Javadoc for my API.">
         <javadoc packagenames="net.java.games.input.*" 
                  destdir="apidocs" 
@@ -113,18 +41,12 @@
     </target>
 
     <target name="clean" depends="init" description="Clean all build products.">
-        <delete>
-            <fileset dir="classes">
-                <include name="**/*.class"/>
-            </fileset>
-        </delete>
-    <delete file="bin/jinput.jar"/>
-    <delete dir="apidocs"/>
-    <delete file="../plugins/DX8/lib/jinput.jar" />
+		<delete dir="classes"/>
+		<delete dir="bin"/>
+		<delete dir="apidocs"/>
     </target>
     
     <target name="all" depends="init,jar" description="Build everything.">
         <echo message="JInput has been built and jinput.jar is located in the bin directory."/>
-    </target>    
-
+	</target>    
 </project>

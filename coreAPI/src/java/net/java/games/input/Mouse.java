@@ -38,56 +38,17 @@
  *****************************************************************************/
 package net.java.games.input;
 
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * A Mouse is a type of controller consisting of two child controllers,
  * a ball and a button pad.  This includes devices such as touch pads,
  * trackballs, and fingersticks.
  */
 public abstract class Mouse extends AbstractController {
-    
-    /**
-     * Mouse ball; should be initialized by subclasses
-     */
-    protected Ball ball;
-    
-    /**
-     * Mouse buttons; should be initialized by subclasses
-     */
-    protected Buttons buttons;
-    
-    /**
-     * Protected constructor;
-     * Subclasses should initialize the ball and buttons
-     */
-    protected Mouse(String name) {
-        super(name);
-    }
-    
-    /**
-     * Returns the controllers connected to make up this controller, or
-     * an empty array if this controller contains no child controllers.
-     * The objects in the array are returned in order of assignment priority
-     * (primary stick, secondary buttons, etc.).
-     */
-    public Controller[] getControllers() {
-        if (children.length == 0 && ball != null && buttons != null) {
-            children = new Controller[] { ball, buttons };
-        }
-        return children;
-    }
-    
-    /**
-     * Returns the control for the ball of the mouse, never null.
-     */
-    public Ball getBall() {
-        return ball;
-    }
-
-    /**
-     * Returns the control for the buttons of the mouse, never null.
-     */
-    public Buttons getButtons() {
-        return buttons;
+    protected Mouse(String name, Component[] components, Controller[] children, Rumbler[] rumblers) {
+        super(name, components, children, rumblers);
     }
 
     /**
@@ -97,249 +58,79 @@ public abstract class Mouse extends AbstractController {
         return Type.MOUSE;
     }
 
-    /**
-     * Mouse ball controller
-     */
-    public abstract class Ball extends AbstractController {
-        
-        /**
-         * X-axis; should be initialized by subclasses
-         */
-        protected Component x;
-        
-        /**
-         * Y-axis; should be initialized by subclasses
-         */
-        protected Component y;
-        
-        /**
-         * Mouse wheel; should be initialized by subclasses
-         */
-        protected Component wheel;
-        
-        /**
-         * Protected constructor
-         */
-        protected Ball(String name) {
-            super(name);
-        }
-        
-        /**
-         * Returns the type of Controller.
-         */
-        public Type getType() {
-            return Type.BALL;
-        }
-        
-        /**
-         * Returns the x-axis for the mouse ball, never null.
-         */
-        public Component getX() {
-            return x;
-        }
-        
-        /**
-         * Returns the y-axis for the mouse ball, never null.
-         */
-        public Component getY() {
-            return y;
-        }
-        
-        /**
-         * Returns the mouse wheel, or null if no mouse wheel is present.
-         */
-        public Component getWheel() {
-            return wheel;
-        }
-        
-        /**
-         * Returns the components on this controller, in order of assignment priority.
-         * Overridden to return the x-axis, followed by the y-axes, followed by
-         * the wheel (if present).
-         * The array returned is an empty array if this controller contains no
-         * axes (such as a logical grouping of child controllers).
-         */
-        public Component[] getComponents() {
-            if (components.length == 0 && x != null && y != null) {
-                if (wheel == null) {
-                    components = new Component[] { x, y };
-                } else {
-                    components = new Component[] { x, y, wheel };
-                }
-            }
-            return components;
-        }
+	/**
+	 * Returns the x-axis for the mouse ball, never null.
+	 */
+	public Component getX() {
+		return getComponent(Component.Identifier.Axis.X);
+	}
 
-        /**
-         * Polls axes for data.  Returns false if the controller is no longer
-         * valid. Polling reflects the current state of the device when polled.
-         * By default, polling a mouse ball or button polls the entire mouse
-         * control.
-         */
-        public boolean poll() {
-            return Mouse.this.poll();
-        }
-    } // class Mouse.Ball
-    
-    /**
-     * Mouse buttons controller
-     */
-    public abstract class Buttons extends AbstractController {
-        
-        /**
-         * Left button; should be initialized by subclasses
-         */
-        protected Button left;
-        
-        /**
-         * Right button; should be initialized by subclasses
-         */
-        protected Button right;
-        
-        /**
-         * Middle button; should be initialized by subclasses
-         */
-        protected Button middle;
-        
-        /**
-         * Side button; should be initialized by subclasses
-         */
-        protected Button side;
-        
-        /**
-         * Extra button; should be initialized by subclasses
-         */
-        protected Button extra;
-        
-        /**
-         * Forward button; should be initialized by subclasses
-         */
-        protected Button forward;
-        
-        /**
-         * Back button; should be initialized by subclasses
-         */
-        protected Button back;
-        
-        /**
-         * Protected constructor
-         */
-        protected Buttons(String name) {
-            super(name);
-        }
-        
-        /**
-         * Returns the type or identifier of the Controller.
-         */
-        public Type getType() {
-            return Type.BUTTONS;
-        }
-        
-        /**
-         * Returns the left or primary mouse button, never null.
-         */
-        public Button getLeft() {
-            return left;
-        }
-        
-        /**
-         * Returns the right or secondary mouse button, null if the mouse is
-         * a single-button mouse.
-         */
-        public Button getRight() {
-            return right;
-        }
-        
-        /**
-         * Returns the middle or tertiary mouse button, null if the mouse has
-         * fewer than three buttons.
-         */
-        public Button getMiddle() {
-            return middle;
-        }
-        
-        /**
-         * Returns the side or 4th mouse button, null if the mouse has
-         * fewer than 4 buttons.
-         */
-        public Button getSide() {
-            return side;
-        }
-        
-        /**
-         * Returns the extra or 5th mouse button, null if the mouse has
-         * fewer than 5 buttons.
-         */
-        public Button getExtra() {
-            return extra;
-        }
-        
-        /**
-         * Returns the forward mouse button, null if the mouse hasn't
-         * got one.
-         */
-        public Button getForward() {
-            return forward;
-        }
-        
-        /**
-         * Returns the back mouse button, null if the mouse hasn't
-         * got one.
-         */
-        public Button getBack() {
-            return back;
-        }
-        
-        /**
-         * Returns the components on this controller, in order of assignment priority.
-         * Overridden to return the the primary or leftmost mouse button,
-         * followed by the secondary or rightmost mouse button (if present),
-         * followed by the middle mouse button (if present).
-         * The array returned is an empty array if this controller contains no
-         * axes (such as a logical grouping of child controllers).
-         */
-        public Component[] getComponents() {
-            if (components.length == 0 && left != null) {
-                if (right == null) {
-                    components = new Component[] { left };
-                } else if (middle == null) {
-                    components = new Component[] { left, right };
-                } else if (side == null) {
-                    components = new Component[] { left, right, middle };
-                } else if (extra == null) {
-                    components = new Component[] { left, right, middle, side };
-                } else if (forward == null) {
-                    components = new Component[] { left, right, middle, side, extra };
-                } else if (back == null) {
-                    components = new Component[] { left, right, middle, side, extra, forward };
-                } else {
-                    components = new Component[] { left, right, middle, side, extra, forward, back };
-                }
-            }
-            return components;
-        }
+	/**
+	 * Returns the y-axis for the mouse ball, never null.
+	 */
+	public Component getY() {
+		return getComponent(Component.Identifier.Axis.Y);
+	}
 
-        /**
-         * Polls axes for data.  Returns false if the controller is no longer
-         * valid. Polling reflects the current state of the device when polled.
-         * By default, polling a mouse ball or button polls the entire mouse
-         * control.
-         */
-        public boolean poll() {
-            return Mouse.this.poll();
-        }
-    } // class Mouse.Buttons
-    
-    /**
-     * Mouse button axis
-     */
-    public abstract class Button extends AbstractComponent {
-        
-        /**
-         * Protected constructor
-         */
-        protected Button(String name, Component.Identifier.Button id) {
-            super(name, id);
-        }
-    } // class Mouse.Button
+	/**
+	 * Returns the mouse wheel, or null if no mouse wheel is present.
+	 */
+	public Component getWheel() {
+		return getComponent(Component.Identifier.Axis.Z);
+	}
+
+	/**
+	 * Returns the left or primary mouse button, never null.
+	 */
+	public Component getLeft() {
+		return getComponent(Component.Identifier.Button.LEFT);
+	}
+
+	/**
+	 * Returns the right or secondary mouse button, null if the mouse is
+	 * a single-button mouse.
+	 */
+	public Component getRight() {
+		return getComponent(Component.Identifier.Button.RIGHT);
+	}
+
+	/**
+	 * Returns the middle or tertiary mouse button, null if the mouse has
+	 * fewer than three buttons.
+	 */
+	public Component getMiddle() {
+		return getComponent(Component.Identifier.Button.MIDDLE);
+	}
+
+	/**
+	 * Returns the side or 4th mouse button, null if the mouse has
+	 * fewer than 4 buttons.
+	 */
+	public Component getSide() {
+		return getComponent(Component.Identifier.Button.SIDE);
+	}
+
+	/**
+	 * Returns the extra or 5th mouse button, null if the mouse has
+	 * fewer than 5 buttons.
+	 */
+	public Component getExtra() {
+		return getComponent(Component.Identifier.Button.EXTRA);
+	}
+
+	/**
+	 * Returns the forward mouse button, null if the mouse hasn't
+	 * got one.
+	 */
+	public Component getForward() {
+		return getComponent(Component.Identifier.Button.FORWARD);
+	}
+
+	/**
+	 * Returns the back mouse button, null if the mouse hasn't
+	 * got one.
+	 */
+	public Component getBack() {
+		return getComponent(Component.Identifier.Button.BACK);
+	}
 } // class Mouse

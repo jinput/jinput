@@ -29,7 +29,7 @@ NR == 1 {
   printf("package net.java.games.input;\n\n")
   printf("\n");
   printf("/**\n * This file is generated from %s please do not edit\n */\n", FILENAME);
-  printf("public class NativeDefinitions {\n")
+  printf("class NativeDefinitions {\n")
 }
 /#define ABS_/ { 
   printf("    public static final int %s = %s;\n", $2, $3) 
@@ -44,6 +44,15 @@ NR == 1 {
   printf("    public static final int %s = %s;\n", $2, $3) 
 }
 /#define BUS_/ { 
+  printf("    public static final int %s = %s;\n", $2, $3) 
+}
+/#define EV_/ { 
+  printf("    public static final int %s = %s;\n", $2, $3) 
+}
+/#define FF_/ { 
+  printf("    public static final int %s = %s;\n", $2, $3) 
+}
+/#define USAGE_/ { 
   printf("    public static final int %s = %s;\n", $2, $3) 
 }
 END {

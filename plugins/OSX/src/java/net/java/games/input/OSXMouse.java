@@ -1,251 +1,68 @@
+/*
+ * %W% %E%
+ *
+ * Copyright 2002 Sun Microsystems, Inc. All rights reserved.
+ * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ */
+/*****************************************************************************
+* Copyright (c) 2003 Sun Microsystems, Inc.  All Rights Reserved.
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+* - Redistribution of source code must retain the above copyright notice,
+*   this list of conditions and the following disclaimer.
+*
+* - Redistribution in binary form must reproduce the above copyright notice,
+*   this list of conditions and the following disclaimer in the documentation
+*   and/or other materails provided with the distribution.
+*
+* Neither the name Sun Microsystems, Inc. or the names of the contributors
+* may be used to endorse or promote products derived from this software
+* without specific prior written permission.
+*
+* This software is provided "AS IS," without a warranty of any kind.
+* ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING
+* ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
+* NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
+* ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
+* A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
+* DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
+* REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
+* INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
+* OF LIABILITY, ARISING OUT OF THE USE OF OUR INABILITY TO USE THIS SOFTWARE,
+* EVEN IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+*
+* You acknowledge that this software is not designed or intended for us in
+* the design, construction, operation or maintenance of any nuclear facility
+*
+*****************************************************************************/
 package net.java.games.input;
 
-/**
- * Created by IntelliJ IDEA.
- * User: gpierce
- * Date: Aug 2, 2003
- * Time: 3:57:00 PM
- * To change this template use Options | File Templates.
- */
-public class OSXMouse extends Mouse implements InputController
-{
-    private OSXEnvironmentPlugin            plugin;
-    private long                            lpDevice;
-    private long                            lpQueue;
-    private int                             buttonCount = 0;
+import java.io.IOException;
 
+/** Represents an OSX Mouse
+* @author elias
+* @version 1.0
+*/
+final class OSXMouse extends Mouse {
+	private final PortType port;
+	private final OSXHIDQueue queue;
+	
+	protected OSXMouse(OSXHIDDevice device, OSXHIDQueue queue, Component[] components, Controller[] children, Rumbler[] rumblers) {
+		super(device.getProductName(), components, children, rumblers);
+		this.queue = queue;
+		this.port = device.getPortType();
+	}
 
-    public OSXMouse( OSXEnvironmentPlugin plugin, long lpDevice, String productName )
-    {
-        super( productName );
+	protected final boolean getNextDeviceEvent(Event event) throws IOException {
+		return OSXControllers.getNextDeviceEvent(event, queue);
+	}
 
-        this.plugin = plugin;
-        this.lpDevice = lpDevice;
+	protected final void setDeviceEventQueueSize(int size) throws IOException {
+		queue.setQueueDepth(size);
+	}
 
-        openDevice();
-
-        buttons = new ButtonsImpl();
-        ball = new BallImpl();
-    }
-
-    public void openDevice()
-    {
-        this.lpQueue = plugin.openDevice( this.lpDevice, 32 );
-    }
-
-    public void closeDevice()
-    {
-        plugin.closeDevice( this.lpDevice, this.lpQueue );
-    }
-
-    public boolean poll()
-    {
-        plugin.pollDevice( this.lpQueue );
-
-        return true;
-    }
-
-    public void addControllerElement(InputControllerElement element)
-    {
-
-        switch ( element.getUsagePage() )
-        {
-            case OSXEnvironmentPlugin.HID_USAGEPAGE_BUTTON:
-                buttonCount ++;
-                System.out.println("Adding button [" + buttonCount + "]");
-                ((ButtonsImpl)buttons).addButton(element);
-                break;
-
-
-            case OSXEnvironmentPlugin.HID_USAGEPAGE_GENERICDESKTOP:
-                switch( element.getUsage() )
-                {
-                    case OSXEnvironmentPlugin.HID_USAGE_POINTER:
-                        System.out.println("Adding pointer - this will contain axis");
-                        break;
-
-                    case OSXEnvironmentPlugin.HID_USAGE_XAXIS:
-                        ((BallImpl)ball).addXAxis(element);
-                        System.out.println("Adding X Axis") ;
-                        break;
-
-                    case OSXEnvironmentPlugin.HID_USAGE_YAXIS:
-                        ((BallImpl)ball).addYAxis(element);
-                        System.out.println("Adding Y Axis");
-                        break;
-
-                    case OSXEnvironmentPlugin.HID_USAGE_WHEEL:
-                        ((BallImpl)ball).addWheelAxis(element);
-                        System.out.println("Adding wheel");
-                        break;
-
-                    default:
-
-                }
-                break;
-
-
-            default:
-
-        }
-    }
-
-    /**
-     * Implementation class representing the mouse ball
-     */
-    class BallImpl extends Ball
-    {
-        /**
-         * Public constructor
-         */
-        public BallImpl()
-        {
-            super(OSXMouse.this.getName() + " ball");
-        }
-
-        public void addXAxis( InputControllerElement element )
-        {
-            x = new BallAxis(Component.Identifier.Axis.X, element );
-        }
-
-        public void addYAxis( InputControllerElement element )
-        {
-            y = new BallAxis( Component.Identifier.Axis.Y, element );
-        }
-
-        public void addWheelAxis( InputControllerElement element )
-        {
-            wheel = new BallAxis( Component.Identifier.Axis.SLIDER, element );
-        }
-    }
-
-
-    /**
-     * Implementation class representing the mouse buttons
-     */
-    class ButtonsImpl extends Buttons
-    {
-        /**
-         * Public constructor
-         */
-        public ButtonsImpl()
-        {
-            super(OSXMouse.this.getName() + " buttons");
-        }
-
-        public void addButton( InputControllerElement element )
-        {
-            if ( left == null )
-            {
-                left = new ButtonImpl( Component.Identifier.Button.LEFT, element );
-            }
-            else if ( right == null )
-            {
-                right = new ButtonImpl( Component.Identifier.Button.RIGHT, element );
-            }
-            else if ( middle == null )
-            {
-                middle = new ButtonImpl( Component.Identifier.Button.MIDDLE, element );
-            }
-        }
-    }
-
-    /**
-     * Mouse button axis implementation
-     */
-    class ButtonImpl extends Button
-    {
-
-        private long hidCookie;
-        private boolean isRelative;
-
-
-        /** Public constructor
-         * @param id An ID of a button to create an obejct to represent.
-         *
-         */
-        public ButtonImpl(Component.Identifier.Button id, InputControllerElement element)
-        {
-            super(id.getName(), id);
-            this.hidCookie = element.getHidCookie();
-            this.isRelative = element.isRelative();
-        }
-
-        /** Returns the data from the last time the control has been polled.
-         * If this axis is a button, the value returned will be either 0.0f or 1.0f.
-         * If this axis is normalized, the value returned will be between -1.0f and
-         * 1.0f.
-         * @return  state of controller. (Note: DX8 mice actually
-         * queue state so what is returned is the next state,
-         * not necessarily the most current one.)
-         */
-        public float getPollData()
-        {
-            return (float) plugin.pollElement( lpDevice, hidCookie );
-        }
-
-        /** Returns <code>true</code> if data returned from <code>poll</code>
-         * is relative to the last call, or <code>false</code> if data
-         * is absolute.
-         * @return true if data is relative, otherwise false.
-         */
-        public boolean isRelative()
-        {
-            return isRelative;
-        }
-    }
-
-
-    /**
-     * Mouse ball axis implementation
-     */
-    class BallAxis extends AbstractComponent
-    {
-
-        private long hidCookie;
-        private boolean isRelative;
-
-        /** Public constructor
-         * @param id  An ID for a mouse axis to create an object to represent.
-         */
-        public BallAxis(Component.Identifier.Axis id, InputControllerElement element)
-        {
-            super(id.getName(), id);
-
-            this.hidCookie = element.getHidCookie();
-            this.isRelative = element.isRelative();
-        }
-
-        /** Returns the data from the last time the control has been polled.
-         * If this axis is a button, the value returned will be either 0.0f or 1.0f.
-         * If this axis is normalized, the value returned will be between -1.0f and
-         * 1.0f.
-         * @return  data.  (Note that mice queue state in DX8 so what
-         * is returned is the next stae in the queue, not
-         * necessarily the most current one.)
-         */
-        public float getPollData()
-        {
-            return (float) plugin.pollElement( lpDevice, hidCookie );
-        }
-
-        /** Returns <code>true</code> if data returned from <code>poll</code>
-         * is relative to the last call, or <code>false</code> if data
-         * is absolute.
-         * @return true if relative, otherwise false.
-         */
-        public boolean isRelative()
-        {
-            return isRelative;
-        }
-
-        /** Returns whether or not the axis is analog, or false if it is digital.
-         * @return true if analog, false if digital
-         */
-        public boolean isAnalog()
-        {
-            return true;
-        }
-    }
-
+	public final PortType getPortType() {
+		return port;
+	}
 }

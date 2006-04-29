@@ -1,0 +1,31 @@
+Major:
+ - Flattened Mouse so it isn't separated into child controllers (ball, buttons).
+ - Removed useless component members from Mouse and Keyboard. For example, Mouse.getX() is now simply getComponent(Component.Identifier.Axis.X).
+ - Removed StandardKeyboard.
+ - Removed Mouse.Button and Keyboard.Key since they only complicated plugins
+ - Added Keyboard.isKeyDown(Component.Identifier.Key) (with default false for non-existent keys).
+ - Removed Component.isPolling() and Component.setPolling().
+ - Removed Component.isNormalized() since all plugins return normalized data for absolute axes anyway.
+ - Windows XP: Added RawInputEnvironmentPlugin to enable multiple mice and keyboards. DirectInput will only report one system mouse and one system keyboard where all mice and keyboard input are combined (in fact, Windows was the OS with the most complicated and confusing APIs, apart from the fact that I had to code two separate plugins for it). The RawInputEnvironment is not enabled per default, since it seems to exclude mouse and keybaord input to DirectInput which will probably confuse unsuspecting applications. But at least there is now a method to access multiple keyboards and mice on windows xp.
+ - DirectInput: Got rid of the nasty DataFormat special case handling. The DirectInput data format is now one large (java int) array which is a better match for the jinput abstraction than the builtin DirectInput data formats for mice, keyboards and joysticks.
+ - Added event queue support. An Event contains a Component, a value and a relative timestamp in nanoseconds.
+ - Basically rewrote all plugins from scratch, with focus on minimizing the amount of native code in general, and in particular for moving decisions from native to java, making the native code more general purpose and less likely to need changes. Additionally, all plugins support the new event queue interface. All plugins now have much better error handling (exceptions) and much tighter native code (no more global variables, helper functions declared static etc.). Additionally, all plugin internal java classes are package protected and final for added security.
+ - Mac OS X: Added missing features and fixed broken Mouse.
+ - Cleaned up build system and added option for a combined jinput.jar with all plugins as opposed to just the OS specific packages
+ - JInput should now be thread safe.
+ - Mac OS X intel mac support. The jinput-osx.jnilib library is for 10.4 or better (both ppc and i386), while libjinput-osx-legacy.jnilib is for 10.3 or earlier.
+
+Minor:
+ - Removed keyId from Component.Identifier.Key
+ - Made components, children and rumblers final in AbstractController
+ - Added Identifier->Component Map to AbstractController to avoid Keyboard special code and to speed up the Component.getComponent() method in general.
+ - Added exceptions to native code for accurate error messages (instead of the standard printf). I use the checked IOException exclusively, but since exceptions are not exposed to user code, that can easily be changed.
+ - Added printfJava(env, format, ...) to native code to avoid printfs altogether
+
+Issues not fixed:
+ - Linux plugin report buttons ids with semantic value (trigger button, thumb button etc.) while all other plugins use simple button indices (0, 1, 2, 3 etc.). This is a property of the underlying linux input API and will probably confuse some jinput programs.
+ - The Plugin architecture seems somewhat complex and IMHO unnecessary. It involves custom Classloaders to separate the each Plugin's namespaces, but since you can't use custom Classloaders in restricted environments (web start, applets) the plugins have to have manually separate namespaces anyway. I'm inclined to remove it, but since it was there originally, there is probably some use case it covers I don't know about.
+
+TODO:
+ - A utility for collecting events from multiple controller at once. An application then just needs to register all its devices to the utility and only call poll() and getEventQueue() in one place. Event will probably need to be extended with a getController() method.
+ 

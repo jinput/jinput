@@ -123,35 +123,35 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 					pluginClasses = pluginClasses + " net.java.games.input.OSXEnvironmentPlugin";
 				} else if(osName.equals("Windows 98") || osName.equals("Windows 2000") || osName.equals("Windows XP")) {
 					pluginClasses = pluginClasses + " net.java.games.input.DirectInputEnvironmentPlugin";
-				} else if(osName.startsWith("Windows")) {
+//					pluginClasses = pluginClasses + " net.java.games.input.RawInputEnvironmentPlugin";
+				} else if (osName.startsWith("Windows")) {
 					System.out.println("WARNING: Found unknown Windows version: " + osName);
 					System.out.println("Attempting to use default windows plug-in.");
 					System.out.flush();
 					pluginClasses = pluginClasses + " net.java.games.input.DirectInputEnvironmentPlugin";
+//					pluginClasses = pluginClasses + " net.java.games.input.RawInputEnvironmentPlugin";
 				} else {
 					System.out.println("Trying to use default plugin, OS name " + osName +" not recognised");
 				}
 			}
-            if(!pluginClasses.equals("")) {
-                ArrayList pluginClassList = new ArrayList();
-                StringTokenizer pluginClassTok = new StringTokenizer(pluginClasses, " \t\n\r\f,;:");
-                while(pluginClassTok.hasMoreTokens()) {
-                    String className = pluginClassTok.nextToken();					
-                    try {
-						if(!loadedPlugins.contains(className)) {
-							Class ceClass = Class.forName(className);
-	                        ControllerEnvironment ce = (ControllerEnvironment) ceClass.newInstance();
-	                        addControllers(ce.getControllers());
-						}
-                    } catch (InstantiationException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+			ArrayList pluginClassList = new ArrayList();
+			StringTokenizer pluginClassTok = new StringTokenizer(pluginClasses, " \t\n\r\f,;:");
+			while(pluginClassTok.hasMoreTokens()) {
+				String className = pluginClassTok.nextToken();					
+				try {
+					if(!loadedPlugins.contains(className)) {
+						Class ceClass = Class.forName(className);
+						ControllerEnvironment ce = (ControllerEnvironment) ceClass.newInstance();
+						addControllers(ce.getControllers());
+					}
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+			}
         }
         Controller[] ret = new Controller[controllers.size()];
         Iterator it = controllers.iterator();
@@ -232,7 +232,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
                         envClasses[i].newInstance();      					
                     addControllers(ce.getControllers());
 					loadedPlugins.add(ce.getClass().getName());
-                } catch (Exception e) {
+                } catch (Throwable e) {
                     e.printStackTrace();
                 }
             }

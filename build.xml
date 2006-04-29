@@ -1,26 +1,9 @@
 <?xml version="1.0"?>
 
-<!-- Written to assume that classpath is rooted in the current directory. -->
-<!-- So this should be OK if you make this script in the root of a filesystem. -->
-<!-- If not, you may prefer to adjust the basedir, or move some directories around. -->
-<!-- The idea is that both Ant and NetBeans have to know what the package root is -->
-<!-- for the classes in your application. -->
 <project name="Sun Games Initiative Client Technologies" basedir="." default="all">
-
-    <!-- Don't worry if you don't know the Ant syntax completely or need help on some tasks! -->
-    <!-- The standard Ant documentation is bundled. See Help | Help Sets | Ant 1.4.1 Manual. -->
-
     <target name="init">
-        <!-- You can set up any variables you want used throughout the script here. -->
-        <!-- <property name="hello" value="world"/ -->
-        <!-- To use e.g. Jikes, uncomment this line. -->
-        <!-- (Or make the same change in Tools | Options | Ant Settings | Properties.) -->
-        <!-- <property name="build.compiler" value="jikes"/> -->
-        <!-- You might like to set up some overridable paths, etc.: -->
-        <!-- <property name="mylib" value="../lib/mylib.jar"/> -->
-        
         <!-- If we are running in windows, set dx8 property to true -->
-        <condition property="dx8" >
+        <condition property="windows" >
             <os family="windows" />
         </condition>
         
@@ -39,142 +22,149 @@
 		</condition>
     </target>
 
-    <target name="core" depends="init">
-        <!-- Both srcdir and destdir should be package roots. -->
-        <!-- They could be different of course; in that case NetBeans can also be set -->
-        <!-- up to compile to a different filesystem in the same way; see Compiler Types: -->
-         <ant dir="coreAPI" />
-    </target>
-    
-    <target name="windows_plugin" depends="core" if="dx8" >
-        <!-- Both srcdir and destdir should be package roots. -->
-        <!-- They could be different of course; in that case NetBeans can also be set -->
-        <!-- up to compile to a different filesystem in the same way; see Compiler Types: -->
-         <ant dir="plugins/DX8" /> 
-    </target>
+	<target name="runtest" depends="dist">
+		<java classname="${mainclass}" 
+              fork="true" failonerror="true" dir=".">
+            <classpath>
+				<pathelement location="dist/jinput.jar"/>
+				<pathelement location="dist/jinput-test.jar"/>
+            </classpath>
+			<jvmarg value="-Djava.library.path=dist"/>
+		</java>
+	</target>
 
-    <target name="linux_plugin" depends="core" if="linux" >
-        <!-- Both srcdir and destdir should be package roots. -->
-        <!-- They could be different of course; in that case NetBeans can also be set -->
-        <!-- up to compile to a different filesystem in the same way; see Compiler Types: -->
-         <ant dir="plugins/linux" /> 
-    </target>
-	
-    <target name="OSX_plugin" depends="core" if="osx" >
-         <ant dir="plugins/OSX" /> 
-    </target>
+	<target name="texttest">
+		<antcall target="runtest">
+			<param name="mainclass" value="net.java.games.input.test.ControllerTextTest"/>
+		</antcall>
+	</target>
 
-    <target name="javadoc" depends="init">
-        <!-- Both srcdir and destdir should be package roots. -->
-        <!-- They could be different of course; in that case NetBeans can also be set -->
-        <!-- up to compile to a different filesystem in the same way; see Compiler Types: -->
-        <ant dir="coreAPI" target="javadoc"/>
-        <ant dir="plugins/DX8" target="javadoc"/>
-        <ant dir="plugins/linux" target="javadoc"/>
-		<ant dir="plugins/OSX" target="javadoc"/>
-    </target>
-    
-    <target name="compile" depends="core,windows_plugin,linux_plugin,OSX_plugin" />
-    
-    <target name="all" depends="init,compile" description="Build everything.">
-        <echo message="Application built. Hello ${hello}!"/>
-    </target>
-    
-    <target name="clean" depends="init" description="Clean all build products.">
-        <ant dir="plugins/DX8" target="clean"/>
-        <ant dir="plugins/linux" target="clean"/>
-		<ant dir="plugins/OSX" target="clean"/>
-    	<ant dir="plugins/awt" target="clean"/>
-        <ant dir="coreAPI" target="clean"/>
-        <delete failonerror="no">
-            <fileset dir="dist">
-                <include name="**/*"/>
-            </fileset>
-        </delete>
-    </target>
-    
-    <target name="dist" depends="init,compile" description="Build the distribution file for this system">
+    <target name="readtest" depends="init,all" description="Try running it.">
+		<antcall target="runtest">
+			<param name="mainclass" value="net.java.games.input.test.ControllerReadTest"/>
+		</antcall>
+	</target>
+
+    <target name="rumbletest" depends="init,all" description="Try running it.">
+		<antcall target="runtest">
+			<param name="mainclass" value="net.java.games.input.test.RumbleTest"/>
+		</antcall>
+	</target>
+
+	<macrodef name="iterate">
+		<attribute name="target"/>
+		<sequential>
+			<subant target="@{target}">
+				<fileset file="coreAPI/build.xml"/>
+				<fileset file="plugins/linux/build.xml"/>
+				<fileset file="plugins/windows/build.xml"/>
+				<fileset file="plugins/OSX/build.xml"/>
+				<fileset file="plugins/awt/build.xml"/>
+			</subant>
+		</sequential>
+	</macrodef>
+
+	<target name="clean">
+		<iterate target="clean"/>
+		<delete dir="dist" failonerror="no"/>
+	</target>
+
+	<target name="all" depends="dist">
+	</target>
+
+	<target name="javadoc" depends="init">
+		<iterate target="javadoc"/>
+	</target>
+
+    <target name="dist" depends="init" description="Build the distribution file for this system">
+		<iterate target="all"/>
         <mkdir dir="dist"/>
-        <mkdir dir="dist/controller"/>
-        <copy file="coreAPI/bin/jinput.jar" todir="dist"/>
-        <copy file="coreAPI/lib/jutils.jar" todir="dist"/>
-        <copy todir="dist/controller">
-            <fileset dir="coreAPI/src/tests/controller/">
-                <include name="**/*"/>
-            </fileset>
-        </copy>
-        <zip destfile="dist/jinput_${os.name}_dist.zip" 
-            basedir="dist"
-            excludes="*.zip"
-            />
+		<jar jarfile="dist/jinput.jar" compress="true">
+			<fileset dir="coreAPI/classes">
+				<include name="**/*.class"/>
+				<exclude name="**/test/*.class"/>
+			</fileset>
+			<fileset dir="plugins/linux/classes">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="plugins/OSX/classes">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="plugins/awt/classes">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="plugins/windows/classes">
+				<include name="**/*.class"/>
+			</fileset>
+			<zipfileset src="lib/jutils.jar" includes="**/*.class"/>
+		</jar>
+		<copy todir="dist">
+			<fileset file="coreAPI/bin/jinput-test.jar"/>
+			<fileset dir="plugins/linux/bin" includes="*so"/>
+			<fileset dir="plugins/OSX/bin" includes="*jnilib"/>
+			<fileset dir="plugins/windows/bin" includes="*dll"/>
+		</copy>
     </target>
 	
-	<target name="simple_dist" depends="init,compile,simple_windows,simple_linux,simple_osx" description="Build the simple jars for each platform"/>
+	<target name="simple_dist" depends="dist,simple_windows,simple_linux,simple_osx" description="Build the simple jars for each platform"/>
 	
-	<target name="simple_linux" depends="init,compile" description="Build the simple linux jar" if="linux">
-		<delete failonerror="no" file="jinput.jar"/>
-		<delete failonerror="no" file="jinput_linux.tgz"/>
-		<jar jarfile="jinput.jar" compress="true">
+	<target name="simple_linux" depends="dist" description="Build the simple linux jar" if="linux">
+		<jar jarfile="dist/jinput-linux.jar" compress="true">
 			<fileset dir="coreAPI/classes">
 				<include name="**/*.class"/>
 			</fileset>
 			<fileset dir="plugins/linux/classes">
 				<include name="**/*.class"/>
 			</fileset>
-			<zipfileset src="coreAPI/lib/jutils.jar" includes="**/*.class"/>
+			<zipfileset src="lib/jutils.jar" includes="**/*.class"/>
 		</jar>
-		<tar destfile="jinput_linux.tgz" compression="gzip">
+		<tar destfile="dist/jinput_linux.tgz" compression="gzip">
 			<tarfileset dir=".">
-				<include name="jinput.jar"/>
+				<include name="dist/jinput-linux.jar"/>
 			</tarfileset>
-			<tarfileset dir="plugins/linux/src/native">
+			<tarfileset dir="plugins/linux/bin">
 				<include name="*.so"/>
 			</tarfileset>
 		</tar>
-		<delete failonerror="no" file="jinput.jar"/>
 	</target>
-	<target name="simple_windows" depends="init,compile" description="Build the simple windows jar" if="dx8">
-		<delete failonerror="no" file="jinput.jar"/>
-		<delete failonerror="no" file="jinput_windows.zip"/>
-		<jar jarfile="jinput.jar" compress="true">
+
+	<target name="simple_windows" depends="dist" description="Build the simple windows jar" if="windows">
+		<jar jarfile="dist/jinput-windows.jar" compress="true">
 			<fileset dir="coreAPI/classes">
 				<include name="**/*.class"/>
 			</fileset>
-			<fileset dir="plugins/DX8/classes">
+			<fileset dir="plugins/windows/classes">
 				<include name="**/*.class"/>
 			</fileset>
-			<zipfileset src="coreAPI/lib/jutils.jar" includes="**/*.class"/>
+			<zipfileset src="lib/jutils.jar" includes="**/*.class"/>
 		</jar>
-		<zip destfile="jinput_windows.zip">
+		<zip destfile="dist/jinput_windows.zip">
 			<zipfileset dir=".">
-				<include name="jinput.jar"/>
+				<include name="dist/jinput-windows.jar"/>
 			</zipfileset>
-			<zipfileset dir="plugins/DX8/bin">
+			<zipfileset dir="plugins/windows/bin">
 				<include name="*.dll"/>
 			</zipfileset>
 		</zip>
-		<delete failonerror="no" file="jinput.jar"/>
 	</target>
-	<target name="simple_osx" depends="init,compile" description="Build the simple osx jar" if="osx">
-		<delete failonerror="no" file="jinput.jar"/>
-		<delete failonerror="no" file="jinput_osx.tgz"/>
-		<jar jarfile="jinput.jar" compress="true">
+
+	<target name="simple_osx" depends="dist" description="Build the simple osx jar" if="osx">
+		<jar jarfile="dist/jinput-osx.jar" compress="true">
 			<fileset dir="coreAPI/classes">
 				<include name="**/*.class"/>
 			</fileset>
 			<fileset dir="plugins/OSX/classes">
 				<include name="**/*.class"/>
 			</fileset>
-			<zipfileset src="coreAPI/lib/jutils.jar" includes="**/*.class"/>
+			<zipfileset src="lib/jutils.jar" includes="**/*.class"/>
 		</jar>
-		<tar destfile="jinput_osx.tgz" compression="gzip">
+		<tar destfile="dist/jinput_osx.tgz" compression="gzip">
 			<tarfileset dir=".">
-				<include name="jinput.jar"/>
+				<include name="dist/jinput-osx.jar"/>
 			</tarfileset>
-			<tarfileset dir="plugins/OSX/src/native">
+			<tarfileset dir="plugins/OSX/bin">
 				<include name="*.jnilib"/>
 			</tarfileset>
 		</tar>
-		<delete failonerror="no" file="jinput.jar"/>
 	</target>
 </project>

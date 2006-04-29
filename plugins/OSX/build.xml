@@ -2,35 +2,37 @@
 <project basedir="." default="all" name="OSX Plugin">
     <description>OSX JInput Plugin</description>
     <property name="src" location="src" />
-    <property name="build" location="classes" />
-    <property name="dist" location="dist" />
+    <property name="build" location="classes"/>
+    <property name="bin" location="bin" />
     <property name="plugins" location="plugins" />
     
     <target name="init">
-        <mkdir dir="classes"/>
-        <mkdir dir="dist"/>
+		<mkdir dir="${build}"/>
+		<mkdir dir="${bin}"/>
+		<condition property="macosx">
+			<and>
+				<os family="mac" />
+				<os family="unix" />
+			</and>
+		</condition>
     </target>
 
     <target depends="init" name="compile">
         <javac debug="true" deprecation="true" destdir="${build}" source="1.4" srcdir="src/java">
             <classpath>
-                <pathelement location="../../coreAPI/bin/jinput.jar"/>
-                <pathelement location="../../coreAPI/lib/jutils.jar"/>
+                <pathelement location="../../coreAPI/bin/jinput-core.jar"/>
+                <pathelement location="../../lib/jutils.jar"/>
             </classpath>
         </javac>
     </target>
 
 	<target depends="init,compile" name="jar">
-        <jar jarfile="${dist}/HIDWrapper.jar" compress="true" basedir="${build}">
-            <exclude name="**/*.java"/>
-            <exclude name="HIDWrapper.jar"/>
-            <exclude name="apidoc"/>
+        <jar jarfile="${bin}/HIDWrapper.jar" compress="true" basedir="${build}">
+            <include name="**/*.class"/>
         </jar> 
-        <copy file="${dist}/HIDWrapper.jar" todir="../../coreAPI/src/tests/controller" />
     </target>
 
     <target depends="compileNativeJinputLib,jar" description="Build everything." name="all">
-        <echo message="Native OSX JInput library built!"/>
     </target>
 
     <target name="javadoc" depends="init" description="Javadoc for OS X plugin for JInput.">
@@ -43,23 +45,17 @@
                 <pathelement location="src/java"/>
             </sourcepath>
              <classpath>
-                <pathelement location="../../coreAPI/bin/jinput.jar"/>
-                <pathelement location="../../coreAPI/lib/jutils.jar"/>
+                <pathelement location="../../coreAPI/bin/jinput-core.jar"/>
+                <pathelement location="../../lib/jutils.jar"/>
             </classpath>
         </javadoc>
     </target>
 
     <target description="Clean all build products." name="clean">
-        <delete failonerror="no">
-            <fileset dir="${build}">
-                <include name="**/*.class"/>
-            </fileset>
-        </delete>
-		<delete file="${dist}/HIDWrapper.jar" failonerror="no"/>
-        <delete file="${dist}/libjinput.jnilib" failonerror="no"/>
-        <delete file="../../coreAPI/src/tests/controller/HIDWrapper.jar" failonerror="no" />
-        <delete file="../../coreAPI/src/tests/controller/libjinput.jnilib" failonerror="no"/>
-        <delete file="apidoc" failonerror="no"/>
+		<delete dir="classes" failonerror="no"/>
+		<delete dir="bin" failonerror="no"/>
+		<delete dir="apidocs" failonerror="no"/>
+		<ant inheritAll="false" antfile="src/native/build.xml" target="clean"/>
     </target>
 
     <target depends="init,compile" name="createJNIHeaders">
@@ -68,14 +64,17 @@
                 <pathelement path="${build}"/>
                 <pathelement location="../../coreAPI/classes"/>
             </classpath>
-            <class name="net.java.games.input.OSXEnvironmentPlugin"/>
+			<class name="net.java.games.input.OSXHIDDeviceIterator"/>
+			<class name="net.java.games.input.OSXHIDDevice"/>
+			<class name="net.java.games.input.OSXHIDQueue"/>
         </javah>
     </target>
 
 	
-    <target name="compileNativeJinputLib" depends="init,createJNIHeaders" >
+    <target name="compileNativeJinputLib" depends="init,createJNIHeaders" if="macosx">
         <ant dir="src/native" target="compileNativeJinputLib"/>
-	<copy file="src/native/libjinput.jnilib" todir="${dist}" />
-        <copy file="${dist}/libjinput.jnilib" todir="../../coreAPI/src/tests/controller" />
+		<copy todir="${bin}">
+			<fileset dir="src/native" includes="*.jnilib"/>
+		</copy>
     </target>
 </project>

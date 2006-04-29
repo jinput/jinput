@@ -89,7 +89,7 @@ public final class Version {
   /**
    * Version string of this build.
    */
-  private static final String version = "1.0.0-b01";
+  private static final String version = "2.0.0-b01";
 
   /**
    * Returns the verison string and build number of

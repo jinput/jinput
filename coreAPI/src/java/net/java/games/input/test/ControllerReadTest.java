@@ -74,6 +74,10 @@ abstract class AxisPanel extends JPanel{
         data = axis.getPollData();
         renderData();
     }
+
+	public Component getAxis() {
+		return axis;
+	}
     
     protected abstract void renderData();
 }
@@ -153,7 +157,10 @@ class AnalogAxisPanel extends AxisPanel {
     }
     
     protected void renderData(){
-        analogState.setText(""+data);
+		String extra = "";
+		if (getAxis().getDeadZone() >= Math.abs(data))
+			extra = " (DEADZONE)";
+        analogState.setText(""+data+extra);
         analogState.repaint();
     }
 }
@@ -216,7 +223,7 @@ class ControllerWindow extends JFrame {
         }
         p.add(p2);
         axisList.add(p2);
-        ax.setPolling(true);
+        //ax.setPolling(true);
     }
     
     public void poll(){

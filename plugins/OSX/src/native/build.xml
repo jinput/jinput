@@ -1,23 +1,67 @@
 <?xml version="1.0" ?>
 <project name="OS X Plugin, Native code" basedir="." default="compileNativeJinputLib">
-    <description>OSX JInput Native Plugin</description>
-    <property name="src" location="src" />
-    <property name="build" location="classes" />
-    <property name="dist" location="../../dist" />
-    <property name="plugins" location="plugins" />
-    
-    <target name="init">
-        <mkdir dir="build"/>
-    </target>
+	<description>OSX JInput Native Plugin</description>
 
-    <target name="compileNativeJinputLib" depends="init">
-        <exec dir="." executable="cc" os="Mac OS X">
-		
-            <arg line="-c -I${java.home}/include jinputjnilib.c"/>
-        </exec>
-		<exec dir="." executable="cc" os="Mac OS X">
-	       <arg line="-bundle -o libjinput.jnilib jinputjnilib.o -framework JavaVM -framework CoreFoundation -framework IOKit "/>
-     	</exec>
-    </target>
+	<target name="init">
+		<mkdir dir="universal"/>
+		<mkdir dir="legacy"/>
+	</target>
+	
+	<target name="clean">
+		<delete failonerror="false">
+			<fileset dir="universal"/>
+			<fileset dir="legacy"/>
+		</delete>
+	</target>
 
+	<target name="compile">
+		<apply dir="${dstdir}" executable="${compiler}" os="Mac OS X" skipemptyfilesets="true" failonerror="true" dest="${dstdir}">
+			<arg line="${cflags} -O2 -Wall -c -fPIC -I${sdkroot}/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers -I../../../../common/src/native -I.."/>
+			<mapper type="glob" from="*.c" to="*.o"/>
+			<fileset dir="." includes="*.c"/>
+			<fileset dir="../../../common/src/native" includes="*.c"/>
+		</apply>
+	</target>
+	
+	<target name="link">
+		<apply dir="." parallel="true" executable="${linker}" os="Mac OS X" failonerror="true">
+			<arg line="${linkerflags} -dynamiclib -o ${libname} -framework JavaVM -framework CoreFoundation -framework IOKit -framework CoreServices"/>
+			<fileset dir="${objdir}" includes="*.o"/>
+		</apply>
+		<apply dir="." parallel="true" executable="strip" os="Mac OS X" failonerror="true">
+			<arg line="-S -X"/>
+			<fileset dir="." includes="*.jnilib"/>
+		</apply>
+	</target>
+	
+	<target name="compileNativeJinputLib" depends="init">
+		<property name="universal_sdkroot" location="/Developer/SDKs/MacOSX10.4u.sdk"/>
+		<property name="legacy_sdkroot" location="/Developer/SDKs/MacOSX10.3.9.sdk"/>
+		<property name="universal_flags" value="-isysroot ${universal_sdkroot} -arch i386 -arch ppc"/>
+		<antcall target="compile">
+			<param name="dstdir" location="universal"/>
+			<param name="compiler" value="gcc-4.0"/>
+			<param name="sdkroot" location="${universal_sdkroot}"/>
+			<param name="cflags" value="${universal_flags}"/>
+		</antcall>
+		<antcall target="link">
+			<param name="objdir" location="universal"/>
+			<param name="libname" value="libjinput-osx.jnilib"/>
+			<param name="linker" value="gcc-4.0"/>
+			<!--			<param name="linkerflags" value="${universal_flags} -Wl,-syslibroot,${universal_sdkroot}"/>-->
+			<param name="linkerflags" value="${universal_flags}"/>
+		</antcall>
+		<antcall target="compile">
+			<param name="dstdir" location="legacy"/>
+			<param name="compiler" value="gcc-3.3"/>
+			<param name="sdkroot" location="${legacy_sdkroot}"/>
+			<param name="cflags" value=""/>
+		</antcall>
+		<antcall target="link">
+			<param name="objdir" location="legacy"/>
+			<param name="libname" value="libjinput-osx-legacy.jnilib"/>
+			<param name="linker" value="gcc-3.3"/>
+			<param name="linkerflags" value=""/>
+		</antcall>
+	</target>
 </project>

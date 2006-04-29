@@ -90,6 +90,17 @@ public interface Controller {
     public abstract boolean poll();
 
     /**
+     * Initialized the controller event queue to a new size. Existing events
+	 * in the queue are lost.
+     */
+	public abstract void setEventQueueSize(int size);
+
+	/**
+	 * Get the device event queue
+	 */
+	public abstract EventQueue getEventQueue();
+
+    /**
      * Returns the port type for this Controller.
      */
     public abstract PortType getPortType();
@@ -129,76 +140,65 @@ public interface Controller {
         }
         
          /**
-         * Mouse controller.
+         * Unkown controller type.
          */
-        public static final Type UNKNOWN = new Type("unknown");
+        public static final Type UNKNOWN = new Type("Unknown");
         
         /**
          * Mouse controller.
          */
-        public static final Type MOUSE = new Type("mouse");
+        public static final Type MOUSE = new Type("Mouse");
 
-        /**
-         * A mouse ball or the ball part of a trackball controller.
-         * Note that a mouse wheel is considered part of a ball controller.
-         */
-        public static final Type BALL = new Type("ball");
-
-        /**
-         * A group of buttons on a pad (mouse buttons, for
-         * example) or a keyboard.
-         */
-        public static final Type BUTTONS = new Type("buttons");
         /**
          * A keyboard controller (same as BUTTONS)
          * @see #BUTTONS
          */
-        public static final Type KEYBOARD = BUTTONS;
+        public static final Type KEYBOARD = new Type("Keyboard");
         
         /**
          * Fingerstick controller; note that this may be sometimes treated as a
          * type of mouse or stick.
          */
-        public static final Type FINGERSTICK = new Type("fingerstick");
+        public static final Type FINGERSTICK = new Type("Fingerstick");
 
         /**
          * Gamepad controller.
          */
-        public static final Type GAMEPAD = new Type("gamepad");
+        public static final Type GAMEPAD = new Type("Gamepad");
 
         /**
          * Headtracker controller.
          */
-        public static final Type HEADTRACKER = new Type("headtracker");
+        public static final Type HEADTRACKER = new Type("Headtracker");
 
         /**
          * Rudder controller.
          */
-        public static final Type RUDDER = new Type("rudder");
+        public static final Type RUDDER = new Type("Rudder");
 
         /**
          * Stick controller, such as a joystick or flightstick.
          */
-        public static final Type STICK = new Type("stick");
+        public static final Type STICK = new Type("Stick");
 
         /**
          * A trackball controller; note that this may sometimes be treated as a
          * type of mouse.
          */
-        public static final Type TRACKBALL = new Type("trackball");
+        public static final Type TRACKBALL = new Type("Trackball");
 
         /**
          * A trackpad, such as a tablet, touchpad, or glidepad;
          * note that this may sometimes be treated as a type of mouse.
          */
-        public static final Type TRACKPAD = new Type("trackpad");
+        public static final Type TRACKPAD = new Type("Trackpad");
 
         /**
          * A wheel controller, such as a steering wheel (note
-         * that a mouse wheel is considered part of a ball control, not a
+         * that a mouse wheel is considered part of a mouse, not a
          * wheel controller).
          */
-        public static final Type WHEEL = new Type("wheel");
+        public static final Type WHEEL = new Type("Wheel");
     } // class Controller.Type
     
     /**

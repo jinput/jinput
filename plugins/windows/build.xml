@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<project name="Direct Input Plugin" basedir="." default="all">
+    <target name="init">
+        <mkdir dir="classes"/>
+        <mkdir dir="bin"/>
+        <condition property="dx8" >
+            <os family="Windows" />
+        </condition>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac srcdir="src/java" destdir="classes" debug="true" deprecation="true" source="1.4" target="1.4">
+            <!-- To add something to the classpath: -->
+            <classpath>
+				<pathelement location="../../coreAPI/bin/jinput-core.jar"/>
+				<pathelement location="../../lib/jutils.jar"/>
+            </classpath>
+		</javac>
+	</target>
+
+    <target depends="init,compile" name="create_jniheaders">
+		<javah destdir="src/native/dx8">
+            <classpath>
+                <pathelement path="classes"/>
+                <pathelement location="../../coreAPI/classes"/>
+            </classpath>
+			<class name="net.java.games.input.IDirectInput"/>
+			<class name="net.java.games.input.IDirectInputDevice"/>
+			<class name="net.java.games.input.IDirectInputEffect"/>
+		</javah>
+		<javah destdir="src/native">
+            <classpath>
+                <pathelement path="classes"/>
+                <pathelement location="../../coreAPI/classes"/>
+            </classpath>
+			<class name="net.java.games.input.DummyWindow"/>
+		</javah>
+		<javah destdir="src/native/raw">
+            <classpath>
+                <pathelement path="classes"/>
+				<pathelement location="../../coreAPI/bin/jinput-core.jar"/>
+            </classpath>
+			<class name="net.java.games.input.RawInputEnvironmentPlugin"/>
+			<class name="net.java.games.input.RawInputEventQueue"/>
+			<class name="net.java.games.input.RawDevice"/>
+		</javah>
+	</target>
+
+    <target name="compile_native" depends="init,create_jniheaders" if="dx8">
+        <ant dir="src/native" target="compile"/>
+		<copy todir="bin">
+			<fileset dir="src/native" includes="*.dll"/>
+		</copy>
+    </target>
+
+    <target name="jar" depends="init,compile">
+        <jar jarfile="bin/dxinput.jar" compress="true" basedir="classes">
+            <include name="**/*.class"/>
+        </jar> 
+    </target>
+
+    <target name="all" depends="compile,compile_native,jar" description="Build everything.">
+    </target>
+
+    <target name="javadoc" depends="init" description="Javadoc for my API.">
+        <mkdir dir="apidocs"/>
+        <javadoc packagenames="net.*" 
+                 destdir="apidocs"
+                 additionalparam="-source 1.4">
+            <sourcepath>
+                <pathelement location="src/java"/>
+            </sourcepath>
+             <classpath>
+				 <pathelement location="../../bin/jinput-core.jar"/>
+				<pathelement location="../../lib/jutils.jar"/>
+            </classpath>
+        </javadoc>
+    </target>
+
+    <target name="clean" depends="init" description="Clean all build products.">
+		<delete dir="classes" failonerror="no"/>
+		<delete dir="bin" failonerror="no"/>
+		<delete dir="apidocs" failonerror="no"/>
+		<ant inheritAll="false" antfile="src/native/build.xml" target="clean"/>
+    </target>
+</project>

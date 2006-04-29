@@ -9,23 +9,19 @@
     <target depends="init" name="compile">
         <javac debug="true" deprecation="true" destdir="classes" source="1.4" target="1.4" srcdir="src">
             <classpath>
-                <pathelement location="../../coreAPI/bin/jinput.jar"/>
-                <pathelement location="../../coreAPI/lib/jutils.jar"/>
+                <pathelement location="../../coreAPI/bin/jinput-core.jar"/>
+                <pathelement location="../../lib/jutils.jar"/>
             </classpath>
         </javac>
     </target>
 
     <target depends="init,compile" name="jar">
         <jar jarfile="bin/awtinput.jar" compress="true" basedir="classes">
-            <exclude name="**/*.java"/>
-            <exclude name="awtinput.jar"/>
-            <exclude name="apidoc"/>
+            <include name="**/*.class"/>
         </jar> 
-        <copy file="bin/awtinput.jar" todir="../../coreAPI/src/tests/controller" />
     </target>
 
     <target depends="jar" description="Build everything." name="all">
-        <echo message="Application built."/>
     </target>
 
     <target name="javadoc" depends="init" description="Javadoc for AWT plugin for JInput.">
@@ -38,21 +34,18 @@
                 <pathelement location="src"/>
             </sourcepath>
              <classpath>
-                <pathelement location="../../coreAPI/bin/jinput.jar"/>
-                <pathelement location="../../coreAPI/lib/jutils.jar"/>
+                <pathelement location="../../coreAPI/bin/jinput-core.jar"/>
+                <pathelement location="../../lib/jutils.jar"/>
             </classpath>
         </javadoc>
     </target>
 
     <target description="Clean all build products." name="clean">
         <delete failonerror="no">
-            <fileset dir="classes">
-                <include name="**/*.class"/>
-            </fileset>
+			<fileset dir="classes"/>
         </delete>
-        <delete file="bin/awtinput.jar" failonerror="no"/>
-        <delete file="../../coreAPI/src/tests/controller/awtinput.jar" failonerror="no" />
-        <delete file="apidoc" failonerror="no"/>
+        <delete dir="bin/awtinput.jar" failonerror="no"/>
+        <delete dir="apidoc" failonerror="no"/>
     </target>
 
 </project>

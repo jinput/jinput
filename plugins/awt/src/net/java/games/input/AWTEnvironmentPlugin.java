@@ -31,24 +31,16 @@ import net.java.games.util.plugins.Plugin;
 
 /**
  * @author Jeremy
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * @author elias
  */
 public class AWTEnvironmentPlugin extends ControllerEnvironment implements Plugin {
-    
-    /** The two controllers */
-    private Controller[] controllers = new Controller[2];
+    private final Controller[] controllers;
 
-    /* (non-Javadoc)
-     * @see net.java.games.input.ControllerEnvironment#getControllers()
-     */
+	public AWTEnvironmentPlugin() {
+		this.controllers = new Controller[]{new AWTKeyboard(), new AWTMouse()};
+	}
+
     public Controller[] getControllers() {
-        if((controllers[0] == null) && (controllers[1] == null)) {
-            controllers[0] = new AWTKeyboard("AWTKeyboard");
-            controllers[1] = new AWTMouse("AWTMouse");
-        }
         return controllers;
     }
-
 }

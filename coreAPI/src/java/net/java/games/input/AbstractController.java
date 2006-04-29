@@ -38,27 +38,22 @@
  *****************************************************************************/
 package net.java.games.input;
 
+import java.util.Map;
+import java.util.List;
+import java.util.HashMap;
+import java.util.ArrayList;
+
+import java.io.IOException;
+
 /**
  * An AbstractController is a skeleton implementation of a controller that
  * contains a fixed number of axes, controllers, and rumblers.
  */
 public abstract class AbstractController implements Controller {
-
-    /**
-     * Null array representing no axes
-     */
-    protected static final Component[] NO_COMPONENTS = {};
-    
-    /**
-     * Null array representing no child controllers
-     */
-    protected static final Controller[] NO_CONTROLLERS = {};
-    
-    /**
-     * Null array representing no rumblers
-     */
-    protected static final Rumbler[] NO_RUMBLERS = {};
-    
+	final static int EVENT_QUEUE_DEPTH = 32;
+	
+	private final static Event event = new Event();
+	
     /**
      * Human-readable name for this Controller
      */
@@ -67,26 +62,24 @@ public abstract class AbstractController implements Controller {
     /**
      * Array of components
      */
-    protected Component[] components;
+    private final Component[] components;
     
     /**
      * Array of child controllers
      */
-    protected Controller[] children;
+    private final Controller[] children;
     
     /**
      * Array of rumblers
      */
-    protected Rumbler[] rumblers;
-    
-    /**
-     * Protected constructor for a controller; initially contains no axes,
-     * child controllers, or rumblers.
-     * @param name The name for the controller
-     */
-    protected AbstractController(String name) {
-        this(name, NO_COMPONENTS, NO_CONTROLLERS, NO_RUMBLERS);
-    }
+    private final Rumbler[] rumblers;
+
+	/**
+	 * Map from Component.Identifiers to Components
+	 */
+	private final Map id_to_components = new HashMap();
+
+	private EventQueue event_queue = new EventQueue(EVENT_QUEUE_DEPTH);
     
     /**
      * Protected constructor for a controller containing the specified
@@ -96,21 +89,24 @@ public abstract class AbstractController implements Controller {
      * @param children child controllers for the controller
      * @param rumblers rumblers for the controller
      */
-    protected AbstractController(String name, Component[] components,
-        Controller[] children, Rumbler[] rumblers) {
+    protected AbstractController(String name, Component[] components, Controller[] children, Rumbler[] rumblers) {
         this.name = name;
         this.components = components;
         this.children = children;
         this.rumblers = rumblers;
-    }
-    
+		// process from last to first to let earlier listed Components get higher priority
+		for (int i = components.length - 1; i >= 0; i--) {
+			id_to_components.put(components[i].getIdentifier(), components[i]);
+		}
+	}
+
     /**
      * Returns the controllers connected to make up this controller, or
      * an empty array if this controller contains no child controllers.
      * The objects in the array are returned in order of assignment priority
      * (primary stick, secondary buttons, etc.).
      */
-    public Controller[] getControllers() {
+    public final Controller[] getControllers() {
         return children;
     }
 
@@ -123,35 +119,23 @@ public abstract class AbstractController implements Controller {
      * The array returned is an empty array if this controller contains no components
      * (such as a logical grouping of child controllers).
      */
-    public Component[] getComponents() {
+    public final Component[] getComponents() {
         return components;
     }
 
     /**
      * Returns a single component based on its identifier, or null
      * if no component with the specified type could be found.
-     * By default, AbstractController calls getComponents in this method so that
-     * subclasses may lazily initialize the array of components, if necessary.
      */
-    public Component getComponent(Component.Identifier id) {
-        // Calls getAxes() so that subclasses may lazily set the array of axes.
-        Component[] components = getComponents();
-        if (components.length == 0) {
-            return null;
-        }
-        for (int i = 0; i < components.length; i++) {
-            if (components[i].getIdentifier() == id) {
-                return components[i];
-            }
-        }
-        return null;
+    public final Component getComponent(Component.Identifier id) {
+		return (Component)id_to_components.get(id);
     }
 
     /**
      * Returns the rumblers for sending feedback to this controller, or an
      * empty array if there are no rumblers on this controller.
      */
-    public Rumbler[] getRumblers() {
+    public final Rumbler[] getRumblers() {
         return rumblers;
     }
 
@@ -174,7 +158,7 @@ public abstract class AbstractController implements Controller {
     /**
      * Returns a human-readable name for this Controller.
      */
-    public String getName() {
+    public final String getName() {
         return name;
     }
     
@@ -190,5 +174,68 @@ public abstract class AbstractController implements Controller {
     public Type getType() {
         return Type.UNKNOWN;
     }
-    
+
+    /**
+     * Creates a new EventQueue. Events in old queue are lost.
+     */
+	public final void setEventQueueSize(int size) {
+		try {
+			setDeviceEventQueueSize(size);
+			event_queue = new EventQueue(size);
+		} catch (IOException e) {
+			ControllerEnvironment.logln("Failed to create new event queue of size " + size + ": " + e);
+		}
+	}
+
+	/**
+	 * Plugins override this method to adjust their internal event queue size
+	 */
+	protected void setDeviceEventQueueSize(int size) throws IOException {
+	}
+
+	public final EventQueue getEventQueue() {
+		return event_queue;
+	}
+
+	protected abstract boolean getNextDeviceEvent(Event event) throws IOException;
+
+	protected void pollDevice() throws IOException {
+	}
+
+	/* poll() is synchronized to protect the static event */
+	public synchronized boolean poll() {
+		Component[] components = getComponents();
+		try {
+			pollDevice();
+			for (int i = 0; i < components.length; i++) {
+				AbstractComponent component = (AbstractComponent)components[i];
+				if (component.isRelative()) {
+					component.setPollData(0);
+				} else {
+					float value = component.poll();
+					component.setPollData(value);
+				}
+			}
+			while (getNextDeviceEvent(event)) {
+				AbstractComponent component = (AbstractComponent)event.getComponent();
+				float value = event.getValue();
+				if (component.isRelative()) {
+					if (value == 0)
+						continue;
+					component.setPollData(component.getPollData() + value);
+				} else {
+					if (value == component.getEventValue())
+						continue;
+					component.setEventValue(value);
+				}
+				if (!event_queue.isFull())
+					event_queue.add(event);
+			}
+			return true;
+		} catch (IOException e) {
+			ControllerEnvironment.logln("Failed to poll device: " + e.getMessage());
+			return false;
+		}
+	} 
+	
 } // class AbstractController

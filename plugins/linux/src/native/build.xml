@@ -6,50 +6,43 @@
 <!-- The idea is that both Ant and NetBeans have to know what the package root is -->
 <!-- for the classes in your application. -->
 <project name="JInput Linux port, Native code" basedir="." default="compileNativeJinputLib">
-
-    <!-- Don't worry if you don't know the Ant syntax completely or need help on some tasks! -->
-    <!-- The standard Ant documentation is bundled. See Help | Help Sets | Ant 1.4.1 Manual. -->
-
+	<property name="libname" value="libjinput-linux.so"/>
+	
     <target name="init">
-        <!-- You can set up any variables you want used throughout the script here. -->
-        <!-- property name="hello" value="world"/-->
-        <!-- To use e.g. Jikes, uncomment this line. -->
-        <!-- (Or make the same change in Tools | Options | Ant Settings | Properties.) -->
-        <!-- <property name="build.compiler" value="jikes"/> -->
-        <!-- You might like to set up some overridable paths, etc.: -->
-        <!-- <property name="mylib" value="../lib/mylib.jar"/> -->
-        <mkdir dir="build"/>
-        <mkdir dir="apidoc"/>
-    </target>
-    
-    <target name="createNativeDefinitions.java" depends="init">
-        <exec dir="." executable="./getDefinitions" os="Linux" output="../java/net/java/games/input/NativeDefinitions.java">
-            <arg line="/usr/include/linux/input.h"/>
-        </exec>
-    </target>
+	</target>
 
-    <target name="createJNIHeaders" depends="init">
-        <javah>
-            <classpath>
-                <pathelement path="."/>
-                <pathelement location="jinput.jar"/>
-            </classpath>
-            <class name="net.java.games.input.LinuxDevice"/>
-            <class name="net.java.games.input.LinuxEnvironmentPlugin"/>
-            <class name="net.java.games.input.LinuxKeyboard"/>
-        </javah>
-    </target>
+	<target depends="init" name="createNativeDefinitions.java">
+		<exec dir="." executable="gawk" os="Linux" output="../java/net/java/games/input/NativeDefinitions.java">
+			<arg line="-f"/>
+			<arg line="getDefinitions"/>
+			<arg line="/usr/include/linux/input.h"/>
+		</exec>
+	</target>
 
-    <target name="compileNativeEventLib" depends="init">
-        <exec dir="." executable="g++" os="Linux">
-            <arg line="--shared -DLOGTRACE -o libeventInterface.so eventInterface.cpp EventDevice.cpp"/>
-        </exec>
-    </target>
-
+	<target name="clean">
+		<delete>
+			<fileset dir="." includes="*.o"/>
+			<fileset file="${libname}"/>
+		</delete>
+	</target>
+	
     <target name="compileNativeJinputLib" depends="init">
-        <exec dir="." executable="g++" os="Linux">
-            <arg line="-I${java.home}/include -I${java.home}/include/linux -I${java.home}/../include -I${java.home}/../include/linux --shared -DLOGTRACE -o libjinput-linux.so jinput.cpp eventInterface.cpp EventDevice.cpp joystickInterface.cpp JoystickDevice.cpp MixedDevice.cpp"/>
-        </exec>
+		<apply dir="." executable="cc" os="Linux" dest="." skipemptyfilesets="true" failonerror="true">
+			<arg line="-O2 -Wall -c -fPIC"/>
+			<arg value="-I${java.home}/include"/>
+			<arg value="-I${java.home}/include/linux"/>
+			<arg value="-I../../../common/src/native"/>
+			<mapper type="glob" from="*.c" to="*.o"/>
+			<fileset dir="." includes="*.c"/>
+			<fileset dir="../../../common/src/native" includes="*.c"/>
+		</apply>
+		<apply dir="." parallel="true" executable="cc" os="Linux" failonerror="true">
+			<arg line="-shared -O2 -Wall -o ${libname}"/>
+			<fileset dir="." includes="*.o"/>
+		</apply>
+		<apply dir="." parallel="true" executable="strip" os="Linux" failonerror="true">
+			<fileset file="${libname}"/>
+		</apply>
     </target>
 </project>
 

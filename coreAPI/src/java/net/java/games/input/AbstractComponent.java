@@ -38,6 +38,8 @@
  *****************************************************************************/
 package net.java.games.input;
 
+import java.io.IOException;
+
 /**
  * Skeleton implementation of a named axis.
  */
@@ -46,17 +48,12 @@ public abstract class AbstractComponent implements Component {
     /**
      * Human-readable name for this Axis
      */
-    protected String name;
+    private final String name;
     
-    /**
-     * Identifier for the axis
-     */
-    protected Identifier id;
-    
-    /**
-     * Whether this axis is ready to receive polling data
-     */
-    private boolean polling;
+    private final Identifier id;
+
+	private float value;
+	private float event_value;
     
     /**
      * Protected constructor
@@ -65,7 +62,6 @@ public abstract class AbstractComponent implements Component {
     protected AbstractComponent(String name, Identifier id) {
         this.name = name;
         this.id = id;
-        this.polling = true;
     }
         
     /**
@@ -81,30 +77,6 @@ public abstract class AbstractComponent implements Component {
      */
     public boolean isAnalog() {
         return false;
-    }
-
-    /**
-     * Returns whether or not data polled from this axis is normalized
-     * between the values of -1.0f and 1.0f.
-     * @return true by default, can be overridden
-     */
-    public boolean isNormalized() {
-        return true;
-    }
-
-    /**
-     * Returns whether or not this axis is ready to receive polling data.
-     * By default, an abstract axis is set to receive polling data.
-     */
-    public boolean isPolling() {
-        return polling;
-    }
-
-    /**
-     * Sets whether or not the axis should receive polling data.
-     */
-    public void setPolling(boolean polling) {
-        this.polling = polling;
     }
 
     /**
@@ -125,10 +97,22 @@ public abstract class AbstractComponent implements Component {
      * 1.0f.
      * @return 0.0f by default, can be overridden
      */
-    public float getPollData() {
-        return 0.0f;
+    public final float getPollData() {
+        return value;
     }
 
+    final void setPollData(float value) {
+        this.value = value;
+    }
+ 
+    final float getEventValue() {
+        return event_value;
+    }
+
+    final void setEventValue(float event_value) {
+        this.event_value = event_value;
+    }
+ 
     /**
      * Returns a human-readable name for this axis.
      */
@@ -142,12 +126,7 @@ public abstract class AbstractComponent implements Component {
     public String toString() {
         return name;
     }
+
+	protected abstract float poll() throws IOException;
     
-    /**
-     * Changes the name of this Axis.  This should be done only during
-     * initialization of the axis so that its name remains immutable.
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
 } // AbstractAxis
