@@ -144,11 +144,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 						ControllerEnvironment ce = (ControllerEnvironment) ceClass.newInstance();
 						addControllers(ce.getControllers());
 					}
-				} catch (InstantiationException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
+				} catch (Throwable e) {
 					e.printStackTrace();
 				}
 			}

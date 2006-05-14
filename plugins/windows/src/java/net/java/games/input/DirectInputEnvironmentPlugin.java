@@ -102,6 +102,8 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 		for (int i = 0; i < device_objects.size(); i++) {
 			DIDeviceObject device_object = (DIDeviceObject)device_objects.get(i);
 			Component.Identifier identifier = device_object.getIdentifier();
+			if (identifier == null)
+				continue;
 			if (map_mouse_buttons && identifier instanceof Component.Identifier.Button) {
 				identifier = DIIdentifierMap.mapMouseButtonIdentifier((Component.Identifier.Button)identifier);
 			}
