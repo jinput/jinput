@@ -273,6 +273,11 @@ public interface Component {
              */
             public static final Axis POV = new Axis("pov");
 
+            /**
+             * An unknown axis.
+             */
+            public static final Axis UNKNOWN = new Axis("unknown");
+
         }
         
         public static class Button extends Identifier {

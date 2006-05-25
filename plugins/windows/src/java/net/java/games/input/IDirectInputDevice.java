@@ -472,7 +472,7 @@ final class IDirectInputDevice {
 			case IDirectInputDevice.GUID_Button:
 				return getNextButtonIdentifier();
 			default:
-				return null;
+				return Component.Identifier.Axis.UNKNOWN;
 		}
 	}
 	
