@@ -1,8 +1,3 @@
-/*
- * ConrtollerReadTest.java
- *
- * Created on May 5, 2003, 3:15 PM
- */
 /*****************************************************************************
  * Copyright (c) 2003 Sun Microsystems, Inc.  All Rights Reserved.
  * Redistribution and use in source and binary forms, with or without
@@ -44,6 +39,8 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -53,9 +50,11 @@ import javax.swing.JScrollPane;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
+import net.java.games.input.EventQueue;
+import net.java.games.input.Event;
 
-public class ControllerReadTest extends JFrame{
-	private abstract static class AxisPanel extends JPanel{
+public class ControllerEventTest extends JFrame{
+	private static abstract class AxisPanel extends JPanel{
 		Component axis;
 		float data;
 
@@ -66,8 +65,8 @@ public class ControllerReadTest extends JFrame{
 					BorderLayout.NORTH);
 		}
 
-		public void poll(){
-			data = axis.getPollData();
+		public void setPollData(float data){
+			this.data = data;
 			renderData();
 		}
 
@@ -165,7 +164,7 @@ public class ControllerReadTest extends JFrame{
 
 	private static class ControllerWindow extends JFrame {
 		Controller ca;
-		List axisList = new ArrayList();
+		Map axes_to_panels = new HashMap();
 		boolean disabled = false;
 
 		public ControllerWindow(JFrame frame,Controller ca){
@@ -218,8 +217,7 @@ public class ControllerReadTest extends JFrame{
 				}
 			}
 			p.add(p2);
-			axisList.add(p2);
-			//ax.setPolling(true);
+			axes_to_panels.put(ax, p2);
 		}
 
 		public void poll(){
@@ -232,13 +230,11 @@ public class ControllerReadTest extends JFrame{
 			if (disabled()){
 				setDisabled(false);
 			}
-			//System.out.println("Polled "+ca.getName());
-			for(Iterator i =axisList.iterator();i.hasNext();){
-				try {
-					((AxisPanel)i.next()).poll();
-				}catch (Exception e) {
-					e.printStackTrace();
-				}
+			EventQueue event_queue = ca.getEventQueue();
+			Event event = new Event();
+			while (event_queue.getNextEvent(event)) {
+				AxisPanel panel = (AxisPanel)axes_to_panels.get(event.getComponent());
+				panel.setPollData(event.getValue());
 			}
 		}
 	}
@@ -246,8 +242,8 @@ public class ControllerReadTest extends JFrame{
 	static final long HEARTBEATMS =100; // 10th of a second
 	List controllers = new ArrayList();
 
-	public ControllerReadTest() {
-		super("Controller Read Test");
+	public ControllerEventTest() {
+		super("Controller Event Test");
 		ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment();
 		Controller[] ca = ce.getControllers();
 		for(int i =0;i<ca.length;i++){
@@ -298,7 +294,7 @@ public class ControllerReadTest extends JFrame{
 	 * @param args the command line arguments
 	 */
 	public static void main(String[] args) {
-		new ControllerReadTest().setVisible(true);
+		new ControllerEventTest().setVisible(true);
 	}
 
 }

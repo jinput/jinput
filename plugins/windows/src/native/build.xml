@@ -48,7 +48,7 @@
 	</target>
 
 	<target name="compile" depends="init">
-		<property name="program_files" location="c:\Program Files"/>
+		<property name="program_files" location="c:\Programmer"/>
 		<property name="dxhome" location="${program_files}\Microsoft DirectX SDK (February 2006)"/>
 		<property name="toolkithome" location="${program_files}\Microsoft Visual C++ Toolkit 2003"/>
 		<property name="rawlibs" value="Kernel32.lib User32.lib Setupapi.lib"/>

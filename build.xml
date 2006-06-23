@@ -45,6 +45,12 @@
 		</antcall>
 	</target>
 
+    <target name="eventtest" depends="init,all" description="Try running it.">
+		<antcall target="runtest">
+			<param name="mainclass" value="net.java.games.input.test.ControllerEventTest"/>
+		</antcall>
+	</target>
+
     <target name="rumbletest" depends="init,all" description="Try running it.">
 		<antcall target="runtest">
 			<param name="mainclass" value="net.java.games.input.test.RumbleTest"/>
