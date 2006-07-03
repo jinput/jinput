@@ -56,21 +56,7 @@ import java.security.PrivilegedAction;
 */
 public final class OSXEnvironmentPlugin extends ControllerEnvironment implements Plugin {
     static {
-		AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				if (isMacOSXEqualsOrBetterThan(10, 4)) {
-					System.loadLibrary("jinput-osx");
-				} else {
-					// If we're not on 10.4 or later, try to load the legacy library first
-					try {
-						System.loadLibrary("jinput-osx-legacy");
-					} catch (UnsatisfiedLinkError e) {
-						System.loadLibrary("jinput-osx");
-					}
-				}
-				return null;
-			}
-		});
+		DefaultControllerEnvironment.loadLibrary("jinput-osx");
     }
 
 	private final static boolean isMacOSXEqualsOrBetterThan(int major_required, int minor_required) {

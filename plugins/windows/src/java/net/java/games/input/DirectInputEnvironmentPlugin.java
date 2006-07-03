@@ -53,13 +53,7 @@ import net.java.games.util.plugins.Plugin;
  */
 public final class DirectInputEnvironmentPlugin extends ControllerEnvironment implements Plugin {
 	static {
-		AccessController.doPrivileged(
-				new PrivilegedAction() {
-					public final Object run() {
-						System.loadLibrary("jinput-dx8");
-						return null;
-					}
-				});
+		DefaultControllerEnvironment.loadLibrary("jinput-dx8");
 	}
 
 	private final Controller[] controllers;

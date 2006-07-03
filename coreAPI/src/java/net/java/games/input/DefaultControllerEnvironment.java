@@ -92,6 +92,27 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
     private PluginClassLoader pluginLoader = new PluginClassLoader();
 	
 	private Collection loadedPlugins = new ArrayList();
+
+	/**
+	 * Static utility method for loading native libraries.
+	 * It will try to load from either the path given by
+	 * the net.java.games.input.librarypath property
+	 * or through System.loadLibrary().
+	 * 
+	 */
+	static void loadLibrary(final String lib_name) {
+		AccessController.doPrivileged(
+				new PrivilegedAction() {
+					public final Object run() {
+						String lib_path = System.getProperty("net.java.games.input.librarypath");
+						if (lib_path != null)
+							System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
+						else
+							System.loadLibrary(lib_name);
+						return null;
+					}
+				});
+	}
     
     /**
      * Public no-arg constructor.

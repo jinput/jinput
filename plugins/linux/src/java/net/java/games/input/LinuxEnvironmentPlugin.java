@@ -44,13 +44,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 	private final static LinuxDeviceThread device_thread = new LinuxDeviceThread();
     
 	static {
-		AccessController.doPrivileged(
-				new PrivilegedAction() {
-					public final Object run() {
-						System.loadLibrary("jinput-linux");
-						return null;
-					}
-				});
+		DefaultControllerEnvironment.loadLibrary("jinput-linux");
 	}
 
 	public final static Object execute(LinuxDeviceTask task) throws IOException {

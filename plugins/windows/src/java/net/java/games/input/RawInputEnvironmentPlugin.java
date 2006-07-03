@@ -53,13 +53,7 @@ import net.java.games.util.plugins.Plugin;
  */
 public final class RawInputEnvironmentPlugin extends ControllerEnvironment implements Plugin {
 	static {
-		AccessController.doPrivileged(
-				new PrivilegedAction() {
-					public final Object run() {
-						System.loadLibrary("jinput-raw");
-						return null;
-					}
-				});
+		DefaultControllerEnvironment.loadLibrary("jinput-raw");
 	}
 
 	private final Controller[] controllers;
