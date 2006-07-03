@@ -103,6 +103,9 @@
 				<include name="**/*.class"/>
 			</fileset>
 			<zipfileset src="lib/jutils.jar" includes="**/*.class"/>
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+			</manifest>
 		</jar>
 		<copy todir="dist">
 			<fileset file="coreAPI/bin/jinput-test.jar"/>
@@ -123,6 +126,9 @@
 				<include name="**/*.class"/>
 			</fileset>
 			<zipfileset src="lib/jutils.jar" includes="**/*.class"/>
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+			</manifest>
 		</jar>
 		<tar destfile="dist/jinput_linux.tgz" compression="gzip">
 			<tarfileset dir=".">
@@ -143,6 +149,9 @@
 				<include name="**/*.class"/>
 			</fileset>
 			<zipfileset src="lib/jutils.jar" includes="**/*.class"/>
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+			</manifest>
 		</jar>
 		<zip destfile="dist/jinput_windows.zip">
 			<zipfileset dir=".">
@@ -163,6 +172,9 @@
 				<include name="**/*.class"/>
 			</fileset>
 			<zipfileset src="lib/jutils.jar" includes="**/*.class"/>
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+			</manifest>
 		</jar>
 		<tar destfile="dist/jinput_osx.tgz" compression="gzip">
 			<tarfileset dir=".">
