@@ -58,6 +58,19 @@ JNIEXPORT void JNICALL Java_net_java_games_input_RawInputEventQueue_nRegisterDev
 	int i;
 	HWND hwnd = (HWND)(INT_PTR)hwnd_addr;
 
+/*	res = GetRegisteredRawInputDevices(NULL, &num_devices, sizeof(RAWINPUTDEVICE));
+	if (num_devices > 0) {
+		devices = (RAWINPUTDEVICE *)malloc(num_devices*sizeof(RAWINPUTDEVICE));
+		res = GetRegisteredRawInputDevices(devices, &num_devices, sizeof(RAWINPUTDEVICE));
+		if (res == -1) {
+			throwIOException(env, "Failed to get registered raw devices (%d)\n", GetLastError());
+			return;
+		}
+		for (i = 0; i < num_devices; i++) {
+			printfJava(env, "from windows: registered: %d %d %p (of %d)\n", devices[i].usUsagePage, devices[i].usUsage, devices[i].hwndTarget, num_devices);
+		}
+		free(devices);
+	}*/
 	device_info_class = (*env)->FindClass(env, "net/java/games/input/RawDeviceInfo");
 	if (device_info_class == NULL)
 		return;
@@ -98,22 +111,6 @@ JNIEXPORT void JNICALL Java_net_java_games_input_RawInputEventQueue_nRegisterDev
 	free(devices);
 	if (!res)
 		throwIOException(env, "Failed to register raw devices (%d)\n", GetLastError());
-
-/*
-
-
-	
-	res = GetRegisteredRawInputDevices(NULL, &num_devices, sizeof(RAWINPUTDEVICE));
-	devices = (RAWINPUTDEVICE *)malloc(num_devices*sizeof(RAWINPUTDEVICE));
-	res = GetRegisteredRawInputDevices(devices, &num_devices, sizeof(RAWINPUTDEVICE));
-	if (res == -1) {
-		throwIOException(env, "Failed to get registered raw devices (%d)\n", GetLastError());
-		return;
-	}
-	for (i = 0; i < num_devices; i++) {
-printfJava(env, "from windows: registered: %d %d %p (of %d)\n", devices[i].usUsagePage, devices[i].usUsage, devices[i].hwndTarget, num_devices);
-	}
-	free(devices);*/
 }
 
 JNIEXPORT void JNICALL Java_net_java_games_input_RawInputEventQueue_nPoll(JNIEnv *env, jobject self, jlong hwnd_handle) {
@@ -135,21 +132,26 @@ JNIEXPORT void JNICALL Java_net_java_games_input_RawInputEventQueue_nPoll(JNIEnv
 	if (addKeyboardEvent_method == NULL)
 		return;
 	if (GetMessage(&msg, hwnd, 0, 0) != 0) {
-		if (msg.message != WM_INPUT)
+		if (msg.message != WM_INPUT) {
+			DefWindowProc(hwnd, msg.message, msg.wParam, msg.lParam);
 			return; // ignore it
-		time = GetMessageTime();
+		}
+		time = msg.time;
 		if (GetRawInputData((HRAWINPUT)msg.lParam, RID_INPUT, NULL, &input_size, sizeof(RAWINPUTHEADER)) == (UINT)-1) {
 			throwIOException(env, "Failed to get raw input data size (%d)\n", GetLastError());
+			DefWindowProc(hwnd, msg.message, msg.wParam, msg.lParam);
 			return;
 		}
 		input_data = (RAWINPUT *)malloc(input_size);
 		if (input_data == NULL) {
 			throwIOException(env, "Failed to allocate input data buffer\n");
+			DefWindowProc(hwnd, msg.message, msg.wParam, msg.lParam);
 			return;
 		}
 		if (GetRawInputData((HRAWINPUT)msg.lParam, RID_INPUT, input_data, &input_size, sizeof(RAWINPUTHEADER)) == (UINT)-1) {
 			free(input_data);
 			throwIOException(env, "Failed to get raw input data (%d)\n", GetLastError());
+			DefWindowProc(hwnd, msg.message, msg.wParam, msg.lParam);
 			return;
 		}
 		switch (input_data->header.dwType) {
@@ -164,5 +166,6 @@ JNIEXPORT void JNICALL Java_net_java_games_input_RawInputEventQueue_nPoll(JNIEnv
 				break;
 		}
 		free(input_data);
+		DefWindowProc(hwnd, msg.message, msg.wParam, msg.lParam);
 	}		
 }
