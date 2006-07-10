@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 
 <project name="JInput dx8 port, Native code" basedir="." default="compile">
-    <target name="init">
-	</target>
+	<property environment="env"/>
+	<property name="dxhome" location="${env.DXSDK_DIR}"/>
+	<property name="sdkhome" location="${env.MSSDk}"/>
 
-	<target name="compile_dir" depends="init">
+	<target name="compile_dir">
 		<echo message="${compiledir}"/>
 		<apply dir="${compiledir}" failonerror="true" executable="cl" dest="${compiledir}" skipemptyfilesets="true">
 			<arg line="/Ox /Wp64 /W2 /nologo /c"/>
-			<arg value="/I${toolkithome}\include"/>
 			<arg value="/I${sdkhome}\include"/>
 			<arg value="/I${dxhome}\include"/>
 			<arg value="/I${java.home}\..\include"/>
@@ -30,7 +30,6 @@
 			<arg value="/LIBPATH:${java.home}\lib"/>
 			<arg value="/LIBPATH:${dxhome}\lib\x86"/>
 			<arg value="/LIBPATH:${sdkhome}\lib"/>
-			<arg value="/LIBPATH:${toolkithome}\lib"/>
 			<arg line="/DLL ${libs}"/>
 			<fileset dir="${commonhome}/src/native" includes="*.obj"/>
 			<fileset dir="." includes="*.obj"/>
@@ -47,13 +46,9 @@
 		</delete>
 	</target>
 
-	<target name="compile" depends="init">
-		<property name="program_files" location="c:\Programmer"/>
-		<property name="dxhome" location="${program_files}\Microsoft DirectX SDK (February 2006)"/>
-		<property name="toolkithome" location="${program_files}\Microsoft Visual C++ Toolkit 2003"/>
+	<target name="compile">
 		<property name="rawlibs" value="Kernel32.lib User32.lib Setupapi.lib"/>
 		<property name="dx8libs" value="Kernel32.lib dinput8.lib dxguid.lib User32.lib"/>
-		<property name="sdkhome" location="${program_files}\Microsoft Platform SDK"/>
 		<property name="commonhome" location="../../../common"/>
 		<property name="dx8dllname" value="jinput-dx8.dll"/>
 		<property name="rawdllname" value="jinput-raw.dll"/>
