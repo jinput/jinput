@@ -66,7 +66,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 
     public LinuxEnvironmentPlugin() {
 		this.controllers = enumerateControllers();
-        System.out.println("Linux plugin claims to have found " + controllers.length + " controllers");
+        ControllerEnvironment.logln("Linux plugin claims to have found " + controllers.length + " controllers");
 		AccessController.doPrivileged(
 				new PrivilegedAction() {
 					public final Object run() {
