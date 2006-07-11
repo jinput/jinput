@@ -6,12 +6,10 @@
 <!-- The idea is that both Ant and NetBeans have to know what the package root is -->
 <!-- for the classes in your application. -->
 <project name="JInput Linux port, Native code" basedir="." default="compileNativeJinputLib">
-	<property name="libname" value="libjinput-linux.so"/>
+	<property name="libname64" value="libjinput-linux64.so"/>
+	<property name="libname32" value="libjinput-linux.so"/>
 	
-    <target name="init">
-	</target>
-
-	<target depends="init" name="createNativeDefinitions.java">
+	<target name="createNativeDefinitions.java">
 		<exec dir="." executable="gawk" os="Linux" output="../java/net/java/games/input/NativeDefinitions.java">
 			<arg line="-f"/>
 			<arg line="getDefinitions"/>
@@ -22,11 +20,17 @@
 	<target name="clean">
 		<delete>
 			<fileset dir="." includes="*.o"/>
-			<fileset file="${libname}"/>
+			<fileset dir="." includes="*.so"/>
 		</delete>
 	</target>
 	
-    <target name="compileNativeJinputLib" depends="init">
+    <target name="compileNativeJinputLib">
+		<exec executable="uname" outputproperty="hwplatform">
+			<arg value="-i"/>
+		</exec>
+		<condition property="libname" value="${libname64}" else="${libname32}">
+			<equals arg1="${hwplatform}" arg2="x86_64"/>
+		</condition>
 		<apply dir="." executable="cc" os="Linux" dest="." skipemptyfilesets="true" failonerror="true">
 			<arg line="-O2 -Wall -c -fPIC"/>
 			<arg value="-I${java.home}/include"/>

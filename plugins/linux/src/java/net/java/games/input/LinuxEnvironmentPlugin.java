@@ -39,12 +39,25 @@ import java.security.PrivilegedAction;
  * @author Jeremy Booth (jeremy@newdawnsoftware.com)
  */
 public final class LinuxEnvironmentPlugin extends ControllerEnvironment implements Plugin {
+	private final static String LIBNAME = "jinput-linux";
+	private final static String POSTFIX64BIT = "64";
+	
     private final Controller[] controllers;
 	private final List devices = new ArrayList();
 	private final static LinuxDeviceThread device_thread = new LinuxDeviceThread();
     
 	static {
-		DefaultControllerEnvironment.loadLibrary("jinput-linux");
+		try {
+			DefaultControllerEnvironment.loadLibrary(LIBNAME);
+		} catch (UnsatisfiedLinkError e) {
+			try {
+				DefaultControllerEnvironment.loadLibrary(LIBNAME + POSTFIX64BIT);
+			} catch (UnsatisfiedLinkError e2) {
+				ControllerEnvironment.logln("Failed to load 64 bit library: " + e2.getMessage());
+				// throw original error
+				throw e;
+			}
+		}
 	}
 
 	public final static Object execute(LinuxDeviceTask task) throws IOException {
