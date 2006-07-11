@@ -64,6 +64,8 @@
     
     <target depends="init,createJNIHeaders" name="compileNativeJinputLib" if="linux">
         <ant dir="src/native" target="compileNativeJinputLib"/>
-        <copy file="src/native/libjinput-linux.so" todir="bin" />
+        <copy todir="bin">
+ 	       <fileset dir="src/native" includes="libjinput-linux*.so"/>
+	   </copy>
     </target>
 </project>
