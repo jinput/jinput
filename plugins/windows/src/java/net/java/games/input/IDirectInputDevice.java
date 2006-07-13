@@ -124,6 +124,7 @@ final class IDirectInputDevice {
 	public final static int DI_OK					= 0x00000000;
 	public final static int DI_NOEFFECT				= 0x00000001;
 	public final static int DI_PROPNOEFFECT			= 0x00000001;
+	public final static int DI_POLLEDDEVICE			= 0x00000002;
 
 	public final static int DI_DOWNLOADSKIPPED			  = 0x00000003;
 	public final static int DI_EFFECTRESTARTED			  = 0x00000004;
@@ -480,7 +481,7 @@ final class IDirectInputDevice {
 		checkReleased();
 		unacquire();
 		int res = nSetBufferSize(address, size);
-		if (res != DI_OK && res != DI_PROPNOEFFECT)
+		if (res != DI_OK && res != DI_PROPNOEFFECT && res != DI_POLLEDDEVICE)
 			throw new IOException("Failed to set buffer size (" + Integer.toHexString(res) + ")");
 		queue = new DataQueue(size, DIDeviceObjectData.class);
 		queue.position(queue.limit());
