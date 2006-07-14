@@ -57,20 +57,6 @@ import net.java.games.util.plugins.*;
  * @author Michael Martak
  */
 class DefaultControllerEnvironment extends ControllerEnvironment {
-    static final boolean DEBUG =false;
-    /**
-     * The name of the properties file to find plugins.
-     */
-    private final static String PROPERTY_FILENAME =
-        "controller.properties";
-    
-    /**
-     * The name of the property for identifying a plugin (used
-     * as the value, the key being the class name).
-     */
-    private final static String ID_PLUGIN =
-        "ControllerEnvironment";
-    
     /**
      * Location of the LIB directory.
      */
@@ -81,16 +67,6 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
      */
     private ArrayList controllers;
     
-    /**
-     * Plug-in properties.
-     */
-    private Properties properties = new Properties();
-    
-    /**
-     * Plug-in class loader.
-     */
-    private PluginClassLoader pluginLoader = new PluginClassLoader();
-	
 	private Collection loadedPlugins = new ArrayList();
 
 	/**
@@ -120,6 +96,22 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
     public DefaultControllerEnvironment() {
     }
     
+	private static String getPrivilegedProperty(final String property) {
+       return (String)AccessController.doPrivileged(new PrivilegedAction() {
+                public Object run() {
+                    return System.getProperty(property);
+                }
+            });
+	}
+	
+	private static String getPrivilegedProperty(final String property, final String default_value) {
+       return (String)AccessController.doPrivileged(new PrivilegedAction() {
+                public Object run() {
+                    return System.getProperty(property, default_value);
+                }
+            });
+	}
+	
     /**
      * Returns a list of all controllers available to this environment,
      * or an empty array if there are no controllers in this environment.
@@ -131,13 +123,13 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
             AccessController.doPrivileged(new PrivilegedAction() {
                 public Object run() {
                     scanControllers();
-                    return DefaultControllerEnvironment.this;
+                    return null;
                 }
             });
             //Check the properties for specified controller classes
-            String pluginClasses = System.getProperty("jinput.plugins", "") + " " + System.getProperty("net.java.games.input.plugins", "");
-			if(!System.getProperty("jinput.useDefaultPlugin", "true").toLowerCase().trim().equals("false") && !System.getProperty("net.java.games.input.useDefaultPlugin", "true").toLowerCase().trim().equals("false")) {
-				String osName = System.getProperty("os.name", "").trim();
+            String pluginClasses = getPrivilegedProperty("jinput.plugins", "") + " " + getPrivilegedProperty("net.java.games.input.plugins", "");
+			if(!getPrivilegedProperty("jinput.useDefaultPlugin", "true").toLowerCase().trim().equals("false") && !getPrivilegedProperty("net.java.games.input.useDefaultPlugin", "true").toLowerCase().trim().equals("false")) {
+				String osName = getPrivilegedProperty("os.name", "").trim();
 				if(osName.equals("Linux")) {
 					pluginClasses = pluginClasses + " net.java.games.input.LinuxEnvironmentPlugin";
 				} else if(osName.equals("Mac OS X")) {
@@ -180,53 +172,16 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
         return ret;
     }
     
-    /**
-     * Scans for controllers, placing them in the controllers list.
-     */
-    /*  This is Mike's old plugin code.
-    private void scanControllers() {
-        // Load properties object.
-        try {
-            loadProperties();
-        } catch (IOException e) {
-            // Could not find or read file, simply return.
-            return;
-        }
-        // Create a list of ControllerEnvironment classes.
-        // For each ControllerEnvironment, locate the class
-        // using the plugin class loader.
-        Iterator it = properties.keySet().iterator();
-        while (it.hasNext()) {
-            Object key = it.next();
-            assert key != null;
-            Object value = properties.get(key);
-            assert value != null;
-            if (value.equals(ID_PLUGIN)) {
-                try {
-                    ControllerEnvironment plugin =
-                        newPlugin(key.toString());
-                        addControllers(plugin.getControllers());
-                } catch (Throwable t) {
-                    System.err.println(
-                        "Warning : could not load plugin " +
-                        key.toString() + ", received exeption " +
-                        t.toString());
-                    t.printStackTrace(System.err);
-                }
-            }
-        }
-    }*/
-    
     /* This is jeff's new plugin code using Jeff's Plugin manager */
     private void scanControllers() {
-        String pluginPathName = System.getProperty("jinput.controllerPluginPath");
+        String pluginPathName = getPrivilegedProperty("jinput.controllerPluginPath");
         if(pluginPathName == null) {
             pluginPathName = "controller";
         }
         
-        scanControllersAt(System.getProperty("java.home") +
+        scanControllersAt(getPrivilegedProperty("java.home") +
             File.separator + "lib"+File.separator + pluginPathName);
-        scanControllersAt(System.getProperty("user.dir")+
+        scanControllersAt(getPrivilegedProperty("user.dir")+
             File.separator + pluginPathName);
     }
     
@@ -240,13 +195,11 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
             Class[] envClasses = plugins.getExtends(ControllerEnvironment.class);
             for(int i=0;i<envClasses.length;i++){
                 try {
-                    if (DEBUG) {
-                        System.out.println("ControllerEnvironment "+
+					ControllerEnvironment.logln("ControllerEnvironment "+
                             envClasses[i].getName()
                             +" loaded by "+envClasses[i].getClassLoader());
-                    }
                     ControllerEnvironment ce = (ControllerEnvironment)
-                        envClasses[i].newInstance();      					
+                        envClasses[i].newInstance();
                     addControllers(ce.getControllers());
 					loadedPlugins.add(ce.getClass().getName());
                 } catch (Throwable e) {
@@ -258,39 +211,6 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
         }
     }
         
-    /**
-     * Retrieve the file "lib/control.properties" and
-     * load properties into properties object.
-     */
-    private void loadProperties() throws IOException {
-        if (libPath == null) {
-            libPath = System.getProperty("java.home") +
-            File.separator + "lib";
-        }
-        File file = new File(libPath + File.separator +
-        PROPERTY_FILENAME);
-        FileInputStream inputStream = new FileInputStream(file);
-        properties.load(inputStream);
-        inputStream.close();
-    }
-    
-    /**
-     * Create a new plugin ControllerEnvironment object
-     */
-    /*
-    private ControllerEnvironment newPlugin(String name) throws
-        ClassNotFoundException, InstantiationException,
-        IllegalAccessException {
-        Class pluginClass = pluginLoader.loadClass(name);
-        if (!ControllerEnvironment.class.isAssignableFrom(pluginClass)) {
-            throw new ClassCastException(
-                "Plugin class must be assignable from " +
-                ControllerEnvironment.class.getName());
-        }
-        Object instance = pluginClass.newInstance();
-        return (ControllerEnvironment)instance;
-    }
-    */
     /**
      * Add the array of controllers to our list of controllers.
      */

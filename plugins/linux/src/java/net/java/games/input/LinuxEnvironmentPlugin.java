@@ -296,7 +296,8 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 		for (int i = 0; i < joystick_device_files.length; i++) {
 			File event_file = joystick_device_files[i];
 			try {
-				LinuxJoystickDevice device = new LinuxJoystickDevice(event_file.getAbsolutePath());
+				String path = getAbsolutePathPrivileged(event_file);
+				LinuxJoystickDevice device = new LinuxJoystickDevice(path);
 				Controller controller = createJoystickFromJoystickDevice(device);
 				if (controller != null) {
 					controllers.add(controller);
@@ -309,18 +310,34 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 		}
 	}
 
-	private final static File[] enumerateJoystickDeviceFiles(String dev_path) {
-		File dev = new File(dev_path);
-		return dev.listFiles(new FilenameFilter() {
+	private final static File[] enumerateJoystickDeviceFiles(final String dev_path) {
+		final File dev = new File(dev_path);
+		return listFilesPrivileged(dev, new FilenameFilter() {
 			public final boolean accept(File dir, String name) {
 				return name.startsWith("js");
 			}
 		});
 	}
 
+	private static String getAbsolutePathPrivileged(final File file) {
+		return (String)AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				return file.getAbsolutePath();
+			}
+		});
+	}
+
+	private static File[] listFilesPrivileged(final File dir, final FilenameFilter filter) {
+		return (File[])AccessController.doPrivileged(new PrivilegedAction() {
+			public Object run() {
+				return dir.listFiles(filter);
+			}
+		});
+	}
+
     private final void enumerateEventControllers(List controllers) {
-		File dev = new File("/dev/input");
-		File[] event_device_files = dev.listFiles(new FilenameFilter() {
+		final File dev = new File("/dev/input");
+		File[] event_device_files = listFilesPrivileged(dev, new FilenameFilter() {
 			public final boolean accept(File dir, String name) {
 				return name.startsWith("event");
 			}
@@ -330,7 +347,8 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 		for (int i = 0; i < event_device_files.length; i++) {
 			File event_file = event_device_files[i];
 			try {
-				LinuxEventDevice device = new LinuxEventDevice(event_file.getAbsolutePath());
+				String path = getAbsolutePathPrivileged(event_file);
+				LinuxEventDevice device = new LinuxEventDevice(path);
 				try {
 					Controller controller = createControllerFromDevice(device);
 					if (controller != null) {
