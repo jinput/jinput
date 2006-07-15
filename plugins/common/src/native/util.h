@@ -40,6 +40,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <jni.h>
+#ifdef _MSC_VER
+#include <Basetsd.h>
+#else
+#include <inttypes.h>
+#endif
 
 extern void printfJava(JNIEnv *env, const char *format, ...);
 extern void throwRuntimeException(JNIEnv * env, const char *format, ...);

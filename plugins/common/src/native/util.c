@@ -46,7 +46,7 @@ static jstring sprintfJavaString(JNIEnv *env, const char *format, va_list ap) {
 #define BUFFER_SIZE 4000
     char buffer[BUFFER_SIZE];
     jstring str; 
-#ifdef _WIN32
+#ifdef _MSC_VER
 	vsnprintf_s(buffer, BUFFER_SIZE, _TRUNCATE, format, ap);
 #else
     vsnprintf(buffer, BUFFER_SIZE, format, ap);

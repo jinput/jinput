@@ -59,7 +59,7 @@ JNIEXPORT jlong JNICALL Java_net_java_games_input_DummyWindow_createWindow(JNIEn
 		throwIOException(env, "Failed to create window (%d)\n", GetLastError());
         return 0;
     }
-	return (jlong)hwndDummy;
+	return (jlong)(intptr_t)hwndDummy;
 }
 
 JNIEXPORT void JNICALL Java_net_java_games_input_DummyWindow_nDestroy(JNIEnv *env, jclass unused, jlong hwnd_address) {
