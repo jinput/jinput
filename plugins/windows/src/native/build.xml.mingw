@@ -11,10 +11,10 @@
 		<echo message="${compiledir}"/>
 		<apply dir="${compiledir}" failonerror="true" executable="${gcc}" dest="${compiledir}" skipemptyfilesets="true">
 			<arg line="-c -Wall -O2 -std=gnu99"/>
-			<arg value="-I${sdkhome}\include"/>
-			<arg value="-I${dxhome}\include"/>
-			<arg value="-I${java.home}\..\include"/>
-			<arg value="-I${java.home}\..\include\win32"/>
+			<arg value="-I${sdkhome}/include"/>
+			<arg value="-I${dxhome}/include"/>
+			<arg value="-I${java.home}/../include"/>
+			<arg value="-I${java.home}/../include/win32"/>
 			<arg value="-I${commonhome}/src/native"/>
 			<arg value="-I.."/>
 			<srcfile/>
