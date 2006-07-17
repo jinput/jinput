@@ -7,6 +7,7 @@
 
 #include "rawwinver.h"
 #include <windows.h>
+#include <winuser.h>
 #include <jni.h>
 #include "net_java_games_input_RawDevice.h"
 #include "util.h"
