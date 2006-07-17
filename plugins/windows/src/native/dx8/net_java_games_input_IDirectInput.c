@@ -22,7 +22,7 @@ typedef struct {
 JNIEXPORT jlong JNICALL Java_net_java_games_input_IDirectInput_createIDirectInput(JNIEnv *env, jclass unused) {
     LPDIRECTINPUT8 lpDirectInput;
     HRESULT res = DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION,
-        &IID_IDirectInput8,(VOID **)&lpDirectInput, NULL);
+        &IID_IDirectInput8, (void *)&lpDirectInput, NULL);
     if (FAILED(res)) {
 		throwIOException(env, "Failed to create IDirectInput8 (%d)\n", res);
 		return 0;

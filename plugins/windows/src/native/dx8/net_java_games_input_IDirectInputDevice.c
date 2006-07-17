@@ -32,34 +32,6 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_IDirectInputDevice_nSetBufferSi
 	return res;
 }
 
-static const GUID *mapGUIDId(const jint guid_id) {
-	switch (guid_id) {
-		case net_java_games_input_IDirectInputDevice_GUID_XAxis:
-			return &GUID_XAxis;
-		case net_java_games_input_IDirectInputDevice_GUID_YAxis:
-			return &GUID_YAxis;
-		case net_java_games_input_IDirectInputDevice_GUID_ZAxis:
-			return &GUID_ZAxis;
-		case net_java_games_input_IDirectInputDevice_GUID_RxAxis:
-			return &GUID_RxAxis;
-		case net_java_games_input_IDirectInputDevice_GUID_RyAxis:
-			return &GUID_RyAxis;
-		case net_java_games_input_IDirectInputDevice_GUID_RzAxis:
-			return &GUID_RzAxis;
-		case net_java_games_input_IDirectInputDevice_GUID_Slider:
-			return &GUID_Slider;
-		case net_java_games_input_IDirectInputDevice_GUID_Button:
-			return &GUID_Button;
-		case net_java_games_input_IDirectInputDevice_GUID_Key:
-			return &GUID_Key;
-		case net_java_games_input_IDirectInputDevice_GUID_POV:
-			return &GUID_POV;
-		case net_java_games_input_IDirectInputDevice_GUID_Unknown:
-		default:
-			return NULL;
-	}
-}
-
 static jint mapGUIDType(const GUID *guid) {
 	if (IsEqualGUID(guid, &GUID_XAxis)) {
 		return net_java_games_input_IDirectInputDevice_GUID_XAxis;
@@ -113,9 +85,6 @@ static BOOL CALLBACK enumEffectsCallback(LPCDIEFFECTINFO pdei, LPVOID pvRef) {
 	enum_context_t *enum_context = (enum_context_t *)pvRef;
 	jmethodID add_method;
 	jstring name;
-	DWORD instance;
-	DWORD type;
-	jint guid_type;
 	jbyteArray guid;
 	JNIEnv *env = enum_context->env;
 	jobject device_obj = enum_context->device_obj;
@@ -228,7 +197,6 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_IDirectInputDevice_nSetDataForm
 	jmethodID getInstance_method;
 	jobject object;
 	jint type;
-	jint guid_id;
 	jint object_flags;
 	jint instance;
 	jobject guid_array;
