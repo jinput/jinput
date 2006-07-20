@@ -6,6 +6,7 @@
 	<property name="plthome" location="${env.MSSdk}"/>
 	<property name="chome" location="c:/MinGW"/>
 	<property name="gcc" location="${chome}/bin/gcc"/>
+	<property name="strip" location="${chome}/bin/strip"/>
 
 	<target name="compile_dir">
 		<echo message="${compiledir}"/>
@@ -34,6 +35,9 @@
 			<fileset dir="." includes="*.o"/>
 			<fileset dir="${objdir}" includes="*.o"/>
 		</apply>
+		<apply dir="." executable="${strip}" failonerror="true">
+			<fileset dir="." includes="${dllname}"/>
+		</apply>
 	</target>
 
 	<target name="clean">
@@ -46,7 +50,7 @@
 	</target>
 
 	<target name="compile">
-		<property name="rawlibs" value="-lkernel32 -luser32 -lsetupapi"/>
+		<property name="rawlibs" value="-lkernel32 -luser32 -lsetupapi -luuid"/>
 		<property name="dx8libs" value="-lkernel32 -ldinput8 -ldxguid -luser32"/>
 		<property name="commonhome" location="../../../common"/>
 		<property name="dx8dllname" value="jinput-dx8.dll"/>
