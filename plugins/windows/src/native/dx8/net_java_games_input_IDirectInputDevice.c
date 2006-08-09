@@ -352,6 +352,8 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_IDirectInputDevice_nGetDeviceDa
 		return -1;
 
 	data = (DIDEVICEOBJECTDATA *)malloc(num_events*sizeof(DIDEVICEOBJECTDATA));
+	if (data == NULL)
+		return -1;
 	
 	res = IDirectInputDevice8_GetDeviceData(lpDevice, sizeof(DIDEVICEOBJECTDATA), data, &num_events, flags);
 	if (res == DI_OK || res == DI_BUFFEROVERFLOW) {
