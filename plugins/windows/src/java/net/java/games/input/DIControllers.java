@@ -52,13 +52,15 @@ final class DIControllers {
 		if (!device.getNextEvent(di_event))
 			return false;
 		DIDeviceObject object = device.mapEvent(di_event);
+		DIComponent component = device.mapObject(object);
+		if (component == null)
+			return false;
 		int event_value;
 		if (object.isRelative()) {
 			event_value = object.getRelativeEventValue(di_event.getData());
 		} else {
 			event_value = di_event.getData();
 		}
-		DIComponent component = device.mapObject(object);
 		event.set(component, component.getDeviceObject().convertValue(event_value), di_event.getNanos());
 		return true;
 	}
