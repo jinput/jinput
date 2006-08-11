@@ -48,25 +48,29 @@ final class LinuxEventDevice implements LinuxDevice {
 	 */
 	private boolean closed;
 
-	/* Access the the key_states array could be synchronized, but
+	/* Access to the key_states array could be synchronized, but
 	 * it doesn't hurt to have multiple threads read/write from/to it
 	 */
 	private final byte[] key_states = new byte[NativeDefinitions.KEY_MAX/8 + 1];
 	
     public LinuxEventDevice(String filename) throws IOException {
 		long fd;
+		boolean detect_rumblers = true;
 		try {
 			fd = nOpen(filename, true);
 		} catch (IOException e) {
-			ControllerEnvironment.logln("Failed to open device R/W: " + e.getMessage());
 			fd = nOpen(filename, false);
+			detect_rumblers = false;
 		}
 		this.fd = fd;
 		try {
 			this.name = getDeviceName();
 			this.input_id = getDeviceInputID();
 			this.components = getDeviceComponents();
-			this.rumblers = enumerateRumblers();
+			if (detect_rumblers)
+				this.rumblers = enumerateRumblers();
+			else
+				this.rumblers = new Rumbler[]{};
 			this.type = guessType();
 		} catch (IOException e) {
 			close();
