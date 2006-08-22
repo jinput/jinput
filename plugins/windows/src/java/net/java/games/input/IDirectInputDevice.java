@@ -206,6 +206,9 @@ final class IDirectInputDevice {
 	private final List rumblers = new ArrayList();
 	private final int[] device_state;
 	private final Map object_to_component = new HashMap();
+	private final boolean axes_in_relative_mode;
+
+
 	private boolean released;
 	private DataQueue queue;
 
@@ -229,9 +232,24 @@ final class IDirectInputDevice {
 		}
 		/* Some DirectInput lamer-designer made the device state
 		 * axis mode be per-device not per-axis, so I'll just
-		 * get all axes as absolute and compensate for relative axes
+		 * get all axes as absolute and compensate for relative axes.
+		 *
+		 * Unless, of course, all axes are relative like a mouse device,
+		 * in which case setting the DIDF_ABSAXIS flag will result in
+		 * incorrect axis values returned from GetDeviceData for some
+		 * obscure reason.
 		 */
-		setDataFormat(DIDF_ABSAXIS);
+		boolean all_relative = true;
+		for (int i = 0; i < objects.size(); i++) {
+			DIDeviceObject obj = (DIDeviceObject)objects.get(i);
+			if (obj.isAxis() && !obj.isRelative()) {
+				all_relative = false;
+				break;
+			}
+		}
+		this.axes_in_relative_mode = all_relative;
+		int axis_mode = all_relative ? DIDF_RELAXIS : DIDF_ABSAXIS;
+		setDataFormat(axis_mode);
 		if (rumblers.size() > 0) {
 			try {
 				setCooperativeLevel(DISCL_BACKGROUND | DISCL_EXCLUSIVE);
@@ -243,6 +261,10 @@ final class IDirectInputDevice {
 		setBufferSize(AbstractController.EVENT_QUEUE_DEPTH);
 		acquire();
 		this.device_state = new int[objects.size()];
+	}
+
+	public final boolean areAxesRelative() {
+		return axes_in_relative_mode;
 	}
 
 	public final Rumbler[] getRumblers() {

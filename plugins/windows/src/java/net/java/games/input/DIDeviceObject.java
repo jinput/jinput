@@ -90,12 +90,16 @@ final class DIDeviceObject {
 	}
 
 	public final synchronized int getRelativePollValue(int current_abs_value) {
+		if (device.areAxesRelative())
+			return current_abs_value;
 		int rel_value = current_abs_value - last_poll_value;
 		last_poll_value = current_abs_value;
 		return rel_value;
 	}
 
 	public final synchronized int getRelativeEventValue(int current_abs_value) {
+		if (device.areAxesRelative())
+			return current_abs_value;
 		int rel_value = current_abs_value - last_event_value;
 		last_event_value = current_abs_value;
 		return rel_value;
@@ -157,7 +161,7 @@ final class DIDeviceObject {
 		return (type & IDirectInputDevice.DIDFT_BUTTON) != 0;
 	}
 	
-	private final boolean isAxis() {
+	public final boolean isAxis() {
 		return (type & IDirectInputDevice.DIDFT_AXIS) != 0;
 	}
 	
