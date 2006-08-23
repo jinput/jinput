@@ -240,14 +240,18 @@ final class IDirectInputDevice {
 		 * obscure reason.
 		 */
 		boolean all_relative = true;
+		boolean has_axis = false;
 		for (int i = 0; i < objects.size(); i++) {
 			DIDeviceObject obj = (DIDeviceObject)objects.get(i);
-			if (obj.isAxis() && !obj.isRelative()) {
-				all_relative = false;
-				break;
+			if (obj.isAxis()) {
+				has_axis = true;
+				if (!obj.isRelative()) {
+					all_relative = false;
+					break;
+				}
 			}
 		}
-		this.axes_in_relative_mode = all_relative;
+		this.axes_in_relative_mode = all_relative && has_axis;
 		int axis_mode = all_relative ? DIDF_RELAXIS : DIDF_ABSAXIS;
 		setDataFormat(axis_mode);
 		if (rumblers.size() > 0) {
