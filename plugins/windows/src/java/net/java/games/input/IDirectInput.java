@@ -78,7 +78,12 @@ final class IDirectInput {
 	 * native side will clean up in case of an exception
 	 */
 	private final void addDevice(long address, byte[] instance_guid, byte[] product_guid, int dev_type, int dev_subtype, String instance_name, String product_name) throws IOException {
-		devices.add(new IDirectInputDevice(window, address, instance_guid, product_guid, dev_type, dev_subtype, instance_name, product_name));
+		try {
+			IDirectInputDevice device = new IDirectInputDevice(window, address, instance_guid, product_guid, dev_type, dev_subtype, instance_name, product_name);
+			devices.add(device);
+		} catch (IOException e) {
+			DefaultControllerEnvironment.logln("Failed to initialize device " + product_name + " because of: " + e);
+		}
 	}
 
 	public final void releaseDevices() {
