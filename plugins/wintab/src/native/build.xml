@@ -42,10 +42,13 @@
 		<delete>
 			<fileset dir="." includes="*.obj"/>
 			<fileset dir="." includes="*.dll"/>
+			<fileset dir="." includes="*.h"/>
+			<fileset dir="." includes="*.exp"/>
+			<fileset dir="." includes="*.lib"/>
 		</delete>
 	</target>
 
-	<target name="compile">
+	<target name="compile" if="wintabhome">
 		<property name="wintablibs" value="Kernel32.lib WINTAB32.LIB User32.lib"/>
 		<property name="commonhome" location="../../../common"/>
 		<property name="dllname" value="jinput-wintab.dll"/>

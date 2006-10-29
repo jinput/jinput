@@ -64,6 +64,7 @@
 				<fileset file="coreAPI/build.xml"/>
 				<fileset file="plugins/linux/build.xml"/>
 				<fileset file="plugins/windows/build.xml"/>
+				<fileset file="plugins/wintab/build.xml"/>
 				<fileset file="plugins/OSX/build.xml"/>
 				<fileset file="plugins/awt/build.xml"/>
 			</subant>
@@ -102,6 +103,9 @@
 			<fileset dir="plugins/windows/classes">
 				<include name="**/*.class"/>
 			</fileset>
+			<fileset dir="plugins/wintab/classes">
+				<include name="**/*.class"/>
+			</fileset>
 			<zipfileset src="lib/jutils.jar" includes="**/*.class"/>
 			<manifest>
 				<attribute name="Sealed" value="true"/>
@@ -112,10 +116,11 @@
 			<fileset dir="plugins/linux/bin" includes="*so"/>
 			<fileset dir="plugins/OSX/bin" includes="*jnilib"/>
 			<fileset dir="plugins/windows/bin" includes="*dll"/>
+			<fileset dir="plugins/wintab/bin" includes="*dll"/>
 		</copy>
     </target>
 	
-	<target name="simple_dist" depends="dist,simple_windows,simple_linux,simple_osx" description="Build the simple jars for each platform"/>
+	<target name="simple_dist" depends="dist,simple_windows,simple_wintab,simple_linux,simple_osx" description="Build the simple jars for each platform"/>
 	
 	<target name="simple_linux" depends="dist" description="Build the simple linux jar" if="linux">
 		<jar jarfile="dist/jinput-linux.jar" compress="true">
@@ -158,6 +163,29 @@
 				<include name="dist/jinput-windows.jar"/>
 			</zipfileset>
 			<zipfileset dir="plugins/windows/bin">
+				<include name="*.dll"/>
+			</zipfileset>
+		</zip>
+	</target>
+
+	<target name="simple_wintab" depends="dist" description="Build the simple windows jar" if="windows">
+		<jar jarfile="dist/jinput-wintab.jar" compress="true">
+			<fileset dir="coreAPI/classes">
+				<include name="**/*.class"/>
+			</fileset>
+			<fileset dir="plugins/wintab/classes">
+				<include name="**/*.class"/>
+			</fileset>
+			<zipfileset src="lib/jutils.jar" includes="**/*.class"/>
+			<manifest>
+				<attribute name="Sealed" value="true"/>
+			</manifest>
+		</jar>
+		<zip destfile="dist/jinput_wintab.zip">
+			<zipfileset dir=".">
+				<include name="dist/jinput-wintab.jar"/>
+			</zipfileset>
+			<zipfileset dir="plugins/wintab/bin">
 				<include name="*.dll"/>
 			</zipfileset>
 		</zip>
