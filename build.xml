@@ -86,7 +86,7 @@
     <target name="dist" depends="init" description="Build the distribution file for this system">
 		<iterate target="all"/>
         <mkdir dir="dist"/>
-		<jar jarfile="dist/jinput.jar" compress="true">
+		<jar jarfile="dist/jinput.jar" compress="true" duplicate="preserve">
 			<fileset dir="coreAPI/classes">
 				<include name="**/*.class"/>
 				<exclude name="**/test/*.class"/>
