@@ -17,14 +17,21 @@ JNIEXPORT jlong JNICALL Java_net_java_games_input_WinTabContext_nOpen(JNIEnv *en
 	HWND hWnd = (HWND)(INT_PTR)hWnd_long;
 	HCTX hCtx = NULL;
 	
-	/* get default region */
-	WTInfo(WTI_DEFCONTEXT, 0, &context);
+	jclass booleanClass = (*env)->FindClass(env, "java/lang/Boolean");
+    jstring propertyName = (*env)->NewStringUTF(env, "jinput.wintab.detachcursor");
+    jmethodID getBooleanMethod = (*env)->GetStaticMethodID(env, booleanClass, "getBoolean", "(Ljava/lang/String;)Z");
+    jboolean detachCursor = (*env)->CallStaticBooleanMethod(env, booleanClass, getBooleanMethod, propertyName);
+
+    WTInfo(WTI_DEFCONTEXT, 0, &context);
 
 	wsprintf(context.lcName, "JInput Digitizing");
 	context.lcPktData = PACKETDATA;
 	context.lcPktMode = PACKETMODE;
 	context.lcMoveMask = PACKETDATA;
 	context.lcBtnUpMask = context.lcBtnDnMask;
+	if(!detachCursor) {
+		context.lcOptions |= CXO_SYSTEM;
+	}
 
 	/* open the region */
 	hCtx = WTOpen(hWnd, &context, TRUE);
