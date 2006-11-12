@@ -121,7 +121,7 @@ final class GenericDesktopUsage implements Usage {
 			return Component.Identifier.Axis.X;
 		} else if (this == GenericDesktopUsage.Y) {
 			return Component.Identifier.Axis.Y;
-		} else if (this == GenericDesktopUsage.Z) {
+		} else if (this == GenericDesktopUsage.Z || this == GenericDesktopUsage.WHEEL) {
 			return Component.Identifier.Axis.Z;
 		} else if (this == GenericDesktopUsage.RX) {
 			return Component.Identifier.Axis.RX;
