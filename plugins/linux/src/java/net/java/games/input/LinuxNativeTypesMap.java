@@ -783,7 +783,9 @@ class LinuxNativeTypesMap {
      * @return The jinput id
      */    
     public static Component.Identifier getButtonID(int nativeID) {
-        Component.Identifier retval = INSTANCE.buttonIDs[nativeID];
+        Component.Identifier retval = null;
+		if (nativeID >= 0 && nativeID < INSTANCE.buttonIDs.length)
+			retval = INSTANCE.buttonIDs[nativeID];
         if(retval == null) {
             retval = Component.Identifier.Key.UNKNOWN;
             INSTANCE.buttonIDs[nativeID] = retval;
