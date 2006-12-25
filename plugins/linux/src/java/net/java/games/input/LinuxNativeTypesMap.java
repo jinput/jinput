@@ -751,7 +751,13 @@ class LinuxNativeTypesMap {
      * @return The jinput id
      */    
     public static Component.Identifier getRelAxisID(int nativeID) {
-        Component.Identifier retval = INSTANCE.relAxesIDs[nativeID];
+        Component.Identifier retval = null;
+		try {
+        	retval = INSTANCE.relAxesIDs[nativeID];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			System.out.println("INSTANCE.relAxesIDis only " + INSTANCE.relAxesIDs.length + " long, so " + nativeID + " not contained");
+			//ignore, pretend it was null
+		}
         if(retval == null) {
             retval = Component.Identifier.Axis.SLIDER_VELOCITY;
             INSTANCE.relAxesIDs[nativeID] = retval;
@@ -784,8 +790,12 @@ class LinuxNativeTypesMap {
      */    
     public static Component.Identifier getButtonID(int nativeID) {
         Component.Identifier retval = null;
-		if (nativeID >= 0 && nativeID < INSTANCE.buttonIDs.length)
+		try {
 			retval = INSTANCE.buttonIDs[nativeID];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			System.out.println("INSTANCE.buttonIDs is only " + INSTANCE.buttonIDs.length + " long, so " + nativeID + " not contained");
+			//ignore, pretend it was null
+		}
         if(retval == null) {
             retval = Component.Identifier.Key.UNKNOWN;
             INSTANCE.buttonIDs[nativeID] = retval;
