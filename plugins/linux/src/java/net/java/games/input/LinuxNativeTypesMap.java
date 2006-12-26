@@ -760,7 +760,6 @@ class LinuxNativeTypesMap {
 		}
         if(retval == null) {
             retval = Component.Identifier.Axis.SLIDER_VELOCITY;
-            INSTANCE.relAxesIDs[nativeID] = retval;
         }
         return retval;
     }
@@ -779,7 +778,6 @@ class LinuxNativeTypesMap {
 		}
         if(retval == null) {
             retval = Component.Identifier.Axis.SLIDER;
-            INSTANCE.absAxesIDs[nativeID] = retval;
         }
         return retval;
     }
@@ -798,7 +796,6 @@ class LinuxNativeTypesMap {
 		}
         if(retval == null) {
             retval = Component.Identifier.Key.UNKNOWN;
-            INSTANCE.buttonIDs[nativeID] = retval;
         }
         return retval;
     }
