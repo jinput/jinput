@@ -190,24 +190,31 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 		try {
 			OSXHIDDeviceIterator it = new OSXHIDDeviceIterator();
 			try {
-				OSXHIDDevice device;
-				while ((device = it.next()) != null) {
-					boolean device_used = false;
+				while (true) {
+					OSXHIDDevice device;
 					try {
-						int old_size = controllers.size();
-						createControllersFromDevice(device, controllers);
-						device_used = old_size != controllers.size();
+						device = it.next();
+						if (device == null)
+							break;
+						boolean device_used = false;
+						try {
+							int old_size = controllers.size();
+							createControllersFromDevice(device, controllers);
+							device_used = old_size != controllers.size();
+						} catch (IOException e) {
+							ControllerEnvironment.logln("Failed to create controllers from device: " + device.getProductName());
+						}
+						if (!device_used)
+							device.release();
 					} catch (IOException e) {
-						ControllerEnvironment.logln("Failed to create controllers from device: " + device.getProductName());
+						ControllerEnvironment.logln("Failed to enumerate device: " + e.getMessage());
 					}
-					if (!device_used)
-						device.release();
 				}
 			} finally {
 				it.close();
 			}
 		} catch (IOException e) {
-			ControllerEnvironment.log("Failed to enumerate device: " + e.getMessage());
+			ControllerEnvironment.log("Failed to enumerate devices: " + e.getMessage());
 			return new Controller[]{};
 		}
 		Controller[] controllers_array = new Controller[controllers.size()];
