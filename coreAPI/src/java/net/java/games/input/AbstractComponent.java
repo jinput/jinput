@@ -52,6 +52,7 @@ public abstract class AbstractComponent implements Component {
     
     private final Identifier id;
 
+	private boolean has_polled;
 	private float value;
 	private float event_value;
     
@@ -98,8 +99,20 @@ public abstract class AbstractComponent implements Component {
      * @return 0.0f by default, can be overridden
      */
     public final float getPollData() {
+		if (!has_polled && !isRelative()) {
+			has_polled = true;
+			try {
+				setPollData(poll());
+			} catch (IOException e) {
+				ControllerEnvironment.log("Failed to poll component: " + e);
+			}
+		}
         return value;
     }
+
+	final void resetHasPolled() {
+		has_polled = false;
+	}
 
     final void setPollData(float value) {
         this.value = value;

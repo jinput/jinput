@@ -212,8 +212,8 @@ public abstract class AbstractController implements Controller {
 				if (component.isRelative()) {
 					component.setPollData(0);
 				} else {
-					float value = component.poll();
-					component.setPollData(value);
+					// Let the component poll itself lazily
+					component.resetHasPolled();
 				}
 			}
 			while (getNextDeviceEvent(event)) {
