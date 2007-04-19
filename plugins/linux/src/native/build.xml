@@ -35,6 +35,8 @@
 			<arg line="-O2 -Wall -c -fPIC"/>
 			<arg value="-I${java.home}/include"/>
 			<arg value="-I${java.home}/include/linux"/>
+			<arg value="-I${java.home}/../include"/>
+			<arg value="-I${java.home}/../include/linux"/>
 			<arg value="-I../../../common/src/native"/>
 			<mapper type="glob" from="*.c" to="*.o"/>
 			<fileset dir="." includes="*.c"/>
