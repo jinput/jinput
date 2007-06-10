@@ -38,6 +38,9 @@
  *****************************************************************************/
 package net.java.games.input;
 
+import java.io.File;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -104,6 +107,13 @@ public abstract class ControllerEnvironment {
         assert l != null;
         controllerListeners.add(l);
     }
+    
+    /**
+     * Returns the isSupported status of this environment.
+     * What makes an environment supported or not is up to the
+     * particular plugin, but may include OS or available hardware.
+     */
+    public abstract boolean isSupported();
     
     /**
      * Removes a listener for controller state change events.

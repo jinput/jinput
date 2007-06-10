@@ -38,6 +38,7 @@
 *****************************************************************************/
 package net.java.games.input;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -55,8 +56,54 @@ import java.security.PrivilegedAction;
 * @version 1.0
 */
 public final class OSXEnvironmentPlugin extends ControllerEnvironment implements Plugin {
+	
+	private static boolean supported = false;
+	
+	/**
+	 * Static utility method for loading native libraries.
+	 * It will try to load from either the path given by
+	 * the net.java.games.input.librarypath property
+	 * or through System.loadLibrary().
+	 * 
+	 */
+	static void loadLibrary(final String lib_name) {
+		AccessController.doPrivileged(
+				new PrivilegedAction() {
+					public final Object run() {
+						String lib_path = System.getProperty("net.java.games.input.librarypath");
+						if (lib_path != null)
+							System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
+						else
+							System.loadLibrary(lib_name);
+						return null;
+					}
+				});
+	}
+    
+	static String getPrivilegedProperty(final String property) {
+	       return (String)AccessController.doPrivileged(new PrivilegedAction() {
+	                public Object run() {
+	                    return System.getProperty(property);
+	                }
+	            });
+		}
+		
+
+	static String getPrivilegedProperty(final String property, final String default_value) {
+       return (String)AccessController.doPrivileged(new PrivilegedAction() {
+                public Object run() {
+                    return System.getProperty(property, default_value);
+                }
+            });
+	}
+		
     static {
-		DefaultControllerEnvironment.loadLibrary("jinput-osx");
+    	String osName = getPrivilegedProperty("os.name", "").trim();
+    	if(osName.equals("Mac OS X")) {
+    		// Could check isMacOSXEqualsOrBetterThan in here too.
+    		supported = true;
+    		loadLibrary("jinput-osx");
+    	}
     }
 
 	private final static boolean isMacOSXEqualsOrBetterThan(int major_required, int minor_required) {
@@ -70,7 +117,7 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 			major = Integer.parseInt(major_str);
 			minor = Integer.parseInt(minor_str);
 		} catch (Exception e) {
-			ControllerEnvironment.logln("Exception occurred while trying to determine OS version: " + e);
+			logln("Exception occurred while trying to determine OS version: " + e);
 			// Best guess, no
 			return false;
 		}
@@ -80,11 +127,19 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 	private final Controller[] controllers;
 
 	public OSXEnvironmentPlugin() {
-		this.controllers = enumerateControllers();
+		if(isSupported()) {
+			this.controllers = enumerateControllers();
+		} else {
+			this.controllers = new Controller[0];
+		}
 	}
 
 	public final Controller[] getControllers() {
 		return controllers;
+	}
+
+	public boolean isSupported() {
+		return supported;
 	}
 
 	private final static void addElements(OSXHIDQueue queue, List elements, List components, boolean map_mouse_buttons) throws IOException {
@@ -202,19 +257,19 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 							createControllersFromDevice(device, controllers);
 							device_used = old_size != controllers.size();
 						} catch (IOException e) {
-							ControllerEnvironment.logln("Failed to create controllers from device: " + device.getProductName());
+							logln("Failed to create controllers from device: " + device.getProductName());
 						}
 						if (!device_used)
 							device.release();
 					} catch (IOException e) {
-						ControllerEnvironment.logln("Failed to enumerate device: " + e.getMessage());
+						logln("Failed to enumerate device: " + e.getMessage());
 					}
 				}
 			} finally {
 				it.close();
 			}
 		} catch (IOException e) {
-			ControllerEnvironment.log("Failed to enumerate devices: " + e.getMessage());
+			log("Failed to enumerate devices: " + e.getMessage());
 			return new Controller[]{};
 		}
 		Controller[] controllers_array = new Controller[controllers.size()];

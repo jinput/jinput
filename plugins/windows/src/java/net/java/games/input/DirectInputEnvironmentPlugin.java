@@ -42,6 +42,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.List;
 import java.util.ArrayList;
+import java.io.File;
 import java.io.IOException;
 
 import net.java.games.util.plugins.Plugin;
@@ -52,8 +53,53 @@ import net.java.games.util.plugins.Plugin;
  * @version 1.0
  */
 public final class DirectInputEnvironmentPlugin extends ControllerEnvironment implements Plugin {
+	
+	private static boolean supported = false;
+		
+	/**
+	 * Static utility method for loading native libraries.
+	 * It will try to load from either the path given by
+	 * the net.java.games.input.librarypath property
+	 * or through System.loadLibrary().
+	 * 
+	 */
+	static void loadLibrary(final String lib_name) {
+		AccessController.doPrivileged(
+				new PrivilegedAction() {
+					public final Object run() {
+						String lib_path = System.getProperty("net.java.games.input.librarypath");
+						if (lib_path != null)
+							System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
+						else
+							System.loadLibrary(lib_name);
+						return null;
+					}
+				});
+	}
+    
+	static String getPrivilegedProperty(final String property) {
+	       return (String)AccessController.doPrivileged(new PrivilegedAction() {
+	                public Object run() {
+	                    return System.getProperty(property);
+	                }
+	            });
+		}
+		
+
+	static String getPrivilegedProperty(final String property, final String default_value) {
+       return (String)AccessController.doPrivileged(new PrivilegedAction() {
+                public Object run() {
+                    return System.getProperty(property, default_value);
+                }
+            });
+	}
+		
 	static {
-		DefaultControllerEnvironment.loadLibrary("jinput-dx8");
+		String osName = getPrivilegedProperty("os.name", "").trim();
+		if(osName.startsWith("Windows")) {
+			supported = true;
+			loadLibrary("jinput-dx8");
+		}
 	}
 
 	private final Controller[] controllers;
@@ -61,29 +107,36 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 	private final DummyWindow window;
 
 	/** Creates new DirectInputEnvironment */
-	public DirectInputEnvironmentPlugin() {
+	public DirectInputEnvironmentPlugin() {		
 		DummyWindow window = null;
 		Controller[] controllers = new Controller[]{};
-		try {
-			window = new DummyWindow();
+		if(isSupported()) {
 			try {
-				controllers = enumControllers(window);
+				window = new DummyWindow();
+				try {
+					controllers = enumControllers(window);
+				} catch (IOException e) {
+					window.destroy();
+					throw e;
+				}
 			} catch (IOException e) {
-				window.destroy();
-				throw e;
+				logln("Failed to enumerate devices: " + e.getMessage());
 			}
-		} catch (IOException e) {
-			ControllerEnvironment.logln("Failed to enumerate devices: " + e.getMessage());
+			this.window = window;
+			this.controllers = controllers;
+			AccessController.doPrivileged(
+					new PrivilegedAction() {
+						public final Object run() {
+							Runtime.getRuntime().addShutdownHook(new ShutdownHook());
+							return null;
+						}
+					});
+		} else {
+			// These are final fields, so can't set them, then over ride 
+			// them if we are supported.
+			this.window = null;
+			this.controllers = controllers;
 		}
-		this.window = window;
-		this.controllers = controllers;
-		AccessController.doPrivileged(
-				new PrivilegedAction() {
-					public final Object run() {
-						Runtime.getRuntime().addShutdownHook(new ShutdownHook());
-						return null;
-					}
-				});
 	}
 
 	public final Controller[] getControllers() {
@@ -184,5 +237,9 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 			 * owned by the thread that created the environment.
 			 */
 		}
+	}
+
+	public boolean isSupported() {
+		return supported;
 	}
 } // class DirectInputEnvironment

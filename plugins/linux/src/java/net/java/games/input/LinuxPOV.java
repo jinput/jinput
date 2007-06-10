@@ -88,7 +88,7 @@ final class LinuxPOV extends LinuxComponent {
 		else if (last_x == 1 && last_y == 1)
 			return Component.POV.DOWN_RIGHT;
 		else {
-			ControllerEnvironment.logln("Unknown values x = " + last_x + " | y = " + last_y);
+			LinuxEnvironmentPlugin.logln("Unknown values x = " + last_x + " | y = " + last_y);
 			return Component.POV.OFF;
 		}
 	}

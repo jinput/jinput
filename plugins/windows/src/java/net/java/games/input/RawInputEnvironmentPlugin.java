@@ -42,6 +42,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.List;
 import java.util.ArrayList;
+import java.io.File;
 import java.io.IOException;
 
 import net.java.games.util.plugins.Plugin;
@@ -52,21 +53,68 @@ import net.java.games.util.plugins.Plugin;
  * @version 1.0
  */
 public final class RawInputEnvironmentPlugin extends ControllerEnvironment implements Plugin {
+	
+	private static boolean supported = false;
+
+	/**
+	 * Static utility method for loading native libraries.
+	 * It will try to load from either the path given by
+	 * the net.java.games.input.librarypath property
+	 * or through System.loadLibrary().
+	 * 
+	 */
+	static void loadLibrary(final String lib_name) {
+		AccessController.doPrivileged(
+				new PrivilegedAction() {
+					public final Object run() {
+						String lib_path = System.getProperty("net.java.games.input.librarypath");
+						if (lib_path != null)
+							System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
+						else
+							System.loadLibrary(lib_name);
+						return null;
+					}
+				});
+	}
+    
+	static String getPrivilegedProperty(final String property) {
+	       return (String)AccessController.doPrivileged(new PrivilegedAction() {
+	                public Object run() {
+	                    return System.getProperty(property);
+	                }
+	            });
+		}
+		
+
+	static String getPrivilegedProperty(final String property, final String default_value) {
+       return (String)AccessController.doPrivileged(new PrivilegedAction() {
+                public Object run() {
+                    return System.getProperty(property, default_value);
+                }
+            });
+	}
+		
 	static {
-		DefaultControllerEnvironment.loadLibrary("jinput-raw");
+		String osName = getPrivilegedProperty("os.name", "").trim();
+		if(osName.startsWith("Windows")) {
+			supported = true;
+			loadLibrary("jinput-raw");
+		}
 	}
 
-	private final Controller[] controllers;
+    private final Controller[] controllers;
 
 	/** Creates new DirectInputEnvironment */
 	public RawInputEnvironmentPlugin() {
 		RawInputEventQueue queue;
 		Controller[] controllers = new Controller[]{};
-		try {
-			queue = new RawInputEventQueue();
-			controllers = enumControllers(queue);
-		} catch (IOException e) {
-			ControllerEnvironment.logln("Failed to enumerate devices: " + e.getMessage());
+		if(isSupported()) {
+			try {
+				queue = new RawInputEventQueue();
+				controllers = enumControllers(queue);
+			} catch (IOException e) {
+				logln("Failed to enumerate devices: " + e.getMessage());
+			}
 		}
 		this.controllers = controllers;
 	}
@@ -122,6 +170,10 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 		return controllers_array;
 	}
 
+	public boolean isSupported() {
+		return supported;
+	}
+
 	/*
 	 * The raw input API, while being able to access
 	 * multiple mice and keyboards, is a bit raw (hah)
@@ -151,4 +203,5 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 
 	private final static native byte[] getKeyboardClassGUID();
 	private final static native byte[] getMouseClassGUID();
+
 } // class DirectInputEnvironment

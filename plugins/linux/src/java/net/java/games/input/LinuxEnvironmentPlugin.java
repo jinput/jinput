@@ -41,21 +41,64 @@ import java.security.PrivilegedAction;
 public final class LinuxEnvironmentPlugin extends ControllerEnvironment implements Plugin {
 	private final static String LIBNAME = "jinput-linux";
 	private final static String POSTFIX64BIT = "64";
+	private static boolean supported = false;
 	
     private final Controller[] controllers;
 	private final List devices = new ArrayList();
 	private final static LinuxDeviceThread device_thread = new LinuxDeviceThread();
     
+	/**
+	 * Static utility method for loading native libraries.
+	 * It will try to load from either the path given by
+	 * the net.java.games.input.librarypath property
+	 * or through System.loadLibrary().
+	 * 
+	 */
+	static void loadLibrary(final String lib_name) {
+		AccessController.doPrivileged(
+				new PrivilegedAction() {
+					public final Object run() {
+						String lib_path = System.getProperty("net.java.games.input.librarypath");
+						if (lib_path != null)
+							System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
+						else
+							System.loadLibrary(lib_name);
+						return null;
+					}
+				});
+	}
+    
+	static String getPrivilegedProperty(final String property) {
+	       return (String)AccessController.doPrivileged(new PrivilegedAction() {
+	                public Object run() {
+	                    return System.getProperty(property);
+	                }
+	            });
+		}
+		
+
+	static String getPrivilegedProperty(final String property, final String default_value) {
+       return (String)AccessController.doPrivileged(new PrivilegedAction() {
+                public Object run() {
+                    return System.getProperty(property, default_value);
+                }
+            });
+	}
+		
 	static {
-		try {
-			DefaultControllerEnvironment.loadLibrary(LIBNAME);
-		} catch (UnsatisfiedLinkError e) {
+		String osName = getPrivilegedProperty("os.name", "").trim();
+		if(osName.equals("Linux")) {
+			supported = true;
 			try {
-				DefaultControllerEnvironment.loadLibrary(LIBNAME + POSTFIX64BIT);
-			} catch (UnsatisfiedLinkError e2) {
-				ControllerEnvironment.logln("Failed to load 64 bit library: " + e2.getMessage());
-				// throw original error
-				throw e;
+				loadLibrary(LIBNAME);
+			} catch (UnsatisfiedLinkError e) {
+				try {
+					loadLibrary(LIBNAME + POSTFIX64BIT);
+				} catch (UnsatisfiedLinkError e2) {
+					logln("Failed to load 64 bit library: " + e2.getMessage());
+					// throw original error
+					throw e;
+				}
 			}
 		}
 	}
@@ -65,15 +108,19 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 	}
 
     public LinuxEnvironmentPlugin() {
-		this.controllers = enumerateControllers();
-        ControllerEnvironment.logln("Linux plugin claims to have found " + controllers.length + " controllers");
-		AccessController.doPrivileged(
-				new PrivilegedAction() {
-					public final Object run() {
-						Runtime.getRuntime().addShutdownHook(new ShutdownHook());
-						return null;
-					}
-				});
+    	if(isSupported()) {
+			this.controllers = enumerateControllers();
+	        logln("Linux plugin claims to have found " + controllers.length + " controllers");
+			AccessController.doPrivileged(
+					new PrivilegedAction() {
+						public final Object run() {
+							Runtime.getRuntime().addShutdownHook(new ShutdownHook());
+							return null;
+						}
+					});
+    	} else {
+    		controllers = new Controller[0];
+    	}
     }
     
     /** Returns a list of all controllers available to this environment,
@@ -120,7 +167,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 						povs[3][1] = event_component;
 						break;
 					default:
-						ControllerEnvironment.logln("Unknown POV instance: " + native_code);
+						logln("Unknown POV instance: " + native_code);
 						break;
 				}
 			} else if (identifier != null) {
@@ -305,7 +352,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 				} else
 					device.close();
 			} catch (IOException e) {
-				ControllerEnvironment.logln("Failed to open device (" + event_file + "): " + e.getMessage());
+				logln("Failed to open device (" + event_file + "): " + e.getMessage());
 			}
 		}
 	}
@@ -357,11 +404,11 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 					} else
 						device.close();
 				} catch (IOException e) {
-					ControllerEnvironment.logln("Failed to create Controller: " + e.getMessage());
+					logln("Failed to create Controller: " + e.getMessage());
 					device.close();
 				}
 			} catch (IOException e) {
-				ControllerEnvironment.logln("Failed to open device (" + event_file + "): " + e.getMessage());
+				logln("Failed to open device (" + event_file + "): " + e.getMessage());
 			}
 		}
     }
@@ -373,9 +420,13 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 					LinuxDevice device = (LinuxDevice)devices.get(i);
 					device.close();
 				} catch (IOException e) {
-					ControllerEnvironment.logln("Failed to close device: " + e.getMessage());
+					logln("Failed to close device: " + e.getMessage());
 				}
 			}
 		}
+	}
+
+	public boolean isSupported() {
+		return supported;
 	}
 }

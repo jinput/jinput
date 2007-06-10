@@ -82,7 +82,7 @@ final class IDirectInput {
 			IDirectInputDevice device = new IDirectInputDevice(window, address, instance_guid, product_guid, dev_type, dev_subtype, instance_name, product_name);
 			devices.add(device);
 		} catch (IOException e) {
-			DefaultControllerEnvironment.logln("Failed to initialize device " + product_name + " because of: " + e);
+			DirectInputEnvironmentPlugin.logln("Failed to initialize device " + product_name + " because of: " + e);
 		}
 	}
 

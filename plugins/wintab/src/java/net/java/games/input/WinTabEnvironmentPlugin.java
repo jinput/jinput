@@ -1,5 +1,6 @@
 package net.java.games.input;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -9,8 +10,52 @@ import java.util.List;
 import net.java.games.util.plugins.Plugin;
 
 public class WinTabEnvironmentPlugin extends ControllerEnvironment implements Plugin {
-	static {
-		DefaultControllerEnvironment.loadLibrary("jinput-wintab");
+	private static boolean supported = false;
+	
+	/**
+	 * Static utility method for loading native libraries.
+	 * It will try to load from either the path given by
+	 * the net.java.games.input.librarypath property
+	 * or through System.loadLibrary().
+	 * 
+	 */
+	static void loadLibrary(final String lib_name) {
+		AccessController.doPrivileged(
+				new PrivilegedAction() {
+					public final Object run() {
+						String lib_path = System.getProperty("net.java.games.input.librarypath");
+						if (lib_path != null)
+							System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
+						else
+							System.loadLibrary(lib_name);
+						return null;
+					}
+				});
+	}
+    
+	static String getPrivilegedProperty(final String property) {
+	       return (String)AccessController.doPrivileged(new PrivilegedAction() {
+	                public Object run() {
+	                    return System.getProperty(property);
+	                }
+	            });
+		}
+		
+
+	static String getPrivilegedProperty(final String property, final String default_value) {
+       return (String)AccessController.doPrivileged(new PrivilegedAction() {
+                public Object run() {
+                    return System.getProperty(property, default_value);
+                }
+            });
+	}
+		
+    static {
+    	String osName = getPrivilegedProperty("os.name", "").trim();
+    	if(osName.startsWith("Windows")) {
+    		supported = true;
+    		loadLibrary("jinput-wintab");
+    	}
 	}
 
 	private final Controller[] controllers;
@@ -20,35 +65,45 @@ public class WinTabEnvironmentPlugin extends ControllerEnvironment implements Pl
 
 	/** Creates new DirectInputEnvironment */
 	public WinTabEnvironmentPlugin() {
-		DummyWindow window = null;
-		WinTabContext winTabContext = null;
-		Controller[] controllers = new Controller[]{};
-		try {
-			window = new DummyWindow();
-			winTabContext = new WinTabContext(window);
+		if(isSupported()) {
+			DummyWindow window = null;
+			WinTabContext winTabContext = null;
+			Controller[] controllers = new Controller[]{};
 			try {
-				winTabContext.open();
-				controllers = winTabContext.getControllers();
+				window = new DummyWindow();
+				winTabContext = new WinTabContext(window);
+				try {
+					winTabContext.open();
+					controllers = winTabContext.getControllers();
+				} catch (Exception e) {
+					window.destroy();
+					throw e;
+				}
 			} catch (Exception e) {
-				window.destroy();
-				throw e;
+				logln("Failed to enumerate devices: " + e.getMessage());
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			ControllerEnvironment.logln("Failed to enumerate devices: " + e.getMessage());
-			e.printStackTrace();
+			this.window = window;
+			this.controllers = controllers;
+			this.winTabContext = winTabContext;
+			AccessController.doPrivileged(
+					new PrivilegedAction() {
+						public final Object run() {
+							Runtime.getRuntime().addShutdownHook(new ShutdownHook());
+							return null;
+						}
+					});
+		} else {
+			winTabContext = null;
+			controllers = new Controller[]{};
+			window = null;
 		}
-		this.window = window;
-		this.controllers = controllers;
-		this.winTabContext = winTabContext;
-		AccessController.doPrivileged(
-				new PrivilegedAction() {
-					public final Object run() {
-						Runtime.getRuntime().addShutdownHook(new ShutdownHook());
-						return null;
-					}
-				});
 	}
 	
+	public boolean isSupported() {
+		return supported;
+	}
+
 	public Controller[] getControllers() {
 		return controllers;
 	}

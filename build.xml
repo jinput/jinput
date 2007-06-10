@@ -83,6 +83,23 @@
 		<iterate target="javadoc"/>
 	</target>
 
+	<target name="pluginTest" depends="dist" description="Build plugin version">
+		<mkdir dir="dist"/>
+		<mkdir dir="dist/controller"/>
+		<copy todir="dist">
+			<fileset file="coreAPI/bin/jinput-core.jar"/>
+			<fileset file="coreAPI/bin/jinput-test.jar"/>
+			<fileset file="plugins/DX8/lib/jutils.jar"/>
+		</copy>
+		<copy todir="dist/controller">
+			<fileset dir="plugins/awt/bin"/>
+			<fileset dir="plugins/linux/bin"/>
+			<fileset dir="plugins/OSX/bin"/>
+			<fileset dir="plugins/windows/bin"/>
+			<fileset dir="plugins/wintab/bin"/>
+		</copy>
+	</target>
+	
     <target name="dist" depends="init" description="Build the distribution file for this system">
 		<iterate target="all"/>
         <mkdir dir="dist"/>

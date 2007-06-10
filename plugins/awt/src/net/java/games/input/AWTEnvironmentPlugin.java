@@ -34,7 +34,8 @@ import net.java.games.util.plugins.Plugin;
  * @author elias
  */
 public class AWTEnvironmentPlugin extends ControllerEnvironment implements Plugin {
-    private final Controller[] controllers;
+	
+	private final Controller[] controllers;
 
 	public AWTEnvironmentPlugin() {
 		this.controllers = new Controller[]{new AWTKeyboard(), new AWTMouse()};
@@ -43,4 +44,8 @@ public class AWTEnvironmentPlugin extends ControllerEnvironment implements Plugi
     public Controller[] getControllers() {
         return controllers;
     }
+
+	public boolean isSupported() {
+		return true;
+	}
 }

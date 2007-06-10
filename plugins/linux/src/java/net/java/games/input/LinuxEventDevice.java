@@ -190,7 +190,7 @@ final class LinuxEventDevice implements LinuxDevice {
 				rumblers.add(new LinuxRumbleFF(this));
 			}
 		} catch (IOException e) {
-			ControllerEnvironment.logln("Failed to enumerate rumblers: " + e.getMessage());
+			LinuxEnvironmentPlugin.logln("Failed to enumerate rumblers: " + e.getMessage());
 		}
 		return (Rumbler[])rumblers.toArray(new Rumbler[]{});
 	}

@@ -228,7 +228,7 @@ final class IDirectInputDevice {
 			enumEffects();
 			createRumblers();
 		} catch (IOException e) {
-			ControllerEnvironment.logln("Failed to create rumblers: " + e.getMessage());
+			DirectInputEnvironmentPlugin.logln("Failed to create rumblers: " + e.getMessage());
 		}
 		/* Some DirectInput lamer-designer made the device state
 		 * axis mode be per-device not per-axis, so I'll just
