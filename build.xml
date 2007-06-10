@@ -90,6 +90,7 @@
 			<fileset dir="coreAPI/classes">
 				<include name="**/*.class"/>
 				<exclude name="**/test/*.class"/>
+				<exclude name="**/example/*.class"/>
 			</fileset>
 			<fileset dir="plugins/linux/classes">
 				<include name="**/*.class"/>
