@@ -133,4 +133,21 @@ public abstract class Mouse extends AbstractController {
 	public Component getBack() {
 		return getComponent(Component.Identifier.Button.BACK);
 	}
+
+	/**
+	 * Returns forth mouse button, null if the mouse hasn't
+	 * got one.
+	 */
+	public Component getButton3() {
+		return getComponent(Component.Identifier.Button._3);
+	}
+
+	/**
+	 * Returns fifth mouse button, null if the mouse hasn't
+	 * got one.
+	 */
+	public Component getButton4() {
+		return getComponent(Component.Identifier.Button._4);
+	}
+
 } // class Mouse

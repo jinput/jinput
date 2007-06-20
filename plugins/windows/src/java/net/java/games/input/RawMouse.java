@@ -143,12 +143,12 @@ final class RawMouse extends Mouse {
 					break;
 				case EVENT_BUTTON_3:
 					event_state = EVENT_BUTTON_4;
-					if (makeButtonEvent(current_event, event, getSide(), RawDevice.RI_MOUSE_BUTTON_4_DOWN, RawDevice.RI_MOUSE_BUTTON_4_UP))
+					if (makeButtonEvent(current_event, event, getButton3(), RawDevice.RI_MOUSE_BUTTON_4_DOWN, RawDevice.RI_MOUSE_BUTTON_4_UP))
 						return true;
 					break;
 				case EVENT_BUTTON_4:
 					event_state = EVENT_DONE;
-					if (makeButtonEvent(current_event, event, getExtra(), RawDevice.RI_MOUSE_BUTTON_5_DOWN, RawDevice.RI_MOUSE_BUTTON_5_UP))
+					if (makeButtonEvent(current_event, event, getButton4(), RawDevice.RI_MOUSE_BUTTON_5_DOWN, RawDevice.RI_MOUSE_BUTTON_5_UP))
 						return true;
 					break;
 				default:
