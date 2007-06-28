@@ -30,7 +30,8 @@
     <target name="javadoc" depends="init" description="Javadoc for my API.">
         <javadoc packagenames="net.java.games.input.*" 
                  destdir="apidocs" 
-                 additionalparam="-source 1.4">
+                 additionalparam="-source 1.4"
+	        	 excludepackagenames="net.java.games.input.example.*,net.java.games.input.test.*">
             <sourcepath>
                 <pathelement location="src/java"/>
             </sourcepath>

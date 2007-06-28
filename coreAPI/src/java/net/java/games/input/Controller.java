@@ -150,8 +150,7 @@ public interface Controller {
         public static final Type MOUSE = new Type("Mouse");
 
         /**
-         * A keyboard controller (same as BUTTONS)
-         * @see #BUTTONS
+         * A keyboard controller
          */
         public static final Type KEYBOARD = new Type("Keyboard");
         

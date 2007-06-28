@@ -6,8 +6,8 @@ Top level package for JInput.
 
 <h2>Package Specification</h2>
 
-Use -D jinput.plugins (or net.java.games.input.plugins) and specifiy a list of class name to over ride the plugins system. This will force the classes passed to be loaded first, then plugins will be searched for in the default manner (./controller/*.jar)<BR/>
-Use -D jinput.controllerPluginPath to change the path the plugins mechanism will use to search for plugin Jars.
-
+Use -Djinput.useDefaultPlugin=false (or net.java.games.input.useDefaultPlugin=false) to disable automatic loading of the default plugin for the platform.<BR/>
+Use -Djinput.plugins (or net.java.games.input.plugins) and specifiy a list of class name to over ride the plugins system. This will force the classes passed to be loaded first, then plugins will be searched for in the default manner (./controller/*.jar)<BR/>
+Use -Djinput.controllerPluginPath to change the path the plugins mechanism will use to search for plugin Jars.
 </body>
 </html>
