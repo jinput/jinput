@@ -191,7 +191,7 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 		Component[] components_array = new Component[components.size()];
 		components.toArray(components_array);
 		Mouse mouse = new OSXMouse(device, queue, components_array, new Controller[]{}, new Rumbler[]{});
-		if (mouse.getLeft() != null && mouse.getX() != null && mouse.getY() != null) {
+		if (mouse.getPrimaryButton() != null && mouse.getX() != null && mouse.getY() != null) {
 			return mouse;
 		} else {
 			queue.release();

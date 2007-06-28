@@ -166,7 +166,7 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 	private final Mouse createMouseFromDevice(IDirectInputDevice device) {
 		Component[] components = createComponents(device, true);
 		Mouse mouse = new DIMouse(device, components, new Controller[]{}, device.getRumblers());
-		if (mouse.getX() != null && mouse.getY() != null && mouse.getLeft() != null)
+		if (mouse.getX() != null && mouse.getY() != null && mouse.getPrimaryButton() != null)
 			return mouse;
 		else
 			return null;

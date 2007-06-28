@@ -82,21 +82,54 @@ public abstract class Mouse extends AbstractController {
 	/**
 	 * Returns the left or primary mouse button, never null.
 	 */
-	public Component getLeft() {
-		return getComponent(Component.Identifier.Button.LEFT);
+	public Component getPrimaryButton() {
+		Component primaryButton = getComponent(Component.Identifier.Button.LEFT);
+		if(primaryButton==null) {
+			primaryButton = getComponent(Component.Identifier.Button._1);
+		}
+		return primaryButton;
 	}
 
 	/**
 	 * Returns the right or secondary mouse button, null if the mouse is
 	 * a single-button mouse.
 	 */
-	public Component getRight() {
-		return getComponent(Component.Identifier.Button.RIGHT);
+	public Component getSecondaryButton() {
+		Component secondaryButton = getComponent(Component.Identifier.Button.RIGHT);
+		if(secondaryButton==null) {
+			secondaryButton = getComponent(Component.Identifier.Button._2);
+		}
+		return secondaryButton;
 	}
 
 	/**
 	 * Returns the middle or tertiary mouse button, null if the mouse has
 	 * fewer than three buttons.
+	 */
+	public Component getTertiaryButton() {
+		Component tertiaryButton = getComponent(Component.Identifier.Button.MIDDLE);
+		if(tertiaryButton==null) {
+			tertiaryButton = getComponent(Component.Identifier.Button._3);
+		}
+		return tertiaryButton;
+	}
+
+	/**
+	 * Returns the left mouse button.
+	 */
+	public Component getLeft() {
+		return getComponent(Component.Identifier.Button.LEFT);
+	}
+
+	/**
+	 * Returns the right, null if the mouse is a single-button mouse.
+	 */
+	public Component getRight() {
+		return getComponent(Component.Identifier.Button.RIGHT);
+	}
+
+	/**
+	 * Returns the middle, null if the mouse has fewer than three buttons.
 	 */
 	public Component getMiddle() {
 		return getComponent(Component.Identifier.Button.MIDDLE);

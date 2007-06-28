@@ -193,7 +193,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 	
 	private final static Mouse createMouseFromDevice(LinuxEventDevice device, Component[] components) throws IOException {
 		Mouse mouse = new LinuxMouse(device, components, new Controller[]{}, device.getRumblers());
-		if (mouse.getX() != null && mouse.getY() != null && mouse.getLeft() != null)
+		if (mouse.getX() != null && mouse.getY() != null && mouse.getPrimaryButton() != null)
 			return mouse;
 		else
 			return null;
