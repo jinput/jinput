@@ -174,7 +174,10 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 
 	private final AbstractController createControllerFromDevice(IDirectInputDevice device, Controller.Type type) {
 		Component[] components = createComponents(device, false);
-		AbstractController controller = new DIAbstractController(device, components, new Controller[]{}, device.getRumblers(), type);
+		AbstractController controller = null;
+		if(type == Controller.Type.UNKNOWN && components.length>0) {
+			controller = new DIAbstractController(device, components, new Controller[]{}, device.getRumblers(), type);
+		}
 		return controller;
 	}
 
