@@ -26,9 +26,14 @@
 package net.java.games.input;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Combines the list of seperate keyboards and mice found with the raw plugin,
+ * with the game controllers found with direct input.
+ * 
+ * @author Jeremy
+ */
 public class DirectAndRawInputEnvironmentPlugin extends ControllerEnvironment {
 
 	private RawInputEnvironmentPlugin rawPlugin;
@@ -41,6 +46,9 @@ public class DirectAndRawInputEnvironmentPlugin extends ControllerEnvironment {
 		rawPlugin = new RawInputEnvironmentPlugin();	
 	}
 	
+	/**
+	 * @see net.java.games.input.ControllerEnvironment#getControllers()
+	 */
 	public Controller[] getControllers() {
 		if(controllers == null) {
 			boolean rawKeyboardFound = false;
@@ -76,6 +84,9 @@ public class DirectAndRawInputEnvironmentPlugin extends ControllerEnvironment {
 		return controllers;
 	}
 
+	/**
+	 * @see net.java.games.input.ControllerEnvironment#isSupported()
+	 */
 	public boolean isSupported() {
 		return rawPlugin.isSupported() || dinputPlugin.isSupported();
 	}
