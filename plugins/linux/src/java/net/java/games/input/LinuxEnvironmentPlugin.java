@@ -256,6 +256,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 							controllers.add(new LinuxCombinedController((LinuxAbstractController)eventControllers.remove(i), (LinuxJoystickAbstractController)jsControllers.remove(j)));
 							i--;
 							j--;
+							break;
 						}
 					}
 				}
