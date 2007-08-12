@@ -125,21 +125,16 @@ JNIEXPORT jbyteArray JNICALL Java_net_java_games_input_LinuxJoystickDevice_nGetA
 
 JNIEXPORT jcharArray JNICALL Java_net_java_games_input_LinuxJoystickDevice_nGetButtonMap(JNIEnv *env, jclass unused, jlong fd_address) {
 	int fd = (int)fd_address;
-	int i=0;
 	__u16 button_map[KEY_MAX - BTN_MISC + 1];
 	if (ioctl(fd, JSIOCGBTNMAP, button_map) == -1) {
 		throwIOException(env, "Failed to get button map (%d)\n", errno);
 		return NULL;
 	}
 	
-	for(i=0;i<10;i++) {
-		printf("Button %d maps to %d\n", i, button_map[i]);
-	}
-	
 	jcharArray button_map_array = (*env)->NewCharArray(env, (KEY_MAX - BTN_MISC + 1));
 	if (button_map_array == NULL)
 		return NULL;
-	(*env)->SetCharArrayRegion(env, button_map_array, 0, (KEY_MAX - BTN_MISC + 1), (jbyte *)button_map);
+	(*env)->SetCharArrayRegion(env, button_map_array, 0, (KEY_MAX - BTN_MISC + 1), (jchar *)button_map);
 	return button_map_array;
 }
 
