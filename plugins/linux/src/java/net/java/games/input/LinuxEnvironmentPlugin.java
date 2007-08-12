@@ -312,8 +312,10 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 
 	private final static Controller createJoystickFromJoystickDevice(LinuxJoystickDevice device) {
 		List components = new ArrayList();
+		byte[] axisMap = device.getAxisMap();
+		char[] buttonMap = device.getButtonMap();
 		for (int i = 0; i < device.getNumButtons(); i++) {
-			Component.Identifier.Button button_id = getButtonIdentifier(i);
+			Component.Identifier.Button button_id = (Component.Identifier.Button)LinuxNativeTypesMap.getButtonID(buttonMap[i]);
 			if (button_id != null) {
 				LinuxJoystickButton button = new LinuxJoystickButton(button_id);
 				device.registerButton(i, button);
@@ -322,14 +324,12 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 		}
 		for (int i = 0; i < device.getNumAxes(); i++) {
 			Component.Identifier.Axis axis_id;
-			if ((i % 2) == 0)
-				axis_id = Component.Identifier.Axis.X;
-			else
-				axis_id = Component.Identifier.Axis.Y;
+			axis_id = (Component.Identifier.Axis) LinuxNativeTypesMap.getAbsAxisID(axisMap[i]);
 			LinuxJoystickAxis axis = new LinuxJoystickAxis(axis_id);
 			device.registerAxis(i, axis);
 			components.add(axis);
 		}
+		
 		return new LinuxJoystickAbstractController(device, (Component[])components.toArray(new Component[]{}), new Controller[]{}, new Rumbler[]{});
 	}
 

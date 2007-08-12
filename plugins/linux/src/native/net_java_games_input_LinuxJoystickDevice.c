@@ -108,6 +108,41 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxJoystickDevice_nGetNumAxes
 	return num_axes;
 }
 
+JNIEXPORT jbyteArray JNICALL Java_net_java_games_input_LinuxJoystickDevice_nGetAxisMap(JNIEnv *env, jclass unused, jlong fd_address) {
+	int fd = (int)fd_address;
+	__u8 axis_map[ABS_MAX + 1];
+	if (ioctl(fd, JSIOCGAXMAP, axis_map) == -1) {
+		throwIOException(env, "Failed to get axis map (%d)\n", errno);
+		return NULL;
+	}
+	
+	jbyteArray axis_map_array = (*env)->NewByteArray(env, (ABS_MAX + 1));
+	if (axis_map_array == NULL)
+		return NULL;
+	(*env)->SetByteArrayRegion(env, axis_map_array, 0, (ABS_MAX + 1), (jbyte *)axis_map);
+	return axis_map_array;
+}
+
+JNIEXPORT jcharArray JNICALL Java_net_java_games_input_LinuxJoystickDevice_nGetButtonMap(JNIEnv *env, jclass unused, jlong fd_address) {
+	int fd = (int)fd_address;
+	int i=0;
+	__u16 button_map[KEY_MAX - BTN_MISC + 1];
+	if (ioctl(fd, JSIOCGBTNMAP, button_map) == -1) {
+		throwIOException(env, "Failed to get button map (%d)\n", errno);
+		return NULL;
+	}
+	
+	for(i=0;i<10;i++) {
+		printf("Button %d maps to %d\n", i, button_map[i]);
+	}
+	
+	jcharArray button_map_array = (*env)->NewCharArray(env, (KEY_MAX - BTN_MISC + 1));
+	if (button_map_array == NULL)
+		return NULL;
+	(*env)->SetCharArrayRegion(env, button_map_array, 0, (KEY_MAX - BTN_MISC + 1), (jbyte *)button_map);
+	return button_map_array;
+}
+
 JNIEXPORT jboolean JNICALL Java_net_java_games_input_LinuxJoystickDevice_nGetNextEvent(JNIEnv *env, jclass unused, jlong fd_address, jobject event_return) {
 	int fd = (int)fd_address;
 	jclass event_class = (*env)->GetObjectClass(env, event_return);

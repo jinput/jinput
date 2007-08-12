@@ -48,6 +48,8 @@ final class LinuxJoystickDevice implements LinuxDevice {
 	private final Event event = new Event();
 	private final LinuxJoystickButton[] buttons;
 	private final LinuxJoystickAxis[] axes;
+	private final byte[] axisMap;
+	private final char[] buttonMap;
 
 	private EventQueue event_queue;
 
@@ -63,6 +65,8 @@ final class LinuxJoystickDevice implements LinuxDevice {
 			setBufferSize(AbstractController.EVENT_QUEUE_DEPTH);
 			buttons = new LinuxJoystickButton[getNumDeviceButtons()];
 			axes = new LinuxJoystickAxis[getNumDeviceAxes()];
+			axisMap = getDeviceAxisMap();
+			buttonMap = getDeviceButtonMap();
 		} catch (IOException e) {
 			close();
 			throw e;
@@ -141,6 +145,14 @@ final class LinuxJoystickDevice implements LinuxDevice {
 	public final int getNumButtons() {
 		return buttons.length;
 	}
+	
+	public final byte[] getAxisMap() {
+		return axisMap;
+	}
+
+	public final char[] getButtonMap() {
+		return buttonMap;
+	}
 
 	private final int getNumDeviceButtons() throws IOException {
 		return nGetNumButtons(fd);
@@ -151,6 +163,16 @@ final class LinuxJoystickDevice implements LinuxDevice {
 		return nGetNumAxes(fd);
 	}
 	private final static native int nGetNumAxes(long fd) throws IOException;
+	
+	private final byte[] getDeviceAxisMap() throws IOException {
+		return nGetAxisMap(fd);
+	}
+	private final static native byte[] nGetAxisMap(long fd) throws IOException;
+
+	private final char[] getDeviceButtonMap() throws IOException {
+		return nGetButtonMap(fd);
+	}
+	private final static native char[] nGetButtonMap(long fd) throws IOException;
 
 	private final int getVersion() throws IOException {
 		return nGetVersion(fd);
