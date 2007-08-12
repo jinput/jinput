@@ -24,7 +24,6 @@ public class LinuxJoystickPOV extends LinuxJoystickAxis {
 	
 	
 	protected void updateValue() {
-		LinuxEnvironmentPlugin.logln("Updating pov " + hatX.getName() + ", " + hatY.getName());
 		float last_x = hatX.getPollData();
 		float last_y = hatY.getPollData();
 		

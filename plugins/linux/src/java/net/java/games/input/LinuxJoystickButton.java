@@ -47,7 +47,7 @@ import java.io.IOException;
 final class LinuxJoystickButton extends AbstractComponent {
 	private float value;
 
-	public LinuxJoystickButton(Component.Identifier.Button button_id) {
+	public LinuxJoystickButton(Component.Identifier button_id) {
 		super(button_id.getName(), button_id);
 	}
 

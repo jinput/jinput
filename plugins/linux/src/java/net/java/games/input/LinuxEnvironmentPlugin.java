@@ -226,14 +226,44 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 	
     private final Controller[] enumerateControllers() {
 		List controllers = new ArrayList();
-		enumerateEventControllers(controllers);
-		if (controllers.size() == 0) {
-			/* Some linux distros, even modern ones, can't figure out
-			 * how to give event devices proper access rights, so we'll have
-			 * to fallback to the legacy joystick interface.
-			 */
-			enumerateJoystickControllers(controllers);
+		List eventControllers = new ArrayList();
+		List jsControllers = new ArrayList();
+		enumerateEventControllers(eventControllers);
+		enumerateJoystickControllers(jsControllers);
+
+		for(int i=0;i<eventControllers.size();i++) {
+			for(int j=0;j<jsControllers.size();j++) {
+				Controller evController = (Controller) eventControllers.get(i);
+				Controller jsController = (Controller) jsControllers.get(j);
+
+				// compare
+				// Check if the nodes have the same name
+				if(evController.getName().equals(jsController.getName())) {
+					// Check they have the same component count
+					Component[] evComponents = evController.getComponents();
+					Component[] jsComponents = jsController.getComponents();
+					if(evComponents.length==jsComponents.length) {
+						boolean foundADifference = false;
+						// check the component pairs are of the same type
+						for(int k=0;k<evComponents.length;k++) {
+							// Check the type of the component is the same
+							if(!(evComponents[k].getIdentifier() == jsComponents[k].getIdentifier())) {
+								foundADifference = true;
+							}
+						}
+						
+						if(!foundADifference) {
+							controllers.add(new LinuxCombinedController((LinuxAbstractController)eventControllers.remove(i), (LinuxJoystickAbstractController)jsControllers.remove(j)));
+							i--;
+							j--;
+						}
+					}
+				}
+			}
 		}
+		controllers.addAll(eventControllers);
+		controllers.addAll(jsControllers);
+		
 		Controller[] controllers_array = new Controller[controllers.size()];
 		controllers.toArray(controllers_array);
 		return controllers_array;
@@ -317,7 +347,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 		LinuxJoystickAxis[] hatBits = new LinuxJoystickAxis[6];
 		
 		for (int i = 0; i < device.getNumButtons(); i++) {
-			Component.Identifier.Button button_id = (Component.Identifier.Button)LinuxNativeTypesMap.getButtonID(buttonMap[i]);
+			Component.Identifier button_id = (Component.Identifier)LinuxNativeTypesMap.getButtonID(buttonMap[i]);
 			if (button_id != null) {
 				LinuxJoystickButton button = new LinuxJoystickButton(button_id);
 				device.registerButton(i, button);
