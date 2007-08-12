@@ -61,7 +61,7 @@ final class LinuxJoystickAbstractController extends AbstractController {
 	}
 
 	protected final boolean getNextDeviceEvent(Event event) throws IOException {
-		return false;
+		return device.getNextEvent(event);
 	}
 
 	public Type getType() {
