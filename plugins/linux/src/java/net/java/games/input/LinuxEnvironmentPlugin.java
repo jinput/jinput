@@ -314,6 +314,8 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 		List components = new ArrayList();
 		byte[] axisMap = device.getAxisMap();
 		char[] buttonMap = device.getButtonMap();
+		LinuxJoystickAxis[] hatBits = new LinuxJoystickAxis[6];
+		
 		for (int i = 0; i < device.getNumButtons(); i++) {
 			Component.Identifier.Button button_id = (Component.Identifier.Button)LinuxNativeTypesMap.getButtonID(buttonMap[i]);
 			if (button_id != null) {
@@ -326,8 +328,33 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 			Component.Identifier.Axis axis_id;
 			axis_id = (Component.Identifier.Axis) LinuxNativeTypesMap.getAbsAxisID(axisMap[i]);
 			LinuxJoystickAxis axis = new LinuxJoystickAxis(axis_id);
+			
 			device.registerAxis(i, axis);
-			components.add(axis);
+
+			if(axisMap[i]==NativeDefinitions.ABS_HAT0X) {
+				hatBits[0] = axis;
+			} else if(axisMap[i]==NativeDefinitions.ABS_HAT0Y) {
+				hatBits[1] = axis;
+				axis = new LinuxJoystickPOV(Component.Identifier.Axis.POV, hatBits[0], hatBits[1]);
+				device.registerPOV((LinuxJoystickPOV)axis);
+				components.add(axis);
+			} else if(axisMap[i]==NativeDefinitions.ABS_HAT1X) {
+				hatBits[2] = axis;
+			} else if(axisMap[i]==NativeDefinitions.ABS_HAT1Y) {
+				hatBits[3] = axis;
+				axis = new LinuxJoystickPOV(Component.Identifier.Axis.POV, hatBits[2], hatBits[3]);
+				device.registerPOV((LinuxJoystickPOV)axis);
+				components.add(axis);
+			} else if(axisMap[i]==NativeDefinitions.ABS_HAT2X) {
+				hatBits[4] = axis;
+			} else if(axisMap[i]==NativeDefinitions.ABS_HAT2Y) {
+				hatBits[5] = axis;
+				axis = new LinuxJoystickPOV(Component.Identifier.Axis.POV, hatBits[4], hatBits[5]);
+				device.registerPOV((LinuxJoystickPOV)axis);
+				components.add(axis);
+			} else {
+				components.add(axis);
+			}
 		}
 		
 		return new LinuxJoystickAbstractController(device, (Component[])components.toArray(new Component[]{}), new Controller[]{}, new Rumbler[]{});

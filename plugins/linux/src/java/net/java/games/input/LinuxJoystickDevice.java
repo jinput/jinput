@@ -48,6 +48,8 @@ final class LinuxJoystickDevice implements LinuxDevice {
 	private final Event event = new Event();
 	private final LinuxJoystickButton[] buttons;
 	private final LinuxJoystickAxis[] axes;
+	private final Map povXs = new HashMap(); 
+	private final Map povYs = new HashMap(); 
 	private final byte[] axisMap;
 	private final char[] buttonMap;
 
@@ -100,7 +102,17 @@ final class LinuxJoystickDevice implements LinuxDevice {
 					if (axis != null) {
 						float value = (float)joystick_event.getValue()/AXIS_MAX_VALUE;
 						axis.setValue(value);
-						event.set(axis, value, joystick_event.getNanos());
+						if(povXs.containsKey(new Integer(index))) {
+							LinuxJoystickPOV pov = (LinuxJoystickPOV)(povXs.get(new Integer(index)));
+							pov.updateValue();
+							event.set(pov, pov.getPollData(), joystick_event.getNanos());
+						} else if(povYs.containsKey(new Integer(index))) {
+							LinuxJoystickPOV pov = (LinuxJoystickPOV)(povYs.get(new Integer(index)));
+							pov.updateValue();
+							event.set(pov, pov.getPollData(), joystick_event.getNanos());
+						} else {
+							event.set(axis, value, joystick_event.getNanos());
+						}
 						break;
 					}
 				}
@@ -120,6 +132,26 @@ final class LinuxJoystickDevice implements LinuxDevice {
 
 	public final void registerButton(int index, LinuxJoystickButton button) {
 		buttons[index] = button;
+	}
+	
+	public final void registerPOV(LinuxJoystickPOV pov) {
+		// The x and y on a joystick device are not the same as on an event device
+		LinuxJoystickAxis xAxis = pov.getYAxis();
+		LinuxJoystickAxis yAxis = pov.getXAxis(); 
+		int xIndex;
+		int yIndex;
+		for(xIndex=0;xIndex<axes.length;xIndex++) {
+			if(axes[xIndex]==xAxis) {
+				break;
+			}
+		}
+		for(yIndex=0;yIndex<axes.length;yIndex++) {
+			if(axes[yIndex]==yAxis) {
+				break;
+			}
+		}
+		povXs.put(new Integer(xIndex),pov);
+		povYs.put(new Integer(yIndex),pov);
 	}
 
 	public final synchronized boolean getNextEvent(Event event) throws IOException {
