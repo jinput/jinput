@@ -47,11 +47,16 @@ public class WinTabEnvironmentPlugin extends ControllerEnvironment implements Pl
 		AccessController.doPrivileged(
 				new PrivilegedAction() {
 					public final Object run() {
-						String lib_path = System.getProperty("net.java.games.input.librarypath");
-						if (lib_path != null)
-							System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
-						else
-							System.loadLibrary(lib_name);
+					    try {
+    						String lib_path = System.getProperty("net.java.games.input.librarypath");
+    						if (lib_path != null)
+    							System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
+    						else
+    							System.loadLibrary(lib_name);
+					    } catch (UnsatisfiedLinkError e) {
+					        e.printStackTrace();
+					        supported = false;
+					    }
 						return null;
 					}
 				});
