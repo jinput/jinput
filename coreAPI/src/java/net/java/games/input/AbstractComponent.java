@@ -94,9 +94,9 @@ public abstract class AbstractComponent implements Component {
     /**
      * Returns the data from the last time the control has been polled.
      * If this axis is a button, the value returned will be either 0.0f or 1.0f.
-     * If this axis is normalized, the value returned will be between -1.0f and
+     * If this axis is normalised, the value returned will be between -1.0f and
      * 1.0f.
-     * @return 0.0f by default, can be overridden
+     * @return The data from the last time the control has been polled.
      */
     public final float getPollData() {
 		if (!has_polled && !isRelative()) {
