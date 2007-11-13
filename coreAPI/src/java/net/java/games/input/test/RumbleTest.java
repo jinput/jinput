@@ -59,6 +59,7 @@ public class RumbleTest {
                 }
             }            
         }
+        System.exit(0);
     }
     
     /**
