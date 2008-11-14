@@ -31,4 +31,14 @@
 			<fileset dir="../webstart/dist/"/>
 		</copy>
 	</target>
+
+	<target name="sign" depends="jar">
+		<input message="Input keystore alias: " addproperty="keystoreAlias"/>
+		<input message="Input keystore password: " addproperty="keystorePassword"/>
+		<signjar alias="${keystoreAlias}" keystore="../webstart/myKeyStore" storepass="${keystorePassword}" verbose="true">
+			<fileset dir="dist">
+				<include name="**/jinput-applet-test.jar"/>
+			</fileset>
+		</signjar>
+	</target>
 </project>

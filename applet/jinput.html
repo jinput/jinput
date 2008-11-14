@@ -2,7 +2,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<meta http-equiv="content-language" content="en">
-		<title>Introducing Java SE 6 Update 10</title>
+		<title>JInput Applet Test</title>
 		<script src="http://java.com/js/deployJava.js"></script>
 	</head>
 	<body>
@@ -10,7 +10,7 @@
 			deployJava.setInstallerType('kernel');
 			// include any required packages as shown below
 			deployJava.setAdditionalPackages('javax.swing, javax.xml');
-			deployJava.runApplet({codebase:"file:/C:/code/workspace/jinput/webstart/dist/",
+			deployJava.runApplet({codebase:"file:/C:/code/workspace/jinput/applet/dist/",
 		    	archive:"jinput.jar,jinput-test.jar,jinput-applet-test.jar", code:"net.java.games.input.applet.test.ControllerReadTestApplet",
 		    	width:"320", Height:"400"}, null, "1.4.2");
 		</script>
