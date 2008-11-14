@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<project name="applet" basedir="." default="jar">
+	
+	<target name="clean">
+		<delete dir="dist" failonerror="true"/>
+	</target>
+	
+	<target name="init">
+		<mkdir dir="classes"/>
+		<mkdir dir="dist"/>
+	</target>
+	
+    <target name="compile" depends="init">
+        <javac srcdir="src" destdir="classes" debug="true" deprecation="true" source="1.4" target="1.4">
+            <classpath>
+				<pathelement location="../dist/jinput.jar"/>
+				<pathelement location="../dist/jinput-test.jar"/>
+            </classpath>
+		</javac>
+	</target>
+	
+	<target name="jar" depends="compile">
+        <jar jarfile="dist/jinput-applet-test.jar" compress="true" basedir="classes">
+            <include name="**/*.class"/>
+        </jar> 
+	</target>
+	
+	<target name="dist" depends="jar">
+		<copy todir="dist">
+			<fileset dir="../webstart/dist/"/>
+		</copy>
+	</target>
+</project>
