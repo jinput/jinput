@@ -29,6 +29,7 @@
 	<target name="dist" depends="jar">
 		<copy todir="dist">
 			<fileset dir="../webstart/dist/"/>
+			<fileset file="jinput.html"/>
 		</copy>
 	</target>
 
