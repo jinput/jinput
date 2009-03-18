@@ -3,7 +3,7 @@
 <project name="JInput dx8 port, Native code" basedir="." default="compile">
 	<property environment="env"/>
 	<property name="dxhome" location="${env.DXSDK_DIR}"/>
-	<property name="sdkhome" location="c:\Program Files\Microsoft Platform SDK for Windows Server 2003 R2"/>
+	<property name="sdkhome" location="${env.WindowsSdkDir}"/>
 
 	<target name="compile_dir">
 		<echo message="${compiledir}"/>
