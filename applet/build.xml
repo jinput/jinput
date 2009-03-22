@@ -30,6 +30,7 @@
 		<copy todir="dist">
 			<fileset dir="../webstart/dist/"/>
 			<fileset file="jinput.html"/>
+			<fileset file="jinput-event.html"/>
 		</copy>
 	</target>
 
