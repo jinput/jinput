@@ -89,17 +89,16 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 		String osName = getPrivilegedProperty("os.name", "").trim();
 		if(osName.equals("Linux")) {
 			try {
-				loadLibrary(LIBNAME);
+				if("i386".equals(getPrivilegedProperty("os.arch"))) {
+					loadLibrary(LIBNAME);
+				} else {
+					loadLibrary(LIBNAME + POSTFIX64BIT);
+				}
 	            supported = true;
 			} catch (UnsatisfiedLinkError e) {
-				try {
-					loadLibrary(LIBNAME + POSTFIX64BIT);
-		            supported = true;
-				} catch (UnsatisfiedLinkError e2) {
-					logln("Failed to load 64 bit library: " + e2.getMessage());
-					e.printStackTrace();
-					supported = false;
-				}
+				logln("Failed to load 64 bit library: " + e.getMessage());
+				e.printStackTrace();
+				supported = false;
 			}
 		}
 	}
