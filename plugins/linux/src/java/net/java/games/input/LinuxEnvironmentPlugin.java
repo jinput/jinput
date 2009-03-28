@@ -96,7 +96,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 				}
 	            supported = true;
 			} catch (UnsatisfiedLinkError e) {
-				logln("Failed to load 64 bit library: " + e.getMessage());
+				logln("Failed to load library: " + e.getMessage());
 				e.printStackTrace();
 				supported = false;
 			}
