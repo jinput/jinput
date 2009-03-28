@@ -103,7 +103,11 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 		String osName = getPrivilegedProperty("os.name", "").trim();
 		if(osName.startsWith("Windows")) {
 			supported = true;
-			loadLibrary("jinput-raw");
+			if("x86".equals(getPrivilegedProperty("os.arch"))) {
+				loadLibrary("jinput-raw");
+			} else {
+				loadLibrary("jinput-raw-64");
+			}
 		}
 	}
 

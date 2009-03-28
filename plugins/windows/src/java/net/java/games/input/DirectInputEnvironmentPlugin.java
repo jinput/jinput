@@ -103,7 +103,11 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 		String osName = getPrivilegedProperty("os.name", "").trim();
 		if(osName.startsWith("Windows")) {
 			supported = true;
-			loadLibrary("jinput-dx8");
+			if("x86".equals(getPrivilegedProperty("os.arch"))) {
+				loadLibrary("jinput-dx8");
+			} else {
+				loadLibrary("jinput-dx8-64");
+			}
 		}
 	}
 

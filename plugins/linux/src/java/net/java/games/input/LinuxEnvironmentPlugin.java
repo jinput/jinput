@@ -59,10 +59,16 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 				new PrivilegedAction() {
 					public final Object run() {
 						String lib_path = System.getProperty("net.java.games.input.librarypath");
-						if (lib_path != null)
-							System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
-						else
-							System.loadLibrary(lib_name);
+						try {
+							if (lib_path != null)
+								System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
+							else
+								System.loadLibrary(lib_name);
+						} catch (UnsatisfiedLinkError e) {
+							logln("Failed to load library: " + e.getMessage());
+							e.printStackTrace();
+							supported = false;
+						}
 						return null;
 					}
 				});
@@ -88,17 +94,11 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 	static {
 		String osName = getPrivilegedProperty("os.name", "").trim();
 		if(osName.equals("Linux")) {
-			try {
-				if("i386".equals(getPrivilegedProperty("os.arch"))) {
-					loadLibrary(LIBNAME);
-				} else {
-					loadLibrary(LIBNAME + POSTFIX64BIT);
-				}
-	            supported = true;
-			} catch (UnsatisfiedLinkError e) {
-				logln("Failed to load library: " + e.getMessage());
-				e.printStackTrace();
-				supported = false;
+            supported = true;
+			if("i386".equals(getPrivilegedProperty("os.arch"))) {
+				loadLibrary(LIBNAME);
+			} else {
+				loadLibrary(LIBNAME + POSTFIX64BIT);
 			}
 		}
 	}
