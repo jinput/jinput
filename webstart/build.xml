@@ -15,7 +15,7 @@
 	
 	<target name="buildnatives" depends="init">
 		<jar destfile="dist/jinput-windows-native.jar"
-			 basedir="../dist/" includes="jinput-dx8.dll, jinput-raw.dll, jinput-wintab.dll"/>
+			 basedir="../dist/" includes="jinput-dx8.dll, jinput-raw.dll, jinput-wintab.dll, jinput-dx8_64.dll, jinput-raw_64.dll"/>
 		<jar destfile="dist/jinput-linux-native.jar"
 			 basedir="../dist/" includes="libjinput-linux.so, libjinput-linux64.so"/>
 		<jar destfile="dist/jinput-osx-native.jar"
