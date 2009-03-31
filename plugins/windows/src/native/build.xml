@@ -9,8 +9,9 @@
 		<echo message="${compiledir}"/>
 		<echo message="sdkhome: ${sdkhome}"/>
 		<echo message="dxhome: ${dxhome}"/>
+		<echo message="target arch: ${os.arch}"/>
 		<apply dir="${compiledir}" failonerror="true" executable="cl" dest="${compiledir}" skipemptyfilesets="true">
-			<arg line="/Ox /Wp64 /W2 /nologo /c"/>
+			<arg line="/Ox /W2 /nologo /c"/>
 			<arg value="/I${sdkhome}\include"/>
 			<arg value="/I${dxhome}\include"/>
 			<arg value="/I${java.home}\..\include"/>
@@ -30,8 +31,8 @@
 			<srcfile/>
 			<arg line="/Fe${dllname} /link"/>
 			<arg value="/LIBPATH:${java.home}\lib"/>
-			<arg value="/LIBPATH:${dxhome}\lib"/>
-			<arg value="/LIBPATH:${sdkhome}\lib"/>
+			<arg value="/LIBPATH:${dxhomelib}"/>
+			<arg value="/LIBPATH:${sdkhomelib}"/>
 			<arg line="/DLL ${libs}"/>
 			<fileset dir="${commonhome}/src/native" includes="*.obj"/>
 			<fileset dir="." includes="*.obj"/>
@@ -45,6 +46,7 @@
 			<fileset dir="raw" includes="*.obj"/>
 			<fileset dir="dx8" includes="*.obj"/>
 			<fileset dir="." includes="*.dll"/>
+			<fileset dir="../../../common/src/native" includes="*.obj"/>
 		</delete>
 	</target>
 
@@ -52,8 +54,19 @@
 		<property name="rawlibs" value="Kernel32.lib User32.lib Setupapi.lib"/>
 		<property name="dx8libs" value="Kernel32.lib dinput8.lib dxguid.lib User32.lib"/>
 		<property name="commonhome" location="../../../common"/>
-		<property name="dx8dllname" value="jinput-dx8.dll"/>
-		<property name="rawdllname" value="jinput-raw.dll"/>
+		
+		<condition property="dx8dllname" value="jinput-dx8.dll" else="jinput-dx8_64.dll">
+			<equals arg1="${os.arch}" arg2="x86"/>
+		</condition>
+		<condition property="rawdllname" value="jinput-raw.dll" else="jinput-raw_64.dll">
+			<equals arg1="${os.arch}" arg2="x86"/>
+		</condition>
+		<condition property="dxhomelib" value="${dxhome}\lib" else="${dxhome}\lib\x64">
+			<equals arg1="${os.arch}" arg2="x86"/>
+		</condition>
+		<condition property="sdkhomelib" value="${sdkhome}\lib" else="${sdkhome}\lib\x64">
+			<equals arg1="${os.arch}" arg2="x86"/>
+		</condition>
 		<antcall target="compile_dir">
 			<param name="compiledir" location="${commonhome}/src/native"/>
 		</antcall>
