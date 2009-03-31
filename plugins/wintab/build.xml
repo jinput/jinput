@@ -4,7 +4,7 @@
         <mkdir dir="classes"/>
         <mkdir dir="bin"/>
         <condition property="wintab" >
-            <os family="Windows" />
+            <os family="Windows" arch="x86"/>
         </condition>
     </target>
 
