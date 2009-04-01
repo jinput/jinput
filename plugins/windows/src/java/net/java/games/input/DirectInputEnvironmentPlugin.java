@@ -106,7 +106,7 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 			if("x86".equals(getPrivilegedProperty("os.arch"))) {
 				loadLibrary("jinput-dx8");
 			} else {
-				loadLibrary("jinput-dx8-64");
+				loadLibrary("jinput-dx8_64");
 			}
 		}
 	}

@@ -106,7 +106,7 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 			if("x86".equals(getPrivilegedProperty("os.arch"))) {
 				loadLibrary("jinput-raw");
 			} else {
-				loadLibrary("jinput-raw-64");
+				loadLibrary("jinput-raw_64");
 			}
 		}
 	}
