@@ -238,6 +238,10 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 			Controller joystick = createControllerFromDevice(device, elements, Controller.Type.STICK);
 			if (joystick != null)
 				controllers.add(joystick);
+		} else if (usage_pair.getUsagePage() == UsagePage.GENERIC_DESKTOP && usage_pair.getUsage() == GenericDesktopUsage.MULTI_AXIS_CONTROLLER) {
+			Controller multiaxis = createControllerFromDevice(device, elements, Controller.Type.STICK);
+			if (multiaxis != null)
+				controllers.add(multiaxis);
 		} else if (usage_pair.getUsagePage() == UsagePage.GENERIC_DESKTOP && usage_pair.getUsage() == GenericDesktopUsage.GAME_PAD) {
 			Controller game_pad = createControllerFromDevice(device, elements, Controller.Type.GAMEPAD);
 			if (game_pad != null)
