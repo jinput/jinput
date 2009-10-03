@@ -133,7 +133,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 					pluginClasses = pluginClasses + " net.java.games.input.LinuxEnvironmentPlugin";
 				} else if(osName.equals("Mac OS X")) {
 					pluginClasses = pluginClasses + " net.java.games.input.OSXEnvironmentPlugin";
-				} else  if(osName.equals("Windows XP") || osName.equals("Windows Vista")) {
+				} else  if(osName.equals("Windows XP") || osName.equals("Windows Vista") || osName.equals("Windows 7")) {
 					pluginClasses = pluginClasses + " net.java.games.input.DirectAndRawInputEnvironmentPlugin";
 				} else if(osName.equals("Windows 98") || osName.equals("Windows 2000")) {
 					pluginClasses = pluginClasses + " net.java.games.input.DirectInputEnvironmentPlugin";
