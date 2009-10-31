@@ -43,6 +43,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 /**
  * A ControllerEnvironment represents a collection of controllers that are
@@ -74,7 +75,7 @@ public abstract class ControllerEnvironment {
 	}
 
     static void log(String msg) {
-		System.out.print(msg);
+		Logger.getLogger(ControllerEnvironment.class.getName()).info(msg);
 	}
 
     /**

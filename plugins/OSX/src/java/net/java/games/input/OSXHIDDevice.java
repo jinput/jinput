@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 /** OSX HIDManager implementation
 * @author elias
@@ -50,6 +51,7 @@ import java.util.Iterator;
 * @version 1.0
 */
 final class OSXHIDDevice {
+	private final static Logger log = Logger.getLogger(OSXHIDDevice.class.getName());
 	private final static int AXIS_DEFAULT_MIN_VALUE = 0;
 	private final static int AXIS_DEFAULT_MAX_VALUE = 64*1024;
 	
@@ -152,7 +154,7 @@ final class OSXHIDDevice {
 		int usage_page = getIntFromProperties(element_properties, kIOHIDElementUsagePageKey);
 		UsagePair usage_pair = createUsagePair(usage_page, usage);
 		if (usage_pair == null || (element_type != ElementType.INPUT_MISC && element_type != ElementType.INPUT_BUTTON && element_type != ElementType.INPUT_AXIS)) {
-//System.out.println("element_type = 0x" + element_type + " | usage = " + usage + " | usage_page = " + usage_page);
+			//log.info("element_type = 0x" + element_type + " | usage = " + usage + " | usage_page = " + usage_page);
 			return null;
 		} else {
 			return new OSXHIDElement(this, usage_pair, element_cookie, element_type, min, max, is_relative);
@@ -238,17 +240,17 @@ final class OSXHIDDevice {
 	}
 */	
 	private final void dumpProperties() {
-		System.out.println(toString());
+		log.info(toString());
 		dumpMap("", properties);
 	}
 
 	private final static void dumpArray(String prefix, Object[] array) {
-		System.out.println(prefix + "{");
+		log.info(prefix + "{");
 		for (int i = 0; i < array.length; i++) {
 			dumpObject(prefix + "\t", array[i]);
-			System.out.println(prefix + ",");
+			log.info(prefix + ",");
 		}
-		System.out.println(prefix + "}");
+		log.info(prefix + "}");
 	}
 	
 	private final static void dumpMap(String prefix, Map map) {
@@ -264,13 +266,13 @@ final class OSXHIDDevice {
 	private final static void dumpObject(String prefix, Object obj) {
 		if (obj instanceof Long) {
 			Long l = (Long)obj;
-			System.out.println(prefix + "0x" + Long.toHexString(l.longValue()));
+			log.info(prefix + "0x" + Long.toHexString(l.longValue()));
 		} else if (obj instanceof Map)
 			dumpMap(prefix, (Map)obj);
 		else if (obj.getClass().isArray())
 			dumpArray(prefix, (Object[])obj);
 		else
-			System.out.println(prefix + obj);
+			log.info(prefix + obj);
 	}
 
 	private final Map getDeviceProperties() throws IOException {

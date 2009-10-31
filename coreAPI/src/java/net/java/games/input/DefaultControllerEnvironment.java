@@ -49,6 +49,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.logging.Logger;
+
 import net.java.games.util.plugins.*;
 
 /**
@@ -59,6 +61,8 @@ import net.java.games.util.plugins.*;
  */
 class DefaultControllerEnvironment extends ControllerEnvironment {
 	static String libPath;
+	
+	private static Logger log = Logger.getLogger(DefaultControllerEnvironment.class.getName());
 	
 	/**
 	 * Static utility method for loading native libraries.
@@ -138,12 +142,11 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 				} else if(osName.equals("Windows 98") || osName.equals("Windows 2000")) {
 					pluginClasses = pluginClasses + " net.java.games.input.DirectInputEnvironmentPlugin";
 				} else if (osName.startsWith("Windows")) {
-					System.out.println("WARNING: Found unknown Windows version: " + osName);
-					System.out.println("Attempting to use default windows plug-in.");
-					System.out.flush();
+					log.warning("Found unknown Windows version: " + osName);
+					log.info("Attempting to use default windows plug-in.");
 					pluginClasses = pluginClasses + " net.java.games.input.DirectAndRawInputEnvironmentPlugin";
 				} else {
-					System.out.println("Trying to use default plugin, OS name " + osName +" not recognised");
+					log.info("Trying to use default plugin, OS name " + osName +" not recognised");
 				}
 			}
 
@@ -152,7 +155,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 				String className = pluginClassTok.nextToken();					
 				try {
 					if(!loadedPlugins.contains(className)) {
-						System.out.println("Loading: " + className);
+						log.info("Loading: " + className);
 						Class ceClass = Class.forName(className);						
 						ControllerEnvironment ce = (ControllerEnvironment) ceClass.newInstance();
 						if(ce.isSupported()) {

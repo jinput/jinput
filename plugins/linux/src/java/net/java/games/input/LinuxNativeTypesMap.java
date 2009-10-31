@@ -25,6 +25,8 @@
  */
 package net.java.games.input;
 
+import java.util.logging.Logger;
+
 /**
  * Mapping utility class between native type ints and string names or
  * Key.Identifiers
@@ -32,6 +34,7 @@ package net.java.games.input;
  */
 class LinuxNativeTypesMap {
     private static LinuxNativeTypesMap INSTANCE = new LinuxNativeTypesMap();
+    private static Logger log = Logger.getLogger(LinuxNativeTypesMap.class.getName());
     
     private final Component.Identifier relAxesIDs[];
     private final Component.Identifier absAxesIDs[];
@@ -755,7 +758,7 @@ class LinuxNativeTypesMap {
 		try {
         	retval = INSTANCE.relAxesIDs[nativeID];
 		} catch (ArrayIndexOutOfBoundsException e) {
-			System.out.println("INSTANCE.relAxesIDis only " + INSTANCE.relAxesIDs.length + " long, so " + nativeID + " not contained");
+			log.warn("INSTANCE.relAxesIDis only " + INSTANCE.relAxesIDs.length + " long, so " + nativeID + " not contained");
 			//ignore, pretend it was null
 		}
         if(retval == null) {
@@ -773,7 +776,7 @@ class LinuxNativeTypesMap {
 		try {
 			retval = INSTANCE.absAxesIDs[nativeID];
 		} catch (ArrayIndexOutOfBoundsException e) {
-			System.out.println("INSTANCE.absAxesIDs is only " + INSTANCE.absAxesIDs.length + " long, so " + nativeID + " not contained");
+			log.warn("INSTANCE.absAxesIDs is only " + INSTANCE.absAxesIDs.length + " long, so " + nativeID + " not contained");
 			//ignore, pretend it was null
 		}
         if(retval == null) {
@@ -791,7 +794,7 @@ class LinuxNativeTypesMap {
 		try {
 			retval = INSTANCE.buttonIDs[nativeID];
 		} catch (ArrayIndexOutOfBoundsException e) {
-			System.out.println("INSTANCE.buttonIDs is only " + INSTANCE.buttonIDs.length + " long, so " + nativeID + " not contained");
+			log.warn("INSTANCE.buttonIDs is only " + INSTANCE.buttonIDs.length + " long, so " + nativeID + " not contained");
 			//ignore, pretend it was null
 		}
         if(retval == null) {
