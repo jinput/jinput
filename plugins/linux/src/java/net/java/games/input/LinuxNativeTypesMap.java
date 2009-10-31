@@ -758,7 +758,7 @@ class LinuxNativeTypesMap {
 		try {
         	retval = INSTANCE.relAxesIDs[nativeID];
 		} catch (ArrayIndexOutOfBoundsException e) {
-			log.warn("INSTANCE.relAxesIDis only " + INSTANCE.relAxesIDs.length + " long, so " + nativeID + " not contained");
+			log.warning("INSTANCE.relAxesIDis only " + INSTANCE.relAxesIDs.length + " long, so " + nativeID + " not contained");
 			//ignore, pretend it was null
 		}
         if(retval == null) {
@@ -776,7 +776,7 @@ class LinuxNativeTypesMap {
 		try {
 			retval = INSTANCE.absAxesIDs[nativeID];
 		} catch (ArrayIndexOutOfBoundsException e) {
-			log.warn("INSTANCE.absAxesIDs is only " + INSTANCE.absAxesIDs.length + " long, so " + nativeID + " not contained");
+			log.warning("INSTANCE.absAxesIDs is only " + INSTANCE.absAxesIDs.length + " long, so " + nativeID + " not contained");
 			//ignore, pretend it was null
 		}
         if(retval == null) {
@@ -794,7 +794,7 @@ class LinuxNativeTypesMap {
 		try {
 			retval = INSTANCE.buttonIDs[nativeID];
 		} catch (ArrayIndexOutOfBoundsException e) {
-			log.warn("INSTANCE.buttonIDs is only " + INSTANCE.buttonIDs.length + " long, so " + nativeID + " not contained");
+			log.warning("INSTANCE.buttonIDs is only " + INSTANCE.buttonIDs.length + " long, so " + nativeID + " not contained");
 			//ignore, pretend it was null
 		}
         if(retval == null) {
