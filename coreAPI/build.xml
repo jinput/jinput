@@ -6,6 +6,7 @@
         <mkdir dir="apidocs"/> 
         <mkdir dir="classes"/> 
         <mkdir dir="bin"/> 
+    	<mkdir dir="build"/>
     </target>
 
     <target name="compile" depends="init">
@@ -56,6 +57,7 @@
 		<delete dir="classes"/>
 		<delete dir="bin"/>
 		<delete dir="apidocs"/>
+		<delete dir="build"/>
     </target>
     
     <target name="all" depends="init,jar" description="Build everything.">
