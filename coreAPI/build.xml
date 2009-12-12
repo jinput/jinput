@@ -9,13 +9,24 @@
     </target>
 
     <target name="compile" depends="init">
-        <javac srcdir="src/java" destdir="classes" debug="true" deprecation="true" source="1.4" target="1.4">
-            <include name="net/**"/>
-            <!-- To add something to the classpath: -->
-            <classpath>
-                <pathelement location="${utils}"/>
-            </classpath>
-        </javac>
+		<javac srcdir="src/java" destdir="classes" debug="true" deprecation="true" source="1.4" target="1.4">
+			<include name="net/**"/>
+			<exclude name="**/Version.java"/>
+			<!-- To add something to the classpath: -->
+			<classpath>
+				<pathelement location="${utils}"/>
+			</classpath>
+		</javac>
+    	<buildnumber/>
+		<copy file="src/java/net/java/games/input/Version.java" 
+    		 todir="build/src/java/net/java/games/input/" overwrite="true">
+			<filterset>
+				<filter token="BUILD_NUMBER" value="${build.number}"/>
+			</filterset>
+		</copy>
+		<javac srcdir="build/src/java" destdir="classes" debug="true" deprecation="true" source="1.4" target="1.4">
+			<include name="net/**" />
+		</javac>
     </target>
 
     <target name="jar" depends="init,compile">

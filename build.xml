@@ -57,6 +57,12 @@
 		</antcall>
 	</target>
 
+    <target name="versiontest" depends="init,all" description="Try running it.">
+		<antcall target="runtest">
+			<param name="mainclass" value="net.java.games.input.test.VersionTest"/>
+		</antcall>
+	</target>
+
 	<macrodef name="iterate">
 		<attribute name="target"/>
 		<sequential>

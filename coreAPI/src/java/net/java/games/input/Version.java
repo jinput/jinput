@@ -89,8 +89,14 @@ public final class Version {
   /**
    * Version string of this build.
    */
-  private static final String version = "2.0.0-b01";
+  private static final String apiVersion = "2.0.1";
+  private static final String buildNumber = "@BUILD_NUMBER@";
 
+  /*
+   * Split so that ant does not replace the token;
+   */
+  private static final String antToken = "@BUILD_" + "NUMBER@";
+  
   /**
    * Returns the verison string and build number of
    * this implementation.  See the class descritpion
@@ -99,6 +105,10 @@ public final class Version {
    * @return The version string of this implementation.
    */
   public static String getVersion() {
+	String version = apiVersion;
+	if(!antToken.equals(buildNumber)) {
+		version += "-b" + buildNumber;
+	}
     return version;
   }
 }
