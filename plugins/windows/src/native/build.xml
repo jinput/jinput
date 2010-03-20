@@ -46,6 +46,8 @@
 			<fileset dir="raw" includes="*.obj"/>
 			<fileset dir="dx8" includes="*.obj"/>
 			<fileset dir="." includes="*.dll"/>
+			<fileset dir="." includes="*.exp"/>
+			<fileset dir="." includes="*.lib"/>
 			<fileset dir="../../../common/src/native" includes="*.obj"/>
 		</delete>
 	</target>
@@ -61,7 +63,7 @@
 		<condition property="rawdllname" value="jinput-raw.dll" else="jinput-raw_64.dll">
 			<equals arg1="${os.arch}" arg2="x86"/>
 		</condition>
-		<condition property="dxhomelib" value="${dxhome}\lib" else="${dxhome}\lib\x64">
+		<condition property="dxhomelib" value="${dxhome}\lib\x86" else="${dxhome}\lib\x64">
 			<equals arg1="${os.arch}" arg2="x86"/>
 		</condition>
 		<condition property="sdkhomelib" value="${sdkhome}\lib" else="${sdkhome}\lib\x64">
