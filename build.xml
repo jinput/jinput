@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="Sun Games Initiative Client Technologies" basedir="." default="all">
+<project name="Sun Games Initiative Client Technologies" basedir="." default="all" xmlns:artifact="urn:maven-artifact-ant">
     <target name="init">
         <!-- If we are running in windows, set dx8 property to true -->
         <condition property="windows" >
@@ -236,5 +236,65 @@
 				<include name="*.jnilib"/>
 			</tarfileset>
 		</tar>
+	</target>
+	
+	<target name="install" description="Installs jinput in to local mvn repo">
+		<path id="maven-ant-tasks.classpath" path="lib/maven-ant-tasks-2.1.0.jar" />
+	    <typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant"
+	             classpathref="maven-ant-tasks.classpath"/>
+		
+		<artifact:pom id="jinputpom" groupId="net.java.games" artifactId="jinput" version="2.0.2-SNAPSHOT">
+		</artifact:pom>
+		<artifact:writepom pomRefId="jinputpom" file="dist/pom.xml"/>
+		
+		<artifact:pom id="jinputpomfile" file="dist/pom.xml" />
+		
+		<delete file="dist/jinput-windows-natives.zip"/>
+		<zip destfile="dist/jinput-windows-natives.zip">
+			<fileset dir="dist/">
+				<include name="**/*.dll"/>
+			</fileset>
+		</zip>
+		
+		<delete file="dist/jinput-linux-natives.zip"/>
+		<zip destfile="dist/jinput-linux-natives.zip">
+			<fileset dir="dist/">
+				<include name="**/*.so"/>
+			</fileset>
+		</zip>
+		
+		<delete file="dist/jinput-osx-natives.jar"/>
+		<zip destfile="dist/jinput-osx-natives.zip" >
+			<fileset dir="dist/">
+				<include name="**/*.jnilib"/>
+			</fileset>
+		</zip>
+		
+		<artifact:install file="dist/jinput.jar">
+			<pom refid="jinputpomfile" />
+			<attach file="dist/jinput-windows-natives.zip" classifier="windows-natives" type="zip"/>
+			<attach file="dist/jinput-linux-natives.zip" classifier="linux-natives" type="zip"/>
+			<attach file="dist/jinput-osx-natives.zip" classifier="osx-natives" type="zip"/>
+		</artifact:install>
+	</target>
+	
+	<target name="mvndeploy" depends="install" description="Installs jinput in to local mvn repo">
+		<artifact:install-provider artifactId="wagon-ssh" version="1.0-beta-2"/>
+		
+		<artifact:pom id="jinputpom" groupId="net.java.games" artifactId="jinput" version="2.0.1">
+		</artifact:pom>
+		<artifact:writepom pomRefId="jinputpom" file="dist/pom.xml"/>
+		
+		<artifact:pom id="jinputpomfile" file="dist/pom.xml" />
+		
+		<artifact:deploy file="dist/jinput.jar">
+		    <remoteRepository url="${repository.url}">
+				<authentication username="${repository.username}" password="${repository.password}"/>
+		    </remoteRepository>
+			<pom refid="jinputpomfile" />
+			<attach file="dist/jinput-windows-natives.zip" classifier="windows-natives" type="zip"/>
+			<attach file="dist/jinput-linux-natives.zip" classifier="linux-natives" type="zip"/>
+			<attach file="dist/jinput-osx-natives.zip" classifier="osx-natives" type="zip"/>
+		</artifact:deploy>
 	</target>
 </project>
