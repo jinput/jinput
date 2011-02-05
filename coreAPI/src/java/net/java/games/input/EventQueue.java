@@ -38,31 +38,53 @@
  *****************************************************************************/
 package net.java.games.input;
 
+/**
+ * A FIFO queue for input events. 
+ */
 public final class EventQueue {
 	private final Event[] queue;
 	
 	private int head;
 	private int tail;
 
+	/**
+	 * This is an internal method and should not be called by applications using the API
+	 */
 	public EventQueue(int size) {
 		queue = new Event[size + 1];
 		for (int i = 0; i < queue.length; i++)
 			queue[i] = new Event();
 	}
 
+	/**
+	 * This is an internal method and should not be called by applications using the API
+	 */
 	final synchronized void add(Event event) {
 		queue[tail].set(event);
 		tail = increase(tail);
 	}
 
+	/**
+	 * Check if the queue is full
+	 * @return true if the queue is full
+	 */
 	final synchronized boolean isFull() {
 		return increase(tail) == head;
 	}
 
+	/**
+	 * This is an internal method and should not be called by applications using the API
+	 */
 	private final int increase(int x) {
 		return (x + 1)%queue.length;
 	}
 
+	/**
+	 * Populates the provided event with the details of the event on the head of the queue.
+	 * 
+	 * @param event The event to populate
+	 * @return false if there were no events left on the queue, otherwise true.
+	 */
 	public final synchronized boolean getNextEvent(Event event) {
 		if (head == tail)
 			return false;
