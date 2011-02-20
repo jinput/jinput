@@ -26,6 +26,9 @@
 package net.java.games.input;
 
 import net.java.games.util.plugins.Plugin;
+
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.IOException;
@@ -435,7 +438,13 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 	private static File[] listFilesPrivileged(final File dir, final FilenameFilter filter) {
 		return (File[])AccessController.doPrivileged(new PrivilegedAction() {
 			public Object run() {
-				return dir.listFiles(filter);
+				File[] files = dir.listFiles(filter);
+				Arrays.sort(files, new Comparator(){
+					public int compare(Object f1, Object f2) {
+						return ((File)f1).getName().compareTo(((File)f2).getName());
+					}
+				});
+				return files;
 			}
 		});
 	}
