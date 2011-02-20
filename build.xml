@@ -243,7 +243,7 @@
 	    <typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant"
 	             classpathref="maven-ant-tasks.classpath"/>
 		
-		<artifact:pom id="jinputpom" groupId="net.java.games" artifactId="jinput" version="2.0.2-SNAPSHOT">
+		<artifact:pom id="jinputpom" groupId="net.java.games" artifactId="jinput" version="2.0.3-SNAPSHOT">
 		</artifact:pom>
 		<artifact:writepom pomRefId="jinputpom" file="dist/pom.xml"/>
 		
@@ -281,7 +281,7 @@
 	<target name="mvndeploy" depends="install" description="Installs jinput in to local mvn repo">
 		<artifact:install-provider artifactId="wagon-ssh" version="1.0-beta-2"/>
 		
-		<artifact:pom id="jinputpom" groupId="net.java.games" artifactId="jinput" version="2.0.1">
+		<artifact:pom id="jinputpom" groupId="net.java.games" artifactId="jinput" version="2.0.2">
 		</artifact:pom>
 		<artifact:writepom pomRefId="jinputpom" file="dist/pom.xml"/>
 		
