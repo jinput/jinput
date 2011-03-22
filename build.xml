@@ -2,7 +2,7 @@
 
 <project name="Sun Games Initiative Client Technologies" basedir="." default="all" xmlns:artifact="urn:maven-artifact-ant">
 	
-	<property name="mvn.version" value="2.0.4-SNAPSHOT"/>
+	<property name="mvn.version" value="2.0.4"/>
 	<property name="maven-repository-url" value="https://oss.sonatype.org/service/local/staging/deploy/maven2/" />
 	<property name="maven-repository-id" value="sonatype-nexus-staging" />
 	
@@ -329,6 +329,7 @@
 			<arg value="-DrepositoryId=${maven-repository-id}" />
 			<arg value="-DpomFile=dist/jinput-${mvn.version}.pom" />
 			<arg value="-Dfile=dist/jinput-javadoc.zip" />
+			<arg value="-Dpackaging=jar"/>
 			<arg value="-Dclassifier=javadoc" />
 			<arg value="-Pgpg" />
 		</artifact:mvn>
@@ -338,6 +339,7 @@
 			<arg value="-DrepositoryId=${maven-repository-id}" />
 			<arg value="-DpomFile=dist/jinput-${mvn.version}.pom" />
 			<arg value="-Dfile=dist/jinput-sources.zip" />
+			<arg value="-Dpackaging=jar"/>
 			<arg value="-Dclassifier=sources" />
 			<arg value="-Pgpg" />
 		</artifact:mvn>
@@ -345,8 +347,9 @@
 			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file" />
 			<arg value="-Durl=${maven-repository-url}" />
 			<arg value="-DrepositoryId=${maven-repository-id}" />
-			<arg value="-DpomFile=dist/jinput-${mvn.version}-natives.pom" />
+			<arg value="-DpomFile=dist/jinput-${mvn.version}-platform.pom" />
 			<arg value="-Dfile=dist/jinput-natives-windows.zip" />
+			<arg value="-Dpackaging=jar"/>
 			<arg value="-Dclassifier=natives-windows" />
 			<arg value="-Pgpg" />
 		</artifact:mvn>
@@ -354,8 +357,9 @@
 			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file" />
 			<arg value="-Durl=${maven-repository-url}" />
 			<arg value="-DrepositoryId=${maven-repository-id}" />
-			<arg value="-DpomFile=dist/jinput-${mvn.version}-natives.pom" />
+			<arg value="-DpomFile=dist/jinput-${mvn.version}-platform.pom" />
 			<arg value="-Dfile=dist/jinput-natives-linux.zip" />
+			<arg value="-Dpackaging=jar"/>
 			<arg value="-Dclassifier=natives-linux" />
 			<arg value="-Pgpg" />
 		</artifact:mvn>
@@ -363,8 +367,9 @@
 			<arg value="org.apache.maven.plugins:maven-gpg-plugin:1.1:sign-and-deploy-file" />
 			<arg value="-Durl=${maven-repository-url}" />
 			<arg value="-DrepositoryId=${maven-repository-id}" />
-			<arg value="-DpomFile=dist/jinput-${mvn.version}-natives.pom" />
+			<arg value="-DpomFile=dist/jinput-${mvn.version}-platform.pom" />
 			<arg value="-Dfile=dist/jinput-natives-osx.zip" />
+			<arg value="-Dpackaging=jar"/>
 			<arg value="-Dclassifier=natives-osx" />
 			<arg value="-Pgpg" />
 		</artifact:mvn>
