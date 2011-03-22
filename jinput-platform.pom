@@ -1,0 +1,27 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>net.java.jinput</groupId>
+	<artifactId>jinput-platform</artifactId>
+	<packaging>pom</packaging>
+	<name>JInput natives</name>
+	<version>@VERSION@</version>
+	<description>Library for access to input devices.</description>
+	<url>http://java.net/projects/jinput</url>
+	<licenses>
+		<license>
+			<name>BSD</name>
+			<url>http://www.opensource.org/licenses/bsd-license.php</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<id>Members</id>
+			<url>http://java.net/projects/jinput/members</url>
+		</developer>
+	</developers>
+	<scm>
+		<url>http://java.net/projects/jinput/sources/svn/show</url>
+		<connection>https://svn.java.net/svn/jinput~svn </connection>
+	</scm>
+</project>

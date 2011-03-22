@@ -30,5 +30,26 @@
 			<artifactId>jutils</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>net.java.jinput</groupId>
+			<artifactId>jinput-platform</artifactId>
+			<version>@VERSION@</version>
+			<classifier>natives-linux</classifier>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.java.jinput</groupId>
+			<artifactId>jinput-platform</artifactId>
+			<version>@VERSION@</version>
+			<classifier>natives-windows</classifier>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.java.jinput</groupId>
+			<artifactId>jinput-platform</artifactId>
+			<version>@VERSION@</version>
+			<classifier>natives-osx</classifier>
+			<scope>runtime</scope>
+		</dependency>
 	</dependencies>
 </project>
