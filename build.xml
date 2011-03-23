@@ -2,7 +2,7 @@
 
 <project name="Sun Games Initiative Client Technologies" basedir="." default="all" xmlns:artifact="urn:maven-artifact-ant">
 	
-	<property name="api.version" value="2.0.5"/>
+	<property name="api.version" value="2.0.6"/>
 	<property name="mvn.version" value="${api.version}-SNAPSHOT"/>
 	<property name="maven-repository-url" value="https://oss.sonatype.org/service/local/staging/deploy/maven2/" />
 	<property name="maven-repository-id" value="sonatype-nexus-staging" />
