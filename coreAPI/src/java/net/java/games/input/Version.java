@@ -89,13 +89,14 @@ public final class Version {
   /**
    * Version string of this build.
    */
-  private static final String apiVersion = "2.0.1";
+  private static final String apiVersion = "@API_VERSION@";
   private static final String buildNumber = "@BUILD_NUMBER@";
 
   /*
    * Split so that ant does not replace the token;
    */
-  private static final String antToken = "@BUILD_" + "NUMBER@";
+  private static final String antBuildNumberToken = "@BUILD_" + "NUMBER@";
+  private static final String antAPIVersionToken = "@API_" + "VERSION@";
   
   /**
    * Returns the verison string and build number of
@@ -105,8 +106,11 @@ public final class Version {
    * @return The version string of this implementation.
    */
   public static String getVersion() {
-	String version = apiVersion;
-	if(!antToken.equals(buildNumber)) {
+	String version = "Unversioned";
+	if(!antAPIVersionToken.equals(apiVersion)) {
+		version = apiVersion;
+	}
+	if(!antBuildNumberToken.equals(buildNumber)) {
 		version += "-b" + buildNumber;
 	}
     return version;
