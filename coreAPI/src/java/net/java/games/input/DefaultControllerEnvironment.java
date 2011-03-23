@@ -143,10 +143,10 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 					pluginClasses = pluginClasses + " net.java.games.input.DirectInputEnvironmentPlugin";
 				} else if (osName.startsWith("Windows")) {
 					log.warning("Found unknown Windows version: " + osName);
-					log.info("Attempting to use default windows plug-in.");
+					log.warning("Attempting to use default windows plug-in.");
 					pluginClasses = pluginClasses + " net.java.games.input.DirectAndRawInputEnvironmentPlugin";
 				} else {
-					log.info("Trying to use default plugin, OS name " + osName +" not recognised");
+					log.warning("Trying to use default plugin, OS name " + osName +" not recognised");
 				}
 			}
 
@@ -155,7 +155,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 				String className = pluginClassTok.nextToken();					
 				try {
 					if(!loadedPlugins.contains(className)) {
-						log.info("Loading: " + className);
+						log.fine("Loading: " + className);
 						Class ceClass = Class.forName(className);						
 						ControllerEnvironment ce = (ControllerEnvironment) ceClass.newInstance();
 						if(ce.isSupported()) {
