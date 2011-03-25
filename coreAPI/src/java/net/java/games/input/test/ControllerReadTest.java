@@ -53,6 +53,7 @@ import javax.swing.JScrollPane;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
+import net.java.games.input.Version;
 
 public class ControllerReadTest extends JFrame{
 	private abstract static class AxisPanel extends JPanel{
@@ -247,7 +248,7 @@ public class ControllerReadTest extends JFrame{
 	List controllers = new ArrayList();
 
 	public ControllerReadTest() {
-		super("Controller Read Test");
+		super("Controller Read Test. Version: " + Version.getVersion());
 		ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment();
 		Controller[] ca = ce.getControllers();
 		for(int i =0;i<ca.length;i++){

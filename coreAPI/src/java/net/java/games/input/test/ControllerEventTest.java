@@ -52,6 +52,7 @@ import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 import net.java.games.input.EventQueue;
 import net.java.games.input.Event;
+import net.java.games.input.Version;
 
 public class ControllerEventTest extends JFrame{
 	private static abstract class AxisPanel extends JPanel{
@@ -243,7 +244,7 @@ public class ControllerEventTest extends JFrame{
 	List controllers = new ArrayList();
 
 	public ControllerEventTest() {
-		super("Controller Event Test");
+		super("Controller Event Test. Version: " + Version.getVersion());
 		ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment();
 		Controller[] ca = ce.getControllers();
 		for(int i =0;i<ca.length;i++){

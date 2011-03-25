@@ -8,6 +8,7 @@ package net.java.games.input.test;
 import net.java.games.input.ControllerEnvironment;
 import net.java.games.input.Controller;
 import net.java.games.input.Rumbler;
+import net.java.games.input.Version;
 
 /**
  *
@@ -18,6 +19,7 @@ public class RumbleTest {
     /** Creates a new instance of RumbleTest */
     public RumbleTest() {
         ControllerEnvironment ca = ControllerEnvironment.getDefaultEnvironment();
+        System.out.println("JInput version: " + Version.getVersion());
         Controller[] controllers = ca.getControllers();
         for(int i=0;i<controllers.length;i++) {
             System.out.println("Scanning " + controllers[i].getName());
