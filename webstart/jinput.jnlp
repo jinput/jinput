@@ -20,10 +20,10 @@
     <jar href="jinput-test.jar"/>
     <jar href="jinput.jar"/>
   </resources>
-  <resources os="Windows" arch="x86_64 x86 amd64">
+  <resources os="Windows" arch="x86 x86_64 amd64">
     <nativelib href="jinput-windows-native.jar"/>
   </resources>
-  <resources os="Linux" arch="i386 ia64 x84_64">
+  <resources os="Linux" arch="x86 i386 ia64 x84_64 amd64">
     <nativelib href="jinput-linux-native.jar"/>
   </resources>
   <resources os="Mac OS">
