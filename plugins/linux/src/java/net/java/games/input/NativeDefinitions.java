@@ -626,4 +626,9 @@ class NativeDefinitions {
     public static final int FF_AUTOCENTER = 0x61;
     public static final int FF_MAX = 0x7f;
     public static final int FF_CNT = (FF_MAX+1);
+    public static final int USAGE_MOUSE = 0x00;
+    public static final int USAGE_JOYSTICK = 0x01;
+    public static final int USAGE_GAMEPAD = 0x02;
+    public static final int USAGE_KEYBOARD = 0x03;
+    public static final int USAGE_MAX = 0x0f;
 }
