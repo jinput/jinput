@@ -308,10 +308,52 @@ class LinuxNativeTypesMap {
         buttonIDs[NativeDefinitions.BTN_TL2] = Component.Identifier.Button.LEFT_THUMB2;
         buttonIDs[NativeDefinitions.BTN_TR2] = Component.Identifier.Button.RIGHT_THUMB2;
         buttonIDs[NativeDefinitions.BTN_SELECT] = Component.Identifier.Button.SELECT;
+        buttonIDs[NativeDefinitions.BTN_START] = Component.Identifier.Button.START;
         buttonIDs[NativeDefinitions.BTN_MODE] = Component.Identifier.Button.MODE;
         buttonIDs[NativeDefinitions.BTN_THUMBL] = Component.Identifier.Button.LEFT_THUMB3;
         buttonIDs[NativeDefinitions.BTN_THUMBR] = Component.Identifier.Button.RIGHT_THUMB3;
-        
+
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY1] = Component.Identifier.Button.EXTRA_1;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY2] = Component.Identifier.Button.EXTRA_2;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY3] = Component.Identifier.Button.EXTRA_3;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY4] = Component.Identifier.Button.EXTRA_4;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY5] = Component.Identifier.Button.EXTRA_5;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY6] = Component.Identifier.Button.EXTRA_6;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY7] = Component.Identifier.Button.EXTRA_7;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY8] = Component.Identifier.Button.EXTRA_8;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY9] = Component.Identifier.Button.EXTRA_9;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY10] = Component.Identifier.Button.EXTRA_10;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY11] = Component.Identifier.Button.EXTRA_11;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY12] = Component.Identifier.Button.EXTRA_12;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY13] = Component.Identifier.Button.EXTRA_13;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY14] = Component.Identifier.Button.EXTRA_14;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY15] = Component.Identifier.Button.EXTRA_15;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY16] = Component.Identifier.Button.EXTRA_16;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY17] = Component.Identifier.Button.EXTRA_17;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY18] = Component.Identifier.Button.EXTRA_18;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY19] = Component.Identifier.Button.EXTRA_19;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY20] = Component.Identifier.Button.EXTRA_20;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY21] = Component.Identifier.Button.EXTRA_21;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY22] = Component.Identifier.Button.EXTRA_22;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY23] = Component.Identifier.Button.EXTRA_23;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY24] = Component.Identifier.Button.EXTRA_24;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY25] = Component.Identifier.Button.EXTRA_25;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY26] = Component.Identifier.Button.EXTRA_26;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY27] = Component.Identifier.Button.EXTRA_27;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY28] = Component.Identifier.Button.EXTRA_28;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY29] = Component.Identifier.Button.EXTRA_29;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY30] = Component.Identifier.Button.EXTRA_30;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY31] = Component.Identifier.Button.EXTRA_31;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY32] = Component.Identifier.Button.EXTRA_32;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY33] = Component.Identifier.Button.EXTRA_33;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY34] = Component.Identifier.Button.EXTRA_34;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY35] = Component.Identifier.Button.EXTRA_35;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY36] = Component.Identifier.Button.EXTRA_36;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY37] = Component.Identifier.Button.EXTRA_37;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY38] = Component.Identifier.Button.EXTRA_38;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY39] = Component.Identifier.Button.EXTRA_39;
+        buttonIDs[NativeDefinitions.BTN_TRIGGER_HAPPY40] = Component.Identifier.Button.EXTRA_40;
+
         // Digitiser
         buttonIDs[NativeDefinitions.BTN_TOOL_PEN] = Component.Identifier.Button.TOOL_PEN;
         buttonIDs[NativeDefinitions.BTN_TOOL_RUBBER] = Component.Identifier.Button.TOOL_RUBBER;
@@ -388,8 +430,9 @@ class LinuxNativeTypesMap {
 			case NativeDefinitions.BTN_TR : 
 			case NativeDefinitions.BTN_TL2 : 
 			case NativeDefinitions.BTN_TR2 : 
-			case NativeDefinitions.BTN_SELECT : 
-			case NativeDefinitions.BTN_MODE : 
+			case NativeDefinitions.BTN_SELECT :
+            case NativeDefinitions.BTN_START :
+			case NativeDefinitions.BTN_MODE :
 			case NativeDefinitions.BTN_THUMBL : 
 			case NativeDefinitions.BTN_THUMBR :
 				return Controller.Type.GAMEPAD;

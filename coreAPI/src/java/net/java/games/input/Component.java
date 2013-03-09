@@ -444,7 +444,11 @@ public interface Component {
             /** 'Select' button on a gamepad
              */        
             public static final Button SELECT = new Button("Select");
-            
+
+            /** 'Start' button on a gamepad
+             */
+            public static final Button START = new Button("Start");
+
             /** 'Mode' button on a gamepad
              */        
             public static final Button MODE = new Button("Mode");
@@ -540,6 +544,50 @@ public interface Component {
              * Returns the side mouse button.
              */
             public static final Button SIDE = new Button("Side");
+
+            /**
+             * Extra, unnamed, buttons
+             */
+            public static final Button EXTRA_1 = new Button("Extra 1");
+            public static final Button EXTRA_2 = new Button("Extra 2");
+            public static final Button EXTRA_3 = new Button("Extra 3");
+            public static final Button EXTRA_4 = new Button("Extra 4");
+            public static final Button EXTRA_5 = new Button("Extra 5");
+            public static final Button EXTRA_6 = new Button("Extra 6");
+            public static final Button EXTRA_7 = new Button("Extra 7");
+            public static final Button EXTRA_8 = new Button("Extra 8");
+            public static final Button EXTRA_9 = new Button("Extra 9");
+            public static final Button EXTRA_10 = new Button("Extra 10");
+            public static final Button EXTRA_11 = new Button("Extra 11");
+            public static final Button EXTRA_12 = new Button("Extra 12");
+            public static final Button EXTRA_13 = new Button("Extra 13");
+            public static final Button EXTRA_14 = new Button("Extra 14");
+            public static final Button EXTRA_15 = new Button("Extra 15");
+            public static final Button EXTRA_16 = new Button("Extra 16");
+            public static final Button EXTRA_17 = new Button("Extra 17");
+            public static final Button EXTRA_18 = new Button("Extra 18");
+            public static final Button EXTRA_19 = new Button("Extra 19");
+            public static final Button EXTRA_20 = new Button("Extra 20");
+            public static final Button EXTRA_21 = new Button("Extra 21");
+            public static final Button EXTRA_22 = new Button("Extra 22");
+            public static final Button EXTRA_23 = new Button("Extra 23");
+            public static final Button EXTRA_24 = new Button("Extra 24");
+            public static final Button EXTRA_25 = new Button("Extra 25");
+            public static final Button EXTRA_26 = new Button("Extra 26");
+            public static final Button EXTRA_27 = new Button("Extra 27");
+            public static final Button EXTRA_28 = new Button("Extra 28");
+            public static final Button EXTRA_29 = new Button("Extra 29");
+            public static final Button EXTRA_30 = new Button("Extra 30");
+            public static final Button EXTRA_31 = new Button("Extra 31");
+            public static final Button EXTRA_32 = new Button("Extra 32");
+            public static final Button EXTRA_33 = new Button("Extra 33");
+            public static final Button EXTRA_34 = new Button("Extra 34");
+            public static final Button EXTRA_35 = new Button("Extra 35");
+            public static final Button EXTRA_36 = new Button("Extra 36");
+            public static final Button EXTRA_37 = new Button("Extra 37");
+            public static final Button EXTRA_38 = new Button("Extra 38");
+            public static final Button EXTRA_39 = new Button("Extra 39");
+            public static final Button EXTRA_40 = new Button("Extra 40");
         }
 
         /**
