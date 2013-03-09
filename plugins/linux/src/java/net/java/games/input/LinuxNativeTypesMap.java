@@ -841,7 +841,7 @@ class LinuxNativeTypesMap {
 			//ignore, pretend it was null
 		}
         if(retval == null) {
-            retval = Component.Identifier.Key.UNKNOWN;
+            retval = Component.Identifier.Button.UNKNOWN;
         }
         return retval;
     }
