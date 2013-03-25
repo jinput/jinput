@@ -142,6 +142,7 @@
 				<attribute name="Sealed" value="true"/>
 			</manifest>
 		</jar>
+		<iterate target="javadoc"/>
 		<copy todir="dist">
 			<fileset file="coreAPI/bin/jinput-test.jar"/>
 			<fileset dir="plugins/linux/bin" includes="*so"/>
