@@ -2,7 +2,7 @@
 
 <project name="Sun Games Initiative Client Technologies" basedir="." default="all" xmlns:artifact="urn:maven-artifact-ant">
 	
-	<property name="api.version" value="2.0.6"/>
+	<property name="api.version" value="2.0.7"/>
 	<property name="mvn.version" value="${api.version}-SNAPSHOT"/>
 	<property name="maven-repository-url" value="https://oss.sonatype.org/service/local/staging/deploy/maven2/" />
 	<property name="maven-repository-id" value="sonatype-nexus-staging" />
@@ -262,33 +262,33 @@
 		<artifact:pom id="jinputpomfile" file="dist/jinput-${mvn.version}.pom" />
 		<artifact:pom id="jinputplatformpomfile" file="dist/jinput-${mvn.version}-platform.pom" />
 
-		<delete file="dist/jinput-natives-windows.zip" />
+		<delete file="dist/jinput-natives-windows.zip" failonerror="false"/>
 		<zip destfile="dist/jinput-natives-windows.zip">
 			<fileset dir="dist/">
 				<include name="**/*.dll"/>
 			</fileset>
 		</zip>
 
-		<delete file="dist/jinput-natives-linux.zip"/>
+		<delete file="dist/jinput-natives-linux.zip" failonerror="false"/>
 		<zip destfile="dist/jinput-natives-linux.zip">
 			<fileset dir="dist/">
 				<include name="**/*.so"/>
 			</fileset>
 		</zip>
 
-		<delete file="dist/jinput-natives-osx.zip"/>
+		<delete file="dist/jinput-natives-osx.zip" failonerror="false"/>
 		<zip destfile="dist/jinput-natives-osx.zip" >
 			<fileset dir="dist/">
 				<include name="**/*.jnilib"/>
 			</fileset>
 		</zip>
 
-		<delete file="dist/jinput-javadoc.zip"/>
+		<delete file="dist/jinput-javadoc.zip" failonerror="false"/>
 		<zip destfile="dist/jinput-javadoc.zip">
 			<fileset dir="coreAPI/apidocs/"/>
 		</zip>
 
-		<delete file="dist/jinput-sources.zip"/>
+		<delete file="dist/jinput-sources.zip" failonerror="false"/>
 		<zip destfile="dist/jinput-sources.zip">
 			<fileset dir=".">
 				<include name="**/*.java"/>
