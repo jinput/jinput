@@ -1,0 +1,10 @@
+.classpath
+.project
+.settings/
+build/
+target/
+apidocs/
+bin/
+classes/
+dist/
+eclipse_bin/
