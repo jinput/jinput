@@ -26,6 +26,11 @@
 				<os family="unix" />
 			</and>
 		</condition>
+		
+		<delete file="lib/jutils.jar"/>
+		<copy tofile="lib/jutils.jar">
+			<fileset dir="lib" includes="jutils-*-SNAPSHOT.jar"></fileset>
+		</copy>
 	</target>
 
 	<target name="runtest" depends="dist">
