@@ -10,7 +10,10 @@ Authors:
             Jeff Kesselman, Game Technology Architect,
             Advanced Software Technologies Group,
             Sun Microsystems.
-    -- this file updated on 06/06/2003 by Jeff Kesselman
+    -- this file updated on 06/06/2003:
+            Jeff Kesselman
+    -- Gradlized by:
+            Duncan Calvert
 
 
 Introduction:
