@@ -38,12 +38,11 @@
  *****************************************************************************/
 package net.java.games.input;
 
-import java.io.File;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Logger;
+
+import us.ihmc.jinput.JInputLibraryLoader;
 
 /**
  * A ControllerEnvironment represents a collection of controllers that are
@@ -70,6 +69,10 @@ import java.util.logging.Logger;
  *
  */
 public abstract class ControllerEnvironment {
+   static {
+      JInputLibraryLoader.loadLibraries();
+   }
+   
     static void logln(String msg) {
 		log(msg + "\n");
 	}

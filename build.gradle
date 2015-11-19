@@ -1,0 +1,67 @@
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+sourceCompatibility = 1.8
+version = '2.0.6'
+
+repositories {
+	maven {
+		url "https://bengal.ihmc.us/nexus/content/repositories/releases/"
+	}
+	
+	mavenCentral()
+}
+
+dependencies {
+	compile group: 'net.java.jutils', name: 'jutils', version: '1.0.0'
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+	compile group: 'us.ihmc', name: 'IHMCNativeLibraryLoader', version: '1.0'
+	runtime group: 'net.java.jinput', name: 'jinput-platform', version: '2.0.6', classifier: 'natives-windows'
+	runtime group: 'net.java.jinput', name: 'jinput-platform', version: '2.0.6', classifier: 'natives-osx'
+	runtime group: 'net.java.jinput', name: 'jinput-platform', version: '2.0.6', classifier: 'natives-linux'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['applet/src',
+                       'coreAPI/src/java',
+                       'plugins/awt/src',
+                       'plugins/linux/src/java',
+                       'plugins/OSX/src/java',
+                       'plugins/windows/src/java',
+                       'plugins/wintab/src/java']
+        }
+    }
+}
+
+task sourceJar(type: Jar) {
+	from sourceSets.main.allJava
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+
+			groupId 'us.ihmc.thirdparty.jinput'
+			artifactId 'jinput'
+			version 'internal-151118'
+			from components.java
+			
+			artifact sourceJar {
+				classifier "sources"
+			}
+		}
+
+	}
+
+	repositories {
+		maven {
+			credentials {	
+				username "${nexus_username}"
+				password "${nexus_password}"
+			}
+			url "https://bengal.ihmc.us/nexus/content/repositories/releases"
+		}
+	}
+}

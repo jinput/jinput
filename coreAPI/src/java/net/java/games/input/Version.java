@@ -106,7 +106,7 @@ public final class Version {
    * @return The version string of this implementation.
    */
   public static String getVersion() {
-	String version = "Unversioned";
+	String version = "ihmc-internal-151118";
 	if(!antAPIVersionToken.equals(apiVersion)) {
 		version = apiVersion;
 	}
