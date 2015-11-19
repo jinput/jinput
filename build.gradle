@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.8
-version = '2.0.6'
+version = 'internal-151119'
 
 repositories {
 	maven {
@@ -35,6 +35,16 @@ sourceSets {
     }
 }
 
+jar {
+   manifest {
+      attributes(
+      "Created-By": "IHMC Gradle Build Script",
+      "Implementation-Title": project.name,
+      "Implementation-Version": project.version,
+      "Implementation-Vendor": "Java Game Initiative")
+   }
+}
+
 task sourceJar(type: Jar) {
 	from sourceSets.main.allJava
 }
@@ -45,7 +55,7 @@ publishing {
 
 			groupId 'us.ihmc.thirdparty.jinput'
 			artifactId 'jinput'
-			version 'internal-151118'
+			version "$version"
 			from components.java
 			
 			artifact sourceJar {
@@ -57,9 +67,9 @@ publishing {
 
 	repositories {
 		maven {
-			credentials {	
-				username "${nexus_username}"
-				password "${nexus_password}"
+			credentials {
+				username project.hasProperty('nexus_username')?"${nexus_username}":"invalid"
+				password project.hasProperty('nexus_password')?"${nexus_password}":"invalid"
 			}
 			url "https://bengal.ihmc.us/nexus/content/repositories/releases"
 		}
