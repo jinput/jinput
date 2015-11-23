@@ -40,15 +40,14 @@ package net.java.games.input;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import net.java.games.util.plugins.Plugin;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 /** OSX HIDManager implementation
 * @author elias
@@ -73,7 +72,7 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 					    try {
     						String lib_path = System.getProperty("net.java.games.input.librarypath");
     						if (lib_path != null)
-    							System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
+    							System.load(lib_path + File.separator + System.mapLibraryName(lib_name).replaceFirst("dylib", "jnilib"));
     						else
     							System.loadLibrary(lib_name);
 					    } catch (UnsatisfiedLinkError e) {
