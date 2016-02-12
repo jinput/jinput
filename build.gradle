@@ -1,14 +1,19 @@
+plugins {
+    id "com.jfrog.bintray" version "1.6"
+}
+
 apply plugin: 'java'
 apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.8
-version = 'internal-151123'
+targetCompatibility = 1.8
+version = '160212'
 
 repositories {
 	maven {
-		url "https://bengal.ihmc.us/nexus/content/repositories/releases/"
+		url "http://dl.bintray.com/ihmcrobotics/maven-release"
 	}
-	
+
 	mavenCentral()
 }
 
@@ -57,21 +62,44 @@ publishing {
 			artifactId 'jinput'
 			version "$version"
 			from components.java
-			
+
 			artifact sourceJar {
 				classifier "sources"
 			}
 		}
 
 	}
+}
 
-	repositories {
-		maven {
-			credentials {
-				username project.hasProperty('nexus_username')?"${nexus_username}":"invalid"
-				password project.hasProperty('nexus_password')?"${nexus_password}":"invalid"
-			}
-			url "https://bengal.ihmc.us/nexus/content/repositories/releases"
-		}
-	}
+bintray {
+    user = project.hasProperty("bintray_user") ? project.bintray_user : "invalid"
+    key = project.hasProperty("bintray_key") ? project.bintray_key : "invalid"
+
+    if (user.equals("invalid")) {
+        project.logger.debug("Bintray user name property not set. Please set the 'bintray_user' property in ~/.gradle/gradle.properties. See https://github.com/bintray/gradle-bintray-plugin")
+    }
+
+    if (key.equals("invalid")) {
+        project.logger.debug("Bintray API key property not set. Please set the 'bintray_key' property in ~/.gradle/gradle.properties. See https://github.com/bintray/gradle-bintray-plugin")
+    }
+
+    dryRun = false
+    publish = false
+
+    publications = ["mavenJava"]
+
+    pkg {
+        repo = "maven-vendor"
+        userOrg = "ihmcrobotics"
+        name = "IHMCJinputMultiArch"
+        desc = "Maven repository providing a multi-arch JInput artifact"
+
+        licenses = ['BSD 2-Clause']
+        labels = ['java', 'jinput', 'vendored']
+
+        version {
+            name = project.version
+            released = new Date()
+        }
+    }
 }
