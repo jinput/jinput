@@ -93,6 +93,7 @@ bintray {
         userOrg = "ihmcrobotics"
         name = "IHMCJinputMultiArch"
         desc = "Maven repository providing a multi-arch JInput artifact"
+				vcsUrl = "https://github.com/ihmcrobotics/ihmc-jinput-multi-arch.git"
 
         licenses = ['BSD 2-Clause']
         labels = ['java', 'jinput', 'vendored']
