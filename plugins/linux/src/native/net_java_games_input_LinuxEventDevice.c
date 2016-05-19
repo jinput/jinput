@@ -112,20 +112,6 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxEventDevice_nGetNumEffects
 	return num_effects;
 }
 
-JNIEXPORT void JNICALL Java_net_java_games_input_LinuxEventDevice_nGetDeviceUsageBits(JNIEnv *env, jclass unused, jlong fd_address, jbyteArray usages_array) {
-#if EV_VERSION >= 0x010001
-	int fd = (int)fd_address;
-	jsize len = (*env)->GetArrayLength(env, usages_array);
-	jbyte *usages = (*env)->GetByteArrayElements(env, usages_array, NULL);
-	if (usages == NULL)
-		return;
-	int res = ioctl(fd, EVIOCGUSAGE(len), usages);
-	(*env)->ReleaseByteArrayElements(env, usages_array, usages, 0);
-	if (res == -1)
-		throwIOException(env, "Failed to get device usages (%d)\n", errno);
-#endif
-}
-
 JNIEXPORT void JNICALL Java_net_java_games_input_LinuxEventDevice_nGetBits(JNIEnv *env, jclass unused, jlong fd_address, jint evtype, jbyteArray bits_array) {
 	int fd = (int)fd_address;
 	jsize len = (*env)->GetArrayLength(env, bits_array);

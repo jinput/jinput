@@ -94,28 +94,6 @@ final class LinuxEventDevice implements LinuxDevice {
 	}
 
 	private final Controller.Type guessType() throws IOException {
-		Controller.Type type_from_usages = guessTypeFromUsages();
-		if (type_from_usages == Controller.Type.UNKNOWN)
-			return guessTypeFromComponents();
-		else
-			return type_from_usages;
-	}
-	
-	private final Controller.Type guessTypeFromUsages() throws IOException {
-		byte[] usage_bits = getDeviceUsageBits();
-		if (isBitSet(usage_bits, NativeDefinitions.USAGE_MOUSE))
-			return Controller.Type.MOUSE;
-		else if (isBitSet(usage_bits, NativeDefinitions.USAGE_KEYBOARD))
-			return Controller.Type.KEYBOARD;
-		else if (isBitSet(usage_bits, NativeDefinitions.USAGE_GAMEPAD))
-			return Controller.Type.GAMEPAD;
-		else if (isBitSet(usage_bits, NativeDefinitions.USAGE_JOYSTICK))
-			return Controller.Type.STICK;
-		else
-			return Controller.Type.UNKNOWN;
-	}
-
-	private final Controller.Type guessTypeFromComponents() throws IOException {
 		List components = getComponents();
 		if (components.size() == 0)
 			return Controller.Type.UNKNOWN;
@@ -341,15 +319,6 @@ final class LinuxEventDevice implements LinuxDevice {
 		return bits;
 	}
 	private final static native void nGetBits(long fd, int ev_type, byte[] evtype_bits) throws IOException;
-
-	private final byte[] getDeviceUsageBits() throws IOException {
-		byte[] bits = new byte[NativeDefinitions.USAGE_MAX/8 + 1];
-		if (getVersion() >= 0x010001) {
-			nGetDeviceUsageBits(fd, bits);
-		}
-		return bits;
-	}
-	private final static native void nGetDeviceUsageBits(long fd, byte[] type_bits) throws IOException;
 
 	public final synchronized void pollKeyStates() throws IOException {
 		nGetKeyStates(fd, key_states);
