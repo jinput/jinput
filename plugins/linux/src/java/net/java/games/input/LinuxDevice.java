@@ -25,15 +25,8 @@
  */
 package net.java.games.input;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-
 /**
  * @author elias
  */
-interface LinuxDevice {
-	void close() throws IOException;
+interface LinuxDevice extends DisposableDevice {
 }

@@ -50,7 +50,7 @@ import java.util.Arrays;
  * @author elias
  * @version 1.0
  */
-final class IDirectInputDevice {
+final class IDirectInputDevice implements DisposableDevice {
 	public final static int GUID_XAxis = 1;
 	public final static int GUID_YAxis = 2;
 	public final static int GUID_ZAxis = 3;
@@ -541,6 +541,10 @@ final class IDirectInputDevice {
 	}
 
 	protected void finalize() {
+		release();
+	}
+
+	public synchronized final void close() {
 		release();
 	}
 }

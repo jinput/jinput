@@ -50,7 +50,7 @@ import java.util.logging.Logger;
 * @author gregorypierce
 * @version 1.0
 */
-final class OSXHIDDevice {
+final class OSXHIDDevice implements DisposableDevice {
 	private final static Logger log = Logger.getLogger(OSXHIDDevice.class.getName());
 	private final static int AXIS_DEFAULT_MIN_VALUE = 0;
 	private final static int AXIS_DEFAULT_MAX_VALUE = 64*1024;
@@ -308,7 +308,7 @@ final class OSXHIDDevice {
 	}
 	private final static native void nOpen(long device_interface_address) throws IOException;
 
-	private final void close() throws IOException {
+	public synchronized final void close() throws IOException {
 		nClose(device_interface_address);
 	}
 	private final static native void nClose(long device_interface_address) throws IOException;
