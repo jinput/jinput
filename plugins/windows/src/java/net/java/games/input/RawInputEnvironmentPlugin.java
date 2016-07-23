@@ -38,14 +38,14 @@
  *****************************************************************************/
 package net.java.games.input;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.List;
-import java.util.ArrayList;
+import net.java.games.util.plugins.Plugin;
+
 import java.io.File;
 import java.io.IOException;
-
-import net.java.games.util.plugins.Plugin;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.List;
 
 /** DirectInput implementation of controller environment
  * @author martak
@@ -67,16 +67,27 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 		AccessController.doPrivileged(
 				new PrivilegedAction() {
 					public final Object run() {
-					    try {
-    						String lib_path = System.getProperty("net.java.games.input.librarypath");
-    						if (lib_path != null)
-    							System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
-    						else
-    							System.loadLibrary(lib_name);
-					    } catch (UnsatisfiedLinkError e) {
-					        e.printStackTrace();
-					        supported = false;
-					    }
+						try {
+							String lib_path = System.getProperty("net.java.games.input.librarypath");
+							if (lib_path != null) {
+								String[] lib_path_parts = lib_path.split(";");
+								boolean found = false;
+								for (int i = 0; i < lib_path_parts.length; i++) {
+									if (lib_path_parts[i].indexOf(lib_name) != -1) {
+										System.load(lib_path);
+										found = true;
+										break;
+									}
+								}
+								if (!found)
+									System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
+							} else {
+								System.loadLibrary(lib_name);
+							}
+						} catch (UnsatisfiedLinkError e) {
+							e.printStackTrace();
+							supported = false;
+						}
 						return null;
 					}
 				});
