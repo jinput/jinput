@@ -6,7 +6,7 @@
 	<name>JInput</name>
 	<version>@VERSION@</version>
 	<description>Library for access to input devices.</description>
-	<url>http://java.net/projects/jinput</url>
+	<url>https://github.com/jinput/jinput</url>
 	<licenses>
 		<license>
 			<name>BSD</name>
@@ -17,12 +17,12 @@
 	<developers>
 		<developer>
 			<id>Members</id>
-			<url>http://java.net/projects/jinput/members</url>
+			<url>https://github.com/jinput/jinput/graphs/contributors</url>
 		</developer>
 	</developers>
 	<scm>
-		<url>http://java.net/projects/jinput/sources/svn/show</url>
-		<connection>https://svn.java.net/svn/jinput~svn </connection>
+		<url>https://github.com/jinput/jinput</url>
+		<connection>https://github.com/jinput/jinput</connection>
 	</scm>
 	<dependencies>
 		<dependency>
