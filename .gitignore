@@ -8,3 +8,5 @@ bin/
 classes/
 dist/
 eclipse_bin/
+*.iml
+.idea/
