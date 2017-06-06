@@ -25,7 +25,7 @@
  * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
  * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
  * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
- * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS 
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
  * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
  * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
@@ -509,22 +509,24 @@ final class DIIdentifierMap {
 			case 21:
 				return Component.Identifier.Button._21;
 			case 22:
-				return Component.Identifier.Button._23;
+				return Component.Identifier.Button._22;
 			case 23:
-				return Component.Identifier.Button._24;
+				return Component.Identifier.Button._23;
 			case 24:
-				return Component.Identifier.Button._25;
+				return Component.Identifier.Button._24;
 			case 25:
-				return Component.Identifier.Button._26;
+				return Component.Identifier.Button._25;
 			case 26:
-				return Component.Identifier.Button._27;
+				return Component.Identifier.Button._26;
 			case 27:
-				return Component.Identifier.Button._28;
+				return Component.Identifier.Button._27;
 			case 28:
-				return Component.Identifier.Button._29;
+				return Component.Identifier.Button._28;
 			case 29:
-				return Component.Identifier.Button._30;
+				return Component.Identifier.Button._29;
 			case 30:
+				return Component.Identifier.Button._30;
+			case 31:
 				return Component.Identifier.Button._31;
 			default:
 				return null;
