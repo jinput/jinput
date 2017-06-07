@@ -38,9 +38,7 @@
  *****************************************************************************/
 package net.java.games.input;
 
-import java.io.File;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.Logger;
@@ -153,6 +151,44 @@ public abstract class ControllerEnvironment {
      * This usually corresponds to the environment for the local machine.
      */
     public static ControllerEnvironment getDefaultEnvironment() {
+        return defaultEnvironment;
+    }
+
+    public static ControllerEnvironment refreshDefaultEnvironment() {
+        DefaultControllerEnvironment newControllerEnvironment = new DefaultControllerEnvironment();
+        int oldControllerListLength = defaultEnvironment.getControllers().length;
+        int newControllerListLength = newControllerEnvironment.getControllers().length;
+
+        // If a controller is removed, the remaining controllers in the old environment should still be valid
+        // so the new environment can simply be discarded. Otherwise, the controllers in the old environment
+        // should be disposed before returning the new environment.
+        if (newControllerListLength < oldControllerListLength) {
+            for (int i = 0; i < newControllerListLength; i++) {
+                if (newControllerEnvironment.controllers.get(i) instanceof DisposableDevice) {
+                    try {
+                        ((DisposableDevice) newControllerEnvironment.controllers.get(i)).close();
+                    } catch (IOException e) {
+                        logln("Device file descriptor is already closed: " + e.getMessage());
+                    }
+                }
+            }
+        } else {
+            for (int i = 0; i < newControllerListLength; i++) {
+                if (i < oldControllerListLength) {
+                    if (!((Controller) ((DefaultControllerEnvironment) defaultEnvironment).controllers.get(i)).poll()) {
+                        if (((DefaultControllerEnvironment) defaultEnvironment).controllers.get(i) instanceof DisposableDevice) {
+                            try {
+                                ((DisposableDevice) ((DefaultControllerEnvironment) defaultEnvironment).controllers.get(i)).close();
+                            } catch (IOException e) {
+                                logln("Device file descriptor is already closed: " + e.getMessage());
+                            }
+                        }
+                    }
+                }
+            }
+            defaultEnvironment = newControllerEnvironment;
+        }
+
         return defaultEnvironment;
     }
 } // ControllerEnvironment

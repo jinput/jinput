@@ -38,20 +38,16 @@
  *****************************************************************************/
 package net.java.games.input;
 
+import net.java.games.util.plugins.Plugins;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
-
-import net.java.games.util.plugins.*;
 
 /**
  * The default controller environment.
@@ -105,7 +101,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
     /**
      * List of all controllers in this environment
      */
-    private ArrayList controllers;
+    protected ArrayList controllers;
     
 	private Collection loadedPlugins = new ArrayList();
 
