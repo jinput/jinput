@@ -243,8 +243,8 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 				// Check if the nodes have the same name
 				if(evController.getName().equals(jsController.getName())) {
 					// Check they have the same component count
-					Component[] evComponents = evController.getComponents();
-					Component[] jsComponents = jsController.getComponents();
+					final Component[] evComponents = evController.getComponents();
+					final Component[] jsComponents = jsController.getComponents();
 					if(evComponents.length==jsComponents.length) {
 						boolean foundADifference = false;
 						// check the component pairs are of the same type
@@ -254,9 +254,12 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 								foundADifference = true;
 							}
 						}
-						
-						if(!foundADifference) {
-							controllers.add(new LinuxCombinedController((LinuxAbstractController)eventControllers.remove(i), (LinuxJoystickAbstractController)jsControllers.remove(j)));
+
+						if(!foundADifference && evController instanceof LinuxAbstractController) {
+							LinuxAbstractController evCtrlPart = (LinuxAbstractController) eventControllers.remove(i);
+							LinuxJoystickAbstractController jsCtrlPart = (LinuxJoystickAbstractController) jsControllers
+									.remove(j);
+							controllers.add(new LinuxCombinedController(evCtrlPart, jsCtrlPart));
 							i--;
 							j--;
 							break;
