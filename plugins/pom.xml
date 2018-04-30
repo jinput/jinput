@@ -1,0 +1,18 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>plugins</artifactId>
+    <packaging>pom</packaging>
+    <name>JInput - plugins</name>
+
+    <parent>
+        <groupId>net.java.jinput</groupId>
+        <artifactId>jinput-parent</artifactId>
+        <version>2.0.8-SNAPSHOT</version>
+        <relativePath>../</relativePath>
+    </parent>
+
+    <modules>
+        <module>awt</module>
+        <module>linux</module>
+    </modules>
+</project>

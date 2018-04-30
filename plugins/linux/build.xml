@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." default="all" name="Linux Plugin">
+<project basedir="." default="compileNativeJinputLib" name="Linux Plugin">
+    <property name="libname64" value="libjinput-linux64.so"/>
+    <property name="libname32" value="libjinput-linux.so"/>
+
     <target name="init">
-        <mkdir dir="classes"/>
-        <mkdir dir="bin"/>
+        <mkdir dir="target/natives"/>
+        <mkdir dir="target/generated-sources/natives"/>
         <condition property="linux" >
             <!--<os family="unix" />-->
             <os name="Linux" />
@@ -10,63 +13,50 @@
 		
     </target>
 
-    <target depends="init" name="compile">
-		<!--		<ant dir="src/native" target="createNativeDefinitions.java"/>-->
-        <javac debug="true" deprecation="true" destdir="classes" source="1.4" target="1.4" srcdir="src/java">
+    <target name="createNativeDefinitions.java">
+        <exec dir="src/main/native" executable="gawk" os="Linux" output="../java/net/java/games/input/NativeDefinitions.java">
+            <arg line="-f"/>
+            <arg line="getDefinitions"/>
+            <arg line="/usr/include/linux/input.h"/>
+        </exec>
+    </target>
+
+    <target depends="createJNIHeaders" name="compileNativeJinputLib">
+        <exec executable="uname" outputproperty="hwplatform">
+            <arg value="-m"/>
+        </exec>
+        <condition property="libname" value="${libname64}" else="${libname32}">
+            <equals arg1="${hwplatform}" arg2="x86_64"/>
+        </condition>
+        <apply dir="target/natives" executable="cc" os="Linux" dest="target/natives" skipemptyfilesets="true" failonerror="true">
+            <arg line="-O2 -Wall -c -fPIC"/>
+            <arg value="-I${java.home}/include"/>
+            <arg value="-I${java.home}/include/linux"/>
+            <arg value="-I${java.home}/../include"/>
+            <arg value="-I${java.home}/../include/linux"/>
+            <arg value="-I../../../common/src/native"/>
+            <arg value="-I../generated-sources/natives"/>
+            <mapper type="glob" from="*.c" to="*.o"/>
+            <fileset dir="src/main/native" includes="*.c"/>
+            <fileset dir="../common/src/native" includes="*.c"/>
+        </apply>
+        <apply dir="target/natives" parallel="true" executable="cc" os="Linux" failonerror="true">
+            <arg line="-shared -O2 -Wall -o ${libname}"/>
+            <fileset dir="target/natives" includes="*.o"/>
+        </apply>
+        <apply dir="target/natives" parallel="true" executable="strip" os="Linux" failonerror="true">
+            <fileset file="target/natives/${libname}"/>
+        </apply>
+    </target>
+
+    <target depends="init" name="createJNIHeaders">
+		<javah destdir="target/generated-sources/natives">
             <classpath>
-				<pathelement location="../../coreAPI/bin/jinput-core.jar"/>
-                <pathelement location="../../lib/jutils.jar"/>
-            </classpath>
-        </javac>
-    </target>
-
-    <target depends="init,compile" name="jar">
-        <jar jarfile="bin/linux.jar" compress="true" basedir="classes">
-            <include name="**/*.class"/>
-        </jar> 
-    </target>
-
-    <target depends="jar,compileNativeJinputLib" description="Build everything." name="all">
-    </target>
-
-    <target name="javadoc" depends="init" description="Javadoc for Linux plugin for JInput.">
-        <mkdir dir="apidocs"/>
-        <javadoc packagenames="net.java.games.input.*" 
-                 destdir="apidocs"
-                 additionalparam="-source 1.4"
-                 link="../../../coreAPI/apidocs">
-            <sourcepath>
-                <pathelement location="src/java"/>
-            </sourcepath>
-             <classpath>
-                <pathelement location="../../coreAPI/bin/jinput-core.jar"/>
-                <pathelement location="../../coreAPI/lib/jutils.jar"/>
-            </classpath>
-        </javadoc>
-    </target>
-
-    <target description="Clean all build products." name="clean">
-		<delete dir="classes" failonerror="no"/>
-		<delete dir="bin" failonerror="no"/>
-        <delete dir="apidocs" failonerror="no"/>
-		<ant inheritAll="false" antfile="src/native/build.xml" target="clean"/>
-    </target>
-
-    <target depends="init,compile" name="createJNIHeaders">
-		<javah destdir="src/native">
-            <classpath>
-                <pathelement location="classes"/>
-                <pathelement location="../../coreAPI/bin/jinput-core.jar"/>
+                <pathelement location="target/classes"/>
+                <pathelement location="../../coreAPI/target/classes"/>
             </classpath>
 			<class name="net.java.games.input.LinuxEventDevice"/>
 			<class name="net.java.games.input.LinuxJoystickDevice"/>
 		</javah>
-    </target>
-    
-    <target depends="init,createJNIHeaders" name="compileNativeJinputLib" if="linux">
-        <ant dir="src/native" target="compileNativeJinputLib"/>
-        <copy todir="bin">
- 	       <fileset dir="src/native" includes="libjinput-linux*.so"/>
-	   </copy>
     </target>
 </project>
