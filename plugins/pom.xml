@@ -13,6 +13,36 @@
 
     <modules>
         <module>awt</module>
-        <module>linux</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>Linux</id>
+            <activation>
+                <os>
+                    <name>linux</name>
+                </os>
+            </activation>
+            <modules>
+                <module>linux</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>Windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <modules>
+                <module>windows</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>Wintab</id>
+            <modules>
+                <module>wintab</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>

@@ -6,11 +6,6 @@
     <target name="init">
         <mkdir dir="target/natives"/>
         <mkdir dir="target/generated-sources/natives"/>
-        <condition property="linux" >
-            <!--<os family="unix" />-->
-            <os name="Linux" />
-        </condition>
-		
     </target>
 
     <target name="createNativeDefinitions.java">
