@@ -2,36 +2,7 @@
 <project name="Direct Input Plugin" basedir=".">
     <target name="init">
         <mkdir dir="target/natives"/>
-        <mkdir dir="target/generated-sources/natives"/>
     </target>
-
-    <target depends="init" name="create_jniheaders">
-		<javah destdir="target/generated-sources/natives">
-            <classpath>
-                <pathelement path="classes"/>
-                <pathelement location="../../coreAPI/classes"/>
-            </classpath>
-			<class name="net.java.games.input.IDirectInput"/>
-			<class name="net.java.games.input.IDirectInputDevice"/>
-			<class name="net.java.games.input.IDirectInputEffect"/>
-		</javah>
-		<javah destdir="target/generated-sources/natives">
-            <classpath>
-                <pathelement path="target/classes"/>
-                <pathelement location="../../coreAPI/target/classes"/>
-            </classpath>
-			<class name="net.java.games.input.DummyWindow"/>
-		</javah>
-		<javah destdir="target/generated-sources/natives">
-            <classpath>
-                <pathelement path="classes"/>
-				<pathelement location="../../coreAPI/bin/jinput-core.jar"/>
-            </classpath>
-			<class name="net.java.games.input.RawInputEnvironmentPlugin"/>
-			<class name="net.java.games.input.RawInputEventQueue"/>
-			<class name="net.java.games.input.RawDevice"/>
-		</javah>
-	</target>
 
     <target name="compile_native" depends="init,create_jniheaders">
         <ant dir="src/native" target="compile"/>
