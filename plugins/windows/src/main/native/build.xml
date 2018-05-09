@@ -2,7 +2,6 @@
 
 <project name="JInput dx8 port, Native code" basedir="." default="compile">
 	<property environment="env"/>
-	<property name="dxhome" location="${env.DXSDK_DIR}"/>
 	<property name="sdkhome" location="${env.WindowsSdkDir}"/>
 
 	<target name="init">
@@ -12,14 +11,12 @@
 	<target name="compile_dir">
 		<echo message="${compiledir}"/>
 		<echo message="sdkhome: ${sdkhome}"/>
-		<echo message="dxhome: ${dxhome}"/>
 		<echo message="target arch: ${os.arch}"/>
 		<apply dir="${compiledir}" failonerror="true" executable="cl" dest="${compiledir}" skipemptyfilesets="true">
 			<arg line="/Ox /W2 /nologo /c"/>
 			<arg value="/I${sdkhome}\include"/>
-			<arg value="/I${dxhome}\include"/>
-			<arg value="/I${java.home}\..\include"/>
-			<arg value="/I${java.home}\..\include\win32"/>
+			<arg value="/I${java.home}\include"/>
+			<arg value="/I${java.home}\include\win32"/>
 			<arg value="/I${commonhome}/src/native"/>
 			<arg value="/I.."/>
 			<srcfile/>
