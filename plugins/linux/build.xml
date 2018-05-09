@@ -5,7 +5,6 @@
 
     <target name="init">
         <mkdir dir="target/natives"/>
-        <mkdir dir="target/generated-sources/natives"/>
     </target>
 
     <target name="createNativeDefinitions.java">
@@ -16,7 +15,7 @@
         </exec>
     </target>
 
-    <target depends="createJNIHeaders" name="compileNativeJinputLib">
+    <target depends="init" name="compileNativeJinputLib">
         <exec executable="uname" outputproperty="hwplatform">
             <arg value="-m"/>
         </exec>
@@ -42,16 +41,5 @@
         <apply dir="target/natives" parallel="true" executable="strip" os="Linux" failonerror="true">
             <fileset file="target/natives/${libname}"/>
         </apply>
-    </target>
-
-    <target depends="init" name="createJNIHeaders">
-		<javah destdir="target/generated-sources/natives">
-            <classpath>
-                <pathelement location="target/classes"/>
-                <pathelement location="../../coreAPI/target/classes"/>
-            </classpath>
-			<class name="net.java.games.input.LinuxEventDevice"/>
-			<class name="net.java.games.input.LinuxJoystickDevice"/>
-		</javah>
     </target>
 </project>
