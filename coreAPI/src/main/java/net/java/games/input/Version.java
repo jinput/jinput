@@ -33,6 +33,11 @@
 
 package net.java.games.input;
 
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 /**
  * The version and build number of this implementation.
  * Version numbers for a release are of the form: w.x.y, where:
@@ -75,12 +80,23 @@ public final class Version {
   /**
    * Returns the verison string and build number of
    * this implementation.  See the class descritpion
-   * for the version string format. 
+   * for the version string format.
    *
    * @return The version string of this implementation.
    */
   public static String getVersion() {
+      String version = "Unversioned";
+      try {
+          Properties p = new Properties();
+          InputStream is = Version.class.getResourceAsStream("/META-INF/maven/net.java.jinput/coreapi/pom.properties");
+          if(is != null) {
+              p.load(is);
+              version = p.getProperty("version", "");
+          }
+      } catch(IOException e) {
+          // ignore
+      }
 
-    return getClass().getPackage().getImplementationVersion();
+      return version;
   }
 }
