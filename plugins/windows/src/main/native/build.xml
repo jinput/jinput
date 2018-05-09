@@ -30,16 +30,14 @@
 	</target>
 
 	<target name="link">
-		<apply dir="." parallel="true" executable="cl" failonerror="true">
+		<apply dir="${compiled-natives}" parallel="true" executable="cl" failonerror="true">
 			<arg line="/LD /nologo"/>
 			<srcfile/>
 			<arg line="/Fe${dllname} /link"/>
 			<arg value="/LIBPATH:${java.home}\lib"/>
 			<arg value="/LIBPATH:${sdkhomelib}"/>
 			<arg line="/DLL ${libs}"/>
-			<fileset dir="${commonhome}/src/native" includes="*.obj"/>
-			<fileset dir="." includes="*.obj"/>
-			<fileset dir="${objdir}" includes="*.obj"/>
+			<fileset dir="${compiled-natives}" includes="winutil.obj,util.obj,net_java_games_input_DummyWindow.obj,${include-pattern}"/>
 		</apply>
 	</target>
 
@@ -72,12 +70,12 @@
 		<antcall target="link">
 			<param name="dllname" value="${dx8dllname}"/>
 			<param name="libs" value="${dx8libs}"/>
-			<param name="objdir" location="dx8"/>
+            <param name="include-pattern" value="net_java_games_input_IDirect*.obj"/>
 		</antcall>
 		<antcall target="link">
 			<param name="dllname" value="${rawdllname}"/>
 			<param name="libs" value="${rawlibs}"/>
-			<param name="objdir" location="raw"/>
+			<param name="include-pattern" value="net_java_games_input_Raw*.obj"/>
 		</antcall>
     </target>
 </project>
