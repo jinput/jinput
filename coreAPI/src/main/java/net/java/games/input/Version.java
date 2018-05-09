@@ -35,7 +35,7 @@ package net.java.games.input;
 
 /**
  * The version and build number of this implementation.
- * Version numbers for a release are of the form: w.x.y[-a]-z, where:
+ * Version numbers for a release are of the form: w.x.y, where:
  * <ul>
  *   <li>
  *     w - the major version number of the release.  This number should
@@ -53,27 +53,13 @@ package net.java.games.input;
  *         bump in the minor-minor version number signifies that new bug
  *         fixes have been  added to the build.
  *  </li>
- *  <li>
- *    a - an optional build designator followed by a digit.  Valid build
- *        designators are:
- *    <ul>
- *      <li>alpha</li>
- *      <li>beta</li>
- *    </ul>
- *  </li>
- *  <li>
- *    z - build number.  This is used to specify the build number of the
- *        release.  This is usually only important to people that use
- *        the daily build of a project.  The format is the lower-case
- *        letter 'b' followed by a two digit number.
- *  </li>
  *  </ul>
  *
  * For example, the following are all valid version strings:
  * <ul>
- *   <li>1.1.2-b02</li>
- *   <li>1.3.5-alpha1-b19</li>
- *   <li>4.7.1-beta3-b20</li>
+ *   <li>1.1.2</li>
+ *   <li>1.3.5-SNAPSHOT</li>
+ *   <li>4.7.1-M2</li>
  * </ul>
  *
  */
@@ -87,18 +73,6 @@ public final class Version {
   }
 
   /**
-   * Version string of this build.
-   */
-  private static final String apiVersion = "@API_VERSION@";
-  private static final String buildNumber = "@BUILD_NUMBER@";
-
-  /*
-   * Split so that ant does not replace the token;
-   */
-  private static final String antBuildNumberToken = "@BUILD_" + "NUMBER@";
-  private static final String antAPIVersionToken = "@API_" + "VERSION@";
-  
-  /**
    * Returns the verison string and build number of
    * this implementation.  See the class descritpion
    * for the version string format. 
@@ -106,13 +80,7 @@ public final class Version {
    * @return The version string of this implementation.
    */
   public static String getVersion() {
-	String version = "Unversioned";
-	if(!antAPIVersionToken.equals(apiVersion)) {
-		version = apiVersion;
-	}
-	if(!antBuildNumberToken.equals(buildNumber)) {
-		version += "-b" + buildNumber;
-	}
-    return version;
+
+    return getClass().getPackage().getImplementationVersion();
   }
 }
