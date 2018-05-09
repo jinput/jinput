@@ -43,7 +43,7 @@
                         <phase>compile</phase>
                         <configuration>
                             <target>
-                                <ant dir="." target="compile_native"/>
+                                <ant dir="${project.build.sourceDirectory}/main/native"/>
                             </target>
                         </configuration>
                         <goals>

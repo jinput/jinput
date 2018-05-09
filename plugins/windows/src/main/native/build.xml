@@ -5,6 +5,10 @@
 	<property name="dxhome" location="${env.DXSDK_DIR}"/>
 	<property name="sdkhome" location="${env.WindowsSdkDir}"/>
 
+	<target name="init">
+		<mkdir dir="target/natives"/>
+	</target>
+
 	<target name="compile_dir">
 		<echo message="${compiledir}"/>
 		<echo message="sdkhome: ${sdkhome}"/>
