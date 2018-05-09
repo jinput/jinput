@@ -28,7 +28,6 @@
 		</apply>
 	</target>
 
-	<!--	<target name="link" unless="nolink">-->
 	<target name="link">
 		<apply dir="." parallel="true" executable="cl" failonerror="true">
 			<arg line="/LD /nologo"/>
@@ -44,22 +43,10 @@
 		</apply>
 	</target>
 
-	<target name="clean">
-		<delete>
-			<fileset dir="." includes="*.obj"/>
-			<fileset dir="raw" includes="*.obj"/>
-			<fileset dir="dx8" includes="*.obj"/>
-			<fileset dir="." includes="*.dll"/>
-			<fileset dir="." includes="*.exp"/>
-			<fileset dir="." includes="*.lib"/>
-			<fileset dir="../../../common/src/native" includes="*.obj"/>
-		</delete>
-	</target>
-
 	<target name="compile">
 		<property name="rawlibs" value="Kernel32.lib User32.lib Setupapi.lib"/>
 		<property name="dx8libs" value="Kernel32.lib dinput8.lib dxguid.lib User32.lib"/>
-		<property name="commonhome" location="../../../common"/>
+		<property name="commonhome" location="../../../../common"/>
 		
 		<condition property="dx8dllname" value="jinput-dx8.dll" else="jinput-dx8_64.dll">
 			<equals arg1="${os.arch}" arg2="x86"/>
@@ -85,9 +72,6 @@
 		<antcall target="compile_dir">
 			<param name="compiledir" location="dx8"/>
 		</antcall>
-		<!--		<uptodate property="nolink" targetfile="${dllname}">
-			<srcfiles dir="." includes="*.obj"/>
-		</uptodate>-->
 		<antcall target="link">
 			<param name="dllname" value="${dx8dllname}"/>
 			<param name="libs" value="${dx8libs}"/>
