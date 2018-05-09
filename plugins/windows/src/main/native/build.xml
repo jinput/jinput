@@ -3,23 +3,27 @@
 <project name="JInput dx8 port, Native code" basedir="." default="compile">
 	<property environment="env"/>
 	<property name="sdkhome" location="${env.WindowsSdkDir}"/>
+    <property name="generated-natives" location="..\..\..\target\generated-sources\natives"/>
+    <property name="compiled-natives" location="..\..\..\target/natives"/>
+    <property name="srcdir" location="."/>
 
 	<target name="init">
-		<mkdir dir="target/natives"/>
+		<mkdir dir="${compiled-natives}"/>
 	</target>
 
 	<target name="compile_dir">
 		<echo message="${compiledir}"/>
 		<echo message="sdkhome: ${sdkhome}"/>
 		<echo message="target arch: ${os.arch}"/>
-		<apply dir="${compiledir}" failonerror="true" executable="cl" dest="${compiledir}" skipemptyfilesets="true">
+        <echo message="sdkversion: ${env.WindowsSDKVersion}"/>
+		<apply dir="${compiled-natives}" failonerror="true" executable="cl" dest="${compiled-natives}" skipemptyfilesets="true">
 			<arg line="/Ox /W2 /nologo /c"/>
-			<arg value="/I${sdkhome}\include"/>
+			<arg value="/I${sdkhome}\include\${env.WindowsSDKVersion}um"/>
 			<arg value="/I${java.home}\include"/>
 			<arg value="/I${java.home}\include\win32"/>
-			<arg value="/I${commonhome}/src/native"/>
-			<arg value="/I.."/>
-			<srcfile/>
+			<arg value="/I${commonhome}\src\native"/>
+			<arg value="/I${generated-natives}"/>
+            <arg value="/I${srcdir}"/>
 			<fileset dir="${compiledir}" includes="*.c"/>
 			<mapper type="glob" from="*.c" to="*.obj"/>
 		</apply>
@@ -31,7 +35,6 @@
 			<srcfile/>
 			<arg line="/Fe${dllname} /link"/>
 			<arg value="/LIBPATH:${java.home}\lib"/>
-			<arg value="/LIBPATH:${dxhomelib}"/>
 			<arg value="/LIBPATH:${sdkhomelib}"/>
 			<arg line="/DLL ${libs}"/>
 			<fileset dir="${commonhome}/src/native" includes="*.obj"/>
@@ -40,7 +43,7 @@
 		</apply>
 	</target>
 
-	<target name="compile">
+	<target name="compile" depends="init">
 		<property name="rawlibs" value="Kernel32.lib User32.lib Setupapi.lib"/>
 		<property name="dx8libs" value="Kernel32.lib dinput8.lib dxguid.lib User32.lib"/>
 		<property name="commonhome" location="../../../../common"/>
@@ -51,10 +54,7 @@
 		<condition property="rawdllname" value="jinput-raw.dll" else="jinput-raw_64.dll">
 			<equals arg1="${os.arch}" arg2="x86"/>
 		</condition>
-		<condition property="dxhomelib" value="${dxhome}\lib\x86" else="${dxhome}\lib\x64">
-			<equals arg1="${os.arch}" arg2="x86"/>
-		</condition>
-		<condition property="sdkhomelib" value="${sdkhome}\lib" else="${sdkhome}\lib\x64">
+		<condition property="sdkhomelib" value="${sdkhome}\lib\${env.WindowsSDKVersion}um\x86" else="${sdkhome}\lib\${env.WindowsSDKVersion}um\x64">
 			<equals arg1="${os.arch}" arg2="x86"/>
 		</condition>
 		<antcall target="compile_dir">
@@ -81,4 +81,3 @@
 		</antcall>
     </target>
 </project>
-
