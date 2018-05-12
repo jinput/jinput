@@ -39,6 +39,17 @@
             </modules>
         </profile>
         <profile>
+            <id>OSX</id>
+            <activation>
+                <os>
+                    <family>macos</family>
+                </os>
+            </activation>
+            <modules>
+                <module>OSX</module>
+            </modules>
+        </profile>
+        <profile>
             <id>Wintab</id>
             <modules>
                 <module>wintab</module>
