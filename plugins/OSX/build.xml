@@ -1,80 +1,82 @@
 <?xml version="1.0" ?>
-<project basedir="." default="all" name="OSX Plugin">
-    <description>OSX JInput Plugin</description>
-    <property name="src" location="src" />
-    <property name="build" location="classes"/>
-    <property name="bin" location="bin" />
-    <property name="plugins" location="plugins" />
-    
-    <target name="init">
-		<mkdir dir="${build}"/>
-		<mkdir dir="${bin}"/>
-		<condition property="macosx">
-			<and>
-				<os family="mac" />
-				<os family="unix" />
-			</and>
-		</condition>
-    </target>
+<project name="OS X Plugin, Native code" basedir="." default="compileNativeJinputLib">
+	<description>OSX JInput Native Plugin</description>
 
-    <target depends="init" name="compile">
-        <javac debug="true" deprecation="true" destdir="${build}" source="1.4" srcdir="src/java">
-            <classpath>
-                <pathelement location="../../coreAPI/bin/jinput-core.jar"/>
-                <pathelement location="../../lib/jutils.jar"/>
-            </classpath>
-        </javac>
-    </target>
+	<target name="init">
+		<mkdir dir="target/natives"/>
+	</target>
 
-	<target depends="init,compile" name="jar">
-        <jar jarfile="${bin}/HIDWrapper.jar" compress="true" basedir="${build}">
-            <include name="**/*.class"/>
-        </jar> 
-    </target>
-
-    <target depends="compileNativeJinputLib,jar" description="Build everything." name="all">
-    </target>
-
-    <target name="javadoc" depends="init" description="Javadoc for OS X plugin for JInput.">
-        <mkdir dir="apidocs"/>
-        <javadoc packagenames="net.java.games.input.*" 
-                 destdir="apidocs"
-                 additionalparam="-source 1.4"
-                 link="../../../coreAPI/apidocs">
-            <sourcepath>
-                <pathelement location="src/java"/>
-            </sourcepath>
-             <classpath>
-                <pathelement location="../../coreAPI/bin/jinput-core.jar"/>
-                <pathelement location="../../lib/jutils.jar"/>
-            </classpath>
-        </javadoc>
-    </target>
-
-    <target description="Clean all build products." name="clean">
-		<delete dir="classes" failonerror="no"/>
-		<delete dir="bin" failonerror="no"/>
-		<delete dir="apidocs" failonerror="no"/>
-		<ant inheritAll="false" antfile="src/native/build.xml" target="clean"/>
-    </target>
-
-    <target depends="init,compile" name="createJNIHeaders">
-        <javah destdir="src/native">
-            <classpath>
-                <pathelement path="${build}"/>
-                <pathelement location="../../coreAPI/classes"/>
-            </classpath>
-			<class name="net.java.games.input.OSXHIDDeviceIterator"/>
-			<class name="net.java.games.input.OSXHIDDevice"/>
-			<class name="net.java.games.input.OSXHIDQueue"/>
-        </javah>
-    </target>
-
+	<target name="compile">
+		<apply dir="${dstdir}" executable="${compiler}" os="Mac OS X" skipemptyfilesets="true" failonerror="true" dest="${dstdir}">
+			<arg line="${cflags} -O2 -Wall -c -fPIC -I${sdkroot}/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers -I../../../../common/src/native -I.."/>
+			<mapper type="glob" from="*.c" to="*.o"/>
+			<fileset dir="." includes="*.c"/>
+			<fileset dir="../../../common/src/native" includes="*.c"/>
+		</apply>
+	</target>
 	
-    <target name="compileNativeJinputLib" depends="init,createJNIHeaders" if="macosx">
-        <ant dir="src/native" target="compileNativeJinputLib"/>
-		<copy todir="${bin}">
-			<fileset dir="src/native" includes="*.jnilib"/>
-		</copy>
-    </target>
+	<target name="link">
+		<apply dir="${objdir}" parallel="true" executable="${linker}" os="Mac OS X" failonerror="true" skipemptyfilesets="true">
+			<arg line="${linkerflags} -dynamiclib -o ${libname} -framework JavaVM -framework CoreFoundation -framework IOKit -framework CoreServices"/>
+			<fileset dir="${objdir}" includes="*.o"/>
+		</apply>
+		<apply dir="${objdir}" executable="strip" os="Mac OS X" failonerror="true">
+			<arg line="-S -X"/>
+			<fileset dir="." includes="${libname}"/>
+		</apply>
+	</target>
+	
+	<target name="compileNativeJinputLib" depends="init">
+		<property name="ppc_sdkroot" location="/Developer/SDKs/MacOSX10.3.9.sdk"/>
+		<property name="universal_sdkroot" location="/Developer/SDKs/MacOSX10.4u.sdk"/>
+		<property name="x86_64_sdkroot" location="/Developer/SDKs/MacOSX10.5.sdk"/>
+		<property name="ppc_flags" value="-isysroot ${universal_sdkroot} -arch ppc -mmacosx-version-min=10.3"/>
+		<property name="universal_flags" value="-isysroot ${universal_sdkroot} -arch i386 -mmacosx-version-min=10.4"/>
+		<property name="x86_64_flags" value="-isysroot ${x86_64_sdkroot} -arch x86_64 -mmacosx-version-min=10.5"/>
+		<antcall target="compile">
+			<param name="dstdir" location="target/natives/ppc"/>
+			<param name="compiler" value="gcc-4.0"/>
+			<param name="sdkroot" location="${universal_sdkroot}"/>
+			<param name="cflags" value="${ppc_flags}"/>
+		</antcall>
+		<antcall target="link">
+			<param name="objdir" location="target/natives/ppc"/>
+			<param name="libname" value="libjinput-osx-ppc.jnilib"/>
+			<param name="linker" value="gcc-4.0"/>
+			<param name="linkerflags" value="${ppc_flags}"/>
+		</antcall>
+		<antcall target="compile">
+			<param name="dstdir" location="target/natives/i386"/>
+			<param name="compiler" value="gcc-4.0"/>
+			<param name="sdkroot" location="${universal_sdkroot}"/>
+			<param name="cflags" value="${universal_flags}"/>
+		</antcall>
+		<antcall target="link">
+			<param name="objdir" location="target/natives/i386"/>
+			<param name="libname" value="libjinput-osx-i386.jnilib"/>
+			<param name="linker" value="gcc-4.0"/>
+			<param name="linkerflags" value="${universal_flags}"/>
+		</antcall>
+		<antcall target="compile">
+			<param name="dstdir" location="target/natives/x86_64"/>
+			<param name="compiler" value="gcc-4.0"/>
+			<param name="sdkroot" location="${x86_64_sdkroot}"/>
+			<param name="cflags" value="${x86_64_flags}"/>
+		</antcall>
+		<antcall target="link">
+			<param name="objdir" location="target/natives/x86_64"/>
+			<param name="libname" value="libjinput-osx-x86_64.jnilib"/>
+			<param name="linker" value="gcc-4.0"/>
+			<param name="linkerflags" value="${x86_64_flags}"/>
+		</antcall>
+		<apply dir="." parallel="true" executable="lipo" os="Mac OS X" failonerror="true" skipemptyfilesets="true" >
+			<arg value="-create"/>
+			<srcfile/>
+			<arg value="-output"/>
+			<arg path="libjinput-osx.jnilib"/>
+			<fileset file="target/natives/ppc/libjinput-osx-ppc.jnilib"/>
+			<fileset file="target/natives/i386/libjinput-osx-i386.jnilib"/>
+			<fileset file="target/natives/x86_64/libjinput-osx-x86_64.jnilib"/>
+		</apply>
+	</target>
 </project>
