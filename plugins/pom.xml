@@ -42,7 +42,7 @@
             <id>OSX</id>
             <activation>
                 <os>
-                    <family>macos</family>
+                    <family>mac</family>
                 </os>
             </activation>
             <modules>
