@@ -17,6 +17,22 @@
             <artifactId>coreapi</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!--
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>windows-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>natives-windows</classifier>
+                </dependency>
+        -->
+        <!--
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>osx-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>natives-osx</classifier>
+                </dependency>
+        -->
     </dependencies>
 
     <build>
@@ -27,6 +43,104 @@
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>com.googlecode.mavennatives</groupId>
+                <artifactId>maven-nativedependencies-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>linux</id>
+            <activation>
+                <os>
+                    <family>linux</family>
+                </os>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>linux-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>natives-linux</classifier>
+                </dependency>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>linux-plugin</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>osx</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>osx-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>natives-osx</classifier>
+                </dependency>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>osx-plugin</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>windows-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>natives-windows</classifier>
+                </dependency>
+                <dependency>
+                    <groupId>${project.groupId}</groupId>
+                    <artifactId>windows-plugin</artifactId>
+                    <version>${project.version}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>ReadAllEvents</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath/>
+                                <argument>-Djava.library.path=${project.build.directory}/natives</argument>
+                                <argument>net.java.games.input.example.ReadAllEvents</argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
