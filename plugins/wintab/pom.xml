@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>net.java.jinput</groupId>
-            <artifactId>coreapi</artifactId>
+            <artifactId>windows-plugin</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
