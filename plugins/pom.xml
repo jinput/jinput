@@ -50,7 +50,7 @@
             </modules>
         </profile>
         <profile>
-            <id>Wintab</id>
+            <id>wintab</id>
             <modules>
                 <module>wintab</module>
             </modules>
