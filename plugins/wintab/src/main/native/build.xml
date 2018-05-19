@@ -4,27 +4,32 @@
     <property environment="env"/>
     <property name="wintabhome" location="${env.WINTAB_DIR}"/>
     <property name="sdkhome" location="${env.WindowsSdkDir}"/>
+    <property name="generated-natives" location="..\..\..\target\generated-sources\natives"/>
+    <property name="compiled-natives" location="..\..\..\target/natives"/>
+
+    <target name="init">
+        <mkdir dir="${compiled-natives}"/>
+    </target>
 
     <target name="compile_dir">
         <echo message="${compiledir}"/>
         <echo message="wintab: ${wintabhome}"/>
-        <apply dir="${compiledir}" failonerror="true" executable="cl" dest="${compiledir}" skipemptyfilesets="true">
+        <apply dir="${compiled-natives}" failonerror="true" executable="cl" dest="${compiled-natives}" skipemptyfilesets="true">
             <arg line="/Ox /W2 /nologo /c"/>
             <arg value="/I${sdkhome}\include"/>
             <arg value="/I${wintabhome}\include"/>
             <arg value="/I${java.home}\include"/>
             <arg value="/I${java.home}\include\win32"/>
             <arg value="/I${commonhome}/src/native"/>
-            <arg value="/I.."/>
+            <arg value="/I${generated-natives}"/>
             <srcfile/>
             <fileset dir="${compiledir}" includes="*.c"/>
             <mapper type="glob" from="*.c" to="*.obj"/>
         </apply>
     </target>
 
-    <!--	<target name="link" unless="nolink">-->
     <target name="link">
-        <apply dir="." parallel="true" executable="cl" failonerror="true">
+        <apply dir="${compiled-natives}" parallel="true" executable="cl" failonerror="true">
             <arg line="/LD /nologo"/>
             <srcfile/>
             <arg line="/Fe${dllname} /link"/>
@@ -32,13 +37,11 @@
             <arg value="/LIBPATH:${wintabhome}\lib\I386"/>
             <arg value="/LIBPATH:${sdkhome}\lib"/>
             <arg line="/DLL ${libs}"/>
-            <fileset dir="${commonhome}/src/native" includes="*.obj"/>
-            <fileset dir="." includes="*.obj"/>
-            <fileset dir="../../../windows/src/native" includes="*.obj"/>
+            <fileset dir="${compiled-natives}" includes="*.obj"/>
         </apply>
     </target>
 
-    <target name="compile" if="wintabhome">
+    <target name="compile" depends="init">
         <property name="wintablibs" value="Kernel32.lib WINTAB32.LIB User32.lib"/>
         <property name="commonhome" location="../../../../common"/>
         <property name="dllname" value="jinput-wintab.dll"/>
@@ -51,9 +54,6 @@
         <antcall target="compile_dir">
             <param name="compiledir" location="../../../windows/src/native"/>
         </antcall>
-        <!--		<uptodate property="nolink" targetfile="${dllname}">
-            <srcfiles dir="." includes="*.obj"/>
-        </uptodate>-->
         <antcall target="link">
             <param name="dllname" value="${dllname}"/>
             <param name="libs" value="${wintablibs}"/>
