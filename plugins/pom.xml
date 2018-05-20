@@ -51,6 +51,14 @@
         </profile>
         <profile>
             <id>wintab</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+                <property>
+                    <name>env.WINTABSDKDIR</name>
+                </property>
+            </activation>
             <modules>
                 <module>wintab</module>
             </modules>
