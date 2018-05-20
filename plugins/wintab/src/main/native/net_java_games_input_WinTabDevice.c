@@ -3,7 +3,6 @@
 
 #include <jni.h>
 #include "net_java_games_input_WinTabDevice.h"
-#include "net_java_games_input_WinTabComponent.h"
 #include "util.h"
 #include <wintab.h>
 #include <malloc.h>
@@ -26,15 +25,15 @@ JNIEXPORT jintArray JNICALL Java_net_java_games_input_WinTabDevice_nGetAxisDetai
 	int res;
 	jintArray retVal = NULL;
 	
-	if(axisId==net_java_games_input_WinTabComponent_XAxis) type = DVC_X;
-	else if(axisId==net_java_games_input_WinTabComponent_YAxis) type = DVC_Y;
-	else if(axisId==net_java_games_input_WinTabComponent_ZAxis) type = DVC_Z;
-	else if(axisId==net_java_games_input_WinTabComponent_NPressureAxis) type = DVC_NPRESSURE;
-	else if(axisId==net_java_games_input_WinTabComponent_TPressureAxis) type = DVC_TPRESSURE;
-	else if(axisId==net_java_games_input_WinTabComponent_OrientationAxis) type = DVC_ORIENTATION;
-	else if(axisId==net_java_games_input_WinTabComponent_RotationAxis) type = DVC_ROTATION;
+	if(axisId==net_java_games_input_WinTabDevice_XAxis) type = DVC_X;
+	else if(axisId==net_java_games_input_WinTabDevice_YAxis) type = DVC_Y;
+	else if(axisId==net_java_games_input_WinTabDevice_ZAxis) type = DVC_Z;
+	else if(axisId==net_java_games_input_WinTabDevice_NPressureAxis) type = DVC_NPRESSURE;
+	else if(axisId==net_java_games_input_WinTabDevice_TPressureAxis) type = DVC_TPRESSURE;
+	else if(axisId==net_java_games_input_WinTabDevice_OrientationAxis) type = DVC_ORIENTATION;
+	else if(axisId==net_java_games_input_WinTabDevice_RotationAxis) type = DVC_ROTATION;
 		
-	if(axisId==net_java_games_input_WinTabComponent_RotationAxis || axisId==net_java_games_input_WinTabComponent_OrientationAxis) {
+	if(axisId==net_java_games_input_WinTabDevice_RotationAxis || axisId==net_java_games_input_WinTabDevice_OrientationAxis) {
 		res = WTInfo(WTI_DEVICES + deviceIndex, type, &threeAxisArray);
 		if(res!=0) {
 			threeAxisData[0] = threeAxisArray[0].axMin;

@@ -33,14 +33,6 @@ import java.util.List;
 
 public class WinTabComponent extends AbstractComponent {
 
-	public final static int XAxis = 1;
-	public final static int YAxis = 2;
-	public final static int ZAxis = 3;
-	public final static int NPressureAxis = 4;
-	public final static int TPressureAxis = 5;
-	public final static int OrientationAxis = 6;
-	public final static int RotationAxis = 7;
-
 	private int min;
 	private int max;
 	protected float lastKnownValue;
@@ -77,27 +69,27 @@ public class WinTabComponent extends AbstractComponent {
 		List components = new ArrayList();
 		Identifier id;
 		switch(axisId) {
-		case XAxis:
+		case WinTabDevice.XAxis:
 			id = Identifier.Axis.X;
 			components.add(new WinTabComponent(context, parentDevice, id.getName(), id, axisRanges[0], axisRanges[1]));
 			break;
-		case YAxis:
+		case WinTabDevice.YAxis:
 			id = Identifier.Axis.Y;
 			components.add(new WinTabComponent(context, parentDevice, id.getName(), id, axisRanges[0], axisRanges[1]));
 			break;
-		case ZAxis:
+		case WinTabDevice.ZAxis:
 			id = Identifier.Axis.Z;
 			components.add(new WinTabComponent(context, parentDevice, id.getName(), id, axisRanges[0], axisRanges[1]));
 			break;
-		case NPressureAxis:
+		case WinTabDevice.NPressureAxis:
 			id = Identifier.Axis.X_FORCE;
 			components.add(new WinTabComponent(context, parentDevice, id.getName(), id, axisRanges[0], axisRanges[1]));
 			break;
-		case TPressureAxis:
+		case WinTabDevice.TPressureAxis:
 			id = Identifier.Axis.Y_FORCE;
 			components.add(new WinTabComponent(context, parentDevice, id.getName(), id, axisRanges[0], axisRanges[1]));
 			break;
-		case OrientationAxis:
+		case WinTabDevice.OrientationAxis:
 			id = Identifier.Axis.RX;
 			components.add(new WinTabComponent(context, parentDevice, id.getName(), id, axisRanges[0], axisRanges[1]));
 			id = Identifier.Axis.RY;
@@ -105,7 +97,7 @@ public class WinTabComponent extends AbstractComponent {
 			id = Identifier.Axis.RZ;
 			components.add(new WinTabComponent(context, parentDevice, id.getName(), id, axisRanges[4], axisRanges[5]));
 			break;
-		case RotationAxis:
+		case WinTabDevice.RotationAxis:
 			id = Identifier.Axis.RX;
 			components.add(new WinTabComponent(context, parentDevice, id.getName(), id, axisRanges[0], axisRanges[1]));
 			id = Identifier.Axis.RY;
