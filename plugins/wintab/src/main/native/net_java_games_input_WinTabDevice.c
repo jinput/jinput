@@ -4,6 +4,7 @@
 #include <jni.h>
 #include "net_java_games_input_WinTabDevice.h"
 #include "util.h"
+#include "wintabutils.h"
 #include <wintab.h>
 #include <malloc.h>
 #define PACKETDATA	( PK_X | PK_Y | PK_Z | PK_BUTTONS | PK_NORMAL_PRESSURE | PK_ORIENTATION | PK_CURSOR )
@@ -12,7 +13,7 @@
 
 JNIEXPORT jstring JNICALL Java_net_java_games_input_WinTabDevice_nGetName(JNIEnv *env, jclass unused, jint deviceIndex) {
 	char name[50];
-	WTInfo(WTI_DEVICES + deviceIndex, DVC_NAME, name);
+	gpWTInfoA(WTI_DEVICES + deviceIndex, DVC_NAME, name);
 	return (*env)->NewStringUTF(env, name);
 }
 
@@ -34,7 +35,7 @@ JNIEXPORT jintArray JNICALL Java_net_java_games_input_WinTabDevice_nGetAxisDetai
 	else if(axisId==net_java_games_input_WinTabDevice_RotationAxis) type = DVC_ROTATION;
 		
 	if(axisId==net_java_games_input_WinTabDevice_RotationAxis || axisId==net_java_games_input_WinTabDevice_OrientationAxis) {
-		res = WTInfo(WTI_DEVICES + deviceIndex, type, &threeAxisArray);
+		res = gpWTInfoA(WTI_DEVICES + deviceIndex, type, &threeAxisArray);
 		if(res!=0) {
 			threeAxisData[0] = threeAxisArray[0].axMin;
 			threeAxisData[1] = threeAxisArray[0].axMax;
@@ -46,7 +47,7 @@ JNIEXPORT jintArray JNICALL Java_net_java_games_input_WinTabDevice_nGetAxisDetai
 			(*env)->SetIntArrayRegion(env, retVal, 0, 6, threeAxisData);
 		}
 	} else {
-		res = WTInfo(WTI_DEVICES + deviceIndex, type, &axis);
+		res = gpWTInfoA(WTI_DEVICES + deviceIndex, type, &axis);
 		if(res!=0) {
 			axisData[0] = axis.axMin;
 			axisData[1] = axis.axMax;
@@ -71,13 +72,13 @@ JNIEXPORT jobjectArray JNICALL Java_net_java_games_input_WinTabDevice_nGetCursor
 	jstring nameString;
 	jobjectArray retval;
 	
-	WTInfo(WTI_DEVICES + deviceId, DVC_NCSRTYPES, &numberCursorTypes);
-	WTInfo(WTI_DEVICES + deviceId, DVC_FIRSTCSR, &firstCursorType);
+	gpWTInfoA(WTI_DEVICES + deviceId, DVC_NCSRTYPES, &numberCursorTypes);
+	gpWTInfoA(WTI_DEVICES + deviceId, DVC_FIRSTCSR, &firstCursorType);
 	
 	retval = (*env)->NewObjectArray(env, numberCursorTypes, stringClass, NULL);
 	
 	for(i=0;i<numberCursorTypes;i++) {
-		WTInfo(WTI_CURSORS + i + firstCursorType, CSR_NAME, name);
+		gpWTInfoA(WTI_CURSORS + i + firstCursorType, CSR_NAME, name);
 		nameString = (*env)->NewStringUTF(env, name);
 		(*env)->SetObjectArrayElement(env, retval, i-firstCursorType, nameString);
 	}
@@ -92,11 +93,11 @@ JNIEXPORT jint JNICALL Java_net_java_games_input_WinTabDevice_nGetMaxButtonCount
 	int i;
 	byte retval=0;
 	
-	WTInfo(WTI_DEVICES + deviceId, DVC_NCSRTYPES, &numberCursorTypes);
-	WTInfo(WTI_DEVICES + deviceId, DVC_FIRSTCSR, &firstCursorType);
+	gpWTInfoA(WTI_DEVICES + deviceId, DVC_NCSRTYPES, &numberCursorTypes);
+	gpWTInfoA(WTI_DEVICES + deviceId, DVC_FIRSTCSR, &firstCursorType);
 	
 	for(i=0;i<numberCursorTypes;i++) {
-		WTInfo(WTI_CURSORS + i + firstCursorType, CSR_BUTTONS, &buttonCount);
+		gpWTInfoA(WTI_CURSORS + i + firstCursorType, CSR_BUTTONS, &buttonCount);
 		if(buttonCount>retval) {
 			retval = buttonCount;
 		}
