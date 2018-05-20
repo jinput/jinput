@@ -115,7 +115,7 @@
             </dependencies>
         </profile>
         <profile>
-            <id>windows</id>
+            <id>wintab</id>
             <activation>
                 <os>
                     <family>windows</family>
