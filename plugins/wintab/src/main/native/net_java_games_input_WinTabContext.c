@@ -23,7 +23,17 @@ JNIEXPORT jlong JNICALL Java_net_java_games_input_WinTabContext_nOpen(JNIEnv *en
     jmethodID getBooleanMethod = (*env)->GetStaticMethodID(env, booleanClass, "getBoolean", "(Ljava/lang/String;)Z");
     jboolean detachCursor = (*env)->CallStaticBooleanMethod(env, booleanClass, getBooleanMethod, propertyName);
 
-    LoadWintab();
+    if(!LoadWintab()) {
+        throwIOException(env, "Failed to load wintab (%d)\n", GetLastError());
+    } else {
+        printfJava(env, "Wintab dll loaded\n");
+    }
+
+    if (!gpWTInfoA(0, 0, NULL)) {
+        throwIOException(env, "Wintab is not available (%d)\n", GetLastError());
+    } else {
+        printfJava(env, "Wintab is available\n");
+    }
 
     gpWTInfoA(WTI_DEFCONTEXT, 0, &context);
 
