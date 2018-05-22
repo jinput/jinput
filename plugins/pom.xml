@@ -42,7 +42,7 @@
             <id>OSX</id>
             <activation>
                 <os>
-                    <family>macos</family>
+                    <family>mac</family>
                 </os>
             </activation>
             <modules>
@@ -50,7 +50,15 @@
             </modules>
         </profile>
         <profile>
-            <id>Wintab</id>
+            <id>wintab</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+                <property>
+                    <name>env.WINTABSDKDIR</name>
+                </property>
+            </activation>
             <modules>
                 <module>wintab</module>
             </modules>

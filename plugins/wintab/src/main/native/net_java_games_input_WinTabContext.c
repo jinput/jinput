@@ -3,6 +3,7 @@
 
 #include <jni.h>
 #include "net_java_games_input_WinTabContext.h"
+#include "wintabutils.h"
 #include <wintab.h>
 //#define PACKETDATA	( PK_X | PK_Y | PK_Z | PK_BUTTONS | PK_NORMAL_PRESSURE | PK_TANGENT_PRESSURE | PK_ROTATION | PK_ORIENTATION | PK_CURSOR )
 #define PACKETDATA	( PK_TIME | PK_X | PK_Y | PK_Z | PK_BUTTONS | PK_NORMAL_PRESSURE  | PK_TANGENT_PRESSURE | PK_ORIENTATION | PK_CURSOR )
@@ -22,7 +23,19 @@ JNIEXPORT jlong JNICALL Java_net_java_games_input_WinTabContext_nOpen(JNIEnv *en
     jmethodID getBooleanMethod = (*env)->GetStaticMethodID(env, booleanClass, "getBoolean", "(Ljava/lang/String;)Z");
     jboolean detachCursor = (*env)->CallStaticBooleanMethod(env, booleanClass, getBooleanMethod, propertyName);
 
-    WTInfo(WTI_DEFCONTEXT, 0, &context);
+    if(!LoadWintab()) {
+        throwIOException(env, "Failed to load wintab (%d)\n", GetLastError());
+    } else {
+        printfJava(env, "Wintab dll loaded\n");
+    }
+
+    if (!gpWTInfoA(0, 0, NULL)) {
+        throwIOException(env, "Wintab is not available (%d)\n", GetLastError());
+    } else {
+        printfJava(env, "Wintab is available\n");
+    }
+
+    gpWTInfoA(WTI_DEFCONTEXT, 0, &context);
 
 	wsprintf(context.lcName, "JInput Digitizing");
 	context.lcPktData = PACKETDATA;
@@ -34,18 +47,19 @@ JNIEXPORT jlong JNICALL Java_net_java_games_input_WinTabContext_nOpen(JNIEnv *en
 	}
 
 	/* open the region */
-	hCtx = WTOpen(hWnd, &context, TRUE);
+	hCtx = gpWTOpenA(hWnd, &context, TRUE);
 	
 	return (jlong)(intptr_t)hCtx;
 }
 
 JNIEXPORT void JNICALL Java_net_java_games_input_WinTabContext_nClose(JNIEnv *env, jclass unused, jlong hCtx_long) {
-	WTClose((HCTX)(INT_PTR)hCtx_long);
+	gpWTClose((HCTX)(INT_PTR)hCtx_long);
+	UnloadWintab();
 }
 
 JNIEXPORT jint JNICALL Java_net_java_games_input_WinTabContext_nGetNumberOfSupportedDevices(JNIEnv *env, jclass unused) {
 	int numDevices;
-	WTInfo(WTI_INTERFACE, IFC_NDEVICES, &numDevices);
+	gpWTInfoA(WTI_INTERFACE, IFC_NDEVICES, &numDevices);
 	return numDevices;
 }
 
@@ -54,7 +68,7 @@ JNIEXPORT jobjectArray JNICALL Java_net_java_games_input_WinTabContext_nGetPacke
 	jobjectArray retval;
 	int i=0;
 	PACKET packets[MAX_PACKETS];
-	int numberRead = WTPacketsGet((HCTX)(INT_PTR)hCtx_long, MAX_PACKETS, packets);
+	int numberRead = gpWTPacketsGet((HCTX)(INT_PTR)hCtx_long, MAX_PACKETS, packets);
 	jclass winTabPacketClass = (*env)->FindClass(env, "net/java/games/input/WinTabPacket");
 	jfieldID packetTimeField = (*env)->GetFieldID(env, winTabPacketClass, "PK_TIME", "J");
 	jfieldID packetXAxisField = (*env)->GetFieldID(env, winTabPacketClass, "PK_X", "I");
