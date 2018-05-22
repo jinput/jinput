@@ -1,5 +1,6 @@
 pipeline {
     agent none
+    triggers { pollSCM('H/15 * * * *') }
     stages {
         stage('Build') {
             parallel {
