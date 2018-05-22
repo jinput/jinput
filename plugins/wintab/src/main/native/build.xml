@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+<project name="JInput wintab port, Native code" basedir="." default="compile">
+    <property environment="env"/>
+    <property name="wintabhome" location="${env.WintabSdkDir}"/>
+    <property name="sdkhome" location="${env.WindowsSdkDir}"/>
+    <property name="generated-natives" location="..\..\..\target\generated-sources\natives"/>
+    <property name="compiled-natives" location="..\..\..\target/natives"/>
+    <property name="jinput-windows-headers" location="../../../../windows/target/generated-sources/natives"/>
+    <property name="jinput-windows-sources" location="../../../../windows/src/main/native"/>
+
+    <target name="init">
+        <mkdir dir="${compiled-natives}"/>
+    </target>
+
+    <target name="compile_dir">
+        <echo message="${compiledir}"/>
+        <echo message="wintab: ${wintabhome}"/>
+        <apply dir="${compiled-natives}" failonerror="true" executable="cl" dest="${compiled-natives}" skipemptyfilesets="true">
+            <arg line="/Ox /W2 /nologo /c"/>
+            <arg line="/I&quot;${sdkhome}\include&quot;"/>
+            <arg line="/I&quot;${wintabhome}&quot;"/>
+            <arg line="/I&quot;${java.home}\include&quot;"/>
+            <arg line="/I&quot;${java.home}\include\win32&quot;"/>
+            <arg value="/I${commonhome}/src/native"/>
+            <arg value="/I${generated-natives}"/>
+            <arg value="/I${jinput-windows-headers}"/>
+            <srcfile/>
+            <fileset dir="${compiledir}" includes="*.c"/>
+            <mapper type="glob" from="*.c" to="*.obj"/>
+        </apply>
+    </target>
+
+    <target name="link">
+        <apply dir="${compiled-natives}" parallel="true" executable="cl" failonerror="true">
+            <arg line="/LD /nologo"/>
+            <srcfile/>
+            <arg line="/Fe${dllname} /link"/>
+            <arg line="/LIBPATH:&quot;${java.home}\lib&quot;"/>
+            <arg line="/LIBPATH:&quot;${sdkhome}\lib&quot;"/>
+            <arg line="/DLL ${libs}"/>
+            <fileset dir="${compiled-natives}" includes="*.obj"/>
+        </apply>
+    </target>
+
+    <target name="compile" depends="init">
+        <property name="wintablibs" value="Kernel32.lib User32.lib"/>
+        <property name="commonhome" location="../../../../common"/>
+        <property name="dllname" value="jinput-wintab.dll"/>
+        <antcall target="compile_dir">
+            <param name="compiledir" location="${commonhome}/src/native"/>
+        </antcall>
+        <antcall target="compile_dir">
+            <param name="compiledir" location="."/>
+        </antcall>
+        <antcall target="compile_dir">
+            <param name="compiledir" location="${jinput-windows-sources}"/>
+        </antcall>
+        <antcall target="link">
+            <param name="dllname" value="${dllname}"/>
+            <param name="libs" value="${wintablibs}"/>
+        </antcall>
+    </target>
+</project>
+

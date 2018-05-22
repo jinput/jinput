@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+
+<project name="JInput dx8 port, Native code" basedir="." default="compile">
+	<property environment="env"/>
+	<property name="sdkhome" location="${env.WindowsSdkDir}"/>
+    <property name="generated-natives" location="..\..\..\target\generated-sources\natives"/>
+    <property name="compiled-natives" location="..\..\..\target/natives"/>
+    <property name="srcdir" location="."/>
+
+	<target name="init">
+		<mkdir dir="${compiled-natives}"/>
+	</target>
+
+	<target name="compile_dir">
+		<echo message="${compiledir}"/>
+		<echo message="sdkhome: ${sdkhome}"/>
+		<echo message="target arch: ${os.arch}"/>
+        <echo message="sdkversion: ${env.WindowsSDKVersion}"/>
+		<apply dir="${compiled-natives}" failonerror="true" executable="cl" dest="${compiled-natives}" skipemptyfilesets="true">
+			<arg line="/Ox /W2 /nologo /c"/>
+			<arg value="/I${sdkhome}\include\${env.WindowsSDKVersion}um"/>
+			<arg value="/I${java.home}\include"/>
+			<arg value="/I${java.home}\include\win32"/>
+			<arg value="/I${commonhome}\src\native"/>
+			<arg value="/I${generated-natives}"/>
+            <arg value="/I${srcdir}"/>
+			<fileset dir="${compiledir}" includes="*.c"/>
+			<mapper type="glob" from="*.c" to="*.obj"/>
+		</apply>
+	</target>
+
+	<target name="link">
+		<apply dir="${compiled-natives}" parallel="true" executable="cl" failonerror="true">
+			<arg line="/LD /nologo"/>
+			<srcfile/>
+			<arg line="/Fe${dllname} /link"/>
+			<arg value="/LIBPATH:${java.home}\lib"/>
+			<arg value="/LIBPATH:${sdkhomelib}"/>
+			<arg line="/DLL ${libs}"/>
+			<fileset dir="${compiled-natives}" includes="winutil.obj,util.obj,net_java_games_input_DummyWindow.obj,${include-pattern}"/>
+		</apply>
+	</target>
+
+	<target name="compile" depends="init">
+		<property name="rawlibs" value="Kernel32.lib User32.lib Setupapi.lib"/>
+		<property name="dx8libs" value="Kernel32.lib dinput8.lib dxguid.lib User32.lib"/>
+		<property name="commonhome" location="../../../../common"/>
+		
+		<condition property="dx8dllname" value="jinput-dx8.dll" else="jinput-dx8_64.dll">
+			<equals arg1="${os.arch}" arg2="x86"/>
+		</condition>
+		<condition property="rawdllname" value="jinput-raw.dll" else="jinput-raw_64.dll">
+			<equals arg1="${os.arch}" arg2="x86"/>
+		</condition>
+		<condition property="sdkhomelib" value="${sdkhome}\lib\${env.WindowsSDKVersion}um\x86" else="${sdkhome}\lib\${env.WindowsSDKVersion}um\x64">
+			<equals arg1="${os.arch}" arg2="x86"/>
+		</condition>
+		<antcall target="compile_dir">
+			<param name="compiledir" location="${commonhome}/src/native"/>
+		</antcall>
+		<antcall target="compile_dir">
+			<param name="compiledir" location="."/>
+		</antcall>
+		<antcall target="compile_dir">
+			<param name="compiledir" location="raw"/>
+		</antcall>
+		<antcall target="compile_dir">
+			<param name="compiledir" location="dx8"/>
+		</antcall>
+		<antcall target="link">
+			<param name="dllname" value="${dx8dllname}"/>
+			<param name="libs" value="${dx8libs}"/>
+            <param name="include-pattern" value="net_java_games_input_IDirect*.obj"/>
+		</antcall>
+		<antcall target="link">
+			<param name="dllname" value="${rawdllname}"/>
+			<param name="libs" value="${rawlibs}"/>
+			<param name="include-pattern" value="net_java_games_input_Raw*.obj"/>
+		</antcall>
+    </target>
+</project>
