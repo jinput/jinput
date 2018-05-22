@@ -16,7 +16,7 @@ pipeline {
                         }
                     }
                 }
-                stage('Build on Windows') {
+                stage('Build on Linux') {
                     agent {
                         label "linux"
                     }
