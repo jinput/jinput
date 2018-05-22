@@ -21,8 +21,9 @@
         </developer>
     </developers>
     <scm>
-        <url>https://github.com/jinput/jinput</url>
-        <connection>scm:git:https://github.com/jinput/jinput</connection>
+        <url>https://github.com/jinput/jinput.git</url>
+        <connection>scm:git:https://github.com/jinput/jinput.git</connection>
+        <developerConnection>scm:git:https://github.com/jinput/jinput.git</developerConnection>
     </scm>
 
     <properties>
