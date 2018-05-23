@@ -13,6 +13,7 @@ pipeline {
                         label "windows"
                     }
                     steps {
+                        bat 'echo %JAVA_HOME%'
                         bat 'mvn -B -DskipTests clean package'
                     }
                     post {
@@ -26,6 +27,7 @@ pipeline {
                         label "linux"
                     }
                     steps {
+                        sh 'echo $JAVA_HOME'
                         sh 'mvn -B -DskipTests clean package'
                     }
                     post {
@@ -39,6 +41,7 @@ pipeline {
                         label "osx"
                     }
                     steps {
+                        sh 'echo $JAVA_HOME'
                         sh 'mvn -B -DskipTests clean package'
                     }
                     post {
