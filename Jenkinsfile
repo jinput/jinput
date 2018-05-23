@@ -19,7 +19,7 @@ pipeline {
                     }
                     post {
                         success {
-                            stash includes: '**/target/*.jar*', name: 'windows-artifacts'
+                            stash includes: 'plugins/**/target/*.jar*', name: 'windows-artifacts'
                         }
                     }
                 }
@@ -33,7 +33,7 @@ pipeline {
                     }
                     post {
                         success {
-                            stash includes: '**/target/*.jar*', name: 'linux-artifacts'
+                            stash includes: 'plugins/**/target/*.jar*', name: 'linux-artifacts'
                         }
                     }
                 }
@@ -47,7 +47,7 @@ pipeline {
                     }
                     post {
                         success {
-                            stash includes: '**/target/*.jar*', name: 'osx-artifacts'
+                            stash includes: 'plugins/**/target/*.jar*', name: 'linux-artifacts'
                         }
                     }
                 }
@@ -60,7 +60,6 @@ pipeline {
             steps {
                 unstash 'windows-artifacts'
                 unstash 'osx-artifacts'
-                unstash 'linux-artifacts'
             }
             post {
                 always {
