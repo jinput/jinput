@@ -31,11 +31,6 @@ pipeline {
                         sh 'echo $JAVA_HOME'
                         sh 'mvn -B -DskipTests clean package'
                     }
-                    post {
-                        success {
-                            stash includes: 'plugins/**/target/*.jar*', name: 'linux-artifacts'
-                        }
-                    }
                 }
                 stage('Build on OSX') {
                     agent {
@@ -47,7 +42,7 @@ pipeline {
                     }
                     post {
                         success {
-                            stash includes: 'plugins/**/target/*.jar*', name: 'linux-artifacts'
+                            stash includes: 'plugins/**/target/*.jar*', name: 'osx-artifacts'
                         }
                     }
                 }
