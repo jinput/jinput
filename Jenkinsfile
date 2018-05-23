@@ -77,7 +77,7 @@ pipeline {
                 unstash 'windows-artifacts'
                 unstash 'osx-artifacts'
                 unstash 'linux-artifacts'
-                sh 'echo $GPG_SECRET_KEYS | base64 --decode | gpg --import'
+                sh 'echo $GPG_SECRET_KEYS | base64 --decode | gpg --batch --import'
                 sh 'echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust'
                 withMaven(
                         mavenSettingsConfig: 'maven-central'
