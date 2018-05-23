@@ -18,8 +18,8 @@ pipeline {
                         bat 'mvn -B -DskipTests clean package'
                     }
                     post {
-                        always {
-                            archiveArtifacts artifacts: '**/target/*.jar*', fingerprint: true
+                        success {
+                            stash includes: '**/target/*.jar*', name: 'windows-artifacts'
                         }
                     }
                 }
@@ -32,8 +32,8 @@ pipeline {
                         sh 'mvn -B -DskipTests clean package'
                     }
                     post {
-                        always {
-                            archiveArtifacts artifacts: '**/target/*.jar*', fingerprint: true
+                        success {
+                            stash includes: '**/target/*.jar*', name: 'linux-artifacts'
                         }
                     }
                 }
@@ -46,10 +46,25 @@ pipeline {
                         sh 'mvn -B -DskipTests clean package'
                     }
                     post {
-                        always {
-                            archiveArtifacts artifacts: '**/target/*.jar*', fingerprint: true
+                        success {
+                            stash includes: '**/target/*.jar*', name: 'osx-artifacts'
                         }
                     }
+                }
+            }
+        }
+        stage('Unpack') {
+            agent {
+                label "linux"
+            }
+            steps {
+                unstash 'windows-artifacts'
+                unstash 'osx-artifacts'
+                unstash 'linux-artifacts'
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: '**/target/*.jar*', fingerprint: true
                 }
             }
         }
