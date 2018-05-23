@@ -19,19 +19,19 @@ the API to adapt to various specific platforms.  These plug-ins
 often contain a native code portion to interface to the host system.
 </p>
 
-##Getting Started
+## Getting Started
 
 Include dependency in your project:
 
 1. Maven - Easy way
 -----
-```xml
-<dependency>
-    <groupId>net.java.jinput</groupId>
-    <artifactId>jinput</artifactId>
-    <version>2.0.7</version>
-</dependency>
-```
+    ```xml
+    <dependency>
+        <groupId>net.java.jinput</groupId>
+        <artifactId>jinput</artifactId>
+        <version>2.0.7</version>
+    </dependency>
+    ```
 
 2. Build from sources - Experts only
 -----
@@ -42,5 +42,5 @@ Include dependency in your project:
         ```
     3. Include generated artifacts to your project.
 
-##Usage
+## Usage
 
