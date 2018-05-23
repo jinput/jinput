@@ -5,6 +5,7 @@ pipeline {
         maven 'Maven 3.5.3'
         jdk 'OpenJDK 9'
     }
+    options { buildDiscarder(logRotator(numToKeepStr: '5')) }
     stages {
         stage('Build') {
             parallel {
