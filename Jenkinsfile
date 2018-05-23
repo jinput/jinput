@@ -2,7 +2,7 @@ pipeline {
     agent none
     triggers { pollSCM('H/15 * * * *') }
     tools {
-        maven 'apache-maven-3.0.1'
+        maven 'Maven 3.5.3'
         jdk 'OpenJDK 9'
     }
     stages {
