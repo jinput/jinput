@@ -157,7 +157,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 					if(!loadedPlugins.contains(className)) {
 						log.fine("Loading: " + className);
 						Class ceClass = Class.forName(className);						
-						ControllerEnvironment ce = (ControllerEnvironment) ceClass.newInstance();
+						ControllerEnvironment ce = (ControllerEnvironment) ceClass.getDeclaredConstructor().newInstance();
 						if(ce.isSupported()) {
 							addControllers(ce.getControllers());
 							loadedPlugins.add(ce.getClass().getName());
@@ -207,7 +207,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
                             envClasses[i].getName()
                             +" loaded by "+envClasses[i].getClassLoader());
                     ControllerEnvironment ce = (ControllerEnvironment)
-                    	envClasses[i].newInstance();
+                    	envClasses[i].getDeclaredConstructor().newInstance();
 					if(ce.isSupported()) {
 	                    addControllers(ce.getControllers());
 						loadedPlugins.add(ce.getClass().getName());
