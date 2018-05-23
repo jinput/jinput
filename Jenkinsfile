@@ -54,10 +54,8 @@ pipeline {
                 }
             }
         }
-        stage('Unpack') {
-            agent {
-                label "linux"
-            }
+        stage('Archive artifacts') {
+            agent any
             steps {
                 unstash 'core-artifacts'
                 unstash 'windows-artifacts'
@@ -67,6 +65,24 @@ pipeline {
             post {
                 always {
                     archiveArtifacts artifacts: '**/target/*.jar*', fingerprint: true
+                }
+            }
+        }
+        stage('Deploy artifacts') {
+            agent {
+                label "linux"
+            }
+            steps {
+                unstash 'core-artifacts'
+                unstash 'windows-artifacts'
+                unstash 'osx-artifacts'
+                unstash 'linux-artifacts'
+                sh 'echo $GPG_SECRET_KEYS | base64 --decode | gpg --import'
+                sh 'echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust'
+                withMaven(
+                        mavenSettingsConfig: 'maven-central'
+                ) {
+                    sh "mvn deploy"
                 }
             }
         }
