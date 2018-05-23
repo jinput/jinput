@@ -80,7 +80,9 @@ pipeline {
                 sh 'echo $GPG_SECRET_KEYS | base64 --decode | gpg --batch --import'
                 sh 'echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust'
                 withMaven(
-                        mavenSettingsConfig: 'fb36efbf-1df7-4366-80b5-c40c359a2711'
+                        maven: 'Maven 3.5.3',
+                        jdk: 'OpenJDK 9',
+                        globalMavenSettingsConfig: 'global-maven-settings-ossrh'
                 ) {
                     sh "mvn deploy"
                 }
