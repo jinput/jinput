@@ -68,7 +68,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
                             else
                                 System.loadLibrary(lib_name);
                         } catch(UnsatisfiedLinkError e) {
-                            logln("Failed to load library: " + e.getMessage());
+                            log("Failed to load library: " + e.getMessage());
                             e.printStackTrace();
                             supported = false;
                         }
@@ -113,7 +113,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
     public LinuxEnvironmentPlugin() {
         if(isSupported()) {
             this.controllers = enumerateControllers();
-            logln("Linux plugin claims to have found " + controllers.length + " controllers");
+            log("Linux plugin claims to have found " + controllers.length + " controllers");
             AccessController.doPrivileged(
                     new PrivilegedAction() {
                         public final Object run() {
@@ -170,7 +170,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
                         povs[3][1] = event_component;
                         break;
                     default:
-                        logln("Unknown POV instance: " + native_code);
+                        log("Unknown POV instance: " + native_code);
                         break;
                 }
             } else if(identifier != null) {
@@ -413,7 +413,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
                 } else
                     device.close();
             } catch(IOException e) {
-                logln("Failed to open device (" + event_file + "): " + e.getMessage());
+                log("Failed to open device (" + event_file + "): " + e.getMessage());
             }
         }
     }
@@ -440,7 +440,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
             public Object run() {
                 File[] files = dir.listFiles(filter);
                 if(files == null) {
-                    logln("dir " + dir.getName() + " exists: " + dir.exists() + ", is writable: " + dir.isDirectory());
+                    log("dir " + dir.getName() + " exists: " + dir.exists() + ", is writable: " + dir.isDirectory());
                     files = new File[]{};
                 } else {
                     Arrays.sort(files, new Comparator() {
@@ -476,11 +476,11 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
                     } else
                         device.close();
                 } catch(IOException e) {
-                    logln("Failed to create Controller: " + e.getMessage());
+                    log("Failed to create Controller: " + e.getMessage());
                     device.close();
                 }
             } catch(IOException e) {
-                logln("Failed to open device (" + event_file + "): " + e.getMessage());
+                log("Failed to open device (" + event_file + "): " + e.getMessage());
             }
         }
     }
@@ -492,7 +492,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
                     LinuxDevice device = (LinuxDevice) devices.get(i);
                     device.close();
                 } catch(IOException e) {
-                    logln("Failed to close device: " + e.getMessage());
+                    log("Failed to close device: " + e.getMessage());
                 }
             }
         }

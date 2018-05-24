@@ -47,7 +47,7 @@ public class LinuxJoystickPOV extends LinuxJoystickAxis {
 		else if (last_x == 1 && last_y == 1)
 			setValue(Component.POV.DOWN_RIGHT);
 		else {
-			LinuxEnvironmentPlugin.logln("Unknown values x = " + last_x + " | y = " + last_y);
+			LinuxEnvironmentPlugin.log("Unknown values x = " + last_x + " | y = " + last_y);
 			setValue(Component.POV.OFF);
 		}
 	}

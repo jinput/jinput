@@ -122,7 +122,7 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 			major = Integer.parseInt(major_str);
 			minor = Integer.parseInt(minor_str);
 		} catch (Exception e) {
-			logln("Exception occurred while trying to determine OS version: " + e);
+			log("Exception occurred while trying to determine OS version: " + e);
 			// Best guess, no
 			return false;
 		}
@@ -266,12 +266,12 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 							createControllersFromDevice(device, controllers);
 							device_used = old_size != controllers.size();
 						} catch (IOException e) {
-							logln("Failed to create controllers from device: " + device.getProductName());
+							log("Failed to create controllers from device: " + device.getProductName());
 						}
 						if (!device_used)
 							device.release();
 					} catch (IOException e) {
-						logln("Failed to enumerate device: " + e.getMessage());
+						log("Failed to enumerate device: " + e.getMessage());
 					}
 				}
 			} finally {

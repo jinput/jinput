@@ -70,9 +70,6 @@ import java.util.logging.Logger;
  *
  */
 public abstract class ControllerEnvironment {
-    static void logln(String msg) {
-		log(msg + "\n");
-	}
 
     static void log(String msg) {
 		Logger.getLogger(ControllerEnvironment.class.getName()).info(msg);

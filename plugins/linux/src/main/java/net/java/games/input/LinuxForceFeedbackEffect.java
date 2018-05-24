@@ -56,7 +56,7 @@ abstract class LinuxForceFeedbackEffect implements Rumbler {
 				write_task.write(0);
 			}
 		} catch (IOException e) {
-			LinuxEnvironmentPlugin.logln("Failed to rumble: " + e);
+			LinuxEnvironmentPlugin.log("Failed to rumble: " + e);
 		}
 	}
 

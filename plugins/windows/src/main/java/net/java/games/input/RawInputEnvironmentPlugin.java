@@ -122,7 +122,7 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 				queue = new RawInputEventQueue();
 				controllers = enumControllers(queue);
 			} catch (IOException e) {
-				logln("Failed to enumerate devices: " + e.getMessage());
+				log("Failed to enumerate devices: " + e.getMessage());
 			}
 		}
 		this.controllers = controllers;
