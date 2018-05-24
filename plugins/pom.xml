@@ -17,7 +17,7 @@
 
     <profiles>
         <profile>
-            <id>Linux</id>
+            <id>linux</id>
             <activation>
                 <os>
                     <name>linux</name>
@@ -28,7 +28,7 @@
             </modules>
         </profile>
         <profile>
-            <id>Windows</id>
+            <id>windows</id>
             <activation>
                 <os>
                     <family>windows</family>
@@ -39,7 +39,7 @@
             </modules>
         </profile>
         <profile>
-            <id>OSX</id>
+            <id>osx</id>
             <activation>
                 <os>
                     <family>mac</family>
