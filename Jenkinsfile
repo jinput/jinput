@@ -7,6 +7,19 @@ pipeline {
     }
     options { buildDiscarder(logRotator(numToKeepStr: '5')) }
     stages {
+        stage('Build core') {
+            agent {
+                label "osx"
+            }
+            steps {
+                sh 'mvn -B -Dmaven.antrun.skip -Dmaven.source.skip -Dmaven.test.skip -DskipTests -DskipITs -pl coreAPI/ package'
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'coreAPI/target/apidocs', fingerprint: true
+                }
+            }
+        }
         stage('Build natives') {
             parallel {
                 stage('Build Windows natives') {
