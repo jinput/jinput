@@ -71,6 +71,7 @@ pipeline {
             agent {
                 label "linux"
             }
+            when { branch 'master' }
             steps {
                 unstash 'windows-natives'
                 unstash 'osx-natives'
