@@ -11,28 +11,65 @@
         <relativePath>../</relativePath>
     </parent>
 
+    <repositories>
+        <repository>
+            <id>central-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <releases><enabled>false</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>net.java.jinput</groupId>
             <artifactId>coreapi</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!--
-                <dependency>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>windows-plugin</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>natives-windows</classifier>
-                </dependency>
-        -->
-        <!--
-                <dependency>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>osx-plugin</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>natives-osx</classifier>
-                </dependency>
-        -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>windows-plugin</artifactId>
+            <version>${project.version}</version>
+            <classifier>natives-windows</classifier>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>osx-plugin</artifactId>
+            <version>${project.version}</version>
+            <classifier>natives-osx</classifier>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>wintab-plugin</artifactId>
+            <version>${project.version}</version>
+            <classifier>natives-wintab</classifier>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>linux-plugin</artifactId>
+            <version>${project.version}</version>
+            <classifier>natives-linux</classifier>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>windows-plugin</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>osx-plugin</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>wintab-plugin</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>linux-plugin</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -51,93 +88,6 @@
     </build>
 
     <profiles>
-        <profile>
-            <id>linux</id>
-            <activation>
-                <os>
-                    <family>linux</family>
-                </os>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>linux-plugin</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>natives-linux</classifier>
-                </dependency>
-                <dependency>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>linux-plugin</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>osx</id>
-            <activation>
-                <os>
-                    <family>mac</family>
-                </os>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>osx-plugin</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>natives-osx</classifier>
-                </dependency>
-                <dependency>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>osx-plugin</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>windows</id>
-            <activation>
-                <os>
-                    <family>windows</family>
-                </os>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>windows-plugin</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>natives-windows</classifier>
-                </dependency>
-                <dependency>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>windows-plugin</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>wintab</id>
-            <activation>
-                <os>
-                    <family>windows</family>
-                </os>
-                <property>
-                    <name>env.WINTABSDKDIR</name>
-                </property>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>wintab-plugin</artifactId>
-                    <version>${project.version}</version>
-                    <classifier>natives-wintab</classifier>
-                </dependency>
-                <dependency>
-                    <groupId>${project.groupId}</groupId>
-                    <artifactId>wintab-plugin</artifactId>
-                    <version>${project.version}</version>
-                </dependency>
-            </dependencies>
-        </profile>
         <profile>
             <id>ReadAllEvents</id>
             <build>
