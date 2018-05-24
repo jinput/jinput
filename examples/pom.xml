@@ -109,6 +109,7 @@
                                 <argument>-classpath</argument>
                                 <classpath/>
                                 <argument>-Djava.library.path=${project.build.directory}/natives</argument>
+                                <argument>-Djinput.loglevel=OFF</argument>
                                 <argument>net.java.games.input.example.ReadAllEvents</argument>
                             </arguments>
                         </configuration>
