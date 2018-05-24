@@ -85,7 +85,7 @@ pipeline {
                         globalMavenSettingsConfig: 'global-maven-settings-ossrh',
                         mavenOpts: '-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts' //Work around for JDK9 missing cacerts
                 ) {
-                    sh "mvn -P linux,windows,osx,wintab deploy:deploy"
+                    sh "mvn -P windows,linux,osx,wintab -Dmaven.main.skip -Dmaven.antrun.skip -Dmaven.javadoc.skip -Dmaven.source.skip -Dmaven.test.skip -DskipTests -DskipITs deploy"
                 }
             }
         }
