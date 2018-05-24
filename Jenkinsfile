@@ -16,7 +16,7 @@ pipeline {
             }
             post {
                 success {
-                    archiveArtifacts artifacts: 'coreAPI/target/apidocs', fingerprint: true
+                    archiveArtifacts artifacts: 'coreAPI/target/apidocs/**/*', fingerprint: true
                 }
             }
         }
