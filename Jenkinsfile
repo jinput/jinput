@@ -82,7 +82,8 @@ pipeline {
                 withMaven(
                         maven: 'Maven 3.5.3',
                         jdk: 'OpenJDK 9',
-                        globalMavenSettingsConfig: 'global-maven-settings-ossrh'
+                        globalMavenSettingsConfig: 'global-maven-settings-ossrh',
+                        mavenOpts: '-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts' //Work around for JDK9 missing cacerts
                 ) {
                     sh "mvn deploy"
                 }
