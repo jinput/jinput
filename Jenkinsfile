@@ -7,76 +7,72 @@ pipeline {
     }
     options { buildDiscarder(logRotator(numToKeepStr: '5')) }
     stages {
-        stage('Build') {
+        stage('Build natives') {
             parallel {
-                stage('Build on Windows') {
+                stage('Build Windows natives') {
                     agent {
                         label "windows"
                     }
                     steps {
-                        bat 'echo %JAVA_HOME%'
-                        bat 'mvn -B -DskipTests clean package'
+                        bat 'mvn -B -am -pl plugins/windows/,plugins/wintab/ clean compile'
                     }
                     post {
                         success {
-                            stash includes: 'plugins/**/target/*.jar*', name: 'windows-artifacts'
+                            stash includes: 'plugins/**/target/natives/*.dll', name: 'windows-natives'
                         }
                     }
                 }
-                stage('Build on Linux') {
+                stage('Build Linux natives') {
                     agent {
                         label "linux"
                     }
                     steps {
-                        sh 'echo $JAVA_HOME'
-                        sh 'mvn -B -DskipTests clean package'
+                        sh 'mvn -B -am -pl plugins/linux/ clean compile'
                     }
                     post {
                         success {
-                            stash includes: 'plugins/**/target/*.jar*', name: 'linux-artifacts'
-                            stash includes: '**/target/*.jar*', excludes: 'plugins/**/target/*.jar*', name: 'core-artifacts'
+                            stash includes: 'plugins/**/target/natives/*.so*', name: 'linux-natives'
                         }
                     }
                 }
-                stage('Build on OSX') {
+                stage('Build OSX natives') {
                     agent {
                         label "osx"
                     }
                     steps {
-                        sh 'echo $JAVA_HOME'
-                        sh 'mvn -B -DskipTests clean package'
+                        sh 'mvn -B -am -pl plugins/OSX/ clean compile'
                     }
                     post {
                         success {
-                            stash includes: 'plugins/**/target/*.jar*', name: 'osx-artifacts'
+                            stash includes: '**/target/natives/*.jnilib', name: 'osx-natives'
                         }
                     }
                 }
             }
         }
-        stage('Archive artifacts') {
+        stage('Build') {
             agent any
             steps {
-                unstash 'core-artifacts'
-                unstash 'windows-artifacts'
-                unstash 'osx-artifacts'
-                unstash 'linux-artifacts'
+                unstash 'windows-natives'
+                unstash 'osx-natives'
+                unstash 'linux-natives'
+                sh 'mvn -B -P windows,linux,osx,wintab -Dmaven.antrun.skip -Dmaven.javadoc.skip -Dmaven.source.skip -Dmaven.test.skip -DskipTests -DskipITs package'
             }
             post {
-                always {
+                success {
+                    stash includes: '**/target/*.jar', name: 'all-java-jars'
                     archiveArtifacts artifacts: '**/target/*.jar*', fingerprint: true
                 }
             }
         }
-        stage('Deploy artifacts') {
+        stage('Deploy') {
             agent {
                 label "linux"
             }
             steps {
-                unstash 'core-artifacts'
-                unstash 'windows-artifacts'
-                unstash 'osx-artifacts'
-                unstash 'linux-artifacts'
+                unstash 'windows-natives'
+                unstash 'osx-natives'
+                unstash 'linux-natives'
                 sh 'echo $GPG_SECRET_KEYS | base64 --decode | gpg --batch --import'
                 sh 'echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust'
                 withMaven(
@@ -85,7 +81,7 @@ pipeline {
                         globalMavenSettingsConfig: 'global-maven-settings-ossrh',
                         mavenOpts: '-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts' //Work around for JDK9 missing cacerts
                 ) {
-                    sh "mvn -P windows,linux,osx,wintab -Dmaven.main.skip -Dmaven.antrun.skip -Dmaven.javadoc.skip -Dmaven.source.skip -Dmaven.test.skip -DskipTests -DskipITs deploy"
+                    sh "mvn -P windows,linux,osx,wintab -Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs deploy"
                 }
             }
         }
