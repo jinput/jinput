@@ -51,7 +51,9 @@ pipeline {
             }
         }
         stage('Build') {
-            agent any
+            agent {
+                label "linux"
+            }
             steps {
                 unstash 'windows-natives'
                 unstash 'osx-natives'
