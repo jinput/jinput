@@ -102,16 +102,21 @@ pipeline {
                 }
             }
         }
-        stage('Release') {
-            agent {
-                label "linux"
-            }
+        stage('Confirm release') {
+            agent none
             steps {
                 milestone(2)
                 timeout(time:5, unit:'MINUTES') {
                     input message: "Do you wish to release?", ok: "Release"
                     input message: "Are you sure, this cannot be undone?", ok: "Release"
                 }
+            }
+        }
+        stage('Perform release') {
+            agent {
+                label "linux"
+            }
+            steps {
                 milestone(3)
                 unstash 'windows-natives'
                 unstash 'osx-natives'
