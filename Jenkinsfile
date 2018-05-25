@@ -133,6 +133,7 @@ pipeline {
                     }
                     sh "git tag -a ${VERSION_TAG} -m 'Release tag ${VERSION_TAG}'"
                     sh "mvn -P windows,linux,osx,wintab -Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs deploy"
+                    sh "mvn -P windows,linux,osx,wintab,release versions:revert"
                     sh "mvn -P windows,linux,osx,wintab,release versions:set -DnextSnapshot"
                     sh "git commit -m 'Next development release' ."
                     sh "git push"
