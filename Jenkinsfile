@@ -136,7 +136,7 @@ pipeline {
                     sh "mvn -P windows,linux,osx,wintab versions:revert"
                     sh "mvn -P windows,linux,osx,wintab versions:set -DnextSnapshot"
                     sh "git commit -m 'Next development release' ."
-                    sh "git push --all"
+                    sh "git push --follow-tags"
                 }
             }
         }
