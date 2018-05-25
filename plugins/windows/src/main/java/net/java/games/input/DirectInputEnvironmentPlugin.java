@@ -129,7 +129,7 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 					throw e;
 				}
 			} catch (IOException e) {
-				logln("Failed to enumerate devices: " + e.getMessage());
+				log("Failed to enumerate devices: " + e.getMessage());
 			}
 			this.window = window;
 			this.controllers = controllers;

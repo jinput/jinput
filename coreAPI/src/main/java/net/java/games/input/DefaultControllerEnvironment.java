@@ -162,7 +162,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 							addControllers(ce.getControllers());
 							loadedPlugins.add(ce.getClass().getName());
 						} else {
-							logln(ceClass.getName() + " is not supported");
+							log(ceClass.getName() + " is not supported");
 						}
 					}
 				} catch (Throwable e) {
@@ -203,7 +203,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
             Class[] envClasses = plugins.getExtends(ControllerEnvironment.class);
             for(int i=0;i<envClasses.length;i++){
                 try {
-					ControllerEnvironment.logln("ControllerEnvironment "+
+					ControllerEnvironment.log("ControllerEnvironment "+
                             envClasses[i].getName()
                             +" loaded by "+envClasses[i].getClassLoader());
                     ControllerEnvironment ce = (ControllerEnvironment)
@@ -212,7 +212,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 	                    addControllers(ce.getControllers());
 						loadedPlugins.add(ce.getClass().getName());
 					} else {
-						logln(envClasses[i].getName() + " is not supported");
+						log(envClasses[i].getName() + " is not supported");
 					}
                 } catch (Throwable e) {
                     e.printStackTrace();

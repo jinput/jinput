@@ -64,7 +64,7 @@ final class IDirectInputEffect implements Rumbler {
 			} else
 				stop();
 		} catch (IOException e) {
-			DirectInputEnvironmentPlugin.logln("Failed to set rumbler gain: " + e.getMessage());
+			DirectInputEnvironmentPlugin.log("Failed to set rumbler gain: " + e.getMessage());
 		}
 	}
 

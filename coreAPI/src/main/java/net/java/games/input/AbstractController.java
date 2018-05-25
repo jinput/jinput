@@ -183,7 +183,7 @@ public abstract class AbstractController implements Controller {
 			setDeviceEventQueueSize(size);
 			event_queue = new EventQueue(size);
 		} catch (IOException e) {
-			ControllerEnvironment.logln("Failed to create new event queue of size " + size + ": " + e);
+			ControllerEnvironment.log("Failed to create new event queue of size " + size + ": " + e);
 		}
 	}
 
@@ -233,7 +233,7 @@ public abstract class AbstractController implements Controller {
 			}
 			return true;
 		} catch (IOException e) {
-			ControllerEnvironment.logln("Failed to poll device: " + e.getMessage());
+			ControllerEnvironment.log("Failed to poll device: " + e.getMessage());
 			return false;
 		}
 	} 

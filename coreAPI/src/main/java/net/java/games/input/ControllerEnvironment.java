@@ -43,6 +43,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -70,9 +71,6 @@ import java.util.logging.Logger;
  *
  */
 public abstract class ControllerEnvironment {
-    static void logln(String msg) {
-		log(msg + "\n");
-	}
 
     static void log(String msg) {
 		Logger.getLogger(ControllerEnvironment.class.getName()).info(msg);
@@ -93,6 +91,11 @@ public abstract class ControllerEnvironment {
      * Protected constructor for subclassing.
      */
     protected ControllerEnvironment() {
+        if(System.getProperty("jinput.loglevel") != null) {
+            String loggerName = ControllerEnvironment.class.getPackage().getName();
+            Level level = Level.parse(System.getProperty("jinput.loglevel"));
+            Logger.getLogger(loggerName).setLevel(level);
+        }
     }
     
     /**

@@ -108,7 +108,7 @@ public class WinTabEnvironmentPlugin extends ControllerEnvironment implements Pl
 					throw e;
 				}
 			} catch (Exception e) {
-				logln("Failed to enumerate devices: " + e.getMessage());
+				log("Failed to enumerate devices: " + e.getMessage());
 				e.printStackTrace();
 			}
 			this.controllers = controllers;
