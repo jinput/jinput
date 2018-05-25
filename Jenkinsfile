@@ -105,7 +105,7 @@ pipeline {
                 }
             }
         }
-        stage('Perform release') {
+        stage('Release') {
             agent {
                 label "linux"
             }
