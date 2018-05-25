@@ -103,23 +103,22 @@ pipeline {
                 }
             }
         }
-    }
-    timeout(time:5, unit:'DAYS') {
-        input {
-            message: "Do you wish to release?"
-            ok: "Release"
-        }
-        input {
-            message: "Are you sure, this cannot be undone?"
-            ok: "Release"
-        }
-    }
-    stages{
         stage('Release') {
             agent {
                 label "linux"
             }
             steps {
+                milestone
+                timeout(time:5, unit:'DAYS') {
+                    input {
+                        message: "Do you wish to release?"
+                        ok: "Release"
+                    }
+                    input {
+                        message: "Are you sure, this cannot be undone?"
+                        ok: "Release"
+                    }
+                }
                 milestone
                 unstash 'windows-natives'
                 unstash 'osx-natives'
