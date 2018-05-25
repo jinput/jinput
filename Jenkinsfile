@@ -81,7 +81,6 @@ pipeline {
             }
         }
         stage('Deploy') {
-            milestone()
             agent {
                 label "linux"
             }
@@ -110,14 +109,8 @@ pipeline {
             steps {
                 milestone()
                 timeout(time:5, unit:'MINUTES') {
-                    input {
-                        message: "Do you wish to release?"
-                        ok: "Release"
-                    }
-                    input {
-                        message: "Are you sure, this cannot be undone?"
-                        ok: "Release"
-                    }
+                    input message: "Do you wish to release?", ok: "Release"
+                    input message: "Are you sure, this cannot be undone?", ok: "Release"
                 }
                 milestone()
                 unstash 'windows-natives'
