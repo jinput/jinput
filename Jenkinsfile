@@ -127,14 +127,14 @@ pipeline {
                         globalMavenSettingsConfig: 'global-maven-settings-ossrh',
                         mavenOpts: '-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts' //Work around for JDK9 missing cacerts
                 ) {
-                    sh "mvn -P windows,linux,osx,wintab,release versions:set -DremoveSnapshot"
+                    sh "mvn -P windows,linux,osx,wintab versions:set -DremoveSnapshot"
                     script {
                         VERSION_TAG = sh(script: "mvn -Dexpression=project.version help:evaluate | grep -e '^[[:digit:]]'", returnStdout: true).trim()
                     }
                     sh "git tag -a ${VERSION_TAG} -m 'Release tag ${VERSION_TAG}'"
-                    sh "mvn -P windows,linux,osx,wintab -Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs deploy"
-                    sh "mvn -P windows,linux,osx,wintab,release versions:revert"
-                    sh "mvn -P windows,linux,osx,wintab,release versions:set -DnextSnapshot"
+                    sh "mvn -P windows,linux,osx,wintab,release -Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs deploy"
+                    sh "mvn -P windows,linux,osx,wintab versions:revert"
+                    sh "mvn -P windows,linux,osx,wintab versions:set -DnextSnapshot"
                     sh "git commit -m 'Next development release' ."
                     sh "git push"
                 }
