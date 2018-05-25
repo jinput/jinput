@@ -81,6 +81,7 @@ pipeline {
             }
         }
         stage('Deploy') {
+            milestone()
             agent {
                 label "linux"
             }
@@ -98,6 +99,39 @@ pipeline {
                         mavenOpts: '-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts' //Work around for JDK9 missing cacerts
                 ) {
                     sh "mvn -P windows,linux,osx,wintab -Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs deploy"
+                }
+            }
+        }
+        stage('Release') {
+            timeout(time:5, unit:'DAYS') {
+                milestone()
+                input {
+                    message: "Do you wish to release?"
+                    ok: "Release"
+                }
+                input {
+                    message: "Are you sure, this cannot be undone?"
+                    ok: "Release"
+                }
+                milestone()
+            }
+            agent {
+                label "linux"
+            }
+            steps {
+                unstash 'windows-natives'
+                unstash 'osx-natives'
+                unstash 'linux-natives'
+                sh 'echo $GPG_SECRET_KEYS | base64 --decode | gpg --batch --import'
+                sh 'echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust'
+                withMaven(
+                        maven: 'Maven 3.5.3',
+                        jdk: 'OpenJDK 9',
+                        globalMavenSettingsConfig: 'global-maven-settings-ossrh',
+                        mavenOpts: '-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts' //Work around for JDK9 missing cacerts
+                ) {
+                    sh "mvn -P windows,linux,osx,wintab versions:set -DremoveSnapshot"
+                    sh "mvn -P windows,linux,osx,wintab versions:set -DnextSnapshot"
                 }
             }
         }
