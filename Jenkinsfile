@@ -86,7 +86,7 @@ pipeline {
             }
             when { branch 'master' }
             steps {
-                milestone()
+                milestone(1)
                 unstash 'windows-natives'
                 unstash 'osx-natives'
                 unstash 'linux-natives'
@@ -107,12 +107,12 @@ pipeline {
                 label "linux"
             }
             steps {
-                milestone()
+                milestone(2)
                 timeout(time:5, unit:'MINUTES') {
                     input message: "Do you wish to release?", ok: "Release"
                     input message: "Are you sure, this cannot be undone?", ok: "Release"
                 }
-                milestone()
+                milestone(3)
                 unstash 'windows-natives'
                 unstash 'osx-natives'
                 unstash 'linux-natives'
