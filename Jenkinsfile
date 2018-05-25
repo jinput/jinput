@@ -6,6 +6,9 @@ pipeline {
         jdk 'OpenJDK 9'
     }
     options { buildDiscarder(logRotator(numToKeepStr: '5')) }
+    parameters {
+        booleanParam(defaultValue: false, description: 'Perform Release', name: 'release')
+    }
     stages {
         stage('Build core') {
             agent {
@@ -102,21 +105,17 @@ pipeline {
                 }
             }
         }
-        stage('Confirm release') {
-            agent none
-            steps {
-                milestone(2)
-                timeout(time:5, unit:'MINUTES') {
-                    input message: "Do you wish to release?", ok: "Release"
-                    input message: "Are you sure, this cannot be undone?", ok: "Release"
-                }
-            }
-        }
         stage('Perform release') {
             agent {
                 label "linux"
             }
+            when {
+                expression {
+                    return params.release
+                }
+            }
             steps {
+/*
                 milestone(3)
                 unstash 'windows-natives'
                 unstash 'osx-natives'
@@ -138,6 +137,8 @@ pipeline {
                     sh "mvn -P windows,linux,osx,wintab,release versions:set -DnextSnapshot"
                     sh "git commit -m 'Next development release' ."
                 }
+*/
+                echo "Release!"
             }
         }
     }
