@@ -130,8 +130,8 @@ pipeline {
                         globalMavenSettingsConfig: 'global-maven-settings-ossrh',
                         mavenOpts: '-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts' //Work around for JDK9 missing cacerts
                 ) {
-                    sh "mvn -B -P windows,linux,osx,wintab -Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs -DdryRun=true -Darguments=\"-Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs\" release:prepare"
-                    sh "mvn -B -P windows,linux,osx,wintab -Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs -DdryRun=true -Darguments=\"-Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs\" release:perform"
+                    sh "mvn -P windows,linux,osx,wintab versions:set -DremoveSnapshot"
+                    sh "mvn -P windows,linux,osx,wintab versions:set -DnextSnapshot"
                 }
             }
         }
