@@ -109,7 +109,7 @@ pipeline {
             }
             steps {
                 milestone
-                timeout(time:5, unit:'DAYS') {
+                timeout(time:5, unit:'MINUTES') {
                     input {
                         message: "Do you wish to release?"
                         ok: "Release"
