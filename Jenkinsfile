@@ -115,7 +115,6 @@ pipeline {
                 }
             }
             steps {
-/*
                 milestone(3)
                 unstash 'windows-natives'
                 unstash 'osx-natives'
@@ -137,8 +136,6 @@ pipeline {
                     sh "mvn -P windows,linux,osx,wintab,release versions:set -DnextSnapshot"
                     sh "git commit -m 'Next development release' ."
                 }
-*/
-                echo "Release!"
             }
         }
     }
