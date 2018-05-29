@@ -1,10 +1,4 @@
 /*
- * %W% %E%
- *
- * Copyright 2002 Sun Microsystems, Inc. All rights reserved.
- * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
-/*****************************************************************************
  * Copyright (c) 2003 Sun Microsystems, Inc.  All Rights Reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,13 +29,11 @@
  * You acknowledge that this software is not designed or intended for us in
  * the design, construction, operation or maintenance of any nuclear facility
  *
- *****************************************************************************/
+ */
 package net.java.games.input;
 
 import java.util.Map;
-import java.util.List;
 import java.util.HashMap;
-import java.util.ArrayList;
 
 import java.io.IOException;
 
@@ -77,7 +69,7 @@ public abstract class AbstractController implements Controller {
 	/**
 	 * Map from Component.Identifiers to Components
 	 */
-	private final Map id_to_components = new HashMap();
+	private final Map<Component.Identifier, Component> id_to_components = new HashMap<>();
 
 	private EventQueue event_queue = new EventQueue(EVENT_QUEUE_DEPTH);
     
@@ -128,7 +120,7 @@ public abstract class AbstractController implements Controller {
      * if no component with the specified type could be found.
      */
     public final Component getComponent(Component.Identifier id) {
-		return (Component)id_to_components.get(id);
+		return id_to_components.get(id);
     }
 
     /**
