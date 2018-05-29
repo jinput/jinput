@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2004 Jeremy Booth (jeremy@newdawnsoftware.com)
  *
  * Redistribution and use in source and binary forms, with or without 
@@ -27,7 +27,6 @@
 package net.java.games.input;
 
 import java.awt.AWTEvent;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.MouseEvent;
@@ -47,8 +46,8 @@ final class AWTMouse extends Mouse implements AWTEventListener {
 	private final static int EVENT_Y = 2;
 	private final static int EVENT_BUTTON = 4;
 
-	private final List awt_events = new ArrayList();
-	private final List processed_awt_events = new ArrayList();
+	private final List<AWTEvent> awt_events = new ArrayList<>();
+	private final List<AWTEvent> processed_awt_events = new ArrayList<>();
 
 	private int event_state = EVENT_X;
 
@@ -115,7 +114,7 @@ final class AWTMouse extends Mouse implements AWTEventListener {
 		Axis wheel = (Axis)getWheel();
 		wheel.setValue(0);
 		for (int i = 0; i < awt_events.size(); i++) {
-			AWTEvent event = (AWTEvent)awt_events.get(i);
+			AWTEvent event = awt_events.get(i);
 			processEvent(event);
 			processed_awt_events.add(event);
         }
@@ -126,7 +125,7 @@ final class AWTMouse extends Mouse implements AWTEventListener {
 		while (true) {
 			if (processed_awt_events.isEmpty())
 				return false;
-			AWTEvent awt_event = (AWTEvent)processed_awt_events.get(0);
+			AWTEvent awt_event = processed_awt_events.get(0);
 			if (awt_event instanceof MouseWheelEvent) {
 				MouseWheelEvent awt_wheel_event = (MouseWheelEvent)awt_event;
 				long nanos = awt_wheel_event.getWhen()*1000000L;
