@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2003 Jeremy Booth (jeremy@newdawnsoftware.com)
  *
  * Redistribution and use in source and binary forms, with or without 
@@ -29,7 +29,6 @@ import java.applet.Applet;
 import java.io.IOException;
 
 import net.java.games.input.ControllerEventTest;
-import net.java.games.input.applet.JInputAppletResourceLoader;
 
 public class ControllerEventTestApplet extends Applet {
 
