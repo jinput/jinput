@@ -32,19 +32,21 @@
  *****************************************************************************/
 package net.java.games.input;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author elias
  * @version 1.0
  */
-final class DataQueue {
-	private final Object[] elements;
+final class DataQueue<T> {
+	private final T[] elements;
 	private int position;
 	private int limit;
 
-	public DataQueue(int size, Class<?> element_type) {
-		this.elements= new Object[size];
+    @SuppressWarnings("unchecked")
+	public DataQueue(int size, Class<T> element_type) {
+		this.elements= (T[])Array.newInstance(element_type, size);
 		for (int i = 0; i < elements.length; i++) {
 			try {
 				elements[i] = element_type.getDeclaredConstructor().newInstance();
@@ -68,12 +70,12 @@ final class DataQueue {
 		return limit;
 	}
 
-	public final Object get(int index) {
+	public final T get(int index) {
 		assert index < limit;
 		return elements[index];
 	}
 
-	public final Object get() {
+	public final T get() {
 		if (!hasRemaining())
 			return null;
 		return get(position++);
@@ -91,7 +93,7 @@ final class DataQueue {
 	}
 
 	private final void swap(int index1, int index2) {
-		Object temp = elements[index1];
+		T temp = elements[index1];
 		elements[index1] = elements[index2];
 		elements[index2] = temp;
 	}
@@ -113,7 +115,7 @@ final class DataQueue {
 		this.position = position;
 	}
 
-	public final Object[] getElements() {
+	public final T[] getElements() {
 		return elements;
 	}
 }

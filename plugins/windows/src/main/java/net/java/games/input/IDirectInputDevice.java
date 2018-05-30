@@ -1,10 +1,4 @@
 /*
- * %W% %E%
- *
- * Copyright 2002 Sun Microsystems, Inc. All rights reserved.
- * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
-/*****************************************************************************
  * Copyright (c) 2003 Sun Microsystems, Inc.  All Rights Reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -201,16 +195,16 @@ final class IDirectInputDevice {
 	private final int dev_subtype;
 	private final String instance_name;
 	private final String product_name;
-	private final List objects = new ArrayList();
-	private final List effects = new ArrayList();
-	private final List rumblers = new ArrayList();
+	private final List<DIDeviceObject> objects = new ArrayList<>();
+	private final List<DIEffectInfo> effects = new ArrayList<>();
+	private final List<Rumbler> rumblers = new ArrayList<>();
 	private final int[] device_state;
-	private final Map object_to_component = new HashMap();
+	private final Map<DIDeviceObject,DIComponent> object_to_component = new HashMap<>();
 	private final boolean axes_in_relative_mode;
 
 
 	private boolean released;
-	private DataQueue queue;
+	private DataQueue<DIDeviceObjectData> queue;
 
 	private int button_counter;
 	private int current_format_offset;
@@ -242,7 +236,7 @@ final class IDirectInputDevice {
 		boolean all_relative = true;
 		boolean has_axis = false;
 		for (int i = 0; i < objects.size(); i++) {
-			DIDeviceObject obj = (DIDeviceObject)objects.get(i);
+			DIDeviceObject obj = objects.get(i);
 			if (obj.isAxis()) {
 				has_axis = true;
 				if (!obj.isRelative()) {
@@ -272,10 +266,10 @@ final class IDirectInputDevice {
 	}
 
 	public final Rumbler[] getRumblers() {
-		return (Rumbler[])rumblers.toArray(new Rumbler[]{});
+		return rumblers.toArray(new Rumbler[]{});
 	}
 
-	private final List createRumblers() throws IOException {
+	private final List<Rumbler> createRumblers() throws IOException {
 		DIDeviceObject x_axis = lookupObjectByGUID(GUID_XAxis);
 //		DIDeviceObject y_axis = lookupObjectByGUID(GUID_YAxis);
 		if(x_axis == null/* || y_axis == null*/)
@@ -283,7 +277,7 @@ final class IDirectInputDevice {
 		DIDeviceObject[] axes = {x_axis/*, y_axis*/};
 		long[] directions = {0/*, 0*/};
 		for (int i = 0; i < effects.size(); i++) {
-			DIEffectInfo info = (DIEffectInfo)effects.get(i);
+			DIEffectInfo info = effects.get(i);
 			if ((info.getEffectType() & 0xff) == DIEFT_PERIODIC &&
 					(info.getDynamicParams() & DIEP_GAIN) != 0) {
 				rumblers.add(createPeriodicRumbler(axes, directions, info));
@@ -304,7 +298,7 @@ final class IDirectInputDevice {
 
 	private final DIDeviceObject lookupObjectByGUID(int guid_id) {
 		for (int i = 0; i < objects.size(); i++) {
-			DIDeviceObject object = (DIDeviceObject)objects.get(i);
+			DIDeviceObject object = objects.get(i);
 			if (guid_id == object.getGUIDType())
 				return object;
 		}
@@ -321,11 +315,11 @@ final class IDirectInputDevice {
 		 * for the int size (4 bytes)
 		 */
 		int format_offset = event.getFormatOffset()/4;
-		return (DIDeviceObject)objects.get(format_offset);
+		return objects.get(format_offset);
 	}
 
 	public final DIComponent mapObject(DIDeviceObject object) {
-		return (DIComponent)object_to_component.get(object);
+		return object_to_component.get(object);
 	}
 
 	public final void registerComponent(DIDeviceObject object, DIComponent component) {
@@ -342,7 +336,7 @@ final class IDirectInputDevice {
 	}
 
 	public synchronized final boolean getNextEvent(DIDeviceObjectData data) {
-		DIDeviceObjectData next_event = (DIDeviceObjectData)queue.get();
+		DIDeviceObjectData next_event = queue.get();
 		if (next_event == null)
 			return false;
 		data.set(next_event);
@@ -375,7 +369,7 @@ final class IDirectInputDevice {
 	}
 	private final static native int nUnacquire(long address);
 
-	private final boolean getDeviceData(DataQueue queue) throws IOException {
+	private final boolean getDeviceData(DataQueue<DIDeviceObjectData> queue) throws IOException {
 		int res = nGetDeviceData(address, 0, queue, queue.getElements(), queue.position(), queue.remaining());
 		if (res != DI_OK && res != DI_BUFFEROVERFLOW) {
 			if (res == DIERR_NOTACQUIRED) {
@@ -386,7 +380,7 @@ final class IDirectInputDevice {
 		}
 		return true;
 	}
-	private final static native int nGetDeviceData(long address, int flags, DataQueue queue, Object[] queue_elements, int position, int remaining);
+	private final static native int nGetDeviceData(long address, int flags, DataQueue<DIDeviceObjectData> queue, Object[] queue_elements, int position, int remaining);
 	
 	private final void getDeviceState(int[] device_state) throws IOException {
 		int res = nGetDeviceState(address, device_state);
@@ -420,7 +414,7 @@ final class IDirectInputDevice {
 		return dev_type;
 	}
 
-	public final List getObjects() {
+	public final List<DIDeviceObject> getObjects() {
 		return objects;
 	}
 
@@ -509,7 +503,7 @@ final class IDirectInputDevice {
 		int res = nSetBufferSize(address, size);
 		if (res != DI_OK && res != DI_PROPNOEFFECT && res != DI_POLLEDDEVICE)
 			throw new IOException("Failed to set buffer size (" + Integer.toHexString(res) + ")");
-		queue = new DataQueue(size, DIDeviceObjectData.class);
+		queue = new DataQueue<>(size, DIDeviceObjectData.class);
 		queue.position(queue.limit());
 		acquire();
 	}
@@ -540,6 +534,7 @@ final class IDirectInputDevice {
 			throw new IOException("Device is released");
 	}
 
+    @SuppressWarnings("deprecation")
 	protected void finalize() {
 		release();
 	}
