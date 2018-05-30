@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2003 Jeremy Booth (jeremy@newdawnsoftware.com)
  *
  * Redistribution and use in source and binary forms, with or without 
@@ -43,9 +43,9 @@ final class LinuxRumbleFF extends LinuxForceFeedbackEffect {
 			weak_magnitude = (int)(0xc000*intensity);
 		} else if (intensity > 0.3333333f) {
 			strong_magnitude = (int)(0x8000*intensity);
-			weak_magnitude = (int)(0xc000*0);
+			weak_magnitude = 0;
 		} else {
-			strong_magnitude = (int)(0x8000*0);
+			strong_magnitude = 0;
 			weak_magnitude = (int)(0xc000*intensity);
 		}
 
