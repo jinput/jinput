@@ -32,7 +32,9 @@ import net.java.games.input.ControllerEventTest;
 
 public class ControllerEventTestApplet extends Applet {
 
-	public void init() {
+    private static final long serialVersionUID = 4250817143444220400L;
+
+    public void init() {
 		try {
 			new JInputAppletResourceLoader().loadResources(getCodeBase());
 		} catch (IOException e) {
