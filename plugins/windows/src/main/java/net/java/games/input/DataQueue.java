@@ -1,10 +1,4 @@
 /*
- * %W% %E%
- *
- * Copyright 2002 Sun Microsystems, Inc. All rights reserved.
- * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
-/*****************************************************************************
  * Copyright (c) 2003 Sun Microsystems, Inc.  All Rights Reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,6 +32,8 @@
  *****************************************************************************/
 package net.java.games.input;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * @author elias
  * @version 1.0
@@ -47,14 +43,12 @@ final class DataQueue {
 	private int position;
 	private int limit;
 
-	public DataQueue(int size, Class element_type) {
+	public DataQueue(int size, Class<?> element_type) {
 		this.elements= new Object[size];
 		for (int i = 0; i < elements.length; i++) {
 			try {
-				elements[i] = element_type.newInstance();
-			} catch (InstantiationException e) {
-				throw new RuntimeException(e);
-			} catch (IllegalAccessException e) {
+				elements[i] = element_type.getDeclaredConstructor().newInstance();
+			} catch (InstantiationException|IllegalAccessException|NoSuchMethodException|InvocationTargetException e) {
 				throw new RuntimeException(e);
 			}
 		}
