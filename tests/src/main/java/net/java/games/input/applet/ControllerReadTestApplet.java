@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2003 Jeremy Booth (jeremy@newdawnsoftware.com)
  *
  * Redistribution and use in source and binary forms, with or without 
@@ -29,9 +29,10 @@ import java.applet.Applet;
 import java.io.IOException;
 
 import net.java.games.input.ControllerReadTest;
-import net.java.games.input.applet.JInputAppletResourceLoader;
 
 public class ControllerReadTestApplet extends Applet {
+
+	private static final long serialVersionUID = -2558493887683964119L;
 
 	public void init() {
 		try {
