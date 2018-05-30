@@ -58,7 +58,7 @@ final class IDirectInputEffect implements Rumbler {
 		try {
 			checkReleased();
 			if (intensity > 0) {
-				int int_gain = (int)Math.round(intensity*IDirectInputDevice.DI_FFNOMINALMAX);
+				int int_gain = Math.round(intensity*IDirectInputDevice.DI_FFNOMINALMAX);
 				setGain(int_gain);
 				start(1, 0);
 			} else
@@ -115,6 +115,7 @@ final class IDirectInputEffect implements Rumbler {
 	}
 	private final static native int nStop(long address);
 
+	@SuppressWarnings("deprecation")
 	protected void finalize() {
 		release();
 	}
