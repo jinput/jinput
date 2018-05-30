@@ -50,19 +50,11 @@ public class JInputAppletResourceLoader {
 	private int percentageDone = 0;
 
 	private String getPrivilegedProperty(final String property) {
-		return (String) AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				return System.getProperty(property);
-			}
-		});
+		return AccessController.doPrivileged((PrivilegedAction<String>) () -> System.getProperty(property));
 	}
 
 	private String setPrivilegedProperty(final String property, final String value) {
-		return (String) AccessController.doPrivileged(new PrivilegedAction() {
-			public Object run() {
-				return System.setProperty(property, value);
-			}
-		});
+		return AccessController.doPrivileged((PrivilegedAction<String>) () -> System.setProperty(property, value));
 	}
 	
 	public void loadResources(URL codeBase) throws IOException {
@@ -94,13 +86,13 @@ public class JInputAppletResourceLoader {
 		
 		JarFile localJarFile = new JarFile(new File(tempDir, nativeJar), true);
 		
-		Enumeration jarEntries = localJarFile.entries();
+		Enumeration<JarEntry> jarEntries = localJarFile.entries();
 		int totalUncompressedBytes = 0;
 		int totalUncompressedBytesWritten = 0;
-		List entriesToUse = new ArrayList();
+		List<JarEntry> entriesToUse = new ArrayList<>();
 		
 		while(jarEntries.hasMoreElements()) {
-			JarEntry jarEntry = (JarEntry)jarEntries.nextElement();
+			JarEntry jarEntry = jarEntries.nextElement();
 			String entryName = jarEntry.getName();
 			if(!entryName.startsWith("META-INF")) {
 				totalUncompressedBytes+=jarEntry.getSize();
@@ -116,7 +108,7 @@ public class JInputAppletResourceLoader {
 		}
 		
 		for(int i=0;i<entriesToUse.size();i++) {
-			JarEntry jarEntry = (JarEntry) entriesToUse.get(i);
+			JarEntry jarEntry = entriesToUse.get(i);
 			InputStream inStream = localJarFile.getInputStream(localJarFile.getEntry(jarEntry.getName()));
 			File nativeFile = new File(tempNativesDir, jarEntry.getName());
 			FileOutputStream fos = new FileOutputStream(nativeFile);
