@@ -360,6 +360,7 @@ final class LinuxEventDevice implements LinuxDevice {
 			throw new IOException("Device is closed");
 	}
 
+	@SuppressWarnings("deprecation")
 	protected void finalize() throws IOException {
 		close();
 	}
