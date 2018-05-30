@@ -64,9 +64,7 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 	 * 
 	 */
 	static void loadLibrary(final String lib_name) {
-		AccessController.doPrivileged(
-				new PrivilegedAction() {
-					public final Object run() {
+		AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
 					    try {
     						String lib_path = System.getProperty("net.java.games.input.librarypath");
     						if (lib_path != null)
@@ -78,25 +76,16 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 					        supported = false;
 					    }
 						return null;
-					}
 				});
 	}
     
 	static String getPrivilegedProperty(final String property) {
-	       return (String)AccessController.doPrivileged(new PrivilegedAction() {
-	                public Object run() {
-	                    return System.getProperty(property);
-	                }
-	            });
+	       return AccessController.doPrivileged((PrivilegedAction<String>) () -> System.getProperty(property));
 		}
 		
 
 	static String getPrivilegedProperty(final String property, final String default_value) {
-       return (String)AccessController.doPrivileged(new PrivilegedAction() {
-                public Object run() {
-                    return System.getProperty(property, default_value);
-                }
-            });
+       return AccessController.doPrivileged((PrivilegedAction<String>) () -> System.getProperty(property, default_value));
 	}
 		
 	static {
@@ -132,23 +121,23 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 		return controllers;
 	}
 
-	private final static SetupAPIDevice lookupSetupAPIDevice(String device_name, List setupapi_devices) {
+	private final static SetupAPIDevice lookupSetupAPIDevice(String device_name, List<SetupAPIDevice> setupapi_devices) {
 		/* First, replace # with / in the device name, since that
 		 * seems to be the format in raw input device name
 		 */
 		device_name = device_name.replaceAll("#", "\\\\").toUpperCase();
 		for (int i = 0; i < setupapi_devices.size(); i++) {
-			SetupAPIDevice device = (SetupAPIDevice)setupapi_devices.get(i);
-			if (device_name.indexOf(device.getInstanceId().toUpperCase()) != -1)
+			SetupAPIDevice device = setupapi_devices.get(i);
+			if (device_name.contains(device.getInstanceId().toUpperCase()))
 				return device;
 		}
 		return null;
 	}
 	
-	private final static void createControllersFromDevices(RawInputEventQueue queue, List controllers, List devices, List setupapi_devices) throws IOException {
-		List active_devices = new ArrayList();
+	private final static void createControllersFromDevices(RawInputEventQueue queue, List<Controller> controllers, List<RawDevice> devices, List<SetupAPIDevice> setupapi_devices) throws IOException {
+		List<RawDevice> active_devices = new ArrayList<>();
 		for (int i = 0; i < devices.size(); i++) {
-			RawDevice device = (RawDevice)devices.get(i);
+			RawDevice device = devices.get(i);
 			SetupAPIDevice setupapi_device = lookupSetupAPIDevice(device.getName(), setupapi_devices);
 			if (setupapi_device == null) {
 				/* Either the device is an RDP or we failed to locate the
@@ -166,13 +155,13 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 		queue.start(active_devices);
 	}
 
-	private final static native void enumerateDevices(RawInputEventQueue queue, List devices) throws IOException;
+	private final static native void enumerateDevices(RawInputEventQueue queue, List<RawDevice> devices) throws IOException;
 
 	private final Controller[] enumControllers(RawInputEventQueue queue) throws IOException {
-		List controllers = new ArrayList();
-		List devices = new ArrayList();
+		List<Controller> controllers = new ArrayList<>();
+		List<RawDevice> devices = new ArrayList<>();
 		enumerateDevices(queue, devices);
-		List setupapi_devices = enumSetupAPIDevices();
+		List<SetupAPIDevice> setupapi_devices = enumSetupAPIDevices();
 		createControllersFromDevices(queue, controllers, devices, setupapi_devices);
 		Controller[] controllers_array = new Controller[controllers.size()];
 		controllers.toArray(controllers_array);
@@ -202,13 +191,13 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 	 * descriptive names and at the same time filter out the unwanted
 	 * RDP devices.
 	 */
-	private final static List enumSetupAPIDevices() throws IOException {
-		List devices = new ArrayList();
+	private final static List<SetupAPIDevice> enumSetupAPIDevices() throws IOException {
+		List<SetupAPIDevice> devices = new ArrayList<>();
 		nEnumSetupAPIDevices(getKeyboardClassGUID(), devices);
 		nEnumSetupAPIDevices(getMouseClassGUID(), devices);
 		return devices;
 	}
-	private final static native void nEnumSetupAPIDevices(byte[] guid, List devices) throws IOException;
+	private final static native void nEnumSetupAPIDevices(byte[] guid, List<SetupAPIDevice> devices) throws IOException;
 
 	private final static native byte[] getKeyboardClassGUID();
 	private final static native byte[] getMouseClassGUID();
