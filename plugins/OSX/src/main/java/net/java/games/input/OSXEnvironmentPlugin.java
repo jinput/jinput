@@ -67,9 +67,7 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 	 * 
 	 */
 	static void loadLibrary(final String lib_name) {
-		AccessController.doPrivileged(
-				new PrivilegedAction() {
-					public final Object run() {
+		AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
 					    try {
     						String lib_path = System.getProperty("net.java.games.input.librarypath");
     						if (lib_path != null)
@@ -81,25 +79,16 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 					        supported = false;
 					    }
 						return null;
-					}
 				});
 	}
     
 	static String getPrivilegedProperty(final String property) {
-	       return (String)AccessController.doPrivileged(new PrivilegedAction() {
-	                public Object run() {
-	                    return System.getProperty(property);
-	                }
-	            });
+	       return AccessController.doPrivileged((PrivilegedAction<String>)() -> System.getProperty(property));
 		}
 		
 
 	static String getPrivilegedProperty(final String property, final String default_value) {
-       return (String)AccessController.doPrivileged(new PrivilegedAction() {
-                public Object run() {
-                    return System.getProperty(property, default_value);
-                }
-            });
+       return AccessController.doPrivileged((PrivilegedAction<String>)() -> System.getProperty(property, default_value));
 	}
 		
     static {
@@ -147,10 +136,10 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 		return supported;
 	}
 
-	private final static void addElements(OSXHIDQueue queue, List elements, List components, boolean map_mouse_buttons) throws IOException {
-		Iterator it = elements.iterator();
+	private final static void addElements(OSXHIDQueue queue, List<OSXHIDElement> elements, List<OSXComponent> components, boolean map_mouse_buttons) throws IOException {
+		Iterator<OSXHIDElement> it = elements.iterator();
 		while (it.hasNext()) {
-			OSXHIDElement element = (OSXHIDElement)it.next();
+			OSXHIDElement element = it.next();
 			Component.Identifier id = element.getIdentifier();
 			if (id == null)
 				continue;
@@ -169,8 +158,8 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 		}
 	}
 
-	private final static Keyboard createKeyboardFromDevice(OSXHIDDevice device, List elements) throws IOException {
-		List components = new ArrayList();
+	private final static Keyboard createKeyboardFromDevice(OSXHIDDevice device, List<OSXHIDElement> elements) throws IOException {
+		List<OSXComponent> components = new ArrayList<>();
 		OSXHIDQueue queue = device.createQueue(AbstractController.EVENT_QUEUE_DEPTH);
 		try {
 			addElements(queue, elements, components, false);
@@ -180,12 +169,11 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 		}
 		Component[] components_array = new Component[components.size()];
 		components.toArray(components_array);
-		Keyboard keyboard = new OSXKeyboard(device, queue, components_array, new Controller[]{}, new Rumbler[]{});
-		return keyboard;
+		return new OSXKeyboard(device, queue, components_array, new Controller[]{}, new Rumbler[]{});
 	}
 
-	private final static Mouse createMouseFromDevice(OSXHIDDevice device, List elements) throws IOException {
-		List components = new ArrayList();
+	private final static Mouse createMouseFromDevice(OSXHIDDevice device, List<OSXHIDElement> elements) throws IOException {
+		List<OSXComponent> components = new ArrayList<>();
 		OSXHIDQueue queue = device.createQueue(AbstractController.EVENT_QUEUE_DEPTH);
 		try {
 			addElements(queue, elements, components, true);
@@ -204,8 +192,8 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 		}
 	}
 	
-	private final static AbstractController createControllerFromDevice(OSXHIDDevice device, List elements, Controller.Type type) throws IOException {
-		List components = new ArrayList();
+	private final static AbstractController createControllerFromDevice(OSXHIDDevice device, List<OSXHIDElement> elements, Controller.Type type) throws IOException {
+		List<OSXComponent> components = new ArrayList<>();
 		OSXHIDQueue queue = device.createQueue(AbstractController.EVENT_QUEUE_DEPTH);
 		try {
 			addElements(queue, elements, components, false);
@@ -215,15 +203,14 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 		}
 		Component[] components_array = new Component[components.size()];
 		components.toArray(components_array);
-		AbstractController controller = new OSXAbstractController(device, queue, components_array, new Controller[]{}, new Rumbler[]{}, type);
-		return controller;
+		return new OSXAbstractController(device, queue, components_array, new Controller[]{}, new Rumbler[]{}, type);
 	}
 
-	private final static void createControllersFromDevice(OSXHIDDevice device, List controllers) throws IOException {
+	private final static void createControllersFromDevice(OSXHIDDevice device, List<Controller> controllers) throws IOException {
 		UsagePair usage_pair = device.getUsagePair();
 		if (usage_pair == null)
 			return;
-		List elements = device.getElements();
+		List<OSXHIDElement> elements = device.getElements();
 		if (usage_pair.getUsagePage() == UsagePage.GENERIC_DESKTOP && (usage_pair.getUsage() == GenericDesktopUsage.MOUSE ||
 					usage_pair.getUsage() == GenericDesktopUsage.POINTER)) {
 			Controller mouse = createMouseFromDevice(device, elements);
@@ -231,26 +218,18 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 				controllers.add(mouse);
 		} else if (usage_pair.getUsagePage() == UsagePage.GENERIC_DESKTOP && (usage_pair.getUsage() == GenericDesktopUsage.KEYBOARD ||
 					usage_pair.getUsage() == GenericDesktopUsage.KEYPAD)) {
-			Controller keyboard = createKeyboardFromDevice(device, elements);
-			if (keyboard != null)
-				controllers.add(keyboard);
+			controllers.add(createKeyboardFromDevice(device, elements));
 		} else if (usage_pair.getUsagePage() == UsagePage.GENERIC_DESKTOP && usage_pair.getUsage() == GenericDesktopUsage.JOYSTICK) {
-			Controller joystick = createControllerFromDevice(device, elements, Controller.Type.STICK);
-			if (joystick != null)
-				controllers.add(joystick);
+			controllers.add(createControllerFromDevice(device, elements, Controller.Type.STICK));
 		} else if (usage_pair.getUsagePage() == UsagePage.GENERIC_DESKTOP && usage_pair.getUsage() == GenericDesktopUsage.MULTI_AXIS_CONTROLLER) {
-			Controller multiaxis = createControllerFromDevice(device, elements, Controller.Type.STICK);
-			if (multiaxis != null)
-				controllers.add(multiaxis);
+			controllers.add(createControllerFromDevice(device, elements, Controller.Type.STICK));
 		} else if (usage_pair.getUsagePage() == UsagePage.GENERIC_DESKTOP && usage_pair.getUsage() == GenericDesktopUsage.GAME_PAD) {
-			Controller game_pad = createControllerFromDevice(device, elements, Controller.Type.GAMEPAD);
-			if (game_pad != null)
-				controllers.add(game_pad);
+			controllers.add(createControllerFromDevice(device, elements, Controller.Type.GAMEPAD));
 		}
 	}
 
 	private final static Controller[] enumerateControllers() {
-		List controllers = new ArrayList();
+		List<Controller> controllers = new ArrayList<>();
 		try {
 			OSXHIDDeviceIterator it = new OSXHIDDeviceIterator();
 			try {
