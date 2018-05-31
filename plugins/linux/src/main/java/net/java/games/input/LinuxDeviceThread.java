@@ -40,7 +40,7 @@ import java.util.ArrayList;
  * is run on a single thread.
  */
 final class LinuxDeviceThread extends Thread {
-	private final List tasks = new ArrayList();
+	private final List<LinuxDeviceTask> tasks = new ArrayList<>();
 	
 	public LinuxDeviceThread() {
 		setDaemon(true);
@@ -50,7 +50,7 @@ final class LinuxDeviceThread extends Thread {
 	public synchronized final void run() {
 		while (true) {
 			if (!tasks.isEmpty()) {
-				LinuxDeviceTask task = (LinuxDeviceTask)tasks.remove(0);
+				LinuxDeviceTask task = tasks.remove(0);
 				task.doExecute();
 				synchronized (task) {
 					task.notify();

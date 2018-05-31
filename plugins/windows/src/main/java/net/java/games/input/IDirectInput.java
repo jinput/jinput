@@ -48,7 +48,7 @@ import java.util.ArrayList;
  * @version 1.0
  */
 final class IDirectInput {
-	private final List devices = new ArrayList();
+	private final List<IDirectInputDevice> devices = new ArrayList<>();
 	private final long idirectinput_address;
 	private final DummyWindow window;
 
@@ -65,7 +65,7 @@ final class IDirectInput {
 	}
 	private final static native long createIDirectInput() throws IOException;
 
-	public final List getDevices() {
+	public final List<IDirectInputDevice> getDevices() {
 		return devices;
 	}
 
@@ -88,7 +88,7 @@ final class IDirectInput {
 
 	public final void releaseDevices() {
 		for (int i = 0; i < devices.size(); i++) {
-			IDirectInputDevice device = (IDirectInputDevice)devices.get(i);
+			IDirectInputDevice device = devices.get(i);
 			device.release();
 		}
 	}

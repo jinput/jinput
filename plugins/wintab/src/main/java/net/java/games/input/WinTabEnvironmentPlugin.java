@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2006 Jeremy Booth (jeremy@newdawnsoftware.com)
  *
  * Redistribution and use in source and binary forms, with or without 
@@ -44,9 +44,7 @@ public class WinTabEnvironmentPlugin extends ControllerEnvironment implements Pl
 	 * 
 	 */
 	static void loadLibrary(final String lib_name) {
-		AccessController.doPrivileged(
-				new PrivilegedAction() {
-					public final Object run() {
+		AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
 					    try {
     						String lib_path = System.getProperty("net.java.games.input.librarypath");
     						if (lib_path != null)
@@ -58,25 +56,16 @@ public class WinTabEnvironmentPlugin extends ControllerEnvironment implements Pl
 					        supported = false;
 					    }
 						return null;
-					}
 				});
 	}
-    
+
 	static String getPrivilegedProperty(final String property) {
-	       return (String)AccessController.doPrivileged(new PrivilegedAction() {
-	                public Object run() {
-	                    return System.getProperty(property);
-	                }
-	            });
-		}
-		
+		return AccessController.doPrivileged((PrivilegedAction<String>)() -> System.getProperty(property));
+	}
+
 
 	static String getPrivilegedProperty(final String property, final String default_value) {
-       return (String)AccessController.doPrivileged(new PrivilegedAction() {
-                public Object run() {
-                    return System.getProperty(property, default_value);
-                }
-            });
+		return AccessController.doPrivileged((PrivilegedAction<String>)() -> System.getProperty(property, default_value));
 	}
 		
     static {
@@ -88,13 +77,13 @@ public class WinTabEnvironmentPlugin extends ControllerEnvironment implements Pl
 	}
 
 	private final Controller[] controllers;
-	private final List active_devices = new ArrayList();
+	private final List<WinTabDevice> active_devices = new ArrayList<>();
 	private final WinTabContext winTabContext;
 
 	/** Creates new DirectInputEnvironment */
 	public WinTabEnvironmentPlugin() {
 		if(isSupported()) {
-			DummyWindow window = null;
+			DummyWindow window;
 			WinTabContext winTabContext = null;
 			Controller[] controllers = new Controller[]{};
 			try {
@@ -113,12 +102,9 @@ public class WinTabEnvironmentPlugin extends ControllerEnvironment implements Pl
 			}
 			this.controllers = controllers;
 			this.winTabContext = winTabContext;
-			AccessController.doPrivileged(
-					new PrivilegedAction() {
-						public final Object run() {
+			AccessController.doPrivileged((PrivilegedAction<Void>)() -> {
 							Runtime.getRuntime().addShutdownHook(new ShutdownHook());
 							return null;
-						}
 					});
 		} else {
 			winTabContext = null;

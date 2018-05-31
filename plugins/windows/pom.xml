@@ -29,12 +29,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <compilerArgs>
-                        <arg>-h</arg>
-                        <arg>${project.build.directory}/generated-sources/natives</arg>
-                    </compilerArgs>
-                </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>

@@ -1,10 +1,4 @@
 /*
- * %W% %E%
- *
- * Copyright 2002 Sun Microsystems, Inc. All rights reserved.
- * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
-/*****************************************************************************
  * Copyright (c) 2003 Sun Microsystems, Inc.  All Rights Reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,7 +29,7 @@
  * You acknowledge that this software is not designed or intended for us in
  * the design, construction, operation or maintenance of any nuclear facility
  *
- *****************************************************************************/
+ */
 package net.java.games.input;
 
 import java.io.File;
@@ -77,7 +71,7 @@ class PluginClassLoader extends ClassLoader {
      * Overrides findClass to first look in the parent class loader,
      * then try loading the class from the plugin file system.
      */
-    protected Class findClass(String name)
+    protected Class<?> findClass(String name)
         throws ClassNotFoundException {
         // Try loading the class from the file system.
         byte[] b = loadClassData(name);

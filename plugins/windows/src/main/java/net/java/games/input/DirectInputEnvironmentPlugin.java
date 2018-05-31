@@ -64,10 +64,8 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 	 * 
 	 */
 	static void loadLibrary(final String lib_name) {
-		AccessController.doPrivileged(
-				new PrivilegedAction() {
-					public final Object run() {
-					    try {
+		AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
+						try {
     						String lib_path = System.getProperty("net.java.games.input.librarypath");
     						if (lib_path != null)
     							System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
@@ -78,25 +76,16 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 					        supported = false;
 					    }
 						return null;
-					}
 				});
 	}
     
 	static String getPrivilegedProperty(final String property) {
-	       return (String)AccessController.doPrivileged(new PrivilegedAction() {
-	                public Object run() {
-	                    return System.getProperty(property);
-	                }
-	            });
+	       return AccessController.doPrivileged((PrivilegedAction<String>) () -> System.getProperty(property));
 		}
 		
 
 	static String getPrivilegedProperty(final String property, final String default_value) {
-       return (String)AccessController.doPrivileged(new PrivilegedAction() {
-                public Object run() {
-                    return System.getProperty(property, default_value);
-                }
-            });
+       return AccessController.doPrivileged((PrivilegedAction<String>) () -> System.getProperty(property, default_value));
 	}
 		
 	static {
@@ -112,7 +101,7 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 	}
 
 	private final Controller[] controllers;
-	private final List active_devices = new ArrayList();
+	private final List<IDirectInputDevice> active_devices = new ArrayList<>();
 	private final DummyWindow window;
 
 	/** Creates new DirectInputEnvironment */
@@ -133,12 +122,9 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 			}
 			this.window = window;
 			this.controllers = controllers;
-			AccessController.doPrivileged(
-					new PrivilegedAction() {
-						public final Object run() {
+			AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
 							Runtime.getRuntime().addShutdownHook(new ShutdownHook());
 							return null;
-						}
 					});
 		} else {
 			// These are final fields, so can't set them, then over ride 
@@ -153,10 +139,10 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 	}
 
 	private final Component[] createComponents(IDirectInputDevice device, boolean map_mouse_buttons) {
-		List device_objects = device.getObjects();
-		List controller_components = new ArrayList();
+		List<DIDeviceObject> device_objects = device.getObjects();
+		List<DIComponent> controller_components = new ArrayList<>();
 		for (int i = 0; i < device_objects.size(); i++) {
-			DIDeviceObject device_object = (DIDeviceObject)device_objects.get(i);
+			DIDeviceObject device_object = device_objects.get(i);
 			Component.Identifier identifier = device_object.getIdentifier();
 			if (identifier == null)
 				continue;
@@ -214,12 +200,12 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 	}
 	
 	private final Controller[] enumControllers(DummyWindow window) throws IOException {
-		List controllers = new ArrayList();
+		List<Controller> controllers = new ArrayList<>();
 		IDirectInput dinput = new IDirectInput(window);
 		try {
-			List devices = dinput.getDevices();
+			List<IDirectInputDevice> devices = dinput.getDevices();
 			for (int i = 0; i < devices.size(); i++) {
-				IDirectInputDevice device = (IDirectInputDevice)devices.get(i);
+				IDirectInputDevice device = devices.get(i);
 				Controller controller = createControllerFromDevice(device);
 				if (controller != null) {
 					controllers.add(controller);
@@ -239,7 +225,7 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 		public final void run() {
 			/* Release the devices to kill off active force feedback effects */
 			for (int i = 0; i < active_devices.size(); i++) {
-				IDirectInputDevice device = (IDirectInputDevice)active_devices.get(i);
+				IDirectInputDevice device = active_devices.get(i);
 				device.release();
 			}
 			/* We won't release the window since it is
@@ -251,4 +237,4 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 	public boolean isSupported() {
 		return supported;
 	}
-} // class DirectInputEnvironment
+}

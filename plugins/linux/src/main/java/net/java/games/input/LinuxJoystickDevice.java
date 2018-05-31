@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2003 Jeremy Booth (jeremy@newdawnsoftware.com)
  *
  * Redistribution and use in source and binary forms, with or without 
@@ -28,8 +28,6 @@ package net.java.games.input;
 import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
 
 /**
  * @author elias
@@ -48,8 +46,8 @@ final class LinuxJoystickDevice implements LinuxDevice {
 	private final Event event = new Event();
 	private final LinuxJoystickButton[] buttons;
 	private final LinuxJoystickAxis[] axes;
-	private final Map povXs = new HashMap(); 
-	private final Map povYs = new HashMap(); 
+	private final Map<Integer, LinuxJoystickPOV> povXs = new HashMap<>();
+	private final Map<Integer, LinuxJoystickPOV> povYs = new HashMap<>();
 	private final byte[] axisMap;
 	private final char[] buttonMap;
 
@@ -102,12 +100,12 @@ final class LinuxJoystickDevice implements LinuxDevice {
 					if (axis != null) {
 						float value = (float)joystick_event.getValue()/AXIS_MAX_VALUE;
 						axis.setValue(value);
-						if(povXs.containsKey(new Integer(index))) {
-							LinuxJoystickPOV pov = (LinuxJoystickPOV)(povXs.get(new Integer(index)));
+						if(povXs.containsKey(index)) {
+							LinuxJoystickPOV pov = povXs.get(index);
 							pov.updateValue();
 							event.set(pov, pov.getPollData(), joystick_event.getNanos());
-						} else if(povYs.containsKey(new Integer(index))) {
-							LinuxJoystickPOV pov = (LinuxJoystickPOV)(povYs.get(new Integer(index)));
+						} else if(povYs.containsKey(index)) {
+							LinuxJoystickPOV pov = povYs.get(index);
 							pov.updateValue();
 							event.set(pov, pov.getPollData(), joystick_event.getNanos());
 						} else {
@@ -150,8 +148,8 @@ final class LinuxJoystickDevice implements LinuxDevice {
 				break;
 			}
 		}
-		povXs.put(new Integer(xIndex),pov);
-		povYs.put(new Integer(yIndex),pov);
+		povXs.put(xIndex,pov);
+		povYs.put(yIndex,pov);
 	}
 
 	public final synchronized boolean getNextEvent(Event event) throws IOException {
@@ -233,6 +231,7 @@ final class LinuxJoystickDevice implements LinuxDevice {
 			throw new IOException("Device is closed");
 	}
 
+    @SuppressWarnings("deprecation")
 	protected void finalize() throws IOException {
 		close();
 	}

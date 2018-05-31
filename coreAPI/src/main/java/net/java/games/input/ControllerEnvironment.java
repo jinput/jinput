@@ -85,7 +85,7 @@ public abstract class ControllerEnvironment {
     /**
      * List of controller listeners
      */
-    protected final ArrayList controllerListeners = new ArrayList();
+    protected final ArrayList<ControllerListener> controllerListeners = new ArrayList<>();
     
     /**
      * Protected constructor for subclassing.
@@ -133,9 +133,9 @@ public abstract class ControllerEnvironment {
      */
     protected void fireControllerAdded(Controller c) {
         ControllerEvent ev = new ControllerEvent(c);
-        Iterator it = controllerListeners.iterator();
+        Iterator<ControllerListener> it = controllerListeners.iterator();
         while (it.hasNext()) {
-            ((ControllerListener)it.next()).controllerAdded(ev);
+            it.next().controllerAdded(ev);
         }
     }
     
@@ -145,9 +145,9 @@ public abstract class ControllerEnvironment {
      */
     protected void fireControllerRemoved(Controller c) {
         ControllerEvent ev = new ControllerEvent(c);
-        Iterator it = controllerListeners.iterator();
+        Iterator<ControllerListener> it = controllerListeners.iterator();
         while (it.hasNext()) {
-            ((ControllerListener)it.next()).controllerRemoved(ev);
+            it.next().controllerRemoved(ev);
         }
     }
     
@@ -158,4 +158,4 @@ public abstract class ControllerEnvironment {
     public static ControllerEnvironment getDefaultEnvironment() {
         return defaultEnvironment;
     }
-} // ControllerEnvironment
+}

@@ -1,41 +1,35 @@
 /*
- * %W% %E%
+ * Copyright (c) 2003 Sun Microsystems, Inc.  All Rights Reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- * Copyright 2002 Sun Microsystems, Inc. All rights reserved.
- * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ * - Redistribution of source code must retain the above copyright notice,
+ *   this list of conditions and the following disclaimer.
+ *
+ * - Redistribution in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materails provided with the distribution.
+ *
+ * Neither the name Sun Microsystems, Inc. or the names of the contributors
+ * may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * This software is provided "AS IS," without a warranty of any kind.
+ * ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING
+ * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
+ * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
+ * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
+ * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
+ * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
+ * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
+ * OF LIABILITY, ARISING OUT OF THE USE OF OUR INABILITY TO USE THIS SOFTWARE,
+ * EVEN IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+ *
+ * You acknowledge that this software is not designed or intended for us in
+ * the design, construction, operation or maintenance of any nuclear facility
+ *
  */
-/*****************************************************************************
-* Copyright (c) 2003 Sun Microsystems, Inc.  All Rights Reserved.
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*
-* - Redistribution of source code must retain the above copyright notice,
-*   this list of conditions and the following disclaimer.
-*
-* - Redistribution in binary form must reproduce the above copyright notice,
-*   this list of conditions and the following disclaimer in the documentation
-*   and/or other materails provided with the distribution.
-*
-* Neither the name Sun Microsystems, Inc. or the names of the contributors
-* may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* This software is provided "AS IS," without a warranty of any kind.
-* ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING
-* ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
-* NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
-* ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
-* A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
-* DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
-* REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
-* INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
-* OF LIABILITY, ARISING OUT OF THE USE OF OUR INABILITY TO USE THIS SOFTWARE,
-* EVEN IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-*
-* You acknowledge that this software is not designed or intended for us in
-* the design, construction, operation or maintenance of any nuclear facility
-*
-*****************************************************************************/
 package net.java.games.input;
 
 import java.lang.reflect.Method;
@@ -77,7 +71,7 @@ final class UsagePage {
 	/* ReservedPointofSalepages 0x8E - 0X8F */
 	public final static UsagePage CAMERACONTROL= new UsagePage(0x90); /* USB Device Class Definition for Image Class Devices */
 	public final static UsagePage ARCADE = new UsagePage(0x91); /* OAAF Definitions for arcade and coinop related Devices */                                                                                                                         
-	private final Class usage_class;
+	private final Class<? extends Usage> usage_class;
 	private final int usage_page_id;
 
 	public final static UsagePage map(int page_id) {
@@ -86,7 +80,7 @@ final class UsagePage {
 		return map[page_id];
 	}
 
-	private UsagePage(int page_id, Class usage_class) {
+	private UsagePage(int page_id, Class<? extends Usage> usage_class) {
 		map[page_id] = this;
 		this.usage_class = usage_class;
 		this.usage_page_id = page_id;
@@ -104,8 +98,8 @@ final class UsagePage {
 		if (usage_class == null)
 			return null;
 		try {
-			Method map_method = usage_class.getMethod("map", new Class[]{int.class});
-			Object result = map_method.invoke(null, new Object[]{new Integer(usage_id)});
+			Method map_method = usage_class.getMethod("map", int.class);
+			Object result = map_method.invoke(null, usage_id);
 			return (Usage)result;
 		} catch (Exception e) {
 			throw new Error(e);

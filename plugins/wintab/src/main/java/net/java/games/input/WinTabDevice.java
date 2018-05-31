@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2006 Jeremy Booth (jeremy@newdawnsoftware.com)
  *
  * Redistribution and use in source and binary forms, with or without 
@@ -39,7 +39,7 @@ public class WinTabDevice extends AbstractController {
 	public final static int RotationAxis = 7;
 
 	private WinTabContext context;
-	private List eventList = new ArrayList();
+	private List<Event> eventList = new ArrayList<>();
 
 	private WinTabDevice(WinTabContext context, int index, String name, Component[] components) {
 		super(name, components, new Controller[0], new Rumbler[0]);
@@ -48,7 +48,7 @@ public class WinTabDevice extends AbstractController {
 
 	protected boolean getNextDeviceEvent(Event event) throws IOException {
 		if(eventList.size()>0) {
-			Event ourEvent = (Event)eventList.remove(0);
+			Event ourEvent = eventList.remove(0);
 			event.set(ourEvent);
 			return true;
 		} else {
@@ -80,7 +80,7 @@ public class WinTabDevice extends AbstractController {
 	public static WinTabDevice createDevice(WinTabContext context, int deviceIndex) {
 		String name = nGetName(deviceIndex);
 		WinTabEnvironmentPlugin.log("Device " + deviceIndex + ", name: " + name);
-		List componentsList = new ArrayList();
+		List<WinTabComponent> componentsList = new ArrayList<>();
 		
 		int[] axisDetails = nGetAxisDetails(deviceIndex, XAxis);
 		if(axisDetails.length==0) {
@@ -148,7 +148,7 @@ public class WinTabDevice extends AbstractController {
 		WinTabEnvironmentPlugin.log("Device has " + numberOfButtons + " buttons");
 		componentsList.addAll(WinTabComponent.createButtons(context, deviceIndex, numberOfButtons));
 		
-		Component[] components = (Component[])componentsList.toArray(new Component[0]);
+		Component[] components = componentsList.toArray(new Component[0]);
 		
 		return new WinTabDevice(context, deviceIndex, name, components);
 	}

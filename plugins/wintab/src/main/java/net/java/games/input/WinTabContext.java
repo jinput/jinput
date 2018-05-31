@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2006 Jeremy Booth (jeremy@newdawnsoftware.com)
  *
  * Redistribution and use in source and binary forms, with or without 
@@ -47,17 +47,14 @@ public class WinTabContext {
 	
 	public synchronized void open() {
 		this.hCTX = nOpen(window.getHwnd());
-		List devices = new ArrayList();
+		List<WinTabDevice> devices = new ArrayList<>();
 		
 		int numSupportedDevices = nGetNumberOfSupportedDevices();
 		for(int i=0;i<numSupportedDevices;i++) {
-			WinTabDevice newDevice = WinTabDevice.createDevice(this,i);
-			if(newDevice!=null) {
-				devices.add(newDevice);
-			}
+			devices.add(WinTabDevice.createDevice(this,i));
 		}
 		
-		controllers = (Controller[])devices.toArray(new Controller[0]);
+		controllers = devices.toArray(new Controller[0]);
 	}
 	
 	public synchronized void close() {

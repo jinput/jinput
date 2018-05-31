@@ -46,6 +46,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.WindowConstants;
 
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
@@ -55,7 +56,10 @@ import net.java.games.input.Event;
 import net.java.games.input.Version;
 
 public class ControllerEventTest extends JFrame{
+	private static final long serialVersionUID = -8266185848160199092L;
+
 	private static abstract class AxisPanel extends JPanel{
+		private static final long serialVersionUID = -6200599064870672000L;
 		Component axis;
 		float data;
 
@@ -79,6 +83,7 @@ public class ControllerEventTest extends JFrame{
 	}
 
 	private static class DigitalAxisPanel extends AxisPanel {
+		private static final long serialVersionUID = -4729666037860134626L;
 		JLabel digitalState = new JLabel("<unread>");
 
 		public DigitalAxisPanel(Component ax) {
@@ -102,6 +107,7 @@ public class ControllerEventTest extends JFrame{
 	}
 
 	private static class DigitalHatPanel extends AxisPanel {
+		private static final long serialVersionUID = -6582605379682496832L;
 		JLabel digitalState = new JLabel("<unread>");
 
 		public DigitalHatPanel(Component ax) {
@@ -145,6 +151,7 @@ public class ControllerEventTest extends JFrame{
 		}
 	}
 	private static class AnalogAxisPanel extends AxisPanel {
+		private static final long serialVersionUID = 7536173405896285590L;
 		JLabel analogState = new JLabel("<unread>");
 
 		public AnalogAxisPanel(Component ax) {
@@ -164,8 +171,9 @@ public class ControllerEventTest extends JFrame{
 
 
 	private static class ControllerWindow extends JFrame {
+		private static final long serialVersionUID = 8623977198558568961L;
 		Controller ca;
-		Map axes_to_panels = new HashMap();
+		Map<Component, AxisPanel> axes_to_panels = new HashMap<>();
 		boolean disabled = false;
 
 		public ControllerWindow(JFrame frame,Controller ca){
@@ -207,7 +215,7 @@ public class ControllerEventTest extends JFrame{
 		}
 
 		private void addAxis(JPanel p, Component ax){
-			JPanel p2;
+			AxisPanel p2;
 			if (ax.isAnalog()) {
 				p2 = new AnalogAxisPanel(ax);
 			} else {
@@ -234,14 +242,14 @@ public class ControllerEventTest extends JFrame{
 			EventQueue event_queue = ca.getEventQueue();
 			Event event = new Event();
 			while (event_queue.getNextEvent(event)) {
-				AxisPanel panel = (AxisPanel)axes_to_panels.get(event.getComponent());
+				AxisPanel panel = axes_to_panels.get(event.getComponent());
 				panel.setPollData(event.getValue());
 			}
 		}
 	}
 
 	static final long HEARTBEATMS =100; // 10th of a second
-	List controllers = new ArrayList();
+	List<ControllerWindow> controllers = new ArrayList<>();
 
 	public ControllerEventTest() {
 		super("Controller Event Test. Version: " + Version.getVersion());
@@ -251,14 +259,12 @@ public class ControllerEventTest extends JFrame{
 			makeController(ca[i]);
 		}
 
-		new Thread(new Runnable() {
-			public void run(){
+		new Thread(() -> {
 				try {
 					while(true){
-						for(Iterator i=controllers.iterator();i.hasNext();){
+						for(Iterator<ControllerWindow> i=controllers.iterator();i.hasNext();){
 							try {
-								ControllerWindow cw = (ControllerWindow)i.next();
-								cw.poll();
+								i.next().poll();
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -268,11 +274,10 @@ public class ControllerEventTest extends JFrame{
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
 		}).start();
 		pack();
 		setSize(400,400);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
 

@@ -1,41 +1,35 @@
 /*
- * %W% %E%
+ * Copyright (c) 2003 Sun Microsystems, Inc.  All Rights Reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- * Copyright 2002 Sun Microsystems, Inc. All rights reserved.
- * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ * - Redistribution of source code must retain the above copyright notice,
+ *   this list of conditions and the following disclaimer.
+ *
+ * - Redistribution in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materails provided with the distribution.
+ *
+ * Neither the name Sun Microsystems, Inc. or the names of the contributors
+ * may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * This software is provided "AS IS," without a warranty of any kind.
+ * ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING
+ * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
+ * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
+ * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
+ * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
+ * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
+ * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
+ * OF LIABILITY, ARISING OUT OF THE USE OF OUR INABILITY TO USE THIS SOFTWARE,
+ * EVEN IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+ *
+ * You acknowledge that this software is not designed or intended for us in
+ * the design, construction, operation or maintenance of any nuclear facility
+ *
  */
-/*****************************************************************************
-* Copyright (c) 2003 Sun Microsystems, Inc.  All Rights Reserved.
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*
-* - Redistribution of source code must retain the above copyright notice,
-*   this list of conditions and the following disclaimer.
-*
-* - Redistribution in binary form must reproduce the above copyright notice,
-*   this list of conditions and the following disclaimer in the documentation
-*   and/or other materails provided with the distribution.
-*
-* Neither the name Sun Microsystems, Inc. or the names of the contributors
-* may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* This software is provided "AS IS," without a warranty of any kind.
-* ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING
-* ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
-* NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
-* ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
-* A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
-* DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
-* REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
-* INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
-* OF LIABILITY, ARISING OUT OF THE USE OF OUR INABILITY TO USE THIS SOFTWARE,
-* EVEN IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-*
-* You acknowledge that this software is not designed or intended for us in
-* the design, construction, operation or maintenance of any nuclear facility
-*
-*****************************************************************************/
 package net.java.games.input;
 
 import java.io.IOException;
@@ -104,7 +98,7 @@ final class OSXHIDDevice {
 
 	private final long device_address;
 	private final long device_interface_address;
-	private final Map properties;
+	private final Map<String,?> properties;
 
 	private boolean released;
 
@@ -130,7 +124,7 @@ final class OSXHIDDevice {
 		return (String)properties.get(kIOHIDProductKey);
 	}
 
-	private final OSXHIDElement createElementFromElementProperties(Map element_properties) {
+	private final OSXHIDElement createElementFromElementProperties(Map<String,?> element_properties) {
 	/*	long size = getLongFromProperties(element_properties, kIOHIDElementSizeKey);
 		// ignore elements that can't fit into the 32 bit value field of a hid event
 		if (size > 32)
@@ -161,12 +155,13 @@ final class OSXHIDDevice {
 		}
 	}
 
-	private final void addElements(List elements, Map properties) {
+    @SuppressWarnings("unchecked")
+    private final void addElements(List<OSXHIDElement> elements, Map<String,?> properties) {
 		Object[] elements_properties = (Object[])properties.get(kIOHIDElementKey);
 		if (elements_properties == null)
 			return;
 		for (int i = 0; i < elements_properties.length; i++) {
-			Map element_properties = (Map)elements_properties[i];
+			Map<String,?> element_properties = (Map<String,?>)elements_properties[i];
 			OSXHIDElement element = createElementFromElementProperties(element_properties);
 			if (element != null) {
 				elements.add(element);
@@ -175,28 +170,28 @@ final class OSXHIDDevice {
 		}
 	}
 	
-	public final List getElements() {
-		List elements = new ArrayList();
+	public final List<OSXHIDElement> getElements() {
+		List<OSXHIDElement> elements = new ArrayList<>();
 		addElements(elements, properties);
 		return elements;
 	}
 	
-	private final static long getLongFromProperties(Map properties, String key, long default_value) {
+	private final static long getLongFromProperties(Map<String,?> properties, String key, long default_value) {
 		Long long_obj = (Long)properties.get(key);
 		if (long_obj == null)
 			return default_value;
 		return long_obj.longValue();
 	}
 
-	private final static boolean getBooleanFromProperties(Map properties, String key, boolean default_value) {
+	private final static boolean getBooleanFromProperties(Map<String,?> properties, String key, boolean default_value) {
 		return getLongFromProperties(properties, key, default_value ? 1 : 0) != 0;
 	}
 
-	private final static int getIntFromProperties(Map properties, String key) {
+	private final static int getIntFromProperties(Map<String,?> properties, String key) {
 		return (int)getLongFromProperties(properties, key);
 	}
 
-	private final static long getLongFromProperties(Map properties, String key) {
+	private final static long getLongFromProperties(Map<String,?> properties, String key) {
 		Long long_obj = (Long)properties.get(key);
 		return long_obj.longValue();
 	}
@@ -217,28 +212,6 @@ final class OSXHIDDevice {
 		return createUsagePair(usage_page_id, usage_id);
 	}
 	
-/*
-	public final List getUsagePairs() {
-		List usage_pairs_list = new ArrayList();
-		Object[] usage_pairs = (Object[])properties.get(kIOHIDDeviceUsagePairsKey);
-		if (usage_pairs == null) {
-			int usage_page_id = getIntFromProperties(properties, kIOHIDPrimaryUsagePageKey);
-			int usage_id = getIntFromProperties(properties, kIOHIDPrimaryUsageKey);
-			UsagePair pair = createUsagePair(usage_page_id, usage_id);
-			if (pair != null)
-				usage_pairs_list.add(pair);
-		}
-		for (int i = 0; i < usage_pairs.length; i++) {
-			Map usage_pair = (Map)usage_pairs[i];
-			int usage_page_id = getIntFromProperties(usage_pair, kIOHIDDeviceUsagePageKey);
-			int usage_id = getIntFromProperties(usage_pair, kIOHIDDeviceUsageKey);
-			UsagePair pair = createUsagePair(usage_page_id, usage_id);
-			if (pair != null)
-				usage_pairs_list.add(pair);
-		}
-		return usage_pairs_list;
-	}
-*/	
 	private final void dumpProperties() {
 		log.info(toString());
 		dumpMap("", properties);
@@ -253,8 +226,8 @@ final class OSXHIDDevice {
 		log.info(prefix + "}");
 	}
 	
-	private final static void dumpMap(String prefix, Map map) {
-		Iterator keys = map.keySet().iterator();
+	private final static void dumpMap(String prefix, Map<String,?> map) {
+		Iterator<String> keys = map.keySet().iterator();
 		while (keys.hasNext()) {
 			Object key = keys.next();
 			Object value = map.get(key);
@@ -262,23 +235,24 @@ final class OSXHIDDevice {
 			dumpObject(prefix + "\t", value);
 		}
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	private final static void dumpObject(String prefix, Object obj) {
 		if (obj instanceof Long) {
 			Long l = (Long)obj;
 			log.info(prefix + "0x" + Long.toHexString(l.longValue()));
 		} else if (obj instanceof Map)
-			dumpMap(prefix, (Map)obj);
+			dumpMap(prefix, (Map<String,?>)obj);
 		else if (obj.getClass().isArray())
 			dumpArray(prefix, (Object[])obj);
 		else
 			log.info(prefix + obj);
 	}
 
-	private final Map getDeviceProperties() throws IOException {
+	private final Map<String,?> getDeviceProperties() throws IOException {
 		return nGetDeviceProperties(device_address);
 	}
-	private final static native Map nGetDeviceProperties(long device_address) throws IOException;
+	private final static native Map<String,?> nGetDeviceProperties(long device_address) throws IOException;
 
 	public final synchronized void release() throws IOException {
 		try {

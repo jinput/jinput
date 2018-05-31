@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2003 Jeremy Booth (jeremy@newdawnsoftware.com)
  *
  * Redistribution and use in source and binary forms, with or without 
@@ -25,15 +25,16 @@
  */
 package net.java.games.input.applet;
 
-import java.applet.Applet;
 import java.io.IOException;
 
 import net.java.games.input.ControllerEventTest;
-import net.java.games.input.applet.JInputAppletResourceLoader;
 
-public class ControllerEventTestApplet extends Applet {
+@SuppressWarnings("deprecation")
+public class ControllerEventTestApplet extends java.applet.Applet {
 
-	public void init() {
+    private static final long serialVersionUID = 4250817143444220400L;
+
+    public void init() {
 		try {
 			new JInputAppletResourceLoader().loadResources(getCodeBase());
 		} catch (IOException e) {
