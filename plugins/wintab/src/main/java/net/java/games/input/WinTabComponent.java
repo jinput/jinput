@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2006 Jeremy Booth (jeremy@newdawnsoftware.com)
  *
  * Redistribution and use in source and binary forms, with or without 
@@ -65,8 +65,8 @@ public class WinTabComponent extends AbstractComponent {
 		return false;
 	}
 
-	public static List createComponents(WinTabContext context, int parentDevice, int axisId, int[] axisRanges) {
-		List components = new ArrayList();
+	public static List<WinTabComponent> createComponents(WinTabContext context, int parentDevice, int axisId, int[] axisRanges) {
+		List<WinTabComponent> components = new ArrayList<>();
 		Identifier id;
 		switch(axisId) {
 		case WinTabDevice.XAxis:
@@ -110,26 +110,17 @@ public class WinTabComponent extends AbstractComponent {
 		return components;
 	}
 
-	public static Collection createButtons(WinTabContext context, int deviceIndex, int numberOfButtons) {
-		List buttons = new ArrayList();
+	public static Collection<WinTabButtonComponent> createButtons(WinTabContext context, int deviceIndex, int numberOfButtons) {
+		List<WinTabButtonComponent> buttons = new ArrayList<>();
 		Identifier id;
 		
 		for(int i=0;i<numberOfButtons;i++) {
 			try {
-				Class buttonIdClass = Identifier.Button.class;
+				Class<Identifier.Button> buttonIdClass = Identifier.Button.class;
 				Field idField = buttonIdClass.getField("_" + i);
 				id = (Identifier)idField.get(null);
 				buttons.add(new WinTabButtonComponent(context, deviceIndex, id.getName(), id, i));
-			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchFieldException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
+			} catch (SecurityException|NoSuchFieldException|IllegalArgumentException|IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -184,9 +175,9 @@ public class WinTabComponent extends AbstractComponent {
 		return (value - min)/bottom;
 	}
 
-	public static Collection createCursors(WinTabContext context, int deviceIndex, String[] cursorNames) {
+	public static Collection<WinTabCursorComponent> createCursors(WinTabContext context, int deviceIndex, String[] cursorNames) {
 		Identifier id;
-		List cursors = new ArrayList();
+		List<WinTabCursorComponent> cursors = new ArrayList<>();
 		
 		for(int i=0;i<cursorNames.length;i++) {
 			if(cursorNames[i].matches("Puck")) {
