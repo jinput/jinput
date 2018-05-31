@@ -40,13 +40,13 @@ import java.util.HashMap;
 * @version 1.0
 */
 final class ButtonUsage implements Usage {
-	private final static Map map = new HashMap();
+	private final static Map<Integer, ButtonUsage> map = new HashMap<>();
 	
 	private final int button_id;
 
 	public final static ButtonUsage map(int button_id) {
-		Integer button_id_obj = new Integer(button_id);
-		ButtonUsage existing = (ButtonUsage)map.get(button_id_obj);
+		Integer button_id_obj = button_id;
+		ButtonUsage existing = map.get(button_id_obj);
 		if (existing != null)
 			return existing;
 		ButtonUsage new_button = new ButtonUsage(button_id);
