@@ -47,7 +47,7 @@ import java.util.HashMap;
 * @version 1.0
 */
 final class OSXHIDQueue {
-	private final Map map = new HashMap();
+	private final Map<Long,OSXComponent> map = new HashMap<>();
 	private final long queue_address;
 
 	private boolean released;
@@ -80,7 +80,7 @@ final class OSXHIDQueue {
 	}
 
 	public final OSXComponent mapEvent(OSXEvent event) {
-		return (OSXComponent)map.get(new Long(event.getCookie()));
+		return map.get(event.getCookie());
 	}
 
 	private final void open(int queue_depth) throws IOException {
@@ -118,13 +118,13 @@ final class OSXHIDQueue {
 
 	public final void addElement(OSXHIDElement element, OSXComponent component) throws IOException {
 		nAddElement(queue_address, element.getCookie());
-		map.put(new Long(element.getCookie()), component);
+		map.put(element.getCookie(), component);
 	}
 	private final static native void nAddElement(long queue_address, long cookie) throws IOException;
 
 	public final void removeElement(OSXHIDElement element) throws IOException {
 		nRemoveElement(queue_address, element.getCookie());
-		map.remove(new Long(element.getCookie()));
+		map.remove(element.getCookie());
 	}
 	private final static native void nRemoveElement(long queue_address, long cookie) throws IOException;
 
