@@ -30,6 +30,7 @@ import java.io.IOException;
 
 import net.java.games.input.ControllerEventTest;
 
+@SuppressWarnings("deprecation")
 public class ControllerEventTestApplet extends Applet {
 
     private static final long serialVersionUID = 4250817143444220400L;
