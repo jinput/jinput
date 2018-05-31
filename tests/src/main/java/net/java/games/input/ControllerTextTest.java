@@ -37,12 +37,6 @@
  *****************************************************************************/
 package net.java.games.input;
 
-/**
- *
- * @author  administrator
- */
-import net.java.games.input.*;
-
 public class ControllerTextTest {
     ControllerEnvironment ce;
     /** Creates a new instance of ControllerScanner */

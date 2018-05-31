@@ -49,13 +49,17 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.WindowConstants;
 
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 
 public class ControllerReadTest extends JFrame{
+	private static final long serialVersionUID = -7129976919159465311L;
+
 	private abstract static class AxisPanel extends JPanel{
+		private static final long serialVersionUID = -2117191506803328790L;
 		Component axis;
 		float data;
 
@@ -79,6 +83,7 @@ public class ControllerReadTest extends JFrame{
 	}
 
 	private static class DigitalAxisPanel extends AxisPanel {
+		private static final long serialVersionUID = -4006900519933869168L;
 		JLabel digitalState = new JLabel("<unread>");
 
 		public DigitalAxisPanel(Component ax) {
@@ -102,6 +107,7 @@ public class ControllerReadTest extends JFrame{
 	}
 
 	private static class DigitalHatPanel extends AxisPanel {
+		private static final long serialVersionUID = -3293100130201231029L;
 		JLabel digitalState = new JLabel("<unread>");
 
 		public DigitalHatPanel(Component ax) {
@@ -145,6 +151,7 @@ public class ControllerReadTest extends JFrame{
 		}
 	}
 	private static class AnalogAxisPanel extends AxisPanel {
+		private static final long serialVersionUID = -3220244985697453835L;
 		JLabel analogState = new JLabel("<unread>");
 
 		public AnalogAxisPanel(Component ax) {
@@ -164,8 +171,9 @@ public class ControllerReadTest extends JFrame{
 
 
 	private static class ControllerWindow extends JFrame {
+		private static final long serialVersionUID = 5812903945250431578L;
 		Controller ca;
-		List axisList = new ArrayList();
+		List<AxisPanel> axisList = new ArrayList<>();
 		boolean disabled = false;
 
 		public ControllerWindow(JFrame frame,Controller ca){
@@ -207,7 +215,7 @@ public class ControllerReadTest extends JFrame{
 		}
 
 		private void addAxis(JPanel p, Component ax){
-			JPanel p2;
+			AxisPanel p2;
 			if (ax.isAnalog()) {
 				p2 = new AnalogAxisPanel(ax);
 			} else {
@@ -233,9 +241,9 @@ public class ControllerReadTest extends JFrame{
 				setDisabled(false);
 			}
 			//System.out.println("Polled "+ca.getName());
-			for(Iterator i =axisList.iterator();i.hasNext();){
+			for(Iterator<AxisPanel> i =axisList.iterator();i.hasNext();){
 				try {
-					((AxisPanel)i.next()).poll();
+					i.next().poll();
 				}catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -244,7 +252,7 @@ public class ControllerReadTest extends JFrame{
 	}
 
 	static final long HEARTBEATMS =100; // 10th of a second
-	List controllers = new ArrayList();
+	List<ControllerWindow> controllers = new ArrayList<>();
 
 	public ControllerReadTest() {
 		super("Controller Read Test. Version: " + Version.getVersion());
@@ -254,13 +262,12 @@ public class ControllerReadTest extends JFrame{
 			makeController(ca[i]);
 		}
 
-		new Thread(new Runnable() {
-			public void run(){
+		new Thread(() ->{
 				try {
 					while(true){
-						for(Iterator i=controllers.iterator();i.hasNext();){
+						for(Iterator<ControllerWindow> i=controllers.iterator();i.hasNext();){
 							try {
-								ControllerWindow cw = (ControllerWindow)i.next();
+								ControllerWindow cw = i.next();
 								cw.poll();
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -271,11 +278,10 @@ public class ControllerReadTest extends JFrame{
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}
 		}).start();
 		pack();
 		setSize(400,400);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
 
