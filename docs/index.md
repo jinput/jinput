@@ -21,6 +21,8 @@ often contain a native code portion to interface to the host system.
 
 ## Getting Started
 
+### Maven
+
 Include the dependency in your project:
 ```xml
     <dependency>
@@ -45,13 +47,21 @@ You'll also need to add the build plugin in your `build/plugins` section of your
     
 A full pom might look like [this one](https://github.com/jinput/jinput/blob/master/examples/example.pom.xml)
 
+### Without maven
+The jar file with the java code in should be in maven central, you'll need the [jinput.jar](http://repo1.maven.org/maven2/net/java/jinput/jinput/{{site.jinput_version}}/jinput-{{site.jinput_version}}.jar) and [jinput-natives-all.jar](http://repo1.maven.org/maven2/net/java/jinput/jinput/{{site.jinput_version}}/jinput-{{site.jinput_version}}-natives-all.jar) that contains the native binaries.
+
 ## Running
 
-Add the jinput jar to your classpath, assuming you are using maven and have the native dependencies plugin working, it will have unpacked the native binaries to `target/natives`, you must specify the `java.library.path` property to point to this directy.
+Add the jinput jar to your classpath, if you are using maven and have the native dependencies plugin working, it will have unpacked the native binaries to `target/natives`, you must specify the `java.library.path` property to point to this directy.
 
 Example
 ```
 java -cp ~/.m2/repository/net/java/jinput/jinput/{{site.jinput_version}}/jinput-{{site.jinput_version}}.jar:target/examples-pom-{{site.jinput_version}}.jar -Djava.library.path=target/natives net.java.games.input.example.ReadFirstMouse
+```
+
+More generally
+```
+java -cp <path to jinput.jar>:<your own jars> -Djava.library.path=<path to natives> <main class>
 ```
 
 ## Usage
