@@ -80,17 +80,34 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <artifactSet>
-                                <excludes>
-                                    <exclude>net.java.jinput:osx-plugin:jar:natives-osx</exclude>
-                                    <exclude>net.java.jinput:linux-plugin:jar:natives-linux</exclude>
-                                    <exclude>net.java.jinput:windows-plugin:jar:natives-windows</exclude>
-                                    <exclude>net.java.jinput:wintab-plugin:jar:natives-wintab</exclude>
-                                </excludes>
-                            </artifactSet>
+                            <filters>
+                                <filter>
+                                    <artifact>net.java.jinput:osx-plugin:natives-osx</artifact>
+                                    <excludes>
+                                        <exclude>**/*</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>net.java.jinput:linux-plugin:natives-linux</artifact>
+                                    <excludes>
+                                        <exclude>**/*</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>net.java.jinput:windows-plugin:natives-windows</artifact>
+                                    <excludes>
+                                        <exclude>**/*</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>net.java.jinput:wintab-plugin:natives-wintab</artifact>
+                                    <excludes>
+                                        <exclude>**/*</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                             <createSourcesJar>true</createSourcesJar>
                             <shadedArtifactAttached>false</shadedArtifactAttached>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
                         </configuration>
                     </execution>
                     <execution>
