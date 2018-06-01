@@ -36,7 +36,9 @@ Include the dependency in your project:
         <classifier>natives-all</classifier>
     </dependency>
 ```
-    You'll also need to add the build plugin in your `build/plugins` section of your pom
+
+You'll also need to add the build plugin in your `build/plugins` section of your pom
+
 ```xml
     <plugin>
         <groupId>com.googlecode.mavennatives</groupId>
@@ -44,7 +46,7 @@ Include the dependency in your project:
     </plugin>
 ```
     
-    A full pom might look like [this one](https://github.com/jinput/jinput/blob/master/examples/example.pom.xml)
+A full pom might look like [this one](https://github.com/jinput/jinput/blob/master/examples/example.pom.xml)
 
 ## Running
 
