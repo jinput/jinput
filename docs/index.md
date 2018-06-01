@@ -29,9 +29,23 @@ Include dependency in your project:
     <dependency>
         <groupId>net.java.jinput</groupId>
         <artifactId>jinput</artifactId>
-        <version>2.0.7</version>
+        <version>2.0.8</version>
+    </dependency>
+    <dependency>
+        <groupId>net.java.jinput</groupId>
+        <artifactId>jinput</artifactId>
+        <version>2.0.8</version>
+        <classifier>natives-all</classifier>
     </dependency>
     ```
+    You'll also need to add the build plugin in your `build/plugins` section of your pom
+    ```xml
+        <plugin>
+            <groupId>com.googlecode.mavennatives</groupId>
+            <artifactId>maven-nativedependencies-plugin</artifactId>
+        </plugin>
+    ```
+
 
 2. Build from sources - Experts only
 -----
