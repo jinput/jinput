@@ -29,7 +29,7 @@ Include dependency in your project:
     <dependency>
         <groupId>net.java.jinput</groupId>
         <artifactId>jinput</artifactId>
-        <version>2.0.9</version>
+        <version>{{site.jinput_version}}</version>
         <type>pom</type>
     </dependency>
     ```
@@ -44,7 +44,7 @@ Include dependency in your project:
 
 2. Build from sources - Experts only
 -----
-See the readme.md at 
+See the [readme.md](https://github.com/jinput/jinput)
 ## Usage
 
 ```java
