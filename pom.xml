@@ -57,6 +57,7 @@
         <module>coreAPI</module>
         <module>plugins</module>
         <module>applet</module>
+        <module>uberjar</module>
         <module>examples</module>
         <module>tests</module>
     </modules>
@@ -144,6 +145,11 @@
                         <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                         <autoReleaseAfterClose>true</autoReleaseAfterClose>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>3.1.1</version>
                 </plugin>
             </plugins>
         </pluginManagement>
