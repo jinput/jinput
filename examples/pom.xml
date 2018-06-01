@@ -7,7 +7,7 @@
     <parent>
         <groupId>net.java.jinput</groupId>
         <artifactId>jinput-parent</artifactId>
-        <version>2.0.8-SNAPSHOT</version>
+        <version>2.0.9-SNAPSHOT</version>
         <relativePath>../</relativePath>
     </parent>
 
@@ -22,53 +22,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.java.jinput</groupId>
-            <artifactId>coreapi</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>windows-plugin</artifactId>
+            <artifactId>jinput</artifactId>
             <version>${project.version}</version>
-            <classifier>natives-windows</classifier>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>osx-plugin</artifactId>
-            <version>${project.version}</version>
-            <classifier>natives-osx</classifier>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>wintab-plugin</artifactId>
-            <version>${project.version}</version>
-            <classifier>natives-wintab</classifier>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>linux-plugin</artifactId>
-            <version>${project.version}</version>
-            <classifier>natives-linux</classifier>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>windows-plugin</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>osx-plugin</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>wintab-plugin</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>linux-plugin</artifactId>
-            <version>${project.version}</version>
+            <type>pom</type>
         </dependency>
     </dependencies>
 
@@ -109,6 +66,7 @@
                                 <argument>-classpath</argument>
                                 <classpath/>
                                 <argument>-Djava.library.path=${project.build.directory}/natives</argument>
+                                <argument>-Djinput.loglevel=OFF</argument>
                                 <argument>net.java.games.input.example.ReadAllEvents</argument>
                             </arguments>
                         </configuration>

@@ -1,10 +1,4 @@
 /*
- * %W% %E%
- *
- * Copyright 2002 Sun Microsystems, Inc. All rights reserved.
- * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
-/*****************************************************************************
  * Copyright (c) 2003 Sun Microsystems, Inc.  All Rights Reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,12 +29,11 @@
  * You acknowledge that this software is not designed or intended for us in
  * the design, construction, operation or maintenance of any nuclear facility
  *
- *****************************************************************************/
+ */
 package net.java.games.input;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -51,9 +44,9 @@ import java.util.HashSet;
 final class RawInputEventQueue {
 	private final Object monitor = new Object();
 
-	private List devices;
+	private List<RawDevice> devices;
 	
-	public final void start(List devices) throws IOException {
+	public final void start(List<RawDevice> devices) throws IOException {
 		this.devices = devices;
 		QueueThread queue = new QueueThread();
 		synchronized (monitor) {
@@ -71,7 +64,7 @@ final class RawInputEventQueue {
 
 	private final RawDevice lookupDevice(long handle) {
 		for (int i = 0; i < devices.size(); i++) {
-			RawDevice device = (RawDevice)devices.get(i);
+			RawDevice device = devices.get(i);
 			if (device.getHandle() == handle)
 				return device;
 		}
@@ -133,10 +126,10 @@ final class RawInputEventQueue {
 			}
 			if (exception != null)
 				return;
-			Set active_infos = new HashSet();
+			Set<RawDeviceInfo> active_infos = new HashSet<>();
 			try {
 				for (int i = 0; i < devices.size(); i++) {
-					RawDevice device = (RawDevice)devices.get(i);
+					RawDevice device = devices.get(i);
 					active_infos.add(device.getInfo());
 				}
 				RawDeviceInfo[] active_infos_array = new RawDeviceInfo[active_infos.size()];

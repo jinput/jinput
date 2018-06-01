@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2004 Jeremy Booth (jeremy@newdawnsoftware.com)
  *
  * Redistribution and use in source and binary forms, with or without 
@@ -43,7 +43,7 @@ import java.lang.reflect.Modifier;
  * @author elias
  */
 final class AWTKeyboard extends Keyboard implements AWTEventListener {
-	private final List awt_events = new ArrayList();
+	private final List<KeyEvent> awt_events = new ArrayList<>();
 	private Event[] processed_events;
 	private int processed_events_index;
     
@@ -54,7 +54,7 @@ final class AWTKeyboard extends Keyboard implements AWTEventListener {
 	}
 
 	private final static Component[] createComponents() {
-		List components = new ArrayList();
+		List<Component> components = new ArrayList<>();
 		Field[] vkey_fields = KeyEvent.class.getFields();
 		for (int i = 0; i < vkey_fields.length; i++) {
 			Field vkey_field = vkey_fields[i];
@@ -80,7 +80,7 @@ final class AWTKeyboard extends Keyboard implements AWTEventListener {
 		components.add(new Key(Component.Identifier.Key.RETURN));
 		components.add(new Key(Component.Identifier.Key.NUMPADCOMMA));
 		components.add(new Key(Component.Identifier.Key.COMMA));
-		return (Component[])components.toArray(new Component[]{});
+		return components.toArray(new Component[]{});
 	}
 
 	private final void resizeEventQueue(int size) {
@@ -96,13 +96,12 @@ final class AWTKeyboard extends Keyboard implements AWTEventListener {
 
     public final synchronized void eventDispatched(AWTEvent event) {
         if (event instanceof KeyEvent)
-			awt_events.add(event);
+			awt_events.add((KeyEvent)event);
 	}
 
 	public final synchronized void pollDevice() throws IOException {
 		for (int i = 0; i < awt_events.size(); i++) {
-			KeyEvent event = (KeyEvent)awt_events.get(i);
-			processEvent(event);
+			processEvent(awt_events.get(i));
         }
 		awt_events.clear();
 	}

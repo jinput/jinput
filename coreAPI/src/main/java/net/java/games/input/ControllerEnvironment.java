@@ -43,6 +43,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -70,9 +71,6 @@ import java.util.logging.Logger;
  *
  */
 public abstract class ControllerEnvironment {
-    static void logln(String msg) {
-		log(msg + "\n");
-	}
 
     static void log(String msg) {
 		Logger.getLogger(ControllerEnvironment.class.getName()).info(msg);
@@ -87,12 +85,17 @@ public abstract class ControllerEnvironment {
     /**
      * List of controller listeners
      */
-    protected final ArrayList controllerListeners = new ArrayList();
+    protected final ArrayList<ControllerListener> controllerListeners = new ArrayList<>();
     
     /**
      * Protected constructor for subclassing.
      */
     protected ControllerEnvironment() {
+        if(System.getProperty("jinput.loglevel") != null) {
+            String loggerName = ControllerEnvironment.class.getPackage().getName();
+            Level level = Level.parse(System.getProperty("jinput.loglevel"));
+            Logger.getLogger(loggerName).setLevel(level);
+        }
     }
     
     /**
@@ -130,9 +133,9 @@ public abstract class ControllerEnvironment {
      */
     protected void fireControllerAdded(Controller c) {
         ControllerEvent ev = new ControllerEvent(c);
-        Iterator it = controllerListeners.iterator();
+        Iterator<ControllerListener> it = controllerListeners.iterator();
         while (it.hasNext()) {
-            ((ControllerListener)it.next()).controllerAdded(ev);
+            it.next().controllerAdded(ev);
         }
     }
     
@@ -142,9 +145,9 @@ public abstract class ControllerEnvironment {
      */
     protected void fireControllerRemoved(Controller c) {
         ControllerEvent ev = new ControllerEvent(c);
-        Iterator it = controllerListeners.iterator();
+        Iterator<ControllerListener> it = controllerListeners.iterator();
         while (it.hasNext()) {
-            ((ControllerListener)it.next()).controllerRemoved(ev);
+            it.next().controllerRemoved(ev);
         }
     }
     
@@ -155,4 +158,4 @@ public abstract class ControllerEnvironment {
     public static ControllerEnvironment getDefaultEnvironment() {
         return defaultEnvironment;
     }
-} // ControllerEnvironment
+}

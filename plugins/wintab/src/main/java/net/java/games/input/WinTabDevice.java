@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2006 Jeremy Booth (jeremy@newdawnsoftware.com)
  *
  * Redistribution and use in source and binary forms, with or without 
@@ -39,7 +39,7 @@ public class WinTabDevice extends AbstractController {
 	public final static int RotationAxis = 7;
 
 	private WinTabContext context;
-	private List eventList = new ArrayList();
+	private List<Event> eventList = new ArrayList<>();
 
 	private WinTabDevice(WinTabContext context, int index, String name, Component[] components) {
 		super(name, components, new Controller[0], new Rumbler[0]);
@@ -48,7 +48,7 @@ public class WinTabDevice extends AbstractController {
 
 	protected boolean getNextDeviceEvent(Event event) throws IOException {
 		if(eventList.size()>0) {
-			Event ourEvent = (Event)eventList.remove(0);
+			Event ourEvent = eventList.remove(0);
 			event.set(ourEvent);
 			return true;
 		} else {
@@ -79,76 +79,76 @@ public class WinTabDevice extends AbstractController {
 
 	public static WinTabDevice createDevice(WinTabContext context, int deviceIndex) {
 		String name = nGetName(deviceIndex);
-		WinTabEnvironmentPlugin.logln("Device " + deviceIndex + ", name: " + name);
-		List componentsList = new ArrayList();
+		WinTabEnvironmentPlugin.log("Device " + deviceIndex + ", name: " + name);
+		List<WinTabComponent> componentsList = new ArrayList<>();
 		
 		int[] axisDetails = nGetAxisDetails(deviceIndex, XAxis);
 		if(axisDetails.length==0) {
-			WinTabEnvironmentPlugin.logln("ZAxis not supported");
+			WinTabEnvironmentPlugin.log("ZAxis not supported");
 		} else {
-			WinTabEnvironmentPlugin.logln("Xmin: " + axisDetails[0] + ", Xmax: " + axisDetails[1]);
+			WinTabEnvironmentPlugin.log("Xmin: " + axisDetails[0] + ", Xmax: " + axisDetails[1]);
 			componentsList.addAll(WinTabComponent.createComponents(context, deviceIndex, XAxis, axisDetails));
 		}
 
 		axisDetails = nGetAxisDetails(deviceIndex, YAxis);
 		if(axisDetails.length==0) {
-			WinTabEnvironmentPlugin.logln("YAxis not supported");
+			WinTabEnvironmentPlugin.log("YAxis not supported");
 		} else {
-			WinTabEnvironmentPlugin.logln("Ymin: " + axisDetails[0] + ", Ymax: " + axisDetails[1]);
+			WinTabEnvironmentPlugin.log("Ymin: " + axisDetails[0] + ", Ymax: " + axisDetails[1]);
 			componentsList.addAll(WinTabComponent.createComponents(context, deviceIndex, YAxis, axisDetails));
 		}
 
 		axisDetails = nGetAxisDetails(deviceIndex, ZAxis);
 		if(axisDetails.length==0) {
-			WinTabEnvironmentPlugin.logln("ZAxis not supported");
+			WinTabEnvironmentPlugin.log("ZAxis not supported");
 		} else {
-			WinTabEnvironmentPlugin.logln("Zmin: " + axisDetails[0] + ", Zmax: " + axisDetails[1]);
+			WinTabEnvironmentPlugin.log("Zmin: " + axisDetails[0] + ", Zmax: " + axisDetails[1]);
 			componentsList.addAll(WinTabComponent.createComponents(context, deviceIndex, ZAxis, axisDetails));
 		}
 
 		axisDetails = nGetAxisDetails(deviceIndex, NPressureAxis);
 		if(axisDetails.length==0) {
-			WinTabEnvironmentPlugin.logln("NPressureAxis not supported");
+			WinTabEnvironmentPlugin.log("NPressureAxis not supported");
 		} else {
-			WinTabEnvironmentPlugin.logln("NPressMin: " + axisDetails[0] + ", NPressMax: " + axisDetails[1]);
+			WinTabEnvironmentPlugin.log("NPressMin: " + axisDetails[0] + ", NPressMax: " + axisDetails[1]);
 			componentsList.addAll(WinTabComponent.createComponents(context, deviceIndex, NPressureAxis, axisDetails));
 		}
 
 		axisDetails = nGetAxisDetails(deviceIndex, TPressureAxis);
 		if(axisDetails.length==0) {
-			WinTabEnvironmentPlugin.logln("TPressureAxis not supported");
+			WinTabEnvironmentPlugin.log("TPressureAxis not supported");
 		} else {
-			WinTabEnvironmentPlugin.logln("TPressureAxismin: " + axisDetails[0] + ", TPressureAxismax: " + axisDetails[1]);
+			WinTabEnvironmentPlugin.log("TPressureAxismin: " + axisDetails[0] + ", TPressureAxismax: " + axisDetails[1]);
 			componentsList.addAll(WinTabComponent.createComponents(context, deviceIndex, TPressureAxis, axisDetails));
 		}
 
 		axisDetails = nGetAxisDetails(deviceIndex, OrientationAxis);
 		if(axisDetails.length==0) {
-			WinTabEnvironmentPlugin.logln("OrientationAxis not supported");
+			WinTabEnvironmentPlugin.log("OrientationAxis not supported");
 		} else {
-			WinTabEnvironmentPlugin.logln("OrientationAxis mins/maxs: " + axisDetails[0] + "," + axisDetails[1] + ", " + axisDetails[2] + "," + axisDetails[3] + ", " + axisDetails[4] + "," + axisDetails[5]);			
+			WinTabEnvironmentPlugin.log("OrientationAxis mins/maxs: " + axisDetails[0] + "," + axisDetails[1] + ", " + axisDetails[2] + "," + axisDetails[3] + ", " + axisDetails[4] + "," + axisDetails[5]);			
 			componentsList.addAll(WinTabComponent.createComponents(context, deviceIndex, OrientationAxis, axisDetails));
 		}
 
 		axisDetails = nGetAxisDetails(deviceIndex, RotationAxis);
 		if(axisDetails.length==0) {
-			WinTabEnvironmentPlugin.logln("RotationAxis not supported");
+			WinTabEnvironmentPlugin.log("RotationAxis not supported");
 		} else {
-			WinTabEnvironmentPlugin.logln("RotationAxis is supported (by the device, not by this plugin)");
+			WinTabEnvironmentPlugin.log("RotationAxis is supported (by the device, not by this plugin)");
 			componentsList.addAll(WinTabComponent.createComponents(context, deviceIndex, RotationAxis, axisDetails));
 		}
 		
 		String[] cursorNames = nGetCursorNames(deviceIndex);
 		componentsList.addAll(WinTabComponent.createCursors(context, deviceIndex, cursorNames));
 		for(int i=0;i<cursorNames.length;i++) {
-			WinTabEnvironmentPlugin.logln("Cursor " + i + "'s name: " + cursorNames[i]);
+			WinTabEnvironmentPlugin.log("Cursor " + i + "'s name: " + cursorNames[i]);
 		}
 		
 		int numberOfButtons = nGetMaxButtonCount(deviceIndex);
-		WinTabEnvironmentPlugin.logln("Device has " + numberOfButtons + " buttons");
+		WinTabEnvironmentPlugin.log("Device has " + numberOfButtons + " buttons");
 		componentsList.addAll(WinTabComponent.createButtons(context, deviceIndex, numberOfButtons));
 		
-		Component[] components = (Component[])componentsList.toArray(new Component[0]);
+		Component[] components = componentsList.toArray(new Component[0]);
 		
 		return new WinTabDevice(context, deviceIndex, name, components);
 	}

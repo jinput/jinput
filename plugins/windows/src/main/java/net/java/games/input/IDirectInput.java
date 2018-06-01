@@ -48,7 +48,7 @@ import java.util.ArrayList;
  * @version 1.0
  */
 final class IDirectInput {
-	private final List devices = new ArrayList();
+	private final List<IDirectInputDevice> devices = new ArrayList<>();
 	private final long idirectinput_address;
 	private final DummyWindow window;
 
@@ -65,7 +65,7 @@ final class IDirectInput {
 	}
 	private final static native long createIDirectInput() throws IOException;
 
-	public final List getDevices() {
+	public final List<IDirectInputDevice> getDevices() {
 		return devices;
 	}
 
@@ -82,13 +82,13 @@ final class IDirectInput {
 			IDirectInputDevice device = new IDirectInputDevice(window, address, instance_guid, product_guid, dev_type, dev_subtype, instance_name, product_name);
 			devices.add(device);
 		} catch (IOException e) {
-			DirectInputEnvironmentPlugin.logln("Failed to initialize device " + product_name + " because of: " + e);
+			DirectInputEnvironmentPlugin.log("Failed to initialize device " + product_name + " because of: " + e);
 		}
 	}
 
 	public final void releaseDevices() {
 		for (int i = 0; i < devices.size(); i++) {
-			IDirectInputDevice device = (IDirectInputDevice)devices.get(i);
+			IDirectInputDevice device = devices.get(i);
 			device.release();
 		}
 	}

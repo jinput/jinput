@@ -1,10 +1,4 @@
 /*
- * %W% %E%
- *
- * Copyright 2002 Sun Microsystems, Inc. All rights reserved.
- * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
-/*****************************************************************************
  * Copyright (c) 2003 Sun Microsystems, Inc.  All Rights Reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,23 +29,19 @@
  * You acknowledge that this software is not designed or intended for us in
  * the design, construction, operation or maintenance of any nuclear facility
  *
- *****************************************************************************/
+ */
 package net.java.games.input;
 
+import net.java.games.util.plugins.Plugins;
+
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
-
-import net.java.games.util.plugins.*;
 
 /**
  * The default controller environment.
@@ -72,42 +62,31 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 	 * 
 	 */
 	static void loadLibrary(final String lib_name) {
-		AccessController.doPrivileged(
-				new PrivilegedAction() {
-					public final Object run() {
+		AccessController.doPrivileged((PrivilegedAction<String>) () -> {
 						String lib_path = System.getProperty("net.java.games.input.librarypath");
 						if (lib_path != null)
 							System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
 						else
 							System.loadLibrary(lib_name);
 						return null;
-					}
 				});
 	}
     
 	static String getPrivilegedProperty(final String property) {
-	       return (String)AccessController.doPrivileged(new PrivilegedAction() {
-	                public Object run() {
-	                    return System.getProperty(property);
-	                }
-	            });
+	       return AccessController.doPrivileged((PrivilegedAction<String>) () ->  System.getProperty(property));
 		}
 		
 
 	static String getPrivilegedProperty(final String property, final String default_value) {
-       return (String)AccessController.doPrivileged(new PrivilegedAction() {
-                public Object run() {
-                    return System.getProperty(property, default_value);
-                }
-            });
+       return AccessController.doPrivileged((PrivilegedAction<String>) () -> System.getProperty(property, default_value));
 	}
 		
     /**
      * List of all controllers in this environment
      */
-    private ArrayList controllers;
+    private ArrayList<Controller> controllers;
     
-	private Collection loadedPlugins = new ArrayList();
+	private Collection<String> loadedPluginNames = new ArrayList<>();
 
     /**
      * Public no-arg constructor.
@@ -122,13 +101,8 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
     public Controller[] getControllers() {
         if (controllers == null) {
             // Controller list has not been scanned.
-            controllers = new ArrayList();
-            AccessController.doPrivileged(new PrivilegedAction() {
-                public Object run() {
-                    scanControllers();
-                    return null;
-                }
-            });
+            controllers = new ArrayList<>();
+            AccessController.doPrivileged((PrivilegedAction<Void>) () -> scanControllers());
             //Check the properties for specified controller classes
             String pluginClasses = getPrivilegedProperty("jinput.plugins", "") + " " + getPrivilegedProperty("net.java.games.input.plugins", "");
 			if(!getPrivilegedProperty("jinput.useDefaultPlugin", "true").toLowerCase().trim().equals("false") && !getPrivilegedProperty("net.java.games.input.useDefaultPlugin", "true").toLowerCase().trim().equals("false")) {
@@ -154,15 +128,15 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 			while(pluginClassTok.hasMoreTokens()) {
 				String className = pluginClassTok.nextToken();					
 				try {
-					if(!loadedPlugins.contains(className)) {
+					if(!loadedPluginNames.contains(className)) {
 						log.fine("Loading: " + className);
-						Class ceClass = Class.forName(className);						
+						Class<?> ceClass = Class.forName(className);
 						ControllerEnvironment ce = (ControllerEnvironment) ceClass.getDeclaredConstructor().newInstance();
 						if(ce.isSupported()) {
 							addControllers(ce.getControllers());
-							loadedPlugins.add(ce.getClass().getName());
+							loadedPluginNames.add(ce.getClass().getName());
 						} else {
-							logln(ceClass.getName() + " is not supported");
+							log(ceClass.getName() + " is not supported");
 						}
 					}
 				} catch (Throwable e) {
@@ -171,17 +145,17 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 			}
         }
         Controller[] ret = new Controller[controllers.size()];
-        Iterator it = controllers.iterator();
+        Iterator<Controller> it = controllers.iterator();
         int i = 0;
         while (it.hasNext()) {
-            ret[i] = (Controller)it.next();
+            ret[i] = it.next();
             i++;
         }
         return ret;
     }
     
     /* This is jeff's new plugin code using Jeff's Plugin manager */
-    private void scanControllers() {
+    private Void scanControllers() {
         String pluginPathName = getPrivilegedProperty("jinput.controllerPluginPath");
         if(pluginPathName == null) {
             pluginPathName = "controller";
@@ -191,6 +165,8 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
             File.separator + "lib"+File.separator + pluginPathName);
         scanControllersAt(getPrivilegedProperty("user.dir")+
             File.separator + pluginPathName);
+
+        return null;
     }
     
     private void scanControllersAt(String path) {
@@ -200,19 +176,19 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
         }
         try {
             Plugins plugins = new Plugins(file);
-            Class[] envClasses = plugins.getExtends(ControllerEnvironment.class);
+            @SuppressWarnings("unchecked")
+            Class<ControllerEnvironment>[] envClasses = plugins.getExtends(ControllerEnvironment.class);
             for(int i=0;i<envClasses.length;i++){
                 try {
-					ControllerEnvironment.logln("ControllerEnvironment "+
+					ControllerEnvironment.log("ControllerEnvironment "+
                             envClasses[i].getName()
                             +" loaded by "+envClasses[i].getClassLoader());
-                    ControllerEnvironment ce = (ControllerEnvironment)
-                    	envClasses[i].getDeclaredConstructor().newInstance();
+                    ControllerEnvironment ce = envClasses[i].getDeclaredConstructor().newInstance();
 					if(ce.isSupported()) {
 	                    addControllers(ce.getControllers());
-						loadedPlugins.add(ce.getClass().getName());
+						loadedPluginNames.add(ce.getClass().getName());
 					} else {
-						logln(envClasses[i].getName() + " is not supported");
+						log(envClasses[i].getName() + " is not supported");
 					}
                 } catch (Throwable e) {
                     e.printStackTrace();

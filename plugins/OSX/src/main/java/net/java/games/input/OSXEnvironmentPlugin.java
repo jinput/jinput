@@ -1,41 +1,35 @@
 /*
- * %W% %E%
+ * Copyright (c) 2003 Sun Microsystems, Inc.  All Rights Reserved.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
  *
- * Copyright 2002 Sun Microsystems, Inc. All rights reserved.
- * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
+ * - Redistribution of source code must retain the above copyright notice,
+ *   this list of conditions and the following disclaimer.
+ *
+ * - Redistribution in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materails provided with the distribution.
+ *
+ * Neither the name Sun Microsystems, Inc. or the names of the contributors
+ * may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * This software is provided "AS IS," without a warranty of any kind.
+ * ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING
+ * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
+ * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
+ * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
+ * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
+ * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
+ * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
+ * OF LIABILITY, ARISING OUT OF THE USE OF OUR INABILITY TO USE THIS SOFTWARE,
+ * EVEN IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+ *
+ * You acknowledge that this software is not designed or intended for us in
+ * the design, construction, operation or maintenance of any nuclear facility
+ *
  */
-/*****************************************************************************
-* Copyright (c) 2003 Sun Microsystems, Inc.  All Rights Reserved.
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*
-* - Redistribution of source code must retain the above copyright notice,
-*   this list of conditions and the following disclaimer.
-*
-* - Redistribution in binary form must reproduce the above copyright notice,
-*   this list of conditions and the following disclaimer in the documentation
-*   and/or other materails provided with the distribution.
-*
-* Neither the name Sun Microsystems, Inc. or the names of the contributors
-* may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* This software is provided "AS IS," without a warranty of any kind.
-* ALL EXPRESS OR IMPLIED CONDITIONS, REPRESENTATIONS AND WARRANTIES, INCLUDING
-* ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
-* NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
-* ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
-* A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
-* DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
-* REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
-* INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
-* OF LIABILITY, ARISING OUT OF THE USE OF OUR INABILITY TO USE THIS SOFTWARE,
-* EVEN IF SUN HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-*
-* You acknowledge that this software is not designed or intended for us in
-* the design, construction, operation or maintenance of any nuclear facility
-*
-*****************************************************************************/
 package net.java.games.input;
 
 import java.io.File;
@@ -67,9 +61,7 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 	 * 
 	 */
 	static void loadLibrary(final String lib_name) {
-		AccessController.doPrivileged(
-				new PrivilegedAction() {
-					public final Object run() {
+		AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
 					    try {
     						String lib_path = System.getProperty("net.java.games.input.librarypath");
     						if (lib_path != null)
@@ -81,25 +73,16 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 					        supported = false;
 					    }
 						return null;
-					}
 				});
 	}
     
 	static String getPrivilegedProperty(final String property) {
-	       return (String)AccessController.doPrivileged(new PrivilegedAction() {
-	                public Object run() {
-	                    return System.getProperty(property);
-	                }
-	            });
+	       return AccessController.doPrivileged((PrivilegedAction<String>)() -> System.getProperty(property));
 		}
 		
 
 	static String getPrivilegedProperty(final String property, final String default_value) {
-       return (String)AccessController.doPrivileged(new PrivilegedAction() {
-                public Object run() {
-                    return System.getProperty(property, default_value);
-                }
-            });
+       return AccessController.doPrivileged((PrivilegedAction<String>)() -> System.getProperty(property, default_value));
 	}
 		
     static {
@@ -122,7 +105,7 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 			major = Integer.parseInt(major_str);
 			minor = Integer.parseInt(minor_str);
 		} catch (Exception e) {
-			logln("Exception occurred while trying to determine OS version: " + e);
+			log("Exception occurred while trying to determine OS version: " + e);
 			// Best guess, no
 			return false;
 		}
@@ -147,10 +130,10 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 		return supported;
 	}
 
-	private final static void addElements(OSXHIDQueue queue, List elements, List components, boolean map_mouse_buttons) throws IOException {
-		Iterator it = elements.iterator();
+	private final static void addElements(OSXHIDQueue queue, List<OSXHIDElement> elements, List<OSXComponent> components, boolean map_mouse_buttons) throws IOException {
+		Iterator<OSXHIDElement> it = elements.iterator();
 		while (it.hasNext()) {
-			OSXHIDElement element = (OSXHIDElement)it.next();
+			OSXHIDElement element = it.next();
 			Component.Identifier id = element.getIdentifier();
 			if (id == null)
 				continue;
@@ -169,8 +152,8 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 		}
 	}
 
-	private final static Keyboard createKeyboardFromDevice(OSXHIDDevice device, List elements) throws IOException {
-		List components = new ArrayList();
+	private final static Keyboard createKeyboardFromDevice(OSXHIDDevice device, List<OSXHIDElement> elements) throws IOException {
+		List<OSXComponent> components = new ArrayList<>();
 		OSXHIDQueue queue = device.createQueue(AbstractController.EVENT_QUEUE_DEPTH);
 		try {
 			addElements(queue, elements, components, false);
@@ -180,12 +163,11 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 		}
 		Component[] components_array = new Component[components.size()];
 		components.toArray(components_array);
-		Keyboard keyboard = new OSXKeyboard(device, queue, components_array, new Controller[]{}, new Rumbler[]{});
-		return keyboard;
+		return new OSXKeyboard(device, queue, components_array, new Controller[]{}, new Rumbler[]{});
 	}
 
-	private final static Mouse createMouseFromDevice(OSXHIDDevice device, List elements) throws IOException {
-		List components = new ArrayList();
+	private final static Mouse createMouseFromDevice(OSXHIDDevice device, List<OSXHIDElement> elements) throws IOException {
+		List<OSXComponent> components = new ArrayList<>();
 		OSXHIDQueue queue = device.createQueue(AbstractController.EVENT_QUEUE_DEPTH);
 		try {
 			addElements(queue, elements, components, true);
@@ -204,8 +186,8 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 		}
 	}
 	
-	private final static AbstractController createControllerFromDevice(OSXHIDDevice device, List elements, Controller.Type type) throws IOException {
-		List components = new ArrayList();
+	private final static AbstractController createControllerFromDevice(OSXHIDDevice device, List<OSXHIDElement> elements, Controller.Type type) throws IOException {
+		List<OSXComponent> components = new ArrayList<>();
 		OSXHIDQueue queue = device.createQueue(AbstractController.EVENT_QUEUE_DEPTH);
 		try {
 			addElements(queue, elements, components, false);
@@ -215,15 +197,14 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 		}
 		Component[] components_array = new Component[components.size()];
 		components.toArray(components_array);
-		AbstractController controller = new OSXAbstractController(device, queue, components_array, new Controller[]{}, new Rumbler[]{}, type);
-		return controller;
+		return new OSXAbstractController(device, queue, components_array, new Controller[]{}, new Rumbler[]{}, type);
 	}
 
-	private final static void createControllersFromDevice(OSXHIDDevice device, List controllers) throws IOException {
+	private final static void createControllersFromDevice(OSXHIDDevice device, List<Controller> controllers) throws IOException {
 		UsagePair usage_pair = device.getUsagePair();
 		if (usage_pair == null)
 			return;
-		List elements = device.getElements();
+		List<OSXHIDElement> elements = device.getElements();
 		if (usage_pair.getUsagePage() == UsagePage.GENERIC_DESKTOP && (usage_pair.getUsage() == GenericDesktopUsage.MOUSE ||
 					usage_pair.getUsage() == GenericDesktopUsage.POINTER)) {
 			Controller mouse = createMouseFromDevice(device, elements);
@@ -231,26 +212,18 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 				controllers.add(mouse);
 		} else if (usage_pair.getUsagePage() == UsagePage.GENERIC_DESKTOP && (usage_pair.getUsage() == GenericDesktopUsage.KEYBOARD ||
 					usage_pair.getUsage() == GenericDesktopUsage.KEYPAD)) {
-			Controller keyboard = createKeyboardFromDevice(device, elements);
-			if (keyboard != null)
-				controllers.add(keyboard);
+			controllers.add(createKeyboardFromDevice(device, elements));
 		} else if (usage_pair.getUsagePage() == UsagePage.GENERIC_DESKTOP && usage_pair.getUsage() == GenericDesktopUsage.JOYSTICK) {
-			Controller joystick = createControllerFromDevice(device, elements, Controller.Type.STICK);
-			if (joystick != null)
-				controllers.add(joystick);
+			controllers.add(createControllerFromDevice(device, elements, Controller.Type.STICK));
 		} else if (usage_pair.getUsagePage() == UsagePage.GENERIC_DESKTOP && usage_pair.getUsage() == GenericDesktopUsage.MULTI_AXIS_CONTROLLER) {
-			Controller multiaxis = createControllerFromDevice(device, elements, Controller.Type.STICK);
-			if (multiaxis != null)
-				controllers.add(multiaxis);
+			controllers.add(createControllerFromDevice(device, elements, Controller.Type.STICK));
 		} else if (usage_pair.getUsagePage() == UsagePage.GENERIC_DESKTOP && usage_pair.getUsage() == GenericDesktopUsage.GAME_PAD) {
-			Controller game_pad = createControllerFromDevice(device, elements, Controller.Type.GAMEPAD);
-			if (game_pad != null)
-				controllers.add(game_pad);
+			controllers.add(createControllerFromDevice(device, elements, Controller.Type.GAMEPAD));
 		}
 	}
 
 	private final static Controller[] enumerateControllers() {
-		List controllers = new ArrayList();
+		List<Controller> controllers = new ArrayList<>();
 		try {
 			OSXHIDDeviceIterator it = new OSXHIDDeviceIterator();
 			try {
@@ -266,12 +239,12 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 							createControllersFromDevice(device, controllers);
 							device_used = old_size != controllers.size();
 						} catch (IOException e) {
-							logln("Failed to create controllers from device: " + device.getProductName());
+							log("Failed to create controllers from device: " + device.getProductName());
 						}
 						if (!device_used)
 							device.release();
 					} catch (IOException e) {
-						logln("Failed to enumerate device: " + e.getMessage());
+						log("Failed to enumerate device: " + e.getMessage());
 					}
 				}
 			} finally {

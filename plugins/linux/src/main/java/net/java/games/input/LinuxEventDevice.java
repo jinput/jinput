@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2003 Jeremy Booth (jeremy@newdawnsoftware.com)
  *
  * Redistribution and use in source and binary forms, with or without 
@@ -35,12 +35,12 @@ import java.util.ArrayList;
  * @author elias
  */
 final class LinuxEventDevice implements LinuxDevice {
-	private final Map component_map = new HashMap();
+	private final Map<LinuxAxisDescriptor, LinuxComponent> component_map = new HashMap<>();
 	private final Rumbler[] rumblers;
 	private final long fd;
 	private final String name;
 	private final LinuxInputID input_id;
-	private final List components;
+	private final List<LinuxEventComponent> components;
 	private final Controller.Type type;
 
 	/* Closed state variable that protects the validity of the file descriptor.
@@ -83,10 +83,10 @@ final class LinuxEventDevice implements LinuxDevice {
 		return type;
 	}
 
-	private final static int countComponents(List components, Class id_type, boolean relative) {
+	private final static int countComponents(List<LinuxEventComponent> components, Class<?> id_type, boolean relative) {
 		int count = 0;
 		for (int i = 0; i < components.size(); i++) {
-			LinuxEventComponent component = (LinuxEventComponent)components.get(i);
+			LinuxEventComponent component = components.get(i);
 			if (id_type.isInstance(component.getIdentifier()) && relative == component.isRelative())
 				count++;
 		}
@@ -94,7 +94,7 @@ final class LinuxEventDevice implements LinuxDevice {
 	}
 
 	private final Controller.Type guessType() throws IOException {
-		List components = getComponents();
+		List<LinuxEventComponent> components = getComponents();
 		if (components.size() == 0)
 			return Controller.Type.UNKNOWN;
 		int num_rel_axes = countComponents(components, Component.Identifier.Axis.class, true);
@@ -118,7 +118,7 @@ final class LinuxEventDevice implements LinuxDevice {
 		int num_gamepad_button_traits = 0;
 		// count button traits
 		for (int i = 0; i < components.size(); i++) {
-			LinuxEventComponent component = (LinuxEventComponent)components.get(i);
+			LinuxEventComponent component = components.get(i);
 			if (component.getButtonTrait() == Controller.Type.MOUSE)
 				num_mouse_button_traits++;
 			else if (component.getButtonTrait() == Controller.Type.KEYBOARD)
@@ -158,19 +158,19 @@ final class LinuxEventDevice implements LinuxDevice {
 	}
 
 	private final Rumbler[] enumerateRumblers() {
-		List rumblers = new ArrayList();
+		List<Rumbler> rumblers = new ArrayList<>();
 		try {
 			int num_effects = getNumEffects();
 			if (num_effects <= 0)
-				return (Rumbler[])rumblers.toArray(new Rumbler[]{});
+				return rumblers.toArray(new Rumbler[]{});
 			byte[] ff_bits = getForceFeedbackBits();
 			if (isBitSet(ff_bits, NativeDefinitions.FF_RUMBLE) && num_effects > rumblers.size()) {
 				rumblers.add(new LinuxRumbleFF(this));
 			}
 		} catch (IOException e) {
-			LinuxEnvironmentPlugin.logln("Failed to enumerate rumblers: " + e.getMessage());
+			LinuxEnvironmentPlugin.log("Failed to enumerate rumblers: " + e.getMessage());
 		}
-		return (Rumbler[])rumblers.toArray(new Rumbler[]{});
+		return rumblers.toArray(new Rumbler[]{});
 	}
 
 	public final Rumbler[] getRumblers() {
@@ -205,7 +205,7 @@ final class LinuxEventDevice implements LinuxDevice {
 	}
 
 	public final LinuxComponent mapDescriptor(LinuxAxisDescriptor desc) {
-		return (LinuxComponent)component_map.get(desc);
+		return component_map.get(desc);
 	}
 
 	public final Controller.PortType getPortType() throws IOException {
@@ -243,7 +243,7 @@ final class LinuxEventDevice implements LinuxDevice {
 	}
 	private final static native void nGetAbsInfo(long fd, int abs_axis, LinuxAbsInfo abs_info) throws IOException;
 
-	private final void addKeys(List components) throws IOException {
+	private final void addKeys(List<LinuxEventComponent> components) throws IOException {
 		byte[] bits = getKeysBits();
 		for (int i = 0; i < bits.length*8; i++) {
 			if (isBitSet(bits, i)) {
@@ -253,7 +253,7 @@ final class LinuxEventDevice implements LinuxDevice {
 		}
 	}
 	
-	private final void addAbsoluteAxes(List components) throws IOException {
+	private final void addAbsoluteAxes(List<LinuxEventComponent> components) throws IOException {
 		byte[] bits = getAbsoluteAxesBits();
 		for (int i = 0; i < bits.length*8; i++) {
 			if (isBitSet(bits, i)) {
@@ -263,7 +263,7 @@ final class LinuxEventDevice implements LinuxDevice {
 		}
 	}
 
-	private final void addRelativeAxes(List components) throws IOException {
+	private final void addRelativeAxes(List<LinuxEventComponent> components) throws IOException {
 		byte[] bits = getRelativeAxesBits();
 		for (int i = 0; i < bits.length*8; i++) {
 			if (isBitSet(bits, i)) {
@@ -273,12 +273,12 @@ final class LinuxEventDevice implements LinuxDevice {
 		}
 	}
 
-	public final List getComponents() {
+	public final List<LinuxEventComponent> getComponents() {
 		return components;
 	}
 
-	private final List getDeviceComponents() throws IOException {
-		List components = new ArrayList();
+	private final List<LinuxEventComponent> getDeviceComponents() throws IOException {
+		List<LinuxEventComponent> components = new ArrayList<>();
 		byte[] evtype_bits = getEventTypeBits();
 		if (isBitSet(evtype_bits, NativeDefinitions.EV_KEY))
 			addKeys(components);
@@ -360,6 +360,7 @@ final class LinuxEventDevice implements LinuxDevice {
 			throw new IOException("Device is closed");
 	}
 
+	@SuppressWarnings("deprecation")
 	protected void finalize() throws IOException {
 		close();
 	}

@@ -89,12 +89,12 @@ final class RawDevice {
 	private final int type;
 
 	/* Events from the event queue thread end here */
-	private DataQueue keyboard_events;
-	private DataQueue mouse_events;
+	private DataQueue<RawKeyboardEvent> keyboard_events;
+	private DataQueue<RawMouseEvent> mouse_events;
 
 	/* After processing in poll*(), the events are placed here */
-	private DataQueue processed_keyboard_events;
-	private DataQueue processed_mouse_events;
+	private DataQueue<RawKeyboardEvent> processed_keyboard_events;
+	private DataQueue<RawMouseEvent> processed_mouse_events;
 
 	/* mouse state */
 	private final boolean[] button_states = new boolean[5];
@@ -123,7 +123,7 @@ final class RawDevice {
 	/* Careful, this is called from the event queue thread */
 	public final synchronized void addMouseEvent(long millis, int flags, int button_flags, int button_data, long raw_buttons, long last_x, long last_y, long extra_information) {
 		if (mouse_events.hasRemaining()) {
-			RawMouseEvent event = (RawMouseEvent)mouse_events.get();
+			RawMouseEvent event = mouse_events.get();
 			event.set(millis, flags, button_flags, button_data, raw_buttons,  last_x, last_y, extra_information);
 		}
 	}
@@ -131,7 +131,7 @@ final class RawDevice {
 	/* Careful, this is called from the event queue thread */
 	public final synchronized void addKeyboardEvent(long millis, int make_code, int flags, int vkey, int message, long extra_information) {
 		if (keyboard_events.hasRemaining()) {
-			RawKeyboardEvent event = (RawKeyboardEvent)keyboard_events.get();
+			RawKeyboardEvent event = keyboard_events.get();
 			event.set(millis, make_code, flags, vkey, message, extra_information);
 		}
 	}
@@ -140,10 +140,10 @@ final class RawDevice {
 		relative_x = relative_y = wheel = 0;
 		mouse_events.flip();
 		while (mouse_events.hasRemaining()) {
-			RawMouseEvent event = (RawMouseEvent)mouse_events.get();
+			RawMouseEvent event = mouse_events.get();
 			boolean has_update = processMouseEvent(event);
 			if (has_update && processed_mouse_events.hasRemaining()) {
-				RawMouseEvent processed_event = (RawMouseEvent)processed_mouse_events.get();
+				RawMouseEvent processed_event = processed_mouse_events.get();
 				processed_event.set(event);
 			}
 		}
@@ -153,10 +153,10 @@ final class RawDevice {
 	public final synchronized void pollKeyboard() {
 		keyboard_events.flip();
 		while (keyboard_events.hasRemaining()) {
-			RawKeyboardEvent event = (RawKeyboardEvent)keyboard_events.get();
+			RawKeyboardEvent event = keyboard_events.get();
 			boolean has_update = processKeyboardEvent(event);
 			if (has_update && processed_keyboard_events.hasRemaining()) {
-				RawKeyboardEvent processed_event = (RawKeyboardEvent)processed_keyboard_events.get();
+				RawKeyboardEvent processed_event = processed_keyboard_events.get();
 				processed_event.set(event);
 			}
 		}
@@ -250,7 +250,7 @@ final class RawDevice {
 			processed_keyboard_events.compact();
 			return false;
 		}
-		RawKeyboardEvent next_event = (RawKeyboardEvent)processed_keyboard_events.get();
+		RawKeyboardEvent next_event = processed_keyboard_events.get();
 		event.set(next_event);
 		processed_keyboard_events.compact();
 		return true;
@@ -262,7 +262,7 @@ final class RawDevice {
 			processed_mouse_events.compact();
 			return false;
 		}
-		RawMouseEvent next_event = (RawMouseEvent)processed_mouse_events.get();
+		RawMouseEvent next_event = processed_mouse_events.get();
 		if ((next_event.getFlags() & MOUSE_MOVE_ABSOLUTE) != 0) {
 			event_relative_x = next_event.getLastX() - event_last_x;
 			event_relative_y = next_event.getLastY() - event_last_y;
@@ -284,10 +284,10 @@ final class RawDevice {
 	}
 
 	public final void setBufferSize(int size) {
-		keyboard_events = new DataQueue(size, RawKeyboardEvent.class);
-		mouse_events = new DataQueue(size, RawMouseEvent.class);
-		processed_keyboard_events = new DataQueue(size, RawKeyboardEvent.class);
-		processed_mouse_events = new DataQueue(size, RawMouseEvent.class);
+		keyboard_events = new DataQueue<>(size, RawKeyboardEvent.class);
+		mouse_events = new DataQueue<>(size, RawMouseEvent.class);
+		processed_keyboard_events = new DataQueue<>(size, RawKeyboardEvent.class);
+		processed_mouse_events = new DataQueue<>(size, RawMouseEvent.class);
 	}
 
 	public final int getType() {
