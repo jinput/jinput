@@ -22,7 +22,6 @@ often contain a native code portion to interface to the host system.
 ## Getting Started
 
 Include the dependency in your project:
-
 ```xml
     <dependency>
         <groupId>net.java.jinput</groupId>
@@ -36,9 +35,7 @@ Include the dependency in your project:
         <classifier>natives-all</classifier>
     </dependency>
 ```
-
 You'll also need to add the build plugin in your `build/plugins` section of your pom
-
 ```xml
     <plugin>
         <groupId>com.googlecode.mavennatives</groupId>
