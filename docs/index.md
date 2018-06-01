@@ -21,16 +21,19 @@ often contain a native code portion to interface to the host system.
 
 ## Getting Started
 
-Include dependency in your project:
+Include the dependency in your project:
 
-1. Maven - Easy way
------
     ```xml
     <dependency>
         <groupId>net.java.jinput</groupId>
         <artifactId>jinput</artifactId>
         <version>{{site.jinput_version}}</version>
-        <type>pom</type>
+    </dependency>
+    <dependency>
+        <groupId>net.java.jinput</groupId>
+        <artifactId>jinput</artifactId>
+        <version>{{site.jinput_version}}</version>
+        <classifier>natives-all</classifier>
     </dependency>
     ```
     You'll also need to add the build plugin in your `build/plugins` section of your pom
@@ -43,10 +46,15 @@ Include dependency in your project:
     
     A full pom might look like [this one](https://github.com/jinput/jinput/blob/master/examples/example.pom.xml)
 
+## Running
 
-2. Build from sources - Experts only
------
-See the [readme.md](https://github.com/jinput/jinput)
+Add the jinput jar to your classpath, assuming you are using maven and have the native dependencies plugin working, it will have unpacked the native binaries to `target/natives`, you must specify the `java.library.path` property to point to this directy.
+
+Example
+```
+java -cp ~/.m2/repository/net/java/jinput/jinput/{{site.jinput_version}}/jinput-{{site.jinput_version}}.jar:target/examples-pom-{{site.jinput_version}}.jar -Djava.library.path=target/natives net.java.games.input.example.ReadFirstMouse
+```
+
 ## Usage
 
 ```java
