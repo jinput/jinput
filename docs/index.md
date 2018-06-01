@@ -23,7 +23,7 @@ often contain a native code portion to interface to the host system.
 
 Include the dependency in your project:
 
-    ```xml
+```xml
     <dependency>
         <groupId>net.java.jinput</groupId>
         <artifactId>jinput</artifactId>
@@ -35,14 +35,14 @@ Include the dependency in your project:
         <version>{{site.jinput_version}}</version>
         <classifier>natives-all</classifier>
     </dependency>
-    ```
+```
     You'll also need to add the build plugin in your `build/plugins` section of your pom
-    ```xml
+```xml
     <plugin>
         <groupId>com.googlecode.mavennatives</groupId>
         <artifactId>maven-nativedependencies-plugin</artifactId>
     </plugin>
-    ```
+```
     
     A full pom might look like [this one](https://github.com/jinput/jinput/blob/master/examples/example.pom.xml)
 
