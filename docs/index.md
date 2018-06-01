@@ -29,21 +29,16 @@ Include dependency in your project:
     <dependency>
         <groupId>net.java.jinput</groupId>
         <artifactId>jinput</artifactId>
-        <version>2.0.8</version>
-    </dependency>
-    <dependency>
-        <groupId>net.java.jinput</groupId>
-        <artifactId>jinput</artifactId>
-        <version>2.0.8</version>
-        <classifier>natives-all</classifier>
+        <version>{{ jinput_version }}</version>
+        <type>pom</type>
     </dependency>
     ```
     You'll also need to add the build plugin in your `build/plugins` section of your pom
     ```xml
-        <plugin>
-            <groupId>com.googlecode.mavennatives</groupId>
-            <artifactId>maven-nativedependencies-plugin</artifactId>
-        </plugin>
+    <plugin>
+        <groupId>com.googlecode.mavennatives</groupId>
+        <artifactId>maven-nativedependencies-plugin</artifactId>
+    </plugin>
     ```
 
 
