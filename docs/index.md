@@ -29,7 +29,7 @@ Include dependency in your project:
     <dependency>
         <groupId>net.java.jinput</groupId>
         <artifactId>jinput</artifactId>
-        <version> {{ jinput_version }} </version>
+        <version>2.0.9</version>
         <type>pom</type>
     </dependency>
     ```
