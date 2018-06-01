@@ -66,6 +66,18 @@
     <build>
         <plugins>
             <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <includeDependencySources>true</includeDependencySources>
+                    <dependencySourceExcludes>
+                        <dependencySourceExclude>net.java.jinput:osx-plugin</dependencySourceExclude>
+                        <dependencySourceExclude>net.java.jinput:linux-plugin</dependencySourceExclude>
+                        <dependencySourceExclude>net.java.jinput:windows-plugin</dependencySourceExclude>
+                        <dependencySourceExclude>net.java.jinput:wintab-plugin</dependencySourceExclude>
+                    </dependencySourceExcludes>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>com.googlecode.mavennatives</groupId>
                 <artifactId>maven-nativedependencies-plugin</artifactId>
             </plugin>
