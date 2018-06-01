@@ -40,6 +40,8 @@ Include dependency in your project:
         <artifactId>maven-nativedependencies-plugin</artifactId>
     </plugin>
     ```
+    
+    A full pom might look like [this one](https://github.com/jinput/jinput/blob/master/examples/example.pom.xml)
 
 
 2. Build from sources - Experts only
