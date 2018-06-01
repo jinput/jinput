@@ -29,7 +29,7 @@ Include dependency in your project:
     <dependency>
         <groupId>net.java.jinput</groupId>
         <artifactId>jinput</artifactId>
-        <version>{{ jinput_version }}</version>
+        <version> {{ jinput_version }} </version>
         <type>pom</type>
     </dependency>
     ```
@@ -44,13 +44,7 @@ Include dependency in your project:
 
 2. Build from sources - Experts only
 -----
-    1. Download latest source from [here]({{ site.github.zip_url }}).
-    2. Build maven root project:
-        ```bash
-        mvn build .
-        ```
-    3. Include generated artifacts to your project.
-
+See the readme.md at 
 ## Usage
 
 ```java
