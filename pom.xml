@@ -4,7 +4,7 @@
     <artifactId>jinput-parent</artifactId>
     <packaging>pom</packaging>
     <name>JInput</name>
-    <version>2.0.9-SNAPSHOT</version>
+    <version>2.0.10-SNAPSHOT</version>
     <description>Library for access to input devices.</description>
     <url>https://github.com/jinput/jinput</url>
     <licenses>
