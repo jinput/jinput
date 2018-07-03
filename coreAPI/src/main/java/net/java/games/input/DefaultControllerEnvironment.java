@@ -98,62 +98,65 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
      * Returns a list of all controllers available to this environment,
      * or an empty array if there are no controllers in this environment.
      */
-    public Controller[] getControllers() {
-        if (controllers == null) {
-            // Controller list has not been scanned.
-            controllers = new ArrayList<>();
-            AccessController.doPrivileged((PrivilegedAction<Void>) () -> scanControllers());
-            //Check the properties for specified controller classes
-            String pluginClasses = getPrivilegedProperty("jinput.plugins", "") + " " + getPrivilegedProperty("net.java.games.input.plugins", "");
-			if(!getPrivilegedProperty("jinput.useDefaultPlugin", "true").toLowerCase().trim().equals("false") && !getPrivilegedProperty("net.java.games.input.useDefaultPlugin", "true").toLowerCase().trim().equals("false")) {
-				String osName = getPrivilegedProperty("os.name", "").trim();
-				if(osName.equals("Linux")) {
-					pluginClasses = pluginClasses + " net.java.games.input.LinuxEnvironmentPlugin";
-				} else if(osName.equals("Mac OS X")) {
-					pluginClasses = pluginClasses + " net.java.games.input.OSXEnvironmentPlugin";
-				} else  if(osName.equals("Windows XP") || osName.equals("Windows Vista") || osName.equals("Windows 7") || osName.equals("Windows 8") || osName.equals("Windows 8.1") || osName.equals("Windows 10")) {
-					pluginClasses = pluginClasses + " net.java.games.input.DirectAndRawInputEnvironmentPlugin";
-				} else if(osName.equals("Windows 98") || osName.equals("Windows 2000")) {
-					pluginClasses = pluginClasses + " net.java.games.input.DirectInputEnvironmentPlugin";
-				} else if (osName.startsWith("Windows")) {
-					log.warning("Found unknown Windows version: " + osName);
-					log.warning("Attempting to use default windows plug-in.");
-					pluginClasses = pluginClasses + " net.java.games.input.DirectAndRawInputEnvironmentPlugin";
-				} else {
-					log.warning("Trying to use default plugin, OS name " + osName +" not recognised");
-				}
-			}
-
-			StringTokenizer pluginClassTok = new StringTokenizer(pluginClasses, " \t\n\r\f,;:");
-			while(pluginClassTok.hasMoreTokens()) {
-				String className = pluginClassTok.nextToken();					
-				try {
-					if(!loadedPluginNames.contains(className)) {
-						log.fine("Loading: " + className);
-						Class<?> ceClass = Class.forName(className);
-						ControllerEnvironment ce = (ControllerEnvironment) ceClass.getDeclaredConstructor().newInstance();
-						if(ce.isSupported()) {
-							addControllers(ce.getControllers());
-							loadedPluginNames.add(ce.getClass().getName());
-						} else {
-							log(ceClass.getName() + " is not supported");
-						}
-					}
-				} catch (Throwable e) {
-					e.printStackTrace();
-				}
-			}
-        }
+    public Controller[] getControllers()
+    {
+        reloadControllers();
         Controller[] ret = new Controller[controllers.size()];
         Iterator<Controller> it = controllers.iterator();
         int i = 0;
-        while (it.hasNext()) {
+        while (it.hasNext())
+        {
             ret[i] = it.next();
             i++;
         }
         return ret;
     }
-    
+
+
+    private void reloadControllers()
+    {
+        controllers = new ArrayList<>();
+        AccessController.doPrivileged((PrivilegedAction<Void>) () -> scanControllers());
+        //Check the properties for specified controller classes
+        String pluginClasses = getPrivilegedProperty("jinput.plugins", "") + " " + getPrivilegedProperty("net.java.games.input.plugins", "");
+        if(!getPrivilegedProperty("jinput.useDefaultPlugin", "true").toLowerCase().trim().equals("false") && !getPrivilegedProperty("net.java.games.input.useDefaultPlugin", "true").toLowerCase().trim().equals("false")) {
+            String osName = getPrivilegedProperty("os.name", "").trim();
+            if(osName.equals("Linux")) {
+                pluginClasses = pluginClasses + " net.java.games.input.LinuxEnvironmentPlugin";
+            } else if(osName.equals("Mac OS X")) {
+                pluginClasses = pluginClasses + " net.java.games.input.OSXEnvironmentPlugin";
+            } else  if(osName.equals("Windows XP") || osName.equals("Windows Vista") || osName.equals("Windows 7") || osName.equals("Windows 8") || osName.equals("Windows 8.1") || osName.equals("Windows 10")) {
+                pluginClasses = pluginClasses + " net.java.games.input.DirectAndRawInputEnvironmentPlugin";
+            } else if(osName.equals("Windows 98") || osName.equals("Windows 2000")) {
+                pluginClasses = pluginClasses + " net.java.games.input.DirectInputEnvironmentPlugin";
+            } else if (osName.startsWith("Windows")) {
+                log.warning("Found unknown Windows version: " + osName);
+                log.warning("Attempting to use default windows plug-in.");
+                pluginClasses = pluginClasses + " net.java.games.input.DirectAndRawInputEnvironmentPlugin";
+            } else {
+                log.warning("Trying to use default plugin, OS name " + osName +" not recognised");
+            }
+        }
+
+		StringTokenizer pluginClassTok = new StringTokenizer(pluginClasses, " \t\n\r\f,;:");
+		while(pluginClassTok.hasMoreTokens()) {
+			String className = pluginClassTok.nextToken();
+			try {
+                log.fine("Loading: " + className);
+                Class<?> ceClass = Class.forName(className);
+                ControllerEnvironment ce = (ControllerEnvironment) ceClass.getDeclaredConstructor().newInstance();
+                if(ce.isSupported()) {
+                    addControllers(ce.getControllers());
+                    loadedPluginNames.add(ce.getClass().getName());
+                } else {
+                    log(ceClass.getName() + " is not supported");
+                }
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+		}
+    }
+
     /* This is jeff's new plugin code using Jeff's Plugin manager */
     private Void scanControllers() {
         String pluginPathName = getPrivilegedProperty("jinput.controllerPluginPath");
