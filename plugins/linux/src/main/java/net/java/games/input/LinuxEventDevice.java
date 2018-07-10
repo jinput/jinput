@@ -360,6 +360,35 @@ final class LinuxEventDevice implements LinuxDevice {
 			throw new IOException("Device is closed");
 	}
 
+    private final static native int nGrab(long fd, int grab) throws IOException;
+
+    /** 
+     * Grabs the device so that no other programs can read from the device.
+     */
+    public synchronized final boolean grab(){
+        try{
+            if(nGrab(fd,1) == 0){ 
+                return false;
+            }   
+        }catch(IOException e){ 
+            return false;
+        }   
+        return true;
+    }   
+    /** 
+     * Release the event so other programs can get events.
+     */
+    public synchronized final boolean ungrab(){
+        try{
+            if(nGrab(fd,0) == 0){ 
+                return false;
+            }   
+        }catch(IOException e){ 
+            return false;
+        }   
+        return true;
+    }   
+
 	@SuppressWarnings("deprecation")
 	protected void finalize() throws IOException {
 		close();

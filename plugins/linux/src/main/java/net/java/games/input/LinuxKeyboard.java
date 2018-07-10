@@ -65,4 +65,14 @@ final class LinuxKeyboard extends Keyboard {
 	public final void pollDevice() throws IOException {
 		device.pollKeyStates();
 	}
+
+    /**
+     * @Override
+     */
+    public boolean grab(){ return device.grab(); }
+
+    /**
+     * @Override
+     */
+    public boolean ungrab(){ return device.ungrab(); }
 }

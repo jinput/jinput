@@ -241,3 +241,14 @@ JNIEXPORT void JNICALL Java_net_java_games_input_LinuxEventDevice_nEraseEffect(J
 	if (ioctl(fd, EVIOCRMFF, &ff_id_int) == -1)
 		throwIOException(env, "Failed to erase effect (%d)\n", errno);
 }
+
+JNIEXPORT jint JNICALL Java_net_java_games_input_LinuxEventDevice_nGrab(JNIEnv *env, jclass unused, jlong fd_address, jint do_grab) {
+        int fd = (int)fd_address;
+        int grab = (int)do_grab;
+        if (ioctl(fd,EVIOCGRAB,grab) == -1){
+                throwIOException(env, "Failed to grab device (%d)\n", errno);
+            return -1; 
+    }   
+        return 1;
+}
+
