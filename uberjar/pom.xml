@@ -11,6 +11,10 @@
         <relativePath>../</relativePath>
     </parent>
 
+    <properties>
+        <plugins.version>2.0.9</plugins.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -20,46 +24,46 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>windows-plugin</artifactId>
-            <version>${project.version}</version>
+            <version>${plugins.version}</version>
             <classifier>natives-windows</classifier>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>osx-plugin</artifactId>
-            <version>${project.version}</version>
+            <version>${plugins.version}</version>
             <classifier>natives-osx</classifier>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>wintab-plugin</artifactId>
-            <version>${project.version}</version>
+            <version>${plugins.version}</version>
             <classifier>natives-wintab</classifier>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>linux-plugin</artifactId>
-            <version>${project.version}</version>
+            <version>${plugins.version}</version>
             <classifier>natives-linux</classifier>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>windows-plugin</artifactId>
-            <version>${project.version}</version>
+            <version>${plugins.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>osx-plugin</artifactId>
-            <version>${project.version}</version>
+            <version>${plugins.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>wintab-plugin</artifactId>
-            <version>${project.version}</version>
+            <version>${plugins.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>linux-plugin</artifactId>
-            <version>${project.version}</version>
+            <version>${plugins.version}</version>
         </dependency>
     </dependencies>
 
