@@ -117,13 +117,14 @@ class PluginClassLoader extends ClassLoader {
         if (!file.exists()) {
             throw new ClassNotFoundException(name);
         }
-        FileInputStream fileInputStream = new FileInputStream(file);
-        assert file.length() <= Integer.MAX_VALUE;
-        int length = (int)file.length();
-        byte[] bytes = new byte[length];
-        int length2 = fileInputStream.read(bytes);
-        assert length == length2;
-        return bytes;
+        try(FileInputStream fileInputStream = new FileInputStream(file)) {
+            assert file.length() <= Integer.MAX_VALUE;
+            int length = (int) file.length();
+            byte[] bytes = new byte[length];
+            int length2 = fileInputStream.read(bytes);
+            assert length == length2;
+            return bytes;
+        }
     }
     
     /**
@@ -141,14 +142,15 @@ class PluginClassLoader extends ClassLoader {
             JarFile jarfile = new JarFile(jarFiles[i]);
             JarEntry jarentry = jarfile.getJarEntry(name + ".class");
             if (jarentry != null) {
-                InputStream jarInputStream = jarfile.getInputStream(jarentry);
-                assert jarentry.getSize() <= Integer.MAX_VALUE;
-                int length = (int)jarentry.getSize();
-                assert length >= 0;
-                byte[] bytes = new byte[length];
-                int length2 = jarInputStream.read(bytes);
-                assert length == length2;
-                return bytes;
+                try(InputStream jarInputStream = jarfile.getInputStream(jarentry)) {
+                    assert jarentry.getSize() <= Integer.MAX_VALUE;
+                    int length = (int) jarentry.getSize();
+                    assert length >= 0;
+                    byte[] bytes = new byte[length];
+                    int length2 = jarInputStream.read(bytes);
+                    assert length == length2;
+                    return bytes;
+                }
             }
         }
         throw new FileNotFoundException(name);
