@@ -39,7 +39,7 @@ public class ReadAllEvents {
 				while (queue.getNextEvent(event)) {
 
 					/*
-					 * Create a strug buffer and put in it, the controller name,
+					 * Create a string buffer and put in it, the controller name,
 					 * the time stamp of the event, the name of the component
 					 * that changed and the new value.
 					 * 
