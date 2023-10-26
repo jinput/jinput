@@ -107,20 +107,44 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
             String pluginClasses = getPrivilegedProperty("jinput.plugins", "") + " " + getPrivilegedProperty("net.java.games.input.plugins", "");
 			if(!getPrivilegedProperty("jinput.useDefaultPlugin", "true").toLowerCase().trim().equals("false") && !getPrivilegedProperty("net.java.games.input.useDefaultPlugin", "true").toLowerCase().trim().equals("false")) {
 				String osName = getPrivilegedProperty("os.name", "").trim();
-				if(osName.equals("Linux")) {
-					pluginClasses = pluginClasses + " net.java.games.input.LinuxEnvironmentPlugin";
-				} else if(osName.equals("Mac OS X")) {
-					pluginClasses = pluginClasses + " net.java.games.input.OSXEnvironmentPlugin";
-				} else  if(osName.equals("Windows XP") || osName.equals("Windows Vista") || osName.equals("Windows 7") || osName.equals("Windows 8") || osName.equals("Windows 8.1") || osName.equals("Windows 10") || osName.equals("Windows 11")) {
-					pluginClasses = pluginClasses + " net.java.games.input.DirectAndRawInputEnvironmentPlugin";
-				} else if(osName.equals("Windows 98") || osName.equals("Windows 2000")) {
-					pluginClasses = pluginClasses + " net.java.games.input.DirectInputEnvironmentPlugin";
-				} else if (osName.startsWith("Windows")) {
-					log.warning("Found unknown Windows version: " + osName);
-					log.warning("Attempting to use default windows plug-in.");
-					pluginClasses = pluginClasses + " net.java.games.input.DirectAndRawInputEnvironmentPlugin";
-				} else {
-					log.warning("Trying to use default plugin, OS name " + osName +" not recognised");
+
+				switch(osName) {
+					case "Linux": {
+						pluginClasses = pluginClasses + " net.java.games.input.LinuxEnvironmentPlugin";
+						break;
+					}
+
+					case "Mac OS X": {
+						pluginClasses = pluginClasses + " net.java.games.input.OSXEnvironmentPlugin";
+						break;
+					}
+
+					case "Windows 98":
+					case "Windows 2000": {
+						pluginClasses = pluginClasses + " net.java.games.input.DirectInputEnvironmentPlugin";
+						break;
+					}
+
+					case "Windows XP":
+					case "Windows Vista":
+					case "Windows 7":
+					case "Windows 8":
+					case "Windows 8.1":
+					case "Windows 10":
+					case "Windows 11": {
+						pluginClasses = pluginClasses + " net.java.games.input.DirectAndRawInputEnvironmentPlugin";
+						break;
+					}
+
+					default: {
+						if (osName.startsWith("Windows")) {
+							log.warning("Found unknown Windows version: " + osName);
+							log.warning("Attempting to use default windows plug-in.");
+							pluginClasses = pluginClasses + " net.java.games.input.DirectAndRawInputEnvironmentPlugin";
+						} else {
+							log.warning("Trying to use default plugin, OS name " + osName + " not recognised");
+						}
+					}
 				}
 			}
 
