@@ -39,8 +39,8 @@
 package net.java.games.input;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /** Java wrapper for IDirectInput
  * @author martak

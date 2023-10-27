@@ -33,9 +33,9 @@
 package net.java.games.input;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 
 /** Java wrapper of RAWDEVICELIST
  * @author elias

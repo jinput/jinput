@@ -38,8 +38,6 @@
  *****************************************************************************/
 package net.java.games.input;
 
-import java.io.IOException;
-
 /** Java wrapper of a SetupAPI device
  * @author elias
  * @version 1.0

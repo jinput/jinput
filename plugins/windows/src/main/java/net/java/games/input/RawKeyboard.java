@@ -33,11 +33,10 @@
 package net.java.games.input;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.ArrayList;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
 * @author elias

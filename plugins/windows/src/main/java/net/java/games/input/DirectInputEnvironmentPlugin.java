@@ -38,14 +38,14 @@
  *****************************************************************************/
 package net.java.games.input;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.List;
-import java.util.ArrayList;
+import net.java.games.util.plugins.Plugin;
+
 import java.io.File;
 import java.io.IOException;
-
-import net.java.games.util.plugins.Plugin;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.List;
 
 /** DirectInput implementation of controller environment
  * @author martak

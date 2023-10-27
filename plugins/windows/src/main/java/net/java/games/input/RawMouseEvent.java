@@ -38,8 +38,6 @@
  *****************************************************************************/
 package net.java.games.input;
 
-import java.io.IOException;
-
 /** Java wrapper of RAWMOUSE
  * @author elias
  * @version 1.0

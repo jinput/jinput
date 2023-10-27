@@ -32,10 +32,9 @@
  */
 package net.java.games.input;
 
-import java.util.Map;
-import java.util.HashMap;
-
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * An AbstractController is a skeleton implementation of a controller that

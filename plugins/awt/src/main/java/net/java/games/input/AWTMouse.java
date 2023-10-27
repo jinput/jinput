@@ -31,11 +31,9 @@ import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-
-import java.util.List;
-import java.util.ArrayList;
-
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Jeremy
