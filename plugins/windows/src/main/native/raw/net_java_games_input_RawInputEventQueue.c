@@ -113,6 +113,11 @@ JNIEXPORT void JNICALL Java_net_java_games_input_RawInputEventQueue_nRegisterDev
 		throwIOException(env, "Failed to register raw devices (%d)\n", GetLastError());
 }
 
+JNIEXPORT void JNICALL Java_net_java_games_input_RawInputEventQueue_nPostMessage(JNIEnv *env, jobject self, jlong hwnd_handle) {
+    HWND hwnd = (HWND)(INT_PTR)hwnd_handle;
+    PostMessage((HWND) hwnd, WM_USER, 0, 0);
+}
+
 JNIEXPORT void JNICALL Java_net_java_games_input_RawInputEventQueue_nPoll(JNIEnv *env, jobject self, jlong hwnd_handle) {
 	MSG msg;
 	HWND hwnd = (HWND)(INT_PTR)hwnd_handle;
@@ -131,7 +136,11 @@ JNIEXPORT void JNICALL Java_net_java_games_input_RawInputEventQueue_nPoll(JNIEnv
 	addKeyboardEvent_method = (*env)->GetMethodID(env, self_class, "addKeyboardEvent", "(JJIIIIJ)V");
 	if (addKeyboardEvent_method == NULL)
 		return;
-	if (GetMessage(&msg, hwnd, 0, 0) != 0) {
+	if (GetMessage(&msg, hwnd, 0, 0) != 0) { // Note: GetMessage is blocking!
+	    if (msg.message == WM_USER) {
+	        // Dummy message used to break GetMessage, just return
+	        return;
+	    }
 		if (msg.message != WM_INPUT) {
 			DefWindowProc(hwnd, msg.message, msg.wParam, msg.lParam);
 			return; // ignore it

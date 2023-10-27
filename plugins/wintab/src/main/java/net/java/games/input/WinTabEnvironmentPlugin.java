@@ -120,6 +120,12 @@ public class WinTabEnvironmentPlugin extends ControllerEnvironment implements Pl
 		return controllers;
 	}
 
+	@Override
+	public void release() {
+		// Not yet implemented!
+		return;
+	}
+
 	private final class ShutdownHook extends Thread {
 		public final void run() {
 			/* Release the devices to kill off active force feedback effects */

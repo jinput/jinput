@@ -138,6 +138,12 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 		return controllers;
 	}
 
+	@Override
+	public void release() {
+		// Not yet implemented!
+		return;
+	}
+
 	private final Component[] createComponents(IDirectInputDevice device, boolean map_mouse_buttons) {
 		List<DIDeviceObject> device_objects = device.getObjects();
 		List<DIComponent> controller_components = new ArrayList<>();

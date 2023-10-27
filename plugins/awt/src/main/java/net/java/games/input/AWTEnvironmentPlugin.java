@@ -45,6 +45,12 @@ public class AWTEnvironmentPlugin extends ControllerEnvironment implements Plugi
         return controllers;
     }
 
+	@Override
+	public void release() {
+		// Not yet implemented
+		return;
+	}
+
 	public boolean isSupported() {
 		return true;
 	}

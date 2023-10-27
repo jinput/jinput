@@ -33,6 +33,7 @@
 package net.java.games.input;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
@@ -41,15 +42,19 @@ import java.util.HashSet;
  * @author elias
  * @version 1.0
  */
-final class RawInputEventQueue {
+public final class RawInputEventQueue {
+
 	private final Object monitor = new Object();
 
 	private List<RawDevice> devices;
-	
+
+	private final List<QueueThread> threads = new ArrayList<>();
+
 	public final void start(List<RawDevice> devices) throws IOException {
 		this.devices = devices;
 		QueueThread queue = new QueueThread();
 		synchronized (monitor) {
+            this.threads.add(queue);
 			queue.start();
 			// wait for initialization
 			while (!queue.isInitialized()) {
@@ -60,6 +65,18 @@ final class RawInputEventQueue {
 		}
 		if (queue.getException() != null)
 			throw queue.getException();
+	}
+
+	/**
+	 * Interrupts the threads that are reading the joystick input.
+	 */
+	public void destroyAll() {
+        this.threads.forEach(thread -> {
+			// Must be done in this order!
+			thread.interrupt();
+			this.postMessage(thread.window);
+		});
+        this.threads.clear();
 	}
 
 	private final RawDevice lookupDevice(long handle) {
@@ -90,6 +107,12 @@ final class RawInputEventQueue {
 		nPoll(window.getHwnd());
 	}
 	private final native void nPoll(long hwnd_handle) throws IOException;
+
+	private final void postMessage(DummyWindow window) {
+		this.nPostMessage(window.getHwnd());
+	}
+
+	private final native void nPostMessage(long hwnd_handle);
 
 	private final static void registerDevices(DummyWindow window, RawDeviceInfo[] devices) throws IOException {
 		nRegisterDevices(0, window.getHwnd(), devices);

@@ -64,6 +64,14 @@ JNIEXPORT jlong JNICALL Java_net_java_games_input_DummyWindow_createWindow(JNIEn
 
 JNIEXPORT void JNICALL Java_net_java_games_input_DummyWindow_nDestroy(JNIEnv *env, jclass unused, jlong hwnd_address) {
 	HWND hwndDummy = (HWND)(INT_PTR)hwnd_address;
+	MSG msg;
+
+    // Makes sure that the window has no more messages before it gets killed
+	while (PeekMessage(&msg, hwndDummy, 0, 0, PM_REMOVE)) {
+	    TranslateMessage(&msg);
+	    DispatchMessage(&msg);
+	}
+
 	BOOL result = DestroyWindow(hwndDummy);
 	if (!result) {
 		throwIOException(env, "Failed to destroy window (%d)\n", GetLastError());

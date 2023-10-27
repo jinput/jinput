@@ -39,6 +39,7 @@
 package net.java.games.input;
 
 import java.io.File;
+import java.io.IOException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
@@ -103,7 +104,12 @@ public abstract class ControllerEnvironment {
      * or an empty array if there are no controllers in this environment.
      */
     public abstract Controller[] getControllers();
-    
+
+    /**
+     * Releases any native resources used when called.
+     */
+    public abstract void release();
+
     /**
      * Adds a listener for controller state change events.
      */
@@ -156,6 +162,48 @@ public abstract class ControllerEnvironment {
      * This usually corresponds to the environment for the local machine.
      */
     public static ControllerEnvironment getDefaultEnvironment() {
+        return defaultEnvironment;
+    }
+
+    public static ControllerEnvironment refreshDefaultEnvironment() {
+        DefaultControllerEnvironment newControllerEnvironment = new DefaultControllerEnvironment();
+        int oldControllerListLength = defaultEnvironment.getControllers().length;
+        int newControllerListLength = newControllerEnvironment.getControllers().length;
+
+        // If a controller is removed, the remaining controllers in the old environment should still be valid
+        // so the new environment can simply be discarded. Otherwise, the controllers in the old environment
+        // should be disposed before returning the new environment.
+        if (newControllerListLength < oldControllerListLength) {
+            for (int i = 0; i < newControllerListLength; i++) {
+                if (newControllerEnvironment.controllers.get(i) instanceof DisposableDevice) {
+                    try {
+                        ((DisposableDevice) newControllerEnvironment.controllers.get(i)).close();
+                    } catch (IOException e) {
+                        log("Device file descriptor is already closed: " + e.getMessage());
+                    }
+                }
+            }
+        } else {
+            for (int i = 0; i < newControllerListLength; i++) {
+                if (i < oldControllerListLength) {
+                    if (!((DefaultControllerEnvironment) defaultEnvironment).controllers.get(i).poll()) {
+                        if (((DefaultControllerEnvironment) defaultEnvironment).controllers.get(i) instanceof DisposableDevice) {
+                            try {
+                                ((DisposableDevice) ((DefaultControllerEnvironment) defaultEnvironment).controllers.get(i)).close();
+                            } catch (IOException e) {
+                                log("Device file descriptor is already closed: " + e.getMessage());
+                            }
+                        }
+                    }
+                }
+            }
+            // defaultEnvironment = newControllerEnvironment;   // Not sure why this was placed here???
+        }
+
+        defaultEnvironment.release();
+
+        defaultEnvironment = newControllerEnvironment;          // It probably should've been here
+
         return defaultEnvironment;
     }
 }
