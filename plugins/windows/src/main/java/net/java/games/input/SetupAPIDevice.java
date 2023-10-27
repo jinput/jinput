@@ -53,11 +53,11 @@ final class SetupAPIDevice {
 		this.device_name = device_name;
 	}
 
-	public final String getName() {
+	public String getName() {
 		return device_name;
 	}
 
-	public final String getInstanceId() {
+	public String getInstanceId() {
 		return device_instance_id;
 	}
 }

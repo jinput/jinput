@@ -46,10 +46,10 @@ public interface ControllerListener {
     /**
      * Invoked when a controller is lost.
      */
-    public abstract void controllerRemoved(ControllerEvent ev);
+    void controllerRemoved(ControllerEvent ev);
 
     /**
      * Invoked when a controller has been added.
      */
-    public abstract void controllerAdded(ControllerEvent ev);
+    void controllerAdded(ControllerEvent ev);
 } // interface ControllerListener

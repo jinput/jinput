@@ -52,7 +52,7 @@ final class RawKeyboardEvent {
 	private int message;
 	private long extra_information;
 
-	public final void set(long millis, int make_code, int flags, int vkey, int message, long extra_information) {
+	public void set(long millis, int make_code, int flags, int vkey, int message, long extra_information) {
 		this.millis = millis;
 		this.make_code = make_code;
 		this.flags = flags;
@@ -61,19 +61,19 @@ final class RawKeyboardEvent {
 		this.extra_information = extra_information;
 	}
 
-	public final void set(RawKeyboardEvent event) {
+	public void set(RawKeyboardEvent event) {
 		set(event.millis, event.make_code, event.flags, event.vkey, event.message, event.extra_information);
 	}
 
-	public final int getVKey() {
+	public int getVKey() {
 		return vkey;
 	}
 
-	public final int getMessage() {
+	public int getMessage() {
 		return message;
 	}
 
-	public final long getNanos() {
+	public long getNanos() {
 		return millis*1000000L;
 	}
 }

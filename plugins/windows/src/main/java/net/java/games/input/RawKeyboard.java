@@ -52,7 +52,7 @@ final class RawKeyboard extends Keyboard {
 		this.device = device;
 	}
 
-	private final static Component[] createKeyboardComponents(RawDevice device) {
+	private static Component[] createKeyboardComponents(RawDevice device) {
 		List<Component> components = new ArrayList<>();
 		Field[] vkey_fields = RawIdentifierMap.class.getFields();
 		for (int i = 0; i < vkey_fields.length; i++) {
@@ -71,7 +71,7 @@ final class RawKeyboard extends Keyboard {
 		return components.toArray(new Component[]{});
 	}
 
-	protected final synchronized boolean getNextDeviceEvent(Event event) throws IOException {
+	protected synchronized boolean getNextDeviceEvent(Event event) throws IOException {
 		while (true) {
 			if (!device.getNextKeyboardEvent(raw_event))
 				return false;
@@ -91,11 +91,11 @@ final class RawKeyboard extends Keyboard {
 		}
 	}
 
-	public final void pollDevice() throws IOException {
+	public void pollDevice() throws IOException {
 		device.pollKeyboard();
 	}
 
-	protected final void setDeviceEventQueueSize(int size) throws IOException {
+	protected void setDeviceEventQueueSize(int size) throws IOException {
 		device.setBufferSize(size);
 	}
 
@@ -109,15 +109,15 @@ final class RawKeyboard extends Keyboard {
 			this.vkey_code = vkey_code;
 		}
 
-		protected final float poll() throws IOException {
+		protected float poll() throws IOException {
 			return device.isKeyDown(vkey_code) ? 1f : 0f;
 		}
 
-		public final boolean isAnalog() {
+		public boolean isAnalog() {
 			return false;
 		}
 
-		public final boolean isRelative() {
+		public boolean isRelative() {
 			return false;
 		} 
 	}

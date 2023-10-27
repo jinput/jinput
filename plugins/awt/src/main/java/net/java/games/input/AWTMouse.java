@@ -56,7 +56,7 @@ final class AWTMouse extends Mouse implements AWTEventListener {
         Toolkit.getDefaultToolkit().addAWTEventListener(this, AWTEvent.MOUSE_EVENT_MASK | AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_WHEEL_EVENT_MASK);
     }
 
-	private final static Component[] createComponents() {
+	private static Component[] createComponents() {
 		return new Component[]{new Axis(Component.Identifier.Axis.X),
 			new Axis(Component.Identifier.Axis.Y),
 			new Axis(Component.Identifier.Axis.Z),
@@ -65,13 +65,13 @@ final class AWTMouse extends Mouse implements AWTEventListener {
 			new Button(Component.Identifier.Button.RIGHT)};
 	}
 
-	private final void processButtons(int button_enum, float value) {
+	private void processButtons(int button_enum, float value) {
 		Button button = getButton(button_enum);
 		if (button != null)
 			button.setValue(value);
 	}
 	
-	private final Button getButton(int button_enum) {
+	private Button getButton(int button_enum) {
 		switch (button_enum) {
 			case MouseEvent.BUTTON1:
 				return (Button)getLeft();
@@ -86,7 +86,7 @@ final class AWTMouse extends Mouse implements AWTEventListener {
 		}
 	}
 
-	private final void processEvent(AWTEvent event) throws IOException {
+	private void processEvent(AWTEvent event) throws IOException {
         if (event instanceof MouseWheelEvent) {
             MouseWheelEvent mwe = (MouseWheelEvent)event;
 			Axis wheel = (Axis)getWheel();
@@ -110,7 +110,7 @@ final class AWTMouse extends Mouse implements AWTEventListener {
 		}
 	}
 
-	public final synchronized void pollDevice() throws IOException {
+	public synchronized void pollDevice() throws IOException {
 		Axis wheel = (Axis)getWheel();
 		wheel.setValue(0);
 		for (int i = 0; i < awt_events.size(); i++) {
@@ -121,7 +121,7 @@ final class AWTMouse extends Mouse implements AWTEventListener {
 		awt_events.clear();
 	}
 
-	protected final synchronized boolean getNextDeviceEvent(Event event) throws IOException {
+	protected synchronized boolean getNextDeviceEvent(Event event) throws IOException {
 		while (true) {
 			if (processed_awt_events.isEmpty())
 				return false;
@@ -167,7 +167,7 @@ final class AWTMouse extends Mouse implements AWTEventListener {
 		}
 	}
 
-    public final synchronized void eventDispatched(AWTEvent event) {
+    public synchronized void eventDispatched(AWTEvent event) {
 		awt_events.add(event);
 	}
 
@@ -178,19 +178,19 @@ final class AWTMouse extends Mouse implements AWTEventListener {
 			super(axis_id.getName(), axis_id);
 		}
 
-		public final boolean isRelative() {
+		public boolean isRelative() {
 			return false;
 		}
 
-		public final boolean isAnalog() {
+		public boolean isAnalog() {
 			return true;
 		} 
 
-		protected final void setValue(float value) {
+		protected void setValue(float value) {
 			this.value = value;
 		}
 
-		protected final float poll() throws IOException {
+		protected float poll() throws IOException {
 			return value;
 		}
 	}
@@ -202,19 +202,19 @@ final class AWTMouse extends Mouse implements AWTEventListener {
 			super(button_id.getName(), button_id);
 		}
 
-		protected final void setValue(float value) {
+		protected void setValue(float value) {
 			this.value = value;
 		}
 
-		protected final float poll() throws IOException {
+		protected float poll() throws IOException {
 			return value;
 		}
 
-		public final boolean isAnalog() {
+		public boolean isAnalog() {
 			return false;
 		}
 
-		public final boolean isRelative() {
+		public boolean isRelative() {
 			return false;
 		}  
 	}

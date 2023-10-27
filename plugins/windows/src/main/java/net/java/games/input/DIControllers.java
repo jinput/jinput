@@ -48,7 +48,7 @@ final class DIControllers {
 	private final static DIDeviceObjectData di_event = new DIDeviceObjectData();
 
 	/* synchronized to protect di_event */
-	public final static synchronized boolean getNextDeviceEvent(Event event, IDirectInputDevice device) throws IOException {
+	public static synchronized boolean getNextDeviceEvent(Event event, IDirectInputDevice device) throws IOException {
 		if (!device.getNextEvent(di_event))
 			return false;
 		DIDeviceObject object = device.mapEvent(di_event);
@@ -65,7 +65,7 @@ final class DIControllers {
 		return true;
 	}
 
-	public final static float poll(Component component, DIDeviceObject object) throws IOException {
+	public static float poll(Component component, DIDeviceObject object) throws IOException {
 		int poll_data = object.getDevice().getPollData(object);
 		float result;
 		if (object.isRelative()) {

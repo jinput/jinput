@@ -63,21 +63,21 @@ final class IDirectInput {
 			throw e;
 		}
 	}
-	private final static native long createIDirectInput() throws IOException;
+	private static native long createIDirectInput() throws IOException;
 
-	public final List<IDirectInputDevice> getDevices() {
+	public List<IDirectInputDevice> getDevices() {
 		return devices;
 	}
 
-	private final void enumDevices() throws IOException {
+	private void enumDevices() throws IOException {
 		nEnumDevices(idirectinput_address);
 	}
-	private final native void nEnumDevices(long addr) throws IOException;
+	private native void nEnumDevices(long addr) throws IOException;
 
 	/* This method is called from native code in nEnumDevices
 	 * native side will clean up in case of an exception
 	 */
-	private final void addDevice(long address, byte[] instance_guid, byte[] product_guid, int dev_type, int dev_subtype, String instance_name, String product_name) throws IOException {
+	private void addDevice(long address, byte[] instance_guid, byte[] product_guid, int dev_type, int dev_subtype, String instance_name, String product_name) throws IOException {
 		try {
 			IDirectInputDevice device = new IDirectInputDevice(window, address, instance_guid, product_guid, dev_type, dev_subtype, instance_name, product_name);
 			devices.add(device);
@@ -86,15 +86,15 @@ final class IDirectInput {
 		}
 	}
 
-	public final void releaseDevices() {
+	public void releaseDevices() {
 		for (int i = 0; i < devices.size(); i++) {
 			IDirectInputDevice device = devices.get(i);
 			device.release();
 		}
 	}
 	
-	public final void release() {
+	public void release() {
 		nRelease(idirectinput_address);
 	}
-	private final static native void nRelease(long address);
+	private static native void nRelease(long address);
 }
