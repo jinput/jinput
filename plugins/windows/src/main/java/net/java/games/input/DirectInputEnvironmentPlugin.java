@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import net.java.games.util.plugins.Plugin;
 
@@ -54,6 +55,9 @@ import net.java.games.util.plugins.Plugin;
  */
 public final class DirectInputEnvironmentPlugin extends ControllerEnvironment implements Plugin {
 	
+
+	private static final Logger LOG = Logger.getLogger(DirectInputEnvironmentPlugin.class.getName());
+
 	private static boolean supported = false;
 		
 	/**
@@ -140,8 +144,7 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 
 	@Override
 	public void release() {
-		// Not yet implemented!
-		return;
+		LOG.severe("Not yet implemented");
 	}
 
 	private final Component[] createComponents(IDirectInputDevice device, boolean map_mouse_buttons) {

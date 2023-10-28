@@ -123,7 +123,7 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 
 	@Override
 	public void release() {
-        this.queue.destroyAll();
+        this.queue.destroyAllThreads();
 	}
 
 	private final static SetupAPIDevice lookupSetupAPIDevice(String device_name, List<SetupAPIDevice> setupapi_devices) {

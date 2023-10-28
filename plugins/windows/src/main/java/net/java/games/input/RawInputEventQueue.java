@@ -70,9 +70,10 @@ public final class RawInputEventQueue {
 	/**
 	 * Interrupts the threads that are reading the joystick input.
 	 */
-	public void destroyAll() {
+	public void destroyAllThreads() {
         this.threads.forEach(thread -> {
 			// Must be done in this order!
+			// Otherwise the thread might not register the interrupt and continue polling in the while !isInterrupted() loop
 			thread.interrupt();
 			this.postMessage(thread.window);
 		});

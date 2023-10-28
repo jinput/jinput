@@ -29,12 +29,16 @@ import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 import net.java.games.util.plugins.Plugin;
 
+import java.util.logging.Logger;
+
 /**
  * @author Jeremy
  * @author elias
  */
 public class AWTEnvironmentPlugin extends ControllerEnvironment implements Plugin {
-	
+
+	private static final Logger LOG = Logger.getLogger(AWTEnvironmentPlugin.class.getName());
+
 	private final Controller[] controllers;
 
 	public AWTEnvironmentPlugin() {
@@ -47,8 +51,7 @@ public class AWTEnvironmentPlugin extends ControllerEnvironment implements Plugi
 
 	@Override
 	public void release() {
-		// Not yet implemented
-		return;
+		LOG.severe("Not yet implemented");
 	}
 
 	public boolean isSupported() {
