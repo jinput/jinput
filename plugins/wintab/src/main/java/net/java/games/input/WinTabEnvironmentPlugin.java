@@ -25,13 +25,13 @@
  */
 package net.java.games.input;
 
+import net.java.games.util.plugins.Plugin;
+
 import java.io.File;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
-
-import net.java.games.util.plugins.Plugin;
 
 public class WinTabEnvironmentPlugin extends ControllerEnvironment implements Plugin {
 	private static boolean supported = false;

@@ -38,14 +38,14 @@
  *****************************************************************************/
 package net.java.games.input;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.List;
-import java.util.ArrayList;
+import net.java.games.util.plugins.Plugin;
+
 import java.io.File;
 import java.io.IOException;
-
-import net.java.games.util.plugins.Plugin;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.List;
 
 /** DirectInput implementation of controller environment
  * @author martak
@@ -134,11 +134,11 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 		}
 	}
 
-	public final Controller[] getControllers() {
+	public Controller[] getControllers() {
 		return controllers;
 	}
 
-	private final Component[] createComponents(IDirectInputDevice device, boolean map_mouse_buttons) {
+	private Component[] createComponents(IDirectInputDevice device, boolean map_mouse_buttons) {
 		List<DIDeviceObject> device_objects = device.getObjects();
 		List<DIComponent> controller_components = new ArrayList<>();
 		for (int i = 0; i < device_objects.size(); i++) {
@@ -158,7 +158,7 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 		return components;
 	}
 		
-	private final Mouse createMouseFromDevice(IDirectInputDevice device) {
+	private Mouse createMouseFromDevice(IDirectInputDevice device) {
 		Component[] components = createComponents(device, true);
 		Mouse mouse = new DIMouse(device, components, new Controller[]{}, device.getRumblers());
 		if (mouse.getX() != null && mouse.getY() != null && mouse.getPrimaryButton() != null)
@@ -167,18 +167,18 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 			return null;
 	}
 
-	private final AbstractController createControllerFromDevice(IDirectInputDevice device, Controller.Type type) {
+	private AbstractController createControllerFromDevice(IDirectInputDevice device, Controller.Type type) {
 		Component[] components = createComponents(device, false);
 		AbstractController controller = new DIAbstractController(device, components, new Controller[]{}, device.getRumblers(), type);
 		return controller;
 	}
 
-	private final Keyboard createKeyboardFromDevice(IDirectInputDevice device) {
+	private Keyboard createKeyboardFromDevice(IDirectInputDevice device) {
 		Component[] components = createComponents(device, false);
 		return new DIKeyboard(device, components, new Controller[]{}, device.getRumblers());
 	}
 
-	private final Controller createControllerFromDevice(IDirectInputDevice device) {
+	private Controller createControllerFromDevice(IDirectInputDevice device) {
 		switch (device.getType()) {
 			case IDirectInputDevice.DI8DEVTYPE_MOUSE:
 				return createMouseFromDevice(device);
@@ -199,7 +199,7 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 		}
 	}
 	
-	private final Controller[] enumControllers(DummyWindow window) throws IOException {
+	private Controller[] enumControllers(DummyWindow window) throws IOException {
 		List<Controller> controllers = new ArrayList<>();
 		IDirectInput dinput = new IDirectInput(window);
 		try {
@@ -222,7 +222,7 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 	}
 
 	private final class ShutdownHook extends Thread {
-		public final void run() {
+		public void run() {
 			/* Release the devices to kill off active force feedback effects */
 			for (int i = 0; i < active_devices.size(); i++) {
 				IDirectInputDevice device = active_devices.get(i);

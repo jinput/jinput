@@ -53,12 +53,12 @@ public interface Controller {
      * The objects in the array are returned in order of assignment priority
      * (primary stick, secondary buttons, etc.).
      */
-    public abstract Controller[] getControllers();
+    Controller[] getControllers();
 
     /**
      * Returns the type of the Controller.
      */
-    public abstract Type getType();
+    Type getType();
 
     /**
      * Returns the components on this controller, in order of assignment priority.
@@ -69,56 +69,56 @@ public interface Controller {
      * The array returned is an empty array if this controller contains no components
      * (such as a logical grouping of child controllers).
      */
-    public abstract Component[] getComponents();
+    Component[] getComponents();
 
     /**
      * Returns a single axis based on its type, or null
      * if no axis with the specified type could be found.
      */
-    public abstract Component getComponent(Component.Identifier id);
+    Component getComponent(Component.Identifier id);
 
     /**
      * Returns the rumblers for sending feedback to this controller, or an
      * empty array if there are no rumblers on this controller.
      */
-    public abstract Rumbler[] getRumblers();
+    Rumbler[] getRumblers();
 
     /**
      * Polls axes for data.  Returns false if the controller is no longer valid.
      * Polling reflects the current state of the device when polled.
      */
-    public abstract boolean poll();
+    boolean poll();
 
     /**
      * Initialized the controller event queue to a new size. Existing events
 	 * in the queue are lost.
      */
-	public abstract void setEventQueueSize(int size);
+	void setEventQueueSize(int size);
 
 	/**
 	 * Get the device event queue
 	 */
-	public abstract EventQueue getEventQueue();
+	EventQueue getEventQueue();
 
     /**
      * Returns the port type for this Controller.
      */
-    public abstract PortType getPortType();
+    PortType getPortType();
 
     /**
      * Returns the zero-based port number for this Controller.
      */
-    public abstract int getPortNumber();
+    int getPortNumber();
 
     /**
      * Returns a human-readable name for this Controller.
      */
-    public abstract String getName();
+    String getName();
     
     /**
      * Types of controller objects.
      */
-    public static class Type {
+    class Type {
         
         /**
          * Name of controller type
@@ -203,7 +203,7 @@ public interface Controller {
     /**
      * Common controller port types.
      */
-    public static final class PortType {
+    final class PortType {
         
         /**
          * Name of port type

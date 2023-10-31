@@ -52,23 +52,23 @@ final class DIComponent extends AbstractComponent {
 		this.object = object;
 	}
 
-	public final boolean isRelative() {
+	public boolean isRelative() {
 		return object.isRelative();
 	}
 
-	public final boolean isAnalog() {
+	public boolean isAnalog() {
 		return object.isAnalog();
 	}
 	
-	public final float getDeadZone() {
+	public float getDeadZone() {
 		return object.getDeadzone();
 	}
 
-	public final DIDeviceObject getDeviceObject() {
+	public DIDeviceObject getDeviceObject() {
 		return object;
 	}
 
-	protected final float poll() throws IOException {
+	protected float poll() throws IOException {
 		return DIControllers.poll(this, object);
 	}
 }

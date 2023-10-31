@@ -51,10 +51,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
-import net.java.games.input.Component;
-import net.java.games.input.Controller;
-import net.java.games.input.ControllerEnvironment;
-
 public class ControllerReadTest extends JFrame{
 	private static final long serialVersionUID = -7129976919159465311L;
 

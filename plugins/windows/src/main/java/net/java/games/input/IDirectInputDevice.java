@@ -261,15 +261,15 @@ final class IDirectInputDevice {
 		this.device_state = new int[objects.size()];
 	}
 
-	public final boolean areAxesRelative() {
+	public boolean areAxesRelative() {
 		return axes_in_relative_mode;
 	}
 
-	public final Rumbler[] getRumblers() {
+	public Rumbler[] getRumblers() {
 		return rumblers.toArray(new Rumbler[]{});
 	}
 
-	private final List<Rumbler> createRumblers() throws IOException {
+	private List<Rumbler> createRumblers() throws IOException {
 		DIDeviceObject x_axis = lookupObjectByGUID(GUID_XAxis);
 //		DIDeviceObject y_axis = lookupObjectByGUID(GUID_YAxis);
 		if(x_axis == null/* || y_axis == null*/)
@@ -286,7 +286,7 @@ final class IDirectInputDevice {
 		return rumblers;
 	}
 
-	private final Rumbler createPeriodicRumbler(DIDeviceObject[] axes, long[] directions, DIEffectInfo info) throws IOException {
+	private Rumbler createPeriodicRumbler(DIDeviceObject[] axes, long[] directions, DIEffectInfo info) throws IOException {
 		int[] axis_ids = new int[axes.length];
 		for (int i = 0; i < axis_ids.length; i++) {
 			axis_ids[i] = axes[i].getDIIdentifier();
@@ -294,9 +294,9 @@ final class IDirectInputDevice {
 		long effect_address = nCreatePeriodicEffect(address, info.getGUID(), DIEFF_CARTESIAN | DIEFF_OBJECTIDS, INFINITE, 0, DI_FFNOMINALMAX, DIEB_NOTRIGGER, 0, axis_ids, directions, 0, 0, 0, 0, DI_FFNOMINALMAX, 0, 0, 50000, 0);
 		return new IDirectInputEffect(effect_address, info);
 	}
-	private final static native long nCreatePeriodicEffect(long address, byte[] effect_guid, int flags, int duration, int sample_period, int gain, int trigger_button,  int trigger_repeat_interval, int[] axis_ids, long[] directions, int envelope_attack_level, int envelope_attack_time, int envelope_fade_level, int envelope_fade_time, int periodic_magnitude, int periodic_offset, int periodic_phase, int periodic_period, int start_delay) throws IOException;
+	private static native long nCreatePeriodicEffect(long address, byte[] effect_guid, int flags, int duration, int sample_period, int gain, int trigger_button,  int trigger_repeat_interval, int[] axis_ids, long[] directions, int envelope_attack_level, int envelope_attack_time, int envelope_fade_level, int envelope_fade_time, int periodic_magnitude, int periodic_offset, int periodic_phase, int periodic_period, int start_delay) throws IOException;
 
-	private final DIDeviceObject lookupObjectByGUID(int guid_id) {
+	private DIDeviceObject lookupObjectByGUID(int guid_id) {
 		for (int i = 0; i < objects.size(); i++) {
 			DIDeviceObject object = objects.get(i);
 			if (guid_id == object.getGUIDType())
@@ -305,11 +305,11 @@ final class IDirectInputDevice {
 		return null;
 	}
 
-	public final int getPollData(DIDeviceObject object) {
+	public int getPollData(DIDeviceObject object) {
 		return device_state[object.getFormatOffset()];
 	}
 
-	public final DIDeviceObject mapEvent(DIDeviceObjectData event) {
+	public DIDeviceObject mapEvent(DIDeviceObjectData event) {
 		/* Raw event format offsets (dwOfs member) is in bytes,
 		 * but we're indexing into ints so we have to compensate
 		 * for the int size (4 bytes)
@@ -318,15 +318,15 @@ final class IDirectInputDevice {
 		return objects.get(format_offset);
 	}
 
-	public final DIComponent mapObject(DIDeviceObject object) {
+	public DIComponent mapObject(DIDeviceObject object) {
 		return object_to_component.get(object);
 	}
 
-	public final void registerComponent(DIDeviceObject object, DIComponent component) {
+	public void registerComponent(DIDeviceObject object, DIComponent component) {
 		object_to_component.put(object, component);
 	}
 
-	public final synchronized void pollAll() throws IOException {
+	public synchronized void pollAll() throws IOException {
 		checkReleased();
 		poll();
 		getDeviceState(device_state);
@@ -335,7 +335,7 @@ final class IDirectInputDevice {
 		queue.flip();
 	}
 
-	public synchronized final boolean getNextEvent(DIDeviceObjectData data) {
+	public synchronized boolean getNextEvent(DIDeviceObjectData data) {
 		DIDeviceObjectData next_event = queue.get();
 		if (next_event == null)
 			return false;
@@ -343,7 +343,7 @@ final class IDirectInputDevice {
 		return true;
 	}
 	
-	private final void poll() throws IOException {
+	private void poll() throws IOException {
 		int res = nPoll(address);
 		if (res != DI_OK && res != DI_NOEFFECT) {
 			if (res == DIERR_NOTACQUIRED) {
@@ -353,23 +353,23 @@ final class IDirectInputDevice {
 			throw new IOException("Failed to poll device (" + Integer.toHexString(res) + ")");
 		}
 	}
-	private final static native int nPoll(long address) throws IOException;
+	private static native int nPoll(long address) throws IOException;
 
-	private final void acquire() throws IOException {
+	private void acquire() throws IOException {
 		int res = nAcquire(address);
 		if (res != DI_OK && res != DIERR_OTHERAPPHASPRIO && res != DI_NOEFFECT)
 			throw new IOException("Failed to acquire device (" + Integer.toHexString(res) + ")");
 	}
-	private final static native int nAcquire(long address);
+	private static native int nAcquire(long address);
 
-	private final void unacquire() throws IOException {
+	private void unacquire() throws IOException {
 		int res = nUnacquire(address);
 		if (res != DI_OK && res != DI_NOEFFECT)
 			throw new IOException("Failed to unAcquire device (" + Integer.toHexString(res) + ")");
 	}
-	private final static native int nUnacquire(long address);
+	private static native int nUnacquire(long address);
 
-	private final boolean getDeviceData(DataQueue<DIDeviceObjectData> queue) throws IOException {
+	private boolean getDeviceData(DataQueue<DIDeviceObjectData> queue) throws IOException {
 		int res = nGetDeviceData(address, 0, queue, queue.getElements(), queue.position(), queue.remaining());
 		if (res != DI_OK && res != DI_BUFFEROVERFLOW) {
 			if (res == DIERR_NOTACQUIRED) {
@@ -380,9 +380,9 @@ final class IDirectInputDevice {
 		}
 		return true;
 	}
-	private final static native int nGetDeviceData(long address, int flags, DataQueue<DIDeviceObjectData> queue, Object[] queue_elements, int position, int remaining);
+	private static native int nGetDeviceData(long address, int flags, DataQueue<DIDeviceObjectData> queue, Object[] queue_elements, int position, int remaining);
 	
-	private final void getDeviceState(int[] device_state) throws IOException {
+	private void getDeviceState(int[] device_state) throws IOException {
 		int res = nGetDeviceState(address, device_state);
 		if (res != DI_OK) {
 			if (res == DIERR_NOTACQUIRED) {
@@ -393,51 +393,51 @@ final class IDirectInputDevice {
 			throw new IOException("Failed to get device state (" + Integer.toHexString(res) + ")");
 		}
 	}
-	private final static native int nGetDeviceState(long address, int[] device_state);
+	private static native int nGetDeviceState(long address, int[] device_state);
 
 	/* Set a custom data format that maps each object's data into an int[]
 	   array with the same index as in the objects List */
-	private final void setDataFormat(int flags) throws IOException {
+	private void setDataFormat(int flags) throws IOException {
 		DIDeviceObject[] device_objects = new DIDeviceObject[objects.size()];
 		objects.toArray(device_objects);
 		int res = nSetDataFormat(address, flags, device_objects);
 		if (res != DI_OK)
 			throw new IOException("Failed to set data format (" + Integer.toHexString(res) + ")");
 	}
-	private final static native int nSetDataFormat(long address, int flags, DIDeviceObject[] device_objects);
+	private static native int nSetDataFormat(long address, int flags, DIDeviceObject[] device_objects);
 	
-	public final String getProductName() {
+	public String getProductName() {
 		return product_name;
 	}
 
-	public final int getType() {
+	public int getType() {
 		return dev_type;
 	}
 
-	public final List<DIDeviceObject> getObjects() {
+	public List<DIDeviceObject> getObjects() {
 		return objects;
 	}
 
-	private final void enumEffects() throws IOException {
+	private void enumEffects() throws IOException {
 		int res = nEnumEffects(address, DIEFT_ALL);
 		if (res != DI_OK)
 			throw new IOException("Failed to enumerate effects (" + Integer.toHexString(res) + ")");
 	}
-	private final native int nEnumEffects(long address, int flags);
+	private native int nEnumEffects(long address, int flags);
 	
 	/* Called from native side from nEnumEffects */
-	private final void addEffect(byte[] guid, int guid_id, int effect_type, int static_params, int dynamic_params, String name) {
+	private void addEffect(byte[] guid, int guid_id, int effect_type, int static_params, int dynamic_params, String name) {
 		effects.add(new DIEffectInfo(this, guid, guid_id, effect_type, static_params, dynamic_params, name));
 	}
 
-	private final void enumObjects() throws IOException {
+	private void enumObjects() throws IOException {
 		int res = nEnumObjects(address, DIDFT_BUTTON | DIDFT_AXIS | DIDFT_POV);
 		if (res != DI_OK)
 			throw new IOException("Failed to enumerate objects (" + Integer.toHexString(res) + ")");
 	}
-	private final native int nEnumObjects(long address, int flags);
+	private native int nEnumObjects(long address, int flags);
 
-	public final synchronized long[] getRangeProperty(int object_identifier) throws IOException {
+	public synchronized long[] getRangeProperty(int object_identifier) throws IOException {
 		checkReleased();
 		long[] range = new long[2];
 		int res = nGetRangeProperty(address, object_identifier, range);
@@ -445,32 +445,32 @@ final class IDirectInputDevice {
 			throw new IOException("Failed to get object range (" + res + ")");
 		return range;
 	}
-	private final static native int nGetRangeProperty(long address, int object_id, long[] range);
+	private static native int nGetRangeProperty(long address, int object_id, long[] range);
 
-	public final synchronized int getDeadzoneProperty(int object_identifier) throws IOException {
+	public synchronized int getDeadzoneProperty(int object_identifier) throws IOException {
 		checkReleased();
 		return nGetDeadzoneProperty(address, object_identifier);
 	}
-	private final static native int nGetDeadzoneProperty(long address, int object_id) throws IOException;
+	private static native int nGetDeadzoneProperty(long address, int object_id) throws IOException;
 
 	/* Called from native side from nEnumObjects */
-	private final void addObject(byte[] guid, int guid_type, int identifier, int type, int instance, int flags, String name) throws IOException {
+	private void addObject(byte[] guid, int guid_type, int identifier, int type, int instance, int flags, String name) throws IOException {
 		Component.Identifier id = getIdentifier(guid_type, type, instance);
 		int format_offset = current_format_offset++;
 		DIDeviceObject obj = new DIDeviceObject(this, id, guid, guid_type, identifier, type, instance, flags, name, format_offset);
 		objects.add(obj);
 	}
 
-	private final static Component.Identifier.Key getKeyIdentifier(int key_instance) {
+	private static Component.Identifier.Key getKeyIdentifier(int key_instance) {
 		return DIIdentifierMap.getKeyIdentifier(key_instance);
 	}
 
-	private final Component.Identifier.Button getNextButtonIdentifier() {
+	private Component.Identifier.Button getNextButtonIdentifier() {
 		int button_id = button_counter++;
 		return DIIdentifierMap.getButtonIdentifier(button_id);
 	}
 	
-	private final Component.Identifier getIdentifier(int guid_type, int type, int instance) {
+	private Component.Identifier getIdentifier(int guid_type, int type, int instance) {
 		switch (guid_type) {
 			case IDirectInputDevice.GUID_XAxis:
 				return Component.Identifier.Axis.X;
@@ -497,7 +497,7 @@ final class IDirectInputDevice {
 		}
 	}
 	
-	public final synchronized void setBufferSize(int size) throws IOException {
+	public synchronized void setBufferSize(int size) throws IOException {
 		checkReleased();
 		unacquire();
 		int res = nSetBufferSize(address, size);
@@ -507,17 +507,17 @@ final class IDirectInputDevice {
 		queue.position(queue.limit());
 		acquire();
 	}
-	private final static native int nSetBufferSize(long address, int size);
+	private static native int nSetBufferSize(long address, int size);
 
-	public final synchronized void setCooperativeLevel(int flags) throws IOException {
+	public synchronized void setCooperativeLevel(int flags) throws IOException {
 		checkReleased();
 		int res = nSetCooperativeLevel(address, window.getHwnd(), flags);
 		if (res != DI_OK)
 			throw new IOException("Failed to set cooperative level (" + Integer.toHexString(res) + ")");
 	}
-	private final static native int nSetCooperativeLevel(long address, long hwnd_address, int flags);
+	private static native int nSetCooperativeLevel(long address, long hwnd_address, int flags);
 
-	public synchronized final void release() {
+	public synchronized void release() {
 		if (!released) {
 			released = true;
 			for (int i = 0; i < rumblers.size(); i++) {
@@ -527,9 +527,9 @@ final class IDirectInputDevice {
 			nRelease(address);
 		}
 	}
-	private final static native void nRelease(long address);
+	private static native void nRelease(long address);
 
-	private final void checkReleased() throws IOException {
+	private void checkReleased() throws IOException {
 		if (released)
 			throw new IOException("Device is released");
 	}
