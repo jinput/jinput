@@ -25,8 +25,6 @@
  */
 package net.java.games.input;
 
-import net.java.games.input.Controller;
-import net.java.games.input.ControllerEnvironment;
 import net.java.games.util.plugins.Plugin;
 
 import java.util.logging.Logger;

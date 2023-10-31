@@ -25,9 +25,9 @@
  */
 package net.java.games.input.applet;
 
-import java.io.IOException;
-
 import net.java.games.input.ControllerReadTest;
+
+import java.io.IOException;
 
 @SuppressWarnings("deprecation")
 public class ControllerReadTestApplet extends java.applet.Applet {

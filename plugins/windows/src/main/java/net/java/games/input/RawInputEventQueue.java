@@ -50,7 +50,7 @@ public final class RawInputEventQueue {
 
 	private final List<QueueThread> threads = new ArrayList<>();
 
-	public final void start(List<RawDevice> devices) throws IOException {
+	public void start(List<RawDevice> devices) throws IOException {
 		this.devices = devices;
 		QueueThread queue = new QueueThread();
 		synchronized (monitor) {
@@ -80,7 +80,7 @@ public final class RawInputEventQueue {
         this.threads.clear();
 	}
 
-	private final RawDevice lookupDevice(long handle) {
+	private RawDevice lookupDevice(long handle) {
 		for (int i = 0; i < devices.size(); i++) {
 			RawDevice device = devices.get(i);
 			if (device.getHandle() == handle)
@@ -90,24 +90,24 @@ public final class RawInputEventQueue {
 	}
 
 	/* Event methods called back from native code in nPoll() */
-	private final void addMouseEvent(long handle, long millis, int flags, int button_flags, int button_data, long raw_buttons, long last_x, long last_y, long extra_information) {
+	private void addMouseEvent(long handle, long millis, int flags, int button_flags, int button_data, long raw_buttons, long last_x, long last_y, long extra_information) {
 		RawDevice device = lookupDevice(handle);
 		if (device == null)
 			return;
 		device.addMouseEvent(millis, flags, button_flags, button_data, raw_buttons, last_x, last_y, extra_information);
 	}
 
-	private final void addKeyboardEvent(long handle, long millis, int make_code, int flags, int vkey, int message, long extra_information) {
+	private void addKeyboardEvent(long handle, long millis, int make_code, int flags, int vkey, int message, long extra_information) {
 		RawDevice device = lookupDevice(handle);
 		if (device == null)
 			return;
 		device.addKeyboardEvent(millis, make_code, flags, vkey, message, extra_information);
 	}
 
-	private final void poll(DummyWindow window) throws IOException {
+	private void poll(DummyWindow window) throws IOException {
 		nPoll(window.getHwnd());
 	}
-	private final native void nPoll(long hwnd_handle) throws IOException;
+	private native void nPoll(long hwnd_handle) throws IOException;
 
 	private final void postMessage(DummyWindow window) {
 		this.nPostMessage(window.getHwnd());
@@ -115,10 +115,10 @@ public final class RawInputEventQueue {
 
 	private final native void nPostMessage(long hwnd_handle);
 
-	private final static void registerDevices(DummyWindow window, RawDeviceInfo[] devices) throws IOException {
+	private static void registerDevices(DummyWindow window, RawDeviceInfo[] devices) throws IOException {
 		nRegisterDevices(0, window.getHwnd(), devices);
 	}
-	private final static native void nRegisterDevices(int flags, long hwnd_addr, RawDeviceInfo[] devices) throws IOException;
+	private static native void nRegisterDevices(int flags, long hwnd_addr, RawDeviceInfo[] devices) throws IOException;
 
 	private final class QueueThread extends Thread {
 		private boolean initialized;
@@ -129,15 +129,15 @@ public final class RawInputEventQueue {
 			setDaemon(true);
 		}
 
-		public final boolean isInitialized() {
+		public boolean isInitialized() {
 			return initialized;
 		}
 
-		public final IOException getException() {
+		public IOException getException() {
 			return exception;
 		}
 
-		public final void run() {
+		public void run() {
 			// We have to create the window in the (private) queue thread
 			try {
 				window = new DummyWindow();

@@ -51,14 +51,14 @@ final class DummyWindow {
 	public DummyWindow() throws IOException {
 		this.hwnd_address = createWindow();
 	}
-	private final static native long createWindow() throws IOException;
+	private static native long createWindow() throws IOException;
 
-	public final void destroy() throws IOException {
+	public void destroy() throws IOException {
 		nDestroy(hwnd_address);
 	}
-	private final static native void nDestroy(long hwnd_address) throws IOException;
+	private static native void nDestroy(long hwnd_address) throws IOException;
 
-	public final long getHwnd() {
+	public long getHwnd() {
 		return hwnd_address;
 	}
 }

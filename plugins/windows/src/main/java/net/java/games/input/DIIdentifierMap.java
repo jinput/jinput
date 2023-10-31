@@ -188,7 +188,7 @@ final class DIIdentifierMap {
 	public final static int DIK_MAIL			= 0xEC;	/* Mail */
 	public final static int DIK_MEDIASELECT	 = 0xED;	/* Media Select */
 
-	public final static Component.Identifier.Key getKeyIdentifier(int key_code) {
+	public static Component.Identifier.Key getKeyIdentifier(int key_code) {
 		switch (key_code) {
 			case DIK_ESCAPE:
 				return Component.Identifier.Key.ESCAPE;
@@ -462,7 +462,7 @@ final class DIIdentifierMap {
 		}
 	}
 
-	public final static Component.Identifier.Button getButtonIdentifier(int id) {
+	public static Component.Identifier.Button getButtonIdentifier(int id) {
 		switch (id) {
 			case 0:
 				return Component.Identifier.Button._0;
@@ -533,7 +533,7 @@ final class DIIdentifierMap {
 		}
 	}
 
-	public final static Component.Identifier.Button mapMouseButtonIdentifier(Component.Identifier.Button button_id) {
+	public static Component.Identifier.Button mapMouseButtonIdentifier(Component.Identifier.Button button_id) {
 		if (button_id == Component.Identifier.Button._0) {
 			return Component.Identifier.Button.LEFT;
 		} else if (button_id == Component.Identifier.Button._1) {

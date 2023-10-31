@@ -29,14 +29,11 @@ import java.awt.AWTEvent;
 import java.awt.Toolkit;
 import java.awt.event.AWTEventListener;
 import java.awt.event.KeyEvent;
-
-import java.util.List;
-import java.util.ArrayList;
-
 import java.io.IOException;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Jeremy
@@ -53,7 +50,7 @@ final class AWTKeyboard extends Keyboard implements AWTEventListener {
 		resizeEventQueue(EVENT_QUEUE_DEPTH);
 	}
 
-	private final static Component[] createComponents() {
+	private static Component[] createComponents() {
 		List<Component> components = new ArrayList<>();
 		Field[] vkey_fields = KeyEvent.class.getFields();
 		for (int i = 0; i < vkey_fields.length; i++) {
@@ -83,7 +80,7 @@ final class AWTKeyboard extends Keyboard implements AWTEventListener {
 		return components.toArray(new Component[]{});
 	}
 
-	private final void resizeEventQueue(int size) {
+	private void resizeEventQueue(int size) {
 		processed_events = new Event[size];
 		for (int i = 0; i < processed_events.length; i++)
 			processed_events[i] = new Event();
@@ -94,19 +91,19 @@ final class AWTKeyboard extends Keyboard implements AWTEventListener {
 		resizeEventQueue(size);
 	}
 
-    public final synchronized void eventDispatched(AWTEvent event) {
+    public synchronized void eventDispatched(AWTEvent event) {
         if (event instanceof KeyEvent)
 			awt_events.add((KeyEvent)event);
 	}
 
-	public final synchronized void pollDevice() throws IOException {
+	public synchronized void pollDevice() throws IOException {
 		for (int i = 0; i < awt_events.size(); i++) {
 			processEvent(awt_events.get(i));
         }
 		awt_events.clear();
 	}
 
-	private final void processEvent(KeyEvent event) {
+	private void processEvent(KeyEvent event) {
 		Component.Identifier.Key key_id = AWTKeyMap.map(event);
 		if (key_id == null)
 			return;
@@ -126,13 +123,13 @@ final class AWTKeyboard extends Keyboard implements AWTEventListener {
 		}
     }
 
-	private final void addEvent(Key key, float value, long nanos) {
+	private void addEvent(Key key, float value, long nanos) {
 		key.setValue(value);
 		if (processed_events_index < processed_events.length)
 			processed_events[processed_events_index++].set(key, value, nanos);
 	}
 
-	protected final synchronized boolean getNextDeviceEvent(Event event) throws IOException {
+	protected synchronized boolean getNextDeviceEvent(Event event) throws IOException {
 		if (processed_events_index == 0)
 			return false;
 		processed_events_index--;
@@ -151,19 +148,19 @@ final class AWTKeyboard extends Keyboard implements AWTEventListener {
 			super(key_id.getName(), key_id);
 		}
 
-		public final void setValue(float value) {
+		public void setValue(float value) {
 			this.value = value;
 		}
 		
-		protected final float poll() {
+		protected float poll() {
 			return value;
 		}
 
-		public final boolean isAnalog() {
+		public boolean isAnalog() {
 			return false;
 		}
 
-		public final boolean isRelative() {
+		public boolean isRelative() {
 			return false;
 		}                    
 	}

@@ -72,9 +72,9 @@ public class WinTabContext {
 		}
 	}
 
-	private final static native int nGetNumberOfSupportedDevices();
-	private final static native long nOpen(long hwnd);
-	private final static native void nClose(long hCtx);
-	private final static native WinTabPacket[] nGetPackets(long hCtx);
+	private static native int nGetNumberOfSupportedDevices();
+	private static native long nOpen(long hwnd);
+	private static native void nClose(long hCtx);
+	private static native WinTabPacket[] nGetPackets(long hCtx);
 
 }

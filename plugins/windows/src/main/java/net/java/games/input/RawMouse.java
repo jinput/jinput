@@ -79,11 +79,11 @@ final class RawMouse extends Mouse {
 		this.device = device;
 	}
 
-	public final void pollDevice() throws IOException {
+	public void pollDevice() throws IOException {
 		device.pollMouse();
 	}
 
-	private final static boolean makeButtonEvent(RawMouseEvent mouse_event, Event event, Component button_component, int down_flag, int up_flag) {
+	private static boolean makeButtonEvent(RawMouseEvent mouse_event, Event event, Component button_component, int down_flag, int up_flag) {
 		if ((mouse_event.getButtonFlags() & down_flag) != 0) {
 			event.set(button_component, 1, mouse_event.getNanos());
 			return true;
@@ -94,7 +94,7 @@ final class RawMouse extends Mouse {
 			return false;
 	}
 
-	protected final synchronized boolean getNextDeviceEvent(Event event) throws IOException {
+	protected synchronized boolean getNextDeviceEvent(Event event) throws IOException {
 		while (true) {
 			switch (event_state) {
 				case EVENT_DONE:
@@ -157,7 +157,7 @@ final class RawMouse extends Mouse {
 		}
 	}
 	
-	protected final void setDeviceEventQueueSize(int size) throws IOException {
+	protected void setDeviceEventQueueSize(int size) throws IOException {
 		device.setBufferSize(size);
 	}
 
@@ -169,15 +169,15 @@ final class RawMouse extends Mouse {
 			this.device = device;
 		}
 
-		public final boolean isRelative() {
+		public boolean isRelative() {
 			return true;
 		}
 
-		public final boolean isAnalog() {
+		public boolean isAnalog() {
 			return true;
 		}
 
-		protected final float poll() throws IOException {
+		protected float poll() throws IOException {
 			if (getIdentifier() == Component.Identifier.Axis.X) {
 				return device.getRelativeX();
 			} else if (getIdentifier() == Component.Identifier.Axis.Y) {
@@ -199,15 +199,15 @@ final class RawMouse extends Mouse {
 			this.button_id = button_id;
 		}
 
-		protected final float poll() throws IOException {
+		protected float poll() throws IOException {
 			return device.getButtonState(button_id) ? 1 : 0;
 		}
 
-		public final boolean isAnalog() {
+		public boolean isAnalog() {
 			return false;
 		}
 
-		public final boolean isRelative() {
+		public boolean isRelative() {
 			return false;
 		}
 	}
