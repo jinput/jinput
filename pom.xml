@@ -120,7 +120,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-antrun-plugin</artifactId>
-                    <version>1.8</version>
+                    <version>3.1.0</version>
                 </plugin>
                 <plugin>
                     <groupId>com.googlecode.mavennatives</groupId>
