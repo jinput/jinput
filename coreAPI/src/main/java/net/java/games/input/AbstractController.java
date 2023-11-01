@@ -150,10 +150,8 @@ public abstract class AbstractController implements Controller {
     public final String getName() {
         return name;
     }
-    
-    /**
-     * Returns a non-localized string description of this controller.
-     */
+
+	@Override
     public String toString() {
         return name;
     }
