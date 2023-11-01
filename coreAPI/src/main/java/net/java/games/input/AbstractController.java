@@ -161,8 +161,9 @@ public abstract class AbstractController implements Controller {
 		return true;
 	}
 
-	// todo Document
+	// todo Document this method.
 	protected void pollDevice() throws IOException {
+		// Default implementation does nothing.
 	}
 
 	/**
@@ -260,6 +261,7 @@ public abstract class AbstractController implements Controller {
 	 * @throws IOException If an I/O error occurs.
 	 */
 	protected void setDeviceEventQueueSize(final int size) throws IOException {
+		// Default implementation does nothing.
 	}
 
 	/**
