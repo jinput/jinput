@@ -89,105 +89,10 @@ public abstract class AbstractController implements Controller {
 		}
 	}
 
-    /**
-     * Returns the controllers connected to make up this controller, or
-     * an empty array if this controller contains no child controllers.
-     * The objects in the array are returned in order of assignment priority
-     * (primary stick, secondary buttons, etc.).
-     */
-    public final Controller[] getControllers() {
-        return children;
-    }
-
-    /**
-     * Returns the components on this controller, in order of assignment priority.
-     * For example, the button controller on a mouse returns an array containing
-     * the primary or leftmost mouse button, followed by the secondary or
-     * rightmost mouse button (if present), followed by the middle mouse button
-     * (if present).
-     * The array returned is an empty array if this controller contains no components
-     * (such as a logical grouping of child controllers).
-     */
-    public final Component[] getComponents() {
-        return components;
-    }
-
-    /**
-     * Returns a single component based on its identifier, or null
-     * if no component with the specified type could be found.
-     */
-    public final Component getComponent(Component.Identifier id) {
-		return idToComponents.get(id);
-    }
-
-    /**
-     * Returns the rumblers for sending feedback to this controller, or an
-     * empty array if there are no rumblers on this controller.
-     */
-    public final Rumbler[] getRumblers() {
-        return rumblers;
-    }
-
-    /**
-     * Returns the port type for this Controller.
-     * @return PortType.UNKNOWN by default, can be overridden
-     */
-    public PortType getPortType() {
-        return PortType.UNKNOWN;
-    }
-
-    /**
-     * Returns the zero-based port number for this Controller.
-     * @return 0 by default, can be overridden
-     */
-    public int getPortNumber() {
-        return 0;
-    }
-
-    /**
-     * Returns a human-readable name for this Controller.
-     */
-    public final String getName() {
-        return name;
-    }
-
 	@Override
     public String toString() {
         return name;
     }
-    
-    /** Returns the type of the Controller.
-     */
-    public Type getType() {
-        return Type.UNKNOWN;
-    }
-
-    /**
-     * Creates a new EventQueue. Events in old queue are lost.
-     */
-	public final void setEventQueueSize(int size) {
-		try {
-			setDeviceEventQueueSize(size);
-			eventQueue = new EventQueue(size);
-		} catch (IOException e) {
-			ControllerEnvironment.log("Failed to create new event queue of size " + size + ": " + e);
-		}
-	}
-
-	/**
-	 * Plugins override this method to adjust their internal event queue size
-	 */
-	protected void setDeviceEventQueueSize(int size) throws IOException {
-	}
-
-	public final EventQueue getEventQueue() {
-		return eventQueue;
-	}
-
-	protected abstract boolean getNextDeviceEvent(Event event) throws IOException;
-
-	protected void pollDevice() throws IOException {
-	}
 
 	/**
 	 * Polls the device for new data and queues any new {@link Event}s.
@@ -244,6 +149,101 @@ public abstract class AbstractController implements Controller {
 		}
 
 		return true;
-	} 
-	
+	}
+
+	protected void pollDevice() throws IOException {
+	}
+
+	/**
+	 * Returns a single component based on its identifier, or null
+	 * if no component with the specified type could be found.
+	 */
+	public final Component getComponent(Component.Identifier id) {
+		return idToComponents.get(id);
+	}
+
+	/**
+	 * Returns the components on this controller, in order of assignment priority.
+	 * For example, the button controller on a mouse returns an array containing
+	 * the primary or leftmost mouse button, followed by the secondary or
+	 * rightmost mouse button (if present), followed by the middle mouse button
+	 * (if present).
+	 * The array returned is an empty array if this controller contains no components
+	 * (such as a logical grouping of child controllers).
+	 */
+	public final Component[] getComponents() {
+		return components;
+	}
+
+	/**
+	 * Returns the controllers connected to make up this controller, or
+	 * an empty array if this controller contains no child controllers.
+	 * The objects in the array are returned in order of assignment priority
+	 * (primary stick, secondary buttons, etc.).
+	 */
+	public final Controller[] getControllers() {
+		return children;
+	}
+
+	public final EventQueue getEventQueue() {
+		return eventQueue;
+	}
+
+	/**
+	 * Returns a human-readable name for this Controller.
+	 */
+	public final String getName() {
+		return name;
+	}
+
+	protected abstract boolean getNextDeviceEvent(Event event) throws IOException;
+
+	/**
+	 * Returns the zero-based port number for this Controller.
+	 * @return 0 by default, can be overridden
+	 */
+	public int getPortNumber() {
+		return 0;
+	}
+
+	/**
+	 * Returns the port type for this Controller.
+	 * @return PortType.UNKNOWN by default, can be overridden
+	 */
+	public PortType getPortType() {
+		return PortType.UNKNOWN;
+	}
+
+	/**
+	 * Returns the rumblers for sending feedback to this controller, or an
+	 * empty array if there are no rumblers on this controller.
+	 */
+	public final Rumbler[] getRumblers() {
+		return rumblers;
+	}
+
+	/** Returns the type of the Controller.
+	 */
+	public Type getType() {
+		return Type.UNKNOWN;
+	}
+
+
+	/**
+	 * Plugins override this method to adjust their internal event queue size
+	 */
+	protected void setDeviceEventQueueSize(int size) throws IOException {
+	}
+
+	/**
+	 * Creates a new EventQueue. Events in old queue are lost.
+	 */
+	public final void setEventQueueSize(int size) {
+		try {
+			setDeviceEventQueueSize(size);
+			eventQueue = new EventQueue(size);
+		} catch (IOException e) {
+			ControllerEnvironment.log("Failed to create new event queue of size " + size + ": " + e);
+		}
+	}
 } // class AbstractController
