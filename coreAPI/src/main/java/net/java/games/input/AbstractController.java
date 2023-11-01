@@ -68,7 +68,7 @@ public abstract class AbstractController implements Controller {
 	 */
 	private final Map<Component.Identifier, Component> id_to_components = new HashMap<>();
 
-	private EventQueue event_queue = new EventQueue(EVENT_QUEUE_DEPTH);
+	private EventQueue eventQueue = new EventQueue(EVENT_QUEUE_DEPTH);
     
     /**
      * Protected constructor for a controller containing the specified
@@ -168,7 +168,7 @@ public abstract class AbstractController implements Controller {
 	public final void setEventQueueSize(int size) {
 		try {
 			setDeviceEventQueueSize(size);
-			event_queue = new EventQueue(size);
+			eventQueue = new EventQueue(size);
 		} catch (IOException e) {
 			ControllerEnvironment.log("Failed to create new event queue of size " + size + ": " + e);
 		}
@@ -181,7 +181,7 @@ public abstract class AbstractController implements Controller {
 	}
 
 	public final EventQueue getEventQueue() {
-		return event_queue;
+		return eventQueue;
 	}
 
 	protected abstract boolean getNextDeviceEvent(Event event) throws IOException;
@@ -238,8 +238,8 @@ public abstract class AbstractController implements Controller {
 				component.setEventValue(value);
 			}
 
-			if (!event_queue.isFull()) {
-				event_queue.add(event);
+			if (!eventQueue.isFull()) {
+				eventQueue.add(event);
 			}
 		}
 
