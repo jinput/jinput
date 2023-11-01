@@ -51,10 +51,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
-import net.java.games.input.Component;
-import net.java.games.input.Controller;
-import net.java.games.input.ControllerEnvironment;
-
 public class ControllerReadTest extends JFrame{
 	private static final long serialVersionUID = -7129976919159465311L;
 
@@ -255,7 +251,7 @@ public class ControllerReadTest extends JFrame{
 	List<ControllerWindow> controllers = new ArrayList<>();
 
 	public ControllerReadTest() {
-		super("Controller Read Test. Version: " + Version.getVersion());
+		super("Controller Read Test. PomProperties: " + PomProperties.getVersion());
 		ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment();
 		Controller[] ca = ce.getControllers();
 		for(int i =0;i<ca.length;i++){

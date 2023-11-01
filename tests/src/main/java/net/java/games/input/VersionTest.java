@@ -28,7 +28,7 @@ package net.java.games.input;
 public class VersionTest {
 
 	public static void main(String[] args) {
-		System.out.println("JInput version: " + Version.getVersion());
+		System.out.println("JInput version: " + PomProperties.getVersion());
 	}
 
 }

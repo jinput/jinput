@@ -48,13 +48,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
-import net.java.games.input.Component;
-import net.java.games.input.Controller;
-import net.java.games.input.ControllerEnvironment;
-import net.java.games.input.EventQueue;
-import net.java.games.input.Event;
-import net.java.games.input.Version;
-
 public class ControllerEventTest extends JFrame{
 	private static final long serialVersionUID = -8266185848160199092L;
 
@@ -252,7 +245,7 @@ public class ControllerEventTest extends JFrame{
 	List<ControllerWindow> controllers = new ArrayList<>();
 
 	public ControllerEventTest() {
-		super("Controller Event Test. Version: " + Version.getVersion());
+		super("Controller Event Test. PomProperties: " + PomProperties.getVersion());
 		ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment();
 		Controller[] ca = ce.getControllers();
 		for(int i =0;i<ca.length;i++){
