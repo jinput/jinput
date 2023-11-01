@@ -66,7 +66,7 @@ public abstract class AbstractController implements Controller {
 	/**
 	 * Map from Component.Identifiers to Components
 	 */
-	private final Map<Component.Identifier, Component> id_to_components = new HashMap<>();
+	private final Map<Component.Identifier, Component> idToComponents = new HashMap<>();
 
 	private EventQueue eventQueue = new EventQueue(EVENT_QUEUE_DEPTH);
     
@@ -85,7 +85,7 @@ public abstract class AbstractController implements Controller {
         this.rumblers = rumblers;
 		// process from last to first to let earlier listed Components get higher priority
 		for (int i = components.length - 1; i >= 0; i--) {
-			id_to_components.put(components[i].getIdentifier(), components[i]);
+			idToComponents.put(components[i].getIdentifier(), components[i]);
 		}
 	}
 
@@ -117,7 +117,7 @@ public abstract class AbstractController implements Controller {
      * if no component with the specified type could be found.
      */
     public final Component getComponent(Component.Identifier id) {
-		return id_to_components.get(id);
+		return idToComponents.get(id);
     }
 
     /**
