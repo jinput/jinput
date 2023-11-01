@@ -1,4 +1,5 @@
-import net.java.games.input.PomProperties;
+package net.java.games.input;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
