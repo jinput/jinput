@@ -43,8 +43,6 @@ import java.util.Map;
 public abstract class AbstractController implements Controller {
 	final static int EVENT_QUEUE_DEPTH = 32;
 	
-	private final static Event event = new Event();
-	
     /**
      * Human-readable name for this Controller
      */
@@ -193,40 +191,61 @@ public abstract class AbstractController implements Controller {
 	protected void pollDevice() throws IOException {
 	}
 
-	/* poll() is synchronized to protect the static event */
-	public synchronized boolean poll() {
-		Component[] components = getComponents();
+	/**
+	 * Polls the device for new data and queues any new {@link Event}s.
+	 *
+	 * @return Whether the device was successfully polled.
+	 */
+	public boolean poll() {
 		try {
 			pollDevice();
-			for (int i = 0; i < components.length; i++) {
-				AbstractComponent component = (AbstractComponent)components[i];
-				if (component.isRelative()) {
-					component.setPollData(0);
-				} else {
-					// Let the component poll itself lazily
-					component.resetHasPolled();
-				}
-			}
-			while (getNextDeviceEvent(event)) {
-				AbstractComponent component = (AbstractComponent)event.getComponent();
-				float value = event.getValue();
-				if (component.isRelative()) {
-					if (value == 0)
-						continue;
-					component.setPollData(component.getPollData() + value);
-				} else {
-					if (value == component.getEventValue())
-						continue;
-					component.setEventValue(value);
-				}
-				if (!event_queue.isFull())
-					event_queue.add(event);
-			}
-			return true;
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			ControllerEnvironment.log("Failed to poll device: " + e.getMessage());
 			return false;
 		}
+
+		for (final AbstractComponent component : (AbstractComponent[]) getComponents()) {
+			if (component.isRelative()) {
+				component.setPollData(0);
+			} else {
+				component.resetHasPolled(); // Let the component poll itself lazily
+			}
+		}
+
+		final Event event = new Event();
+		while (true) {
+			try {
+				if (!getNextDeviceEvent(event)) {
+					break;
+				}
+			} catch (final IOException e) {
+				ControllerEnvironment.log("Failed to poll device: " + e.getMessage());
+				return false;
+			}
+
+			final AbstractComponent component = (AbstractComponent) event.getComponent();
+			final float value = event.getValue();
+
+			if (component.isRelative()) {
+				if (value == 0) {
+					continue;
+				}
+
+				component.setPollData(component.getPollData() + value);
+			} else {
+				if (value == component.getEventValue()) {
+					continue;
+				}
+
+				component.setEventValue(value);
+			}
+
+			if (!event_queue.isFull()) {
+				event_queue.add(event);
+			}
+		}
+
+		return true;
 	} 
 	
 } // class AbstractController
