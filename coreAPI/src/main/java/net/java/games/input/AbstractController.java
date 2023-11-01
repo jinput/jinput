@@ -246,4 +246,4 @@ public abstract class AbstractController implements Controller {
 			ControllerEnvironment.log("Failed to create new event queue of size " + size + ": " + e);
 		}
 	}
-} // class AbstractController
+}
