@@ -41,48 +41,58 @@ import java.util.Map;
  * contains a fixed number of axes, controllers, and rumblers.
  */
 public abstract class AbstractController implements Controller {
+	/** The default maximum number of {@link Event}s that can be stored in the {@link EventQueue}. */
 	final static int EVENT_QUEUE_DEPTH = 32;
 	
-    /**
-     * Human-readable name for this Controller
-     */
+    /** Human-readable name for this {@code Controller}. */
     private final String name;
-    
-    /**
-     * Array of components
-     */
-    private final Component[] components;
-    
-    /**
-     * Array of child controllers
-     */
-    private final Controller[] children;
-    
-    /**
-     * Array of rumblers
-     */
-    private final Rumbler[] rumblers;
 
 	/**
-	 * Map from Component.Identifiers to Components
+	 * <p>The set of {@link Component}s that make up this {@link Controller}, in order of assignment priority.</p>
+	 *
+	 * <p>
+	 *     For example, the button {@link Controller} on a mouse may return the following {@link Component}s:
+	 * </p>
+	 *
+	 * <ol>
+	 *     <li>The primary or left-most button.</li>
+	 *     <li>The secondary or right-most button, if present.</li>
+	 *     <li>The middle mouse button, if present.</li>
+	 * </ol>
 	 */
+    private final Component[] components;
+
+	/** The set of connected {@link Controller}s which comprise this {@link Controller}, in order of assignment priority. */
+    private final Controller[] controllers;
+
+    /** The set of {@link Rumbler}s for sending feedback to this {@link Controller}. */
+    private final Rumbler[] rumblers;
+
+	/** A mapping of {@link Component.Identifier}s to {@link Component}s. */
 	private final Map<Component.Identifier, Component> idToComponents = new HashMap<>();
 
+	/**
+	 * <p>The set of {@link Event}s polled from this controller.</p>
+	 *
+	 * <p>See {@link EventQueue} for more information.</p>
+	 */
 	private EventQueue eventQueue = new EventQueue(EVENT_QUEUE_DEPTH);
     
     /**
-     * Protected constructor for a controller containing the specified
-     * axes, child controllers, and rumblers
-     * @param name name for the controller
-     * @param components components for the controller
-     * @param children child controllers for the controller
-     * @param rumblers rumblers for the controller
+	 * Constructs a new {@link AbstractController} with the specified name, {@link Component}s, {@link Controller}s, and
+	 * {@link Rumbler}s.
+	 *
+	 * @param name Human-readable name for the {@link AbstractController}.
+	 * @param components The set of {@link Component}s which comprise this {@link AbstractController}.
+	 * @param controllers The set of {@link Controller}s which comprise this {@link AbstractController}.
+	 * @param rumblers The set of {@link Rumbler}s for sending feedback to this {@link AbstractController}.
      */
-    protected AbstractController(String name, Component[] components, Controller[] children, Rumbler[] rumblers) {
+    protected AbstractController(final String name, final Component[] components, final Controller[] controllers, final Rumbler[] rumblers) {
         this.name = name;
         this.components = components;
-        this.children = children;
+        this.controllers = controllers;
         this.rumblers = rumblers;
+
 		// process from last to first to let earlier listed Components get higher priority
 		for (int i = components.length - 1; i >= 0; i--) {
 			idToComponents.put(components[i].getIdentifier(), components[i]);
@@ -151,55 +161,62 @@ public abstract class AbstractController implements Controller {
 		return true;
 	}
 
+	// todo Document
 	protected void pollDevice() throws IOException {
 	}
 
 	/**
-	 * Returns a single component based on its identifier, or null
-	 * if no component with the specified type could be found.
+	 * Retrieves the {@link Component} associated with the specified {@link Component.Identifier}.
+	 *
+	 * @param id {@link Component.Identifier} of the {@link Component} to retrieve.
+	 * @return {@link Component} associated with the specified {@link Component.Identifier}, or null if no such {@link Component} exists.
 	 */
-	public final Component getComponent(Component.Identifier id) {
+	public final Component getComponent(final Component.Identifier id) {
 		return idToComponents.get(id);
 	}
 
 	/**
-	 * Returns the components on this controller, in order of assignment priority.
-	 * For example, the button controller on a mouse returns an array containing
-	 * the primary or leftmost mouse button, followed by the secondary or
-	 * rightmost mouse button (if present), followed by the middle mouse button
-	 * (if present).
-	 * The array returned is an empty array if this controller contains no components
-	 * (such as a logical grouping of child controllers).
+	 * Retrieves the set of {@link Component}s which comprise this controller.
+	 *
+	 * @return The set of {@link Component}s.
 	 */
 	public final Component[] getComponents() {
 		return components;
 	}
 
 	/**
-	 * Returns the controllers connected to make up this controller, or
-	 * an empty array if this controller contains no child controllers.
-	 * The objects in the array are returned in order of assignment priority
-	 * (primary stick, secondary buttons, etc.).
+	 * Retrieves the set of {@link Controller}s which comprise this controller.
+	 *
+	 * @return The set of {@link Controller}s.
 	 */
 	public final Controller[] getControllers() {
-		return children;
+		return controllers;
 	}
 
+	/**
+	 * Retrieves the {@link EventQueue} for this {@link Controller}.
+	 *
+	 * @return {@link EventQueue} for this {@link Controller}.
+	 */
 	public final EventQueue getEventQueue() {
 		return eventQueue;
 	}
 
 	/**
-	 * Returns a human-readable name for this Controller.
+	 * Retrieves the human-readable name of this {@link Controller}.
+	 *
+	 * @return Human-readable name of this {@link Controller}.
 	 */
 	public final String getName() {
 		return name;
 	}
 
-	protected abstract boolean getNextDeviceEvent(Event event) throws IOException;
+	// todo Document
+	protected abstract boolean getNextDeviceEvent(final Event event) throws IOException;
 
 	/**
-	 * Returns the zero-based port number for this Controller.
+	 * Returns the zero-based port number for this {@link Controller}.
+	 *
 	 * @return 0 by default, can be overridden
 	 */
 	public int getPortNumber() {
@@ -207,38 +224,51 @@ public abstract class AbstractController implements Controller {
 	}
 
 	/**
-	 * Returns the port type for this Controller.
-	 * @return PortType.UNKNOWN by default, can be overridden
+	 * Retrieves the {@link PortType} of this {@link Controller}.
+	 *
+	 * @return {@link PortType} of this {@link Controller}.
 	 */
 	public PortType getPortType() {
 		return PortType.UNKNOWN;
 	}
 
 	/**
-	 * Returns the rumblers for sending feedback to this controller, or an
-	 * empty array if there are no rumblers on this controller.
+	 * Retrieves the set of {@link Rumbler}s for sending feedback to this controller.
+	 *
+	 * @return The set of {@link Rumbler}s.
 	 */
 	public final Rumbler[] getRumblers() {
 		return rumblers;
 	}
 
-	/** Returns the type of the Controller.
+	/**
+	 * Retrieves the {@link Type} of this {@link Controller}.
+	 *
+	 * @return {@link Type} of this {@link Controller}.
 	 */
 	public Type getType() {
 		return Type.UNKNOWN;
 	}
 
+	/**
+	 * <p>Sets the size of the device's internal event queue.</p>
+	 *
+	 * <p>Plugins must implement this method to adjust their internal {@link EventQueue} size.</p>
+	 *
+	 * @param size Maximum number of {@link Event}s that can be stored in the queue.
+	 *
+	 * @throws IOException If an I/O error occurs.
+	 */
+	protected abstract void setDeviceEventQueueSize(final int size) throws IOException;
 
 	/**
-	 * Plugins override this method to adjust their internal event queue size
+	 * <p>Creates a new {@link EventQueue}.</p>
+	 *
+	 * <p>Events in the old queue are discarded.</p>
+	 *
+	 * @param size Maximum number of {@link Event}s that can be stored in the new queue.
 	 */
-	protected void setDeviceEventQueueSize(int size) throws IOException {
-	}
-
-	/**
-	 * Creates a new EventQueue. Events in old queue are lost.
-	 */
-	public final void setEventQueueSize(int size) {
+	public final void setEventQueueSize(final int size) {
 		try {
 			setDeviceEventQueueSize(size);
 			eventQueue = new EventQueue(size);
