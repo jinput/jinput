@@ -259,7 +259,8 @@ public abstract class AbstractController implements Controller {
 	 *
 	 * @throws IOException If an I/O error occurs.
 	 */
-	protected abstract void setDeviceEventQueueSize(final int size) throws IOException;
+	protected void setDeviceEventQueueSize(final int size) throws IOException {
+	}
 
 	/**
 	 * <p>Creates a new {@link EventQueue}.</p>
