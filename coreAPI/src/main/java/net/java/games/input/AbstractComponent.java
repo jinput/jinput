@@ -73,8 +73,10 @@ public abstract class AbstractComponent implements Component {
         return name;
     }
 
+    // todo Document this.
     protected abstract float poll() throws IOException;
 
+    /** Sets the state of {@code hasPolled} to {@code false}. */
     final synchronized void resetHasPolled() {
         hasPolled = false;
     }
@@ -149,11 +151,12 @@ public abstract class AbstractComponent implements Component {
         return pollData;
     }
 
-    // Document this after, eventValue has been defined.
+    // todo Document this after, eventValue has been defined.
     final void setEventValue(final float eventValue) {
         this.eventValue = eventValue;
     }
 
+    // todo Document this.
     final synchronized void setPollData(final float value) {
         this.pollData = value;
     }
