@@ -63,7 +63,7 @@ public abstract class AbstractComponent implements Component {
      * Protected constructor
      * @param name A name for the axis
      */
-    protected AbstractComponent(String name, Identifier id) {
+    protected AbstractComponent(final String name, final Identifier id) {
         this.name = name;
         this.id = id;
     }
@@ -150,11 +150,11 @@ public abstract class AbstractComponent implements Component {
     }
 
     // Document this after, eventValue has been defined.
-    final void setEventValue(float event_value) {
+    final void setEventValue(final float event_value) {
         this.eventValue = event_value;
     }
 
-    final void setPollData(float value) {
+    final void setPollData(final float value) {
         this.value = value;
     }
 }
