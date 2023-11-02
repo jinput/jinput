@@ -57,8 +57,6 @@
         <module>coreAPI</module>
         <module>plugins</module>
         <module>applet</module>
-        <module>uberjar</module>
-        <module>examples</module>
         <module>tests</module>
     </modules>
 
