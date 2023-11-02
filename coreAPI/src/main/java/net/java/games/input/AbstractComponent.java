@@ -44,16 +44,19 @@ import java.io.IOException;
  * Skeleton implementation of a named axis.
  */
 public abstract class AbstractComponent implements Component {
-
-    /**
-     * Human-readable name for this Axis
-     */
+    /** Human-readable name for this {@code Component}. */
     private final String name;
-    
+
+    /** The type or identifier of this {@code Component}. */
     private final Identifier id;
 
+    /** Whether this {@link Component} has been polled since the last time it was reset. */
 	private boolean hasPolled;
+
+    /** The value of this {@link Component}, from when it was last polled. */
 	private float value;
+
+    // todo Document this.
 	private float eventValue;
     
     /**
@@ -77,48 +80,62 @@ public abstract class AbstractComponent implements Component {
     }
 
     /**
-     * Returns whether or not the axis is analog, or false if it is digital.
-     * @return false by default, can be overridden
+     * Determines whether this {@code Component} is analog or digital.
+     *
+     * @return {@code true} if this {@code Component} is analog; {@code false} otherwise.
      */
     public boolean isAnalog() {
         return false;
     }
 
     /**
-     * Returns the suggested dead zone for this axis.  Dead zone is the
-     * amount polled data can vary before considered a significant change
-     * in value.  An application can safely ignore changes less than this
-     * value in the positive or negative direction.
-     * @return 0.0f by default, can be overridden
+     * <p>Retrieves the <em>suggested</em> dead zone for this {@code Component}.</p>
+     *
+     * <p>
+     *     A dead zone is the amount polled data can vary before considered a significant change in value. Any changes
+     *     less than this value, in the positive or negative direction, can be safely ignored.
+     * </p>
+     *
+     * @return The suggested dead zone for this {@code Component}.
      */
     public float getDeadZone() {
         return 0.0f;
     }
 
+    // todo Document this, after eventValue has been defined.
     final float getEventValue() {
         return eventValue;
     }
-        
+
     /**
-     * Returns the type or identifier of the axis.
+     * Retrieves the type or identifier of this {@link Component}.
+     *
+     * @return Type or identifier of this {@link Component}.
      */
     public Identifier getIdentifier() {
         return id;
     }
 
     /**
-     * Returns a human-readable name for this axis.
+     * Retrieves the human-readable name for this {@link Component}.
+     *
+     * @return Human-readable name for this {@link Component}.
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Returns the data from the last time the control has been polled.
-     * If this axis is a button, the value returned will be either 0.0f or 1.0f.
-     * If this axis is normalised, the value returned will be between -1.0f and
-     * 1.0f.
-     * @return The data from the last time the control has been polled.
+     * <p>Retrieves the value of this {@link Component}, from the last time it was polled.</p>
+     *
+     * <p>If this {@link Component} is a button, then the value will be either {@code 0.0f} or {@code 1.0f}.</p>
+     *
+     * <p>
+     *     If this {@link Component} is normalized, then the value will be between {@code -1.0f} and {@code 1.0f}
+     *     (inclusive).
+     * </p>
+     *
+     * @return The value of this {@link Component}, from the last time it was polled.
      */
     public final float getPollData() {
 		if (!hasPolled && !isRelative()) {
@@ -132,6 +149,7 @@ public abstract class AbstractComponent implements Component {
         return value;
     }
 
+    // Document this after, eventValue has been defined.
     final void setEventValue(float event_value) {
         this.eventValue = event_value;
     }
@@ -139,5 +157,4 @@ public abstract class AbstractComponent implements Component {
     final void setPollData(float value) {
         this.value = value;
     }
-    
 }
