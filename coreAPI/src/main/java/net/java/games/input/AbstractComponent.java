@@ -75,7 +75,7 @@ public abstract class AbstractComponent implements Component {
 
     protected abstract float poll() throws IOException;
 
-    final void resetHasPolled() {
+    final synchronized void resetHasPolled() {
         hasPolled = false;
     }
 
@@ -137,7 +137,7 @@ public abstract class AbstractComponent implements Component {
      *
      * @return The value of this {@link Component}, from the last time it was polled.
      */
-    public final float getPollData() {
+    public synchronized final float getPollData() {
 		if (!hasPolled && !isRelative()) {
 			hasPolled = true;
 			try {
@@ -154,7 +154,7 @@ public abstract class AbstractComponent implements Component {
         this.eventValue = eventValue;
     }
 
-    final void setPollData(final float value) {
+    final synchronized void setPollData(final float value) {
         this.value = value;
     }
 }
