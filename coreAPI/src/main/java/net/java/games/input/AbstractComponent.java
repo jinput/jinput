@@ -52,7 +52,7 @@ public abstract class AbstractComponent implements Component {
     
     private final Identifier id;
 
-	private boolean has_polled;
+	private boolean hasPolled;
 	private float value;
 	private float event_value;
     
@@ -73,7 +73,7 @@ public abstract class AbstractComponent implements Component {
     protected abstract float poll() throws IOException;
 
     final void resetHasPolled() {
-        has_polled = false;
+        hasPolled = false;
     }
 
     /**
@@ -121,8 +121,8 @@ public abstract class AbstractComponent implements Component {
      * @return The data from the last time the control has been polled.
      */
     public final float getPollData() {
-		if (!has_polled && !isRelative()) {
-			has_polled = true;
+		if (!hasPolled && !isRelative()) {
+			hasPolled = true;
 			try {
 				setPollData(poll());
 			} catch (IOException e) {
