@@ -4,7 +4,7 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -12,17 +12,12 @@ jobs:
       - name: Setup JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
-          java-version: 8
+          distribution: 'temurin'
+          java-version: 11
           java-package: jdk
           architecture: x64
 
-      - name: Cache Maven Packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
+      - uses: ilammy/msvc-dev-cmd@v1
 
       - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots -Dmaven.javadoc.skip=true verify --file pom.xml --projects applet,coreAPI,plugins,tests --also-make install
+        run: mvn clean install
