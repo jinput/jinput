@@ -150,8 +150,8 @@ public abstract class AbstractComponent implements Component {
     }
 
     // Document this after, eventValue has been defined.
-    final void setEventValue(final float event_value) {
-        this.eventValue = event_value;
+    final void setEventValue(final float eventValue) {
+        this.eventValue = eventValue;
     }
 
     final void setPollData(final float value) {
