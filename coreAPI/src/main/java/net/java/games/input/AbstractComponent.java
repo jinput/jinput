@@ -65,9 +65,7 @@ public abstract class AbstractComponent implements Component {
         this.id = id;
     }
 
-    /**
-     * Returns a non-localized string description of this axis.
-     */
+    @Override
     public String toString() {
         return name;
     }
