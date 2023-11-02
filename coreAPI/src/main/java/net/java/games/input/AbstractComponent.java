@@ -142,4 +142,4 @@ public abstract class AbstractComponent implements Component {
         this.value = value;
     }
     
-} // AbstractAxis
+}
