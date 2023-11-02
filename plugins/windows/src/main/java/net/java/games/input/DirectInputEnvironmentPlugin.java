@@ -46,6 +46,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /** DirectInput implementation of controller environment
  * @author martak
