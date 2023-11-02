@@ -64,14 +64,20 @@ public abstract class AbstractComponent implements Component {
         this.name = name;
         this.id = id;
     }
-        
+
     /**
-     * Returns the type or identifier of the axis.
+     * Returns a non-localized string description of this axis.
      */
-    public Identifier getIdentifier() {
-        return id;
+    public String toString() {
+        return name;
     }
-    
+
+    protected abstract float poll() throws IOException;
+
+    final void resetHasPolled() {
+        has_polled = false;
+    }
+
     /**
      * Returns whether or not the axis is analog, or false if it is digital.
      * @return false by default, can be overridden
@@ -89,6 +95,24 @@ public abstract class AbstractComponent implements Component {
      */
     public float getDeadZone() {
         return 0.0f;
+    }
+
+    final float getEventValue() {
+        return event_value;
+    }
+        
+    /**
+     * Returns the type or identifier of the axis.
+     */
+    public Identifier getIdentifier() {
+        return id;
+    }
+
+    /**
+     * Returns a human-readable name for this axis.
+     */
+    public String getName() {
+        return name;
     }
 
     /**
@@ -110,36 +134,12 @@ public abstract class AbstractComponent implements Component {
         return value;
     }
 
-	final void resetHasPolled() {
-		has_polled = false;
-	}
+    final void setEventValue(float event_value) {
+        this.event_value = event_value;
+    }
 
     final void setPollData(float value) {
         this.value = value;
     }
- 
-    final float getEventValue() {
-        return event_value;
-    }
-
-    final void setEventValue(float event_value) {
-        this.event_value = event_value;
-    }
- 
-    /**
-     * Returns a human-readable name for this axis.
-     */
-    public String getName() {
-        return name;
-    }
-    
-    /**
-     * Returns a non-localized string description of this axis.
-     */
-    public String toString() {
-        return name;
-    }
-
-	protected abstract float poll() throws IOException;
     
 } // AbstractAxis
