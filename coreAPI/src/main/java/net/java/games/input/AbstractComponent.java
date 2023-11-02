@@ -54,7 +54,7 @@ public abstract class AbstractComponent implements Component {
 	private boolean hasPolled;
 
     /** The value of this {@link Component}, from when it was last polled. */
-	private float value;
+	private float pollData;
 
     // todo Document this.
 	private float eventValue;
@@ -146,7 +146,7 @@ public abstract class AbstractComponent implements Component {
 				ControllerEnvironment.log("Failed to poll component: " + e);
 			}
 		}
-        return value;
+        return pollData;
     }
 
     // Document this after, eventValue has been defined.
@@ -155,6 +155,6 @@ public abstract class AbstractComponent implements Component {
     }
 
     final synchronized void setPollData(final float value) {
-        this.value = value;
+        this.pollData = value;
     }
 }
