@@ -54,7 +54,7 @@ public abstract class AbstractComponent implements Component {
 
 	private boolean hasPolled;
 	private float value;
-	private float event_value;
+	private float eventValue;
     
     /**
      * Protected constructor
@@ -96,7 +96,7 @@ public abstract class AbstractComponent implements Component {
     }
 
     final float getEventValue() {
-        return event_value;
+        return eventValue;
     }
         
     /**
@@ -133,7 +133,7 @@ public abstract class AbstractComponent implements Component {
     }
 
     final void setEventValue(float event_value) {
-        this.event_value = event_value;
+        this.eventValue = event_value;
     }
 
     final void setPollData(float value) {
