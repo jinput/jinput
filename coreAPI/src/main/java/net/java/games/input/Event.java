@@ -54,6 +54,11 @@ public final class Event {
 	 */
 	private long nanos;
 
+	@Override
+	public String toString() {
+		return "Event: component = " + component + " | value = " + value;
+	}
+
     public void set(Event other) {
 		this.set(other.getComponent(), other.getValue(), other.getNanos());
     }
@@ -84,9 +89,5 @@ public final class Event {
 	 */
 	public long getNanos() {
 		return nanos;
-	}
-
-	public String toString() {
-		return "Event: component = " + component + " | value = " + value;
 	}
 }
