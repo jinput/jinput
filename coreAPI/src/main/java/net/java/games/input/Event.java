@@ -38,6 +38,8 @@
  *****************************************************************************/
 package net.java.games.input;
 
+import java.util.Objects;
+
 public final class Event {
 	/** {@link Component} that generated this {@code Event}. */
     private Component component;
@@ -59,15 +61,27 @@ public final class Event {
 		return "Event: component = " + component + " | value = " + value;
 	}
 
-    public void set(final Event other) {
-		this.set(other.getComponent(), other.getValue(), other.getNanos());
-    }
-
+	/**
+	 * Sets the state of this {@code Event}.
+	 *
+	 * @param component {@link Component} that generated this {@code Event}.
+	 * @param value todo Document
+	 * @param nanos Time elapsed since the last {@code Event}, in nanoseconds.
+	 */
     public void set(final Component component, final float value, final long nanos) {
-		this.component = component;
-		this.value = value;
-		this.nanos = nanos;
-    }
+		setComponent(component);
+		setValue(value);
+		setNanos(nanos);
+	}
+
+	/**
+	 * Sets the state of this {@code Event} to the state of the specified {@code Event}.
+	 *
+	 * @param other {@code Event} to copy the state from.
+	 */
+	public void set(final Event other) {
+		this.set(other.getComponent(), other.getValue(), other.getNanos());
+	}
 
 	/**
 	 * Retrieves the {@link Component} that generated this {@code Event}.
@@ -89,5 +103,31 @@ public final class Event {
 	 */
 	public long getNanos() {
 		return nanos;
+	}
+
+	/**
+	 * Sets the {@link Component} that generated this {@code Event}.
+	 *
+	 * @param component {@link Component} that generated this {@code Event}.
+	 *
+	 * @throws NullPointerException If {@code component} is {@code null}.
+	 */
+	public void setComponent(final Component component) {
+		Objects.requireNonNull(component);
+		this.component = component;
+	}
+
+	/**
+	 * Sets the time elapsed since the last {@code Event}, in nanoseconds.
+	 *
+	 * @param nanos The time elapsed since the last {@code Event}, in nanoseconds.
+	 */
+	public void setNanos(final long nanos) {
+		this.nanos = nanos;
+	}
+
+	// todo Document
+	public void setValue(final float value) {
+		this.value = value;
 	}
 }
