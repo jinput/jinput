@@ -15,6 +15,7 @@ pipeline {
                 jdk 'OpenJDK 9'
             }
             steps {
+                sh 'echo JAVA_HOME=$JAVA_HOME'
                 sh 'mvn -B -Dmaven.antrun.skip -Dmaven.source.skip -Dmaven.test.skip -DskipTests -DskipITs -pl coreAPI/ package'
             }
             post {
