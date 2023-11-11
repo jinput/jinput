@@ -59,11 +59,11 @@ public final class Event {
 		return "Event: component = " + component + " | value = " + value;
 	}
 
-    public void set(Event other) {
+    public void set(final Event other) {
 		this.set(other.getComponent(), other.getValue(), other.getNanos());
     }
 
-    public void set(Component component, float value, long nanos) {
+    public void set(final Component component, final float value, final long nanos) {
 		this.component = component;
 		this.value = value;
 		this.nanos = nanos;
