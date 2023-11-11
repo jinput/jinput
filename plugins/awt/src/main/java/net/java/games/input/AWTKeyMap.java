@@ -32,7 +32,7 @@ import java.awt.event.KeyEvent;
  * @author elias
  */
 final class AWTKeyMap {
-	public final static Component.Identifier.Key mapKeyCode(int key_code) {
+	public static Component.Identifier.Key mapKeyCode(int key_code) {
 		switch (key_code) {
 			case KeyEvent.VK_0:
 				return Component.Identifier.Key._0;
@@ -247,7 +247,7 @@ final class AWTKeyMap {
 		}
 	}
 
-	public final static Component.Identifier.Key map(KeyEvent event) {
+	public static Component.Identifier.Key map(KeyEvent event) {
 		int key_code = event.getKeyCode();
 		int key_location = event.getKeyLocation();
 		switch (key_code) {

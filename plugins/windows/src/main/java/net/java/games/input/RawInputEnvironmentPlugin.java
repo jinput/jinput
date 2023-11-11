@@ -38,14 +38,14 @@
  *****************************************************************************/
 package net.java.games.input;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.List;
-import java.util.ArrayList;
+import net.java.games.util.plugins.Plugin;
+
 import java.io.File;
 import java.io.IOException;
-
-import net.java.games.util.plugins.Plugin;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.ArrayList;
+import java.util.List;
 
 /** DirectInput implementation of controller environment
  * @author martak
@@ -117,11 +117,11 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 		this.controllers = controllers;
 	}
 
-	public final Controller[] getControllers() {
+	public Controller[] getControllers() {
 		return controllers;
 	}
 
-	private final static SetupAPIDevice lookupSetupAPIDevice(String device_name, List<SetupAPIDevice> setupapi_devices) {
+	private static SetupAPIDevice lookupSetupAPIDevice(String device_name, List<SetupAPIDevice> setupapi_devices) {
 		/* First, replace # with / in the device name, since that
 		 * seems to be the format in raw input device name
 		 */
@@ -134,7 +134,7 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 		return null;
 	}
 	
-	private final static void createControllersFromDevices(RawInputEventQueue queue, List<Controller> controllers, List<RawDevice> devices, List<SetupAPIDevice> setupapi_devices) throws IOException {
+	private static void createControllersFromDevices(RawInputEventQueue queue, List<Controller> controllers, List<RawDevice> devices, List<SetupAPIDevice> setupapi_devices) throws IOException {
 		List<RawDevice> active_devices = new ArrayList<>();
 		for (int i = 0; i < devices.size(); i++) {
 			RawDevice device = devices.get(i);
@@ -155,9 +155,9 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 		queue.start(active_devices);
 	}
 
-	private final static native void enumerateDevices(RawInputEventQueue queue, List<RawDevice> devices) throws IOException;
+	private static native void enumerateDevices(RawInputEventQueue queue, List<RawDevice> devices) throws IOException;
 
-	private final Controller[] enumControllers(RawInputEventQueue queue) throws IOException {
+	private Controller[] enumControllers(RawInputEventQueue queue) throws IOException {
 		List<Controller> controllers = new ArrayList<>();
 		List<RawDevice> devices = new ArrayList<>();
 		enumerateDevices(queue, devices);
@@ -191,15 +191,15 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 	 * descriptive names and at the same time filter out the unwanted
 	 * RDP devices.
 	 */
-	private final static List<SetupAPIDevice> enumSetupAPIDevices() throws IOException {
+	private static List<SetupAPIDevice> enumSetupAPIDevices() throws IOException {
 		List<SetupAPIDevice> devices = new ArrayList<>();
 		nEnumSetupAPIDevices(getKeyboardClassGUID(), devices);
 		nEnumSetupAPIDevices(getMouseClassGUID(), devices);
 		return devices;
 	}
-	private final static native void nEnumSetupAPIDevices(byte[] guid, List<SetupAPIDevice> devices) throws IOException;
+	private static native void nEnumSetupAPIDevices(byte[] guid, List<SetupAPIDevice> devices) throws IOException;
 
-	private final static native byte[] getKeyboardClassGUID();
-	private final static native byte[] getMouseClassGUID();
+	private static native byte[] getKeyboardClassGUID();
+	private static native byte[] getMouseClassGUID();
 
 } // class DirectInputEnvironment

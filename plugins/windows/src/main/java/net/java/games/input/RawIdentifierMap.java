@@ -327,7 +327,7 @@ final class RawIdentifierMap {
 	public final static int VK_PA1            = 0xFD;
 	public final static int VK_OEM_CLEAR      = 0xFE;
 
-	public final static Component.Identifier.Key mapVKey(int vkey) {
+	public static Component.Identifier.Key mapVKey(int vkey) {
 		switch (vkey) {
 			case VK_ESCAPE:
 				return Component.Identifier.Key.ESCAPE;

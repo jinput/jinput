@@ -48,19 +48,19 @@ public interface Component {
     /**
      * Returns the identifier of the axis.
      */
-    public abstract Identifier getIdentifier();
+    Identifier getIdentifier();
 
     /**
      * Returns <code>true</code> if data returned from <code>poll</code>
      * is relative to the last call, or <code>false</code> if data
      * is absolute.
      */
-    public abstract boolean isRelative();
+    boolean isRelative();
 
     /**
      * Returns whether or not the axis is analog, or false if it is digital.
      */
-    public abstract boolean isAnalog();
+    boolean isAnalog();
 
     /**
      * Returns the suggested dead zone for this axis.  Dead zone is the
@@ -69,7 +69,7 @@ public interface Component {
      * value in the positive or negative direction.
      * @see #getPollData
      */
-    public abstract float getDeadZone();
+    float getDeadZone();
 
     /**
      * Returns the data from the last time the control has been polled.
@@ -78,17 +78,17 @@ public interface Component {
      * 1.0f.
      * @see Controller#poll
      */
-    public abstract float getPollData();
+    float getPollData();
 
     /**
      * Returns a human-readable name for this axis.
      */
-    public abstract String getName();
+    String getName();
     
     /**
      * Identifiers for different Axes.
      */
-    public static class Identifier {
+    class Identifier {
         
         /**
          * Name of axis type
@@ -737,7 +737,7 @@ public interface Component {
     /**
      * POV enum for different positions.
      */
-    public static class POV {
+    class POV {
         /**
         * Standard value for center HAT position
         */

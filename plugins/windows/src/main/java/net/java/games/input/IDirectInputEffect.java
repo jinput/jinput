@@ -54,7 +54,7 @@ final class IDirectInputEffect implements Rumbler {
 		this.info = info;
 	}
 
-	public final synchronized void rumble(float intensity) {
+	public synchronized void rumble(float intensity) {
 		try {
 			checkReleased();
 			if (intensity > 0) {
@@ -68,28 +68,28 @@ final class IDirectInputEffect implements Rumbler {
 		}
 	}
 
-	public final Component.Identifier getAxisIdentifier() {
+	public Component.Identifier getAxisIdentifier() {
 		return null;
 	}
 
-	public final String getAxisName() {
+	public String getAxisName() {
 		return null;
 	}
 
-	public final synchronized void release() {
+	public synchronized void release() {
 		if (!released) {
 			released = true;
 			nRelease(address);
 		}
 	}
-	private final static native void nRelease(long address);
+	private static native void nRelease(long address);
 
-	private final void checkReleased() throws IOException {
+	private void checkReleased() throws IOException {
 		if (released)
 			throw new IOException();
 	}
 
-	private final void setGain(int gain) throws IOException {
+	private void setGain(int gain) throws IOException {
 		int res = nSetGain(address, gain);
 		if (res != IDirectInputDevice.DI_DOWNLOADSKIPPED &&
 			res != IDirectInputDevice.DI_EFFECTRESTARTED &&
@@ -99,21 +99,21 @@ final class IDirectInputEffect implements Rumbler {
 			throw new IOException("Failed to set effect gain (0x" + Integer.toHexString(res) + ")");
 		}
 	}
-	private final static native int nSetGain(long address, int gain);
+	private static native int nSetGain(long address, int gain);
 
-	private final void start(int iterations, int flags) throws IOException {
+	private void start(int iterations, int flags) throws IOException {
 		int res = nStart(address, iterations, flags);
 		if (res != IDirectInputDevice.DI_OK)
 			throw new IOException("Failed to start effect (0x" + Integer.toHexString(res) + ")");
 	}
-	private final static native int nStart(long address, int iterations, int flags);
+	private static native int nStart(long address, int iterations, int flags);
 	
-	private final void stop() throws IOException {
+	private void stop() throws IOException {
 		int res = nStop(address);
 		if (res != IDirectInputDevice.DI_OK)
 			throw new IOException("Failed to stop effect (0x" + Integer.toHexString(res) + ")");
 	}
-	private final static native int nStop(long address);
+	private static native int nStop(long address);
 
 	@SuppressWarnings("deprecation")
 	protected void finalize() {
