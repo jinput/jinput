@@ -44,6 +44,14 @@ public final class Event {
 	/** {@link Component} that generated this {@code Event}. */
     private Component component;
 
+	/**
+	 * <p>A value associated with this {@code Event}.</p>
+	 *
+	 * <p>
+	 *     This could represent any number of things, depending on the {@link Component} that generated this
+	 *     {@code Event}. Rotation of a joystick, pressure on a button, etc.
+	 * </p>
+	 */
     private float value;
 
 	/**
@@ -65,7 +73,7 @@ public final class Event {
 	 * Sets the state of this {@code Event}.
 	 *
 	 * @param component {@link Component} that generated this {@code Event}.
-	 * @param value todo Document
+	 * @param value A value associated with this {@code Event}.
 	 * @param nanos Time elapsed since the last {@code Event}, in nanoseconds.
 	 */
     public void set(final Component component, final float value, final long nanos) {
@@ -92,6 +100,11 @@ public final class Event {
 		return component;
 	}
 
+	/**
+	 * Retrieves the value associated with this {@code Event}.
+	 *
+	 * @return Value associated with this {@code Event}.
+	 */
 	public float getValue() {
 		return value;
 	}
@@ -126,7 +139,11 @@ public final class Event {
 		this.nanos = nanos;
 	}
 
-	// todo Document
+	/**
+	 * Sets the value associated with this {@code Event}.
+	 *
+	 * @param value A value associated with this {@code Event}.
+	 */
 	public void setValue(final float value) {
 		this.value = value;
 	}
