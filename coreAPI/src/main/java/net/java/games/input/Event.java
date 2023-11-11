@@ -39,8 +39,19 @@
 package net.java.games.input;
 
 public final class Event {
+	/** {@link Component} that generated this {@code Event}. */
     private Component component;
+
     private float value;
+
+	/**
+	 * <p>This represents the time elapsed since the last {@code Event}, in nanoseconds.</p>
+	 *
+	 * <p>
+	 *     e.g. If an {@code Event} happens, then one millisecond later another {@code Event} happens, the {@code nanos}
+	 * 	   of the second {@code Event} will be 1,000,000 (1 millisecond).
+	 * </p>
+	 */
 	private long nanos;
 
     public void set(Event other) {
@@ -53,6 +64,11 @@ public final class Event {
 		this.nanos = nanos;
     }
 
+	/**
+	 * Retrieves the {@link Component} that generated this {@code Event}.
+	 *
+	 * @return {@link Component} that generated this {@code Event}.
+	 */
 	public Component getComponent() {
 		return component;
 	}
@@ -62,9 +78,9 @@ public final class Event {
 	}
 
 	/**
-	 * Return the time the event happened, in nanoseconds.
-	 * The time is relative and therefore can only be used
-	 * to compare with other event times.
+	 * Retrieves the time elapsed since the last {@code Event}, in nanoseconds.
+	 *
+	 * @return The time elapsed since the last {@code Event}, in nanoseconds.
 	 */
 	public long getNanos() {
 		return nanos;
