@@ -50,8 +50,6 @@ import java.util.logging.Logger;
  * @author Michael Martak
  */
 class DefaultControllerEnvironment extends ControllerEnvironment {
-	static String libPath;
-	
 	private static Logger log = Logger.getLogger(DefaultControllerEnvironment.class.getName());
 	
 	/**
