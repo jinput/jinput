@@ -150,17 +150,9 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 				continue;
 			}
 
-			addControllers(environment.getControllers());
+			Collections.addAll(controllers, environment.getControllers());
 			loadedPluginNames.add(environment.getClass().getName());
         }
-
-	}
-
-	/**
-	 * Add the array of controllers to our list of controllers.
-	 */
-	private void addControllers(Controller[] c) {
-        Collections.addAll(controllers, c);
 	}
     
     /**
@@ -199,7 +191,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 				}
 
 				if (environment.isSupported()) {
-					addControllers(environment.getControllers());
+					Collections.addAll(controllers, environment.getControllers());
 					loadedPluginNames.add(environment.getClass().getName());
 				} else {
 					log(environment.getClass().getName() + " is not supported.");
