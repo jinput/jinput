@@ -76,10 +76,19 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 			pluginPathName = "controller";
 		}
 
-		scanControllers(getPrivilegedProperty("java.home") +
-				File.separator + "lib"+File.separator + pluginPathName);
-		scanControllers(getPrivilegedProperty("user.dir")+
-				File.separator + pluginPathName);
+		scanControllers(
+			getPrivilegedProperty("java.home") +
+			File.separator +
+			"lib" +
+			File.separator +
+			pluginPathName
+		);
+
+		scanControllers(
+		getPrivilegedProperty("user.dir") +
+			File.separator +
+			pluginPathName
+		);
 
 		return null;
 	}
