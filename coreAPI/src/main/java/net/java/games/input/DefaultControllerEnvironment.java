@@ -86,11 +86,6 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
     
 	private Collection<String> loadedPluginNames = new ArrayList<>();
 
-    /**
-     * Public no-arg constructor.
-     */
-    public DefaultControllerEnvironment() {
-    }
     
     /**
      * Returns a list of all controllers available to this environment,
