@@ -50,7 +50,7 @@ import java.util.logging.Logger;
  * @author Michael Martak
  */
 class DefaultControllerEnvironment extends ControllerEnvironment {
-	private static Logger log = Logger.getLogger(DefaultControllerEnvironment.class.getName());
+	private static Logger logger = Logger.getLogger(DefaultControllerEnvironment.class.getName());
 	
 	/**
 	 * Static utility method for loading native libraries.
@@ -136,11 +136,11 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 
 					default: {
 						if (osName.startsWith("Windows")) {
-							log.warning("Found unknown Windows version: " + osName);
-							log.warning("Attempting to use default windows plug-in.");
+							logger.warning("Found unknown Windows version: " + osName);
+							logger.warning("Attempting to use default windows plug-in.");
 							pluginClasses = pluginClasses + " net.java.games.input.DirectAndRawInputEnvironmentPlugin";
 						} else {
-							log.warning("Trying to use default plugin, OS name " + osName + " not recognised");
+							logger.warning("Trying to use default plugin, OS name " + osName + " not recognised");
 						}
 					}
 				}
@@ -151,7 +151,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 				String className = pluginClassTok.nextToken();					
 				try {
 					if(!loadedPluginNames.contains(className)) {
-						log.fine("Loading: " + className);
+						logger.fine("Loading: " + className);
 						Class<?> ceClass = Class.forName(className);
 						ControllerEnvironment ce = (ControllerEnvironment) ceClass.getDeclaredConstructor().newInstance();
 						if(ce.isSupported()) {
