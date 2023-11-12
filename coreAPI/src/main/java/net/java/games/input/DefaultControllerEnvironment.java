@@ -37,10 +37,7 @@ import net.java.games.util.plugins.Plugins;
 import java.io.File;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -106,9 +103,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 	 * Add the array of controllers to our list of controllers.
 	 */
 	private void addControllers(Controller[] c) {
-		for (int i = 0; i < c.length; i++) {
-			controllers.add(c[i]);
-		}
+        Collections.addAll(controllers, c);
 	}
     
     /**
