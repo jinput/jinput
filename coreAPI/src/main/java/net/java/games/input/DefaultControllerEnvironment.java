@@ -51,24 +51,6 @@ import java.util.logging.Logger;
  */
 class DefaultControllerEnvironment extends ControllerEnvironment {
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
-	
-	/**
-	 * Static utility method for loading native libraries.
-	 * It will try to load from either the path given by
-	 * the net.java.games.input.librarypath property
-	 * or through System.loadLibrary().
-	 * 
-	 */
-	static void loadLibrary(final String lib_name) {
-		AccessController.doPrivileged((PrivilegedAction<String>) () -> {
-						String lib_path = System.getProperty("net.java.games.input.librarypath");
-						if (lib_path != null)
-							System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
-						else
-							System.loadLibrary(lib_name);
-						return null;
-				});
-	}
     
 	static String getPrivilegedProperty(final String property) {
 	       return AccessController.doPrivileged((PrivilegedAction<String>) () ->  System.getProperty(property));
