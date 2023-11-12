@@ -51,23 +51,65 @@ import java.util.logging.Logger;
  */
 class DefaultControllerEnvironment extends ControllerEnvironment {
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
-    
-	static String getPrivilegedProperty(final String property) {
-	       return AccessController.doPrivileged((PrivilegedAction<String>) () ->  System.getProperty(property));
+
+	/**
+	 * List of all controllers in this environment
+	 */
+	private ArrayList<Controller> controllers;
+
+	private Collection<String> loadedPluginNames = new ArrayList<>();/* This is jeff's new plugin code using Jeff's Plugin manager */
+	private Void scanControllers() {
+		String pluginPathName = getPrivilegedProperty("jinput.controllerPluginPath");
+		if(pluginPathName == null) {
+			pluginPathName = "controller";
 		}
-		
 
-	static String getPrivilegedProperty(final String property, final String default_value) {
-       return AccessController.doPrivileged((PrivilegedAction<String>) () -> System.getProperty(property, default_value));
+		scanControllersAt(getPrivilegedProperty("java.home") +
+				File.separator + "lib"+File.separator + pluginPathName);
+		scanControllersAt(getPrivilegedProperty("user.dir")+
+				File.separator + pluginPathName);
+
+		return null;
 	}
-		
-    /**
-     * List of all controllers in this environment
-     */
-    private ArrayList<Controller> controllers;
-    
-	private Collection<String> loadedPluginNames = new ArrayList<>();
 
+	private void scanControllersAt(String path) {
+		File file = new File(path);
+		if (!file.exists()) {
+			return;
+		}
+		try {
+			Plugins plugins = new Plugins(file);
+			@SuppressWarnings("unchecked")
+			Class<ControllerEnvironment>[] envClasses = plugins.getExtends(ControllerEnvironment.class);
+			for(int i=0;i<envClasses.length;i++){
+				try {
+					ControllerEnvironment.log("ControllerEnvironment "+
+							envClasses[i].getName()
+							+" loaded by "+envClasses[i].getClassLoader());
+					ControllerEnvironment ce = envClasses[i].getDeclaredConstructor().newInstance();
+					if(ce.isSupported()) {
+						addControllers(ce.getControllers());
+						loadedPluginNames.add(ce.getClass().getName());
+					} else {
+						log(envClasses[i].getName() + " is not supported");
+					}
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Add the array of controllers to our list of controllers.
+	 */
+	private void addControllers(Controller[] c) {
+		for (int i = 0; i < c.length; i++) {
+			controllers.add(c[i]);
+		}
+	}
     
     /**
      * Returns a list of all controllers available to this environment,
@@ -152,60 +194,16 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
         }
         return ret;
     }
-    
-    /* This is jeff's new plugin code using Jeff's Plugin manager */
-    private Void scanControllers() {
-        String pluginPathName = getPrivilegedProperty("jinput.controllerPluginPath");
-        if(pluginPathName == null) {
-            pluginPathName = "controller";
-        }
-        
-        scanControllersAt(getPrivilegedProperty("java.home") +
-            File.separator + "lib"+File.separator + pluginPathName);
-        scanControllersAt(getPrivilegedProperty("user.dir")+
-            File.separator + pluginPathName);
 
-        return null;
-    }
-    
-    private void scanControllersAt(String path) {
-        File file = new File(path);
-        if (!file.exists()) {
-            return;
-        }
-        try {
-            Plugins plugins = new Plugins(file);
-            @SuppressWarnings("unchecked")
-            Class<ControllerEnvironment>[] envClasses = plugins.getExtends(ControllerEnvironment.class);
-            for(int i=0;i<envClasses.length;i++){
-                try {
-					ControllerEnvironment.log("ControllerEnvironment "+
-                            envClasses[i].getName()
-                            +" loaded by "+envClasses[i].getClassLoader());
-                    ControllerEnvironment ce = envClasses[i].getDeclaredConstructor().newInstance();
-					if(ce.isSupported()) {
-	                    addControllers(ce.getControllers());
-						loadedPluginNames.add(ce.getClass().getName());
-					} else {
-						log(envClasses[i].getName() + " is not supported");
-					}
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-        
-    /**
-     * Add the array of controllers to our list of controllers.
-     */
-    private void addControllers(Controller[] c) {
-        for (int i = 0; i < c.length; i++) {
-            controllers.add(c[i]);
-        }
-    }
+	static String getPrivilegedProperty(final String property) {
+		return AccessController.doPrivileged((PrivilegedAction<String>) () ->  System.getProperty(property));
+	}
+
+
+	static String getPrivilegedProperty(final String property, final String default_value) {
+		return AccessController.doPrivileged((PrivilegedAction<String>) () -> System.getProperty(property, default_value));
+	}
+
 
 	public boolean isSupported() {
 		return true;
