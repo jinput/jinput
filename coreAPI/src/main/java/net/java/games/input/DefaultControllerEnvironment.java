@@ -35,16 +35,24 @@ package net.java.games.input;
 import net.java.games.util.plugins.Plugins;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * The default controller environment.
  *
  * @version %I% %G%
+ *
  * @author Michael Martak
+ * @author Valkryst
  */
 class DefaultControllerEnvironment extends ControllerEnvironment {
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
@@ -55,48 +63,99 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 	private ArrayList<Controller> controllers;
 
 	private Collection<String> loadedPluginNames = new ArrayList<>();/* This is jeff's new plugin code using Jeff's Plugin manager */
+
+	/**
+	 * Attempts to scan the system for loadable {@link ControllerEnvironment} classes, and adds them to the set of
+	 * {@code controllers}.
+	 *
+	 * @return {@code null}
+	 */
 	private Void scanControllers() {
 		String pluginPathName = getPrivilegedProperty("jinput.controllerPluginPath");
 		if(pluginPathName == null) {
 			pluginPathName = "controller";
 		}
 
-		scanControllersAt(getPrivilegedProperty("java.home") +
+		scanControllers(getPrivilegedProperty("java.home") +
 				File.separator + "lib"+File.separator + pluginPathName);
-		scanControllersAt(getPrivilegedProperty("user.dir")+
+		scanControllers(getPrivilegedProperty("user.dir")+
 				File.separator + pluginPathName);
 
 		return null;
 	}
 
-	private void scanControllersAt(String path) {
-		File file = new File(path);
-		if (!file.exists()) {
+	/**
+	 * Attempts to scan a {@link Path} for loadable {@link ControllerEnvironment} classes, and adds them to the set of
+	 * {@code controllers}.
+	 *
+	 * @param path The {@link String} path to scan.
+	 *
+	 * @throws NullPointerException If {@code path} is {@code null}.
+	 */
+	private void scanControllers(final String path) {
+		Objects.requireNonNull(path);
+
+		if (!path.isEmpty()) {
+			scanControllers(Paths.get(path));
+		}
+	}
+
+	/**
+	 * Attempts to scan a {@link Path} for loadable {@link ControllerEnvironment} classes, and adds them to the set of
+	 * {@code controllers}.
+	 *
+	 * @param path The {@link Path} to scan.
+	 *
+	 * @throws NullPointerException If {@code path} is {@code null}.
+	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	private void scanControllers(final Path path) {
+		Objects.requireNonNull(path);
+
+		if (Files.notExists(path)) {
+			logger.warning("Skipping ' + path + ' because it does not exist.");
 			return;
 		}
-		try {
-			Plugins plugins = new Plugins(file);
-			@SuppressWarnings("unchecked")
-			Class<ControllerEnvironment>[] envClasses = plugins.getExtends(ControllerEnvironment.class);
-			for(int i=0;i<envClasses.length;i++){
-				try {
-					ControllerEnvironment.log("ControllerEnvironment "+
-							envClasses[i].getName()
-							+" loaded by "+envClasses[i].getClassLoader());
-					ControllerEnvironment ce = envClasses[i].getDeclaredConstructor().newInstance();
-					if(ce.isSupported()) {
-						addControllers(ce.getControllers());
-						loadedPluginNames.add(ce.getClass().getName());
-					} else {
-						log(envClasses[i].getName() + " is not supported");
-					}
-				} catch (Throwable e) {
-					e.printStackTrace();
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+
+		if (!Files.isReadable(path)) {
+			logger.warning("Skipping ' + path + ' because it is not readable.");
+			return;
 		}
+
+		if (!Files.isDirectory(path)) {
+			logger.warning("Skipping ' + path + ' because it is not a directory.");
+			return;
+		}
+
+		final Plugins plugins;
+		try {
+			plugins = new Plugins(path.toFile());
+		} catch (final IOException e) {
+			logger.log(Level.SEVERE, "Failed to create an instance of Plugins for the path '" + path + "'", e);
+			return;
+		}
+
+		final Class<ControllerEnvironment>[] environmentClasses = plugins.getExtends(ControllerEnvironment.class);
+		for (final Class environmentClass : environmentClasses) {
+			logger.info("ControllerEnvironment " + environmentClass.getName() + " loaded by " + environmentClass.getClassLoader());
+
+			final ControllerEnvironment environment;
+			try {
+				environment = (ControllerEnvironment) environmentClass.getDeclaredConstructor().newInstance();
+			} catch (final InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+                logger.log(Level.SEVERE, "Failed to create an instance of " + environmentClass.getName(), e);
+				continue;
+            }
+
+			if (!environment.isSupported()) {
+				logger.warning(environmentClass.getName() + " is not supported");
+				continue;
+			}
+
+			addControllers(environment.getControllers());
+			loadedPluginNames.add(environment.getClass().getName());
+        }
+
 	}
 
 	/**
