@@ -45,6 +45,7 @@ import java.security.PrivilegedAction;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * The default controller environment.
@@ -139,13 +140,10 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 		for (final Class environmentClass : environmentClasses) {
 			logger.info("ControllerEnvironment " + environmentClass.getName() + " loaded by " + environmentClass.getClassLoader());
 
-			final ControllerEnvironment environment;
-			try {
-				environment = (ControllerEnvironment) environmentClass.getDeclaredConstructor().newInstance();
-			} catch (final InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
-                logger.log(Level.SEVERE, "Failed to create an instance of " + environmentClass.getName(), e);
+			final ControllerEnvironment environment = instantiateControllerEnvironment(environmentClass);
+			if (environment == null) {
 				continue;
-            }
+			}
 
 			if (!environment.isSupported()) {
 				logger.warning(environmentClass.getName() + " is not supported");
@@ -171,83 +169,109 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
      */
     public Controller[] getControllers() {
         if (controllers == null) {
-            // Controller list has not been scanned.
             controllers = new ArrayList<>();
-            AccessController.doPrivileged((PrivilegedAction<Void>) () -> scanControllers());
-            //Check the properties for specified controller classes
-            String pluginClasses = getPrivilegedProperty("jinput.plugins", "") + " " + getPrivilegedProperty("net.java.games.input.plugins", "");
-			if(!getPrivilegedProperty("jinput.useDefaultPlugin", "true").toLowerCase().trim().equals("false") && !getPrivilegedProperty("net.java.games.input.useDefaultPlugin", "true").toLowerCase().trim().equals("false")) {
-				String osName = getPrivilegedProperty("os.name", "").trim();
 
-				switch(osName) {
-					case "Linux": {
-						pluginClasses = pluginClasses + " net.java.games.input.LinuxEnvironmentPlugin";
-						break;
-					}
+            AccessController.doPrivileged((PrivilegedAction<Void>) this::scanControllers);
 
-					case "Mac OS X": {
-						pluginClasses = pluginClasses + " net.java.games.input.OSXEnvironmentPlugin";
-						break;
-					}
+			final String pluginClasses = getPluginClasses().stream().reduce("", (a, b) -> a + b + " ");
 
-					case "Windows 98":
-					case "Windows 2000": {
-						pluginClasses = pluginClasses + " net.java.games.input.DirectInputEnvironmentPlugin";
-						break;
-					}
+			final StringTokenizer tokenizer = new StringTokenizer(pluginClasses, " \t\n\r\f,;:");
+			while (tokenizer.hasMoreTokens()) {
+				final String className = tokenizer.nextToken();
 
-					case "Windows XP":
-					case "Windows Vista":
-					case "Windows 7":
-					case "Windows 8":
-					case "Windows 8.1":
-					case "Windows 10":
-					case "Windows 11": {
-						pluginClasses = pluginClasses + " net.java.games.input.DirectAndRawInputEnvironmentPlugin";
-						break;
-					}
-
-					default: {
-						if (osName.startsWith("Windows")) {
-							logger.warning("Found unknown Windows version: " + osName);
-							logger.warning("Attempting to use default windows plug-in.");
-							pluginClasses = pluginClasses + " net.java.games.input.DirectAndRawInputEnvironmentPlugin";
-						} else {
-							logger.warning("Trying to use default plugin, OS name " + osName + " not recognised");
-						}
-					}
+				if (loadedPluginNames.contains(className)) {
+					continue;
 				}
-			}
 
-			StringTokenizer pluginClassTok = new StringTokenizer(pluginClasses, " \t\n\r\f,;:");
-			while(pluginClassTok.hasMoreTokens()) {
-				String className = pluginClassTok.nextToken();					
+				logger.fine("Loading: " + className);
+
+				final ControllerEnvironment environment;
 				try {
-					if(!loadedPluginNames.contains(className)) {
-						logger.fine("Loading: " + className);
-						Class<?> ceClass = Class.forName(className);
-						ControllerEnvironment ce = (ControllerEnvironment) ceClass.getDeclaredConstructor().newInstance();
-						if(ce.isSupported()) {
-							addControllers(ce.getControllers());
-							loadedPluginNames.add(ce.getClass().getName());
-						} else {
-							log(ceClass.getName() + " is not supported");
-						}
-					}
-				} catch (Throwable e) {
-					e.printStackTrace();
+					final Class<?> clazz = Class.forName(className);
+					environment = instantiateControllerEnvironment(clazz);
+				} catch (final ClassNotFoundException e) {
+                    logger.log(Level.SEVERE, "Failed to load class: " + className, e);
+					continue;
+                }
+
+                if (environment == null) {
+					continue;
+				}
+
+				if (environment.isSupported()) {
+					addControllers(environment.getControllers());
+					loadedPluginNames.add(environment.getClass().getName());
+				} else {
+					log(environment.getClass().getName() + " is not supported.");
+				}
+            }
+        }
+
+		return Arrays.copyOf(controllers.toArray(), controllers.size(), Controller[].class);
+    }
+
+	/**
+	 * Retrieves the list of plugin classes.
+	 *
+	 * @return List of plugin classes.
+	 */
+	private List<String> getPluginClasses() {
+		AccessController.doPrivileged((PrivilegedAction<Void>) this::scanControllers);
+
+		final List<String> classes = new ArrayList<>();
+		classes.add(getPrivilegedProperty("jinput.plugins", ""));
+		classes.add(getPrivilegedProperty("net.java.games.input.plugins", ""));
+
+		if (!getPrivilegedProperty("jinput.useDefaultPlugin", "true").toLowerCase().trim().equals("false")) {
+			return Collections.emptyList();
+		}
+
+		if (!getPrivilegedProperty("net.java.games.input.useDefaultPlugin", "true").toLowerCase().trim().equals("false")) {
+			return Collections.emptyList();
+		}
+
+		final String osName = getPrivilegedProperty("os.name", "").trim();
+		switch(osName) {
+			case "Linux": {
+				classes.add("net.java.games.input.LinuxEnvironmentPlugin");
+				break;
+			}
+
+			case "Mac OS X": {
+				classes.add("net.java.games.input.OSXEnvironmentPlugin");
+				break;
+			}
+
+			case "Windows 98":
+			case "Windows 2000": {
+				classes.add("net.java.games.input.DirectInputEnvironmentPlugin");
+				break;
+			}
+
+			case "Windows XP":
+			case "Windows Vista":
+			case "Windows 7":
+			case "Windows 8":
+			case "Windows 8.1":
+			case "Windows 10":
+			case "Windows 11": {
+				classes.add("net.java.games.input.DirectAndRawInputEnvironmentPlugin");
+				break;
+			}
+
+			default: {
+				if (osName.startsWith("Windows")) {
+					logger.warning("Found unknown Windows version: " + osName);
+					logger.warning("Attempting to use default windows plug-in.");
+					classes.add("net.java.games.input.DirectAndRawInputEnvironmentPlugin");
+				} else {
+					logger.warning("Trying to use default plugin, OS name " + osName + " not recognised");
 				}
 			}
-        }
-        Controller[] ret = new Controller[controllers.size()];
-        Iterator<Controller> it = controllers.iterator();
-        int i = 0;
-        while (it.hasNext()) {
-            ret[i] = it.next();
-            i++;
-        }
-        return ret;
-    }
+		}
+
+		return classes.stream().filter(s -> !s.isEmpty()).collect(Collectors.toList());
+	}
 
 	static String getPrivilegedProperty(final String property) {
 		return AccessController.doPrivileged((PrivilegedAction<String>) () ->  System.getProperty(property));
@@ -261,5 +285,26 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 	@Override
 	public boolean isSupported() {
 		return true;
+	}
+
+	/**
+	 * Instantiates a {@link ControllerEnvironment} from the provided {@link Class}.
+	 *
+	 * @param clazz {@link Class} to instantiate.
+	 *
+	 * @return An instance of the specified {@link Class}.
+	 */
+	private ControllerEnvironment instantiateControllerEnvironment(final Class<?> clazz) {
+		if (!ControllerEnvironment.class.isAssignableFrom(clazz)) {
+			logger.warning("Cannot instantiate '" + clazz.getName() + "' as it does not extend ControllerEnvironment.");
+			return null;
+		}
+
+		try {
+			return (ControllerEnvironment) clazz.getDeclaredConstructor().newInstance();
+		} catch (final InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+			logger.log(Level.SEVERE, "Failed to construct instance of " + clazz.getName(), e);
+			return null;
+		}
 	}
 }
