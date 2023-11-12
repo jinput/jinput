@@ -58,12 +58,11 @@ import java.util.stream.Collectors;
 class DefaultControllerEnvironment extends ControllerEnvironment {
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-	/**
-	 * List of all controllers in this environment
-	 */
+	/** All {@link Controller}s available to this environment. */
 	private ArrayList<Controller> controllers;
 
-	private Collection<String> loadedPluginNames = new ArrayList<>();/* This is jeff's new plugin code using Jeff's Plugin manager */
+	/** Class names of all loaded plugins. */
+	private Collection<String> loadedPluginNames = new ArrayList<>();
 
 	/**
 	 * Attempts to scan the system for loadable {@link ControllerEnvironment} classes, and adds them to the set of
@@ -154,11 +153,12 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 			loadedPluginNames.add(environment.getClass().getName());
         }
 	}
-    
-    /**
-     * Returns a list of all controllers available to this environment,
-     * or an empty array if there are no controllers in this environment.
-     */
+
+	/**
+	 * Retrieves a list of all {@link Controller}s available to this environment.
+	 *
+	 * @return All {@link Controller}s available to this environment, or an empty array if there are no {@link Controller}s.
+	 */
     public Controller[] getControllers() {
         if (controllers == null) {
             controllers = new ArrayList<>();
@@ -265,11 +265,12 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 		return classes.stream().filter(s -> !s.isEmpty()).collect(Collectors.toList());
 	}
 
+	// todo Document
 	static String getPrivilegedProperty(final String property) {
 		return AccessController.doPrivileged((PrivilegedAction<String>) () ->  System.getProperty(property));
 	}
 
-
+	// todo Document
 	static String getPrivilegedProperty(final String property, final String default_value) {
 		return AccessController.doPrivileged((PrivilegedAction<String>) () -> System.getProperty(property, default_value));
 	}
