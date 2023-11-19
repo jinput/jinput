@@ -3,7 +3,7 @@ pipeline {
     triggers { pollSCM('H/15 * * * *') }
     tools {
         maven 'Maven 3.5.3'
-        jdk 'OpenJDK 9'
+        jdk 'OpenJDK 16'
     }
     options { buildDiscarder(logRotator(numToKeepStr: '5')) }
     parameters {
