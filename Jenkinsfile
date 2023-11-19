@@ -1,6 +1,10 @@
 pipeline {
     agent none
     triggers { pollSCM('H/15 * * * *') }
+    tools {
+        maven 'Maven 3.5.3'
+        jdk 'OpenJDK 16'
+    }
     options { buildDiscarder(logRotator(numToKeepStr: '5')) }
     parameters {
         booleanParam(defaultValue: false, description: 'Perform Release', name: 'release')
@@ -10,12 +14,7 @@ pipeline {
             agent {
                 label "osx"
             }
-            tools {
-                maven 'Maven 3.5.3'
-                jdk 'OpenJDK 9'
-            }
             steps {
-                sh 'echo JAVA_HOME=$JAVA_HOME'
                 sh 'mvn -B -Dmaven.antrun.skip -Dmaven.source.skip -Dmaven.test.skip -DskipTests -DskipITs -pl coreAPI/ package'
             }
             post {
@@ -30,10 +29,6 @@ pipeline {
                     agent {
                         label "windows"
                     }
-                    tools {
-                        maven 'Maven 3.5.3'
-                        jdk 'OpenJDK 9'
-                    }
                     steps {
                         bat 'mvn -B -am -pl plugins/windows/,plugins/wintab/ clean compile'
                     }
@@ -47,10 +42,6 @@ pipeline {
                     agent {
                         label "linux"
                     }
-                    tools {
-                        maven 'Maven 3.5.3'
-                        jdk 'OpenJDK 9'
-                    }
                     steps {
                         sh 'mvn -B -am -pl plugins/linux/ clean compile'
                     }
@@ -63,10 +54,6 @@ pipeline {
                 stage('Build OSX natives') {
                     agent {
                         label "osx"
-                    }
-                    tools {
-                        maven 'Maven 3.5.3'
-                        jdk 'OpenJDK 9'
                     }
                     steps {
                         sh 'mvn -B -am -pl plugins/OSX/ clean compile'
@@ -82,10 +69,6 @@ pipeline {
         stage('Build') {
             agent {
                 label "linux"
-            }
-            tools {
-                maven 'Maven 3.5.3'
-                jdk 'OpenJDK 9'
             }
             steps {
                 unstash 'windows-natives'
@@ -103,10 +86,6 @@ pipeline {
         stage('Deploy') {
             agent {
                 label "linux"
-            }
-            tools {
-                maven 'Maven 3.5.3'
-                jdk 'OpenJDK 9'
             }
             when { branch 'master' }
             steps {
@@ -129,10 +108,6 @@ pipeline {
         stage('Release') {
             agent {
                 label "linux"
-            }
-            tools {
-                maven 'Maven 3.5.3'
-                jdk 'OpenJDK 9'
             }
             when {
                 expression {
