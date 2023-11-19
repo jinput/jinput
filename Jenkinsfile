@@ -97,9 +97,8 @@ pipeline {
                 sh 'echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust'
                 withMaven(
                         maven: 'Maven 3.5.3',
-                        jdk: 'OpenJDK 9',
-                        globalMavenSettingsConfig: 'global-maven-settings-ossrh',
-                        mavenOpts: '-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts' //Work around for JDK9 missing cacerts
+                        jdk: 'OpenJDK 16',
+                        globalMavenSettingsConfig: 'global-maven-settings-ossrh'
                 ) {
                     sh "mvn -P windows,linux,osx,wintab -Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs deploy"
                 }
@@ -123,9 +122,8 @@ pipeline {
                 sh 'echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust'
                 withMaven(
                         maven: 'Maven 3.5.3',
-                        jdk: 'OpenJDK 9',
-                        globalMavenSettingsConfig: 'global-maven-settings-ossrh',
-                        mavenOpts: '-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts' //Work around for JDK9 missing cacerts
+                        jdk: 'OpenJDK 16',
+                        globalMavenSettingsConfig: 'global-maven-settings-ossrh'
                 ) {
                     sh "mvn -P windows,linux,osx,wintab versions:set -DremoveSnapshot"
                     script {
