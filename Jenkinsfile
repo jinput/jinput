@@ -2,7 +2,7 @@ pipeline {
     agent none
     triggers { pollSCM('H/15 * * * *') }
     tools {
-        maven 'Maven 3.5.3'
+        maven 'Maven 3.9.5'
         jdk 'OpenJDK 16'
     }
     options { buildDiscarder(logRotator(numToKeepStr: '5')) }
@@ -96,7 +96,7 @@ pipeline {
                 sh 'echo $GPG_SECRET_KEYS | base64 --decode | gpg --batch --import'
                 sh 'echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust'
                 withMaven(
-                        maven: 'Maven 3.5.3',
+                        maven: 'Maven 3.9.5',
                         jdk: 'OpenJDK 16',
                         globalMavenSettingsConfig: 'global-maven-settings-ossrh'
                 ) {
@@ -121,7 +121,7 @@ pipeline {
                 sh 'echo $GPG_SECRET_KEYS | base64 --decode | gpg --batch --import'
                 sh 'echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust'
                 withMaven(
-                        maven: 'Maven 3.5.3',
+                        maven: 'Maven 3.9.5',
                         jdk: 'OpenJDK 16',
                         globalMavenSettingsConfig: 'global-maven-settings-ossrh'
                 ) {
