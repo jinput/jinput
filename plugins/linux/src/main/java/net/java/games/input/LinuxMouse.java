@@ -65,4 +65,14 @@ final class LinuxMouse extends Mouse {
 	protected final boolean getNextDeviceEvent(Event event) throws IOException {
 		return LinuxControllers.getNextDeviceEvent(event, device);
 	}
+
+    /**
+     * @Override
+     */
+    public boolean grab(){ return device.grab(); }
+
+    /**
+     * @Override
+     */
+    public boolean ungrab(){ return device.ungrab(); }
 }

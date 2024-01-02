@@ -229,4 +229,15 @@ public abstract class AbstractController implements Controller {
 		}
 	} 
 	
+    /**
+     * Grabs/captures the input to intercept the the events from going to the system.
+     * @return the status of the grab function where true is on success and false otherwise.
+     */
+    public boolean grab(){ return false; }
+
+    /**
+     * Releases the input capture back to the system.
+     * @return the status of the release function where true is on success and false otherwise.
+     */
+    public boolean ungrab(){ return false;}
 } // class AbstractController
