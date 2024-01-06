@@ -1,0 +1,23 @@
+name: Java CI with Maven
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 11
+          java-package: jdk
+          architecture: x64
+
+      - uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Build with Maven
+        run: mvn clean install

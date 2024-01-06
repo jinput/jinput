@@ -84,6 +84,12 @@ public class DirectAndRawInputEnvironmentPlugin extends ControllerEnvironment {
 		return controllers;
 	}
 
+	@Override
+	public void release() {
+        this.rawPlugin.release();
+        this.dinputPlugin.release();
+	}
+
 	/**
 	 * @see net.java.games.input.ControllerEnvironment#isSupported()
 	 */

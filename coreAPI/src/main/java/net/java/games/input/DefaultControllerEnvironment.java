@@ -40,6 +40,7 @@ import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 
@@ -84,9 +85,11 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
     /**
      * List of all controllers in this environment
      */
-    private ArrayList<Controller> controllers;
-    
+    protected ArrayList<Controller> controllers;
+
 	private Collection<String> loadedPluginNames = new ArrayList<>();
+
+	private final List<ControllerEnvironment> loadedPlugins = new ArrayList<>();
 
     /**
      * Public no-arg constructor.
@@ -159,6 +162,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 						if(ce.isSupported()) {
 							addControllers(ce.getControllers());
 							loadedPluginNames.add(ce.getClass().getName());
+                            this.loadedPlugins.add(ce);
 						} else {
 							log(ceClass.getName() + " is not supported");
 						}
@@ -177,14 +181,23 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
         }
         return ret;
     }
-    
-    /* This is jeff's new plugin code using Jeff's Plugin manager */
+
+	@Override
+	public void release() {
+        this.loadedPlugins.forEach(it -> it.release());
+
+        this.controllers = null;
+        this.controllerListeners.clear();
+		return;
+	}
+
+	/* This is jeff's new plugin code using Jeff's Plugin manager */
     private Void scanControllers() {
         String pluginPathName = getPrivilegedProperty("jinput.controllerPluginPath");
         if(pluginPathName == null) {
             pluginPathName = "controller";
         }
-        
+
         scanControllersAt(getPrivilegedProperty("java.home") +
             File.separator + "lib"+File.separator + pluginPathName);
         scanControllersAt(getPrivilegedProperty("user.dir")+

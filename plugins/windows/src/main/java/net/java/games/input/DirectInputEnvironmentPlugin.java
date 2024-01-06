@@ -46,6 +46,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /** DirectInput implementation of controller environment
  * @author martak
@@ -54,6 +55,9 @@ import java.util.List;
  */
 public final class DirectInputEnvironmentPlugin extends ControllerEnvironment implements Plugin {
 	
+
+	private static final Logger LOG = Logger.getLogger(DirectInputEnvironmentPlugin.class.getName());
+
 	private static boolean supported = false;
 		
 	/**
@@ -138,7 +142,12 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 		return controllers;
 	}
 
-	private Component[] createComponents(IDirectInputDevice device, boolean map_mouse_buttons) {
+	@Override
+	public void release() {
+		LOG.severe("Not yet implemented");
+	}
+
+	private final Component[] createComponents(IDirectInputDevice device, boolean map_mouse_buttons) {
 		List<DIDeviceObject> device_objects = device.getObjects();
 		List<DIComponent> controller_components = new ArrayList<>();
 		for (int i = 0; i < device_objects.size(); i++) {

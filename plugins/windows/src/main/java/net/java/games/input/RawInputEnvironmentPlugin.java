@@ -55,6 +55,7 @@ import java.util.List;
 public final class RawInputEnvironmentPlugin extends ControllerEnvironment implements Plugin {
 	
 	private static boolean supported = false;
+	private RawInputEventQueue queue;
 
 	/**
 	 * Static utility method for loading native libraries.
@@ -104,7 +105,6 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 
 	/** Creates new DirectInputEnvironment */
 	public RawInputEnvironmentPlugin() {
-		RawInputEventQueue queue;
 		Controller[] controllers = new Controller[]{};
 		if(isSupported()) {
 			try {
@@ -119,6 +119,11 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 
 	public Controller[] getControllers() {
 		return controllers;
+	}
+
+	@Override
+	public void release() {
+        this.queue.destroyAllThreads();
 	}
 
 	private static SetupAPIDevice lookupSetupAPIDevice(String device_name, List<SetupAPIDevice> setupapi_devices) {
