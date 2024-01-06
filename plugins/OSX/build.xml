@@ -10,10 +10,12 @@
 		<mkdir dir="target/natives/x86_64"/>
 	</target>
 
+    <property environment="env"/>
+    
 	<target name="compile">
 		<apply dir="${dstdir}" executable="${compiler}" os="Mac OS X" skipemptyfilesets="true" failonerror="true" dest="${dstdir}">
 		    <!-- Depending on the JRE you have installed, you may need to change the path in the following line in two places -->
-			<arg line="${cflags} -O2 -Wall -c -fPIC -I../../../../common/src/native/ -I ../../generated-sources/natives/ -I/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/include -I/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/include/darwin "/>
+			<arg line="${cflags} -O2 -Wall -c -fPIC -I../../../../common/src/native/ -I ../../generated-sources/natives/ -I${env.JAVA_HOME}/include -I${env.JAVA_HOME}/include/darwin "/>
 			<mapper type="glob" from="*.c" to="*.o"/>
 			<fileset dir="src/main/native" includes="*.c"/>
 			<fileset dir="../common/src/native" includes="*.c"/>
