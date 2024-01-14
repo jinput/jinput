@@ -1,0 +1,47 @@
+name: Java CI
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  build:
+    name: ${{ matrix.name }} build
+    strategy:
+      matrix:
+        include:
+          - name: Linux
+            os: ubuntu-latest
+            artifact: linux-natives
+            project: plugins/linux
+          - name: Windows
+            os: windows-latest
+            artifact: windows-natives
+            project: plugins/windows
+          - name: macOS
+            os: macos-latest
+            artifact: macos-natives
+            project: plugins/OSX
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 11
+          java-package: jdk
+          architecture: x64
+
+      - name: Setup MSVC Dev Cmd
+        if: matrix.os == 'windows-latest'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Build with Maven
+        run: mvn --batch-mode install --file pom.xml --projects applet,coreAPI,${{ matrix.project }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: ${{ matrix.project }}/target/*.jar
