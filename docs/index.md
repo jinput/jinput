@@ -49,7 +49,7 @@ You'll also need to add the build plugin in your `build/plugins` section of your
 A full pom might look like [this one](https://github.com/jinput/jinput/blob/master/examples/example.pom.xml)
 
 ### Without maven
-The jar file with the java code in should be in maven central, you'll need the [jinput.jar](http://repo1.maven.org/maven2/net/java/jinput/jinput/{{site.jinput_version}}/jinput-{{site.jinput_version}}.jar) and [jinput-natives-all.jar](http://repo1.maven.org/maven2/net/java/jinput/jinput/{{site.jinput_version}}/jinput-{{site.jinput_version}}-natives-all.jar) that contains the native binaries.
+The jar file with the java code in should be in maven central, you'll need the [jinput.jar](https://repo1.maven.org/maven2/net/java/jinput/jinput/{{site.jinput_version}}/jinput-{{site.jinput_version}}.jar) and [jinput-natives-all.jar](https://repo1.maven.org/maven2/net/java/jinput/jinput/{{site.jinput_version}}/jinput-{{site.jinput_version}}-natives-all.jar) that contains the native binaries.
 
 ## Running
 
