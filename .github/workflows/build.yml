@@ -61,7 +61,7 @@ jobs:
           java-package: jdk
 
       - name: Clean
-        run: mvn --batch-mode --file pom.xml --also-make --projects windows,linux,osx,uberjar clean
+        run: mvn --batch-mode --file pom.xml --also-make --projects uberjar clean
 
       - name: Unpack linux natives
         uses: actions/download-artifact@v4
@@ -80,7 +80,7 @@ jobs:
           path: plugins/windows/target
 
       - name: Package
-        run: mvn --batch-mode --file pom.xml --also-make --projects windows,linux,osx,uberjar package
+        run: mvn --batch-mode --file pom.xml --also-make --projects uberjar package
 
       - name: Find jars
         run: find . -name \*.jar
