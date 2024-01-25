@@ -16,6 +16,10 @@ jobs:
             os: windows-latest
             artifact: windows-natives
             project: plugins/windows
+          - name: wintab
+            os: windows-latest
+            artifact: wintab-natives
+            project: plugins/wintab
           - name: macOS
             os: macos-latest
             artifact: macos-natives
@@ -36,7 +40,18 @@ jobs:
         if: matrix.os == 'windows-latest'
         uses: ilammy/msvc-dev-cmd@v1
 
+      - name: Download and Extract Wintab SDK
+        if: matrix.name == 'wintab'
+        run: |
+          mkdir wintab-sdk
+          cd wintab-sdk
+          curl -L -O https://raw.githubusercontent.com/Wacom-Developer/wacom-device-kit-windows/master/Wintab%20Tablet%20Controls/SampleCode/Wintab/WINTAB.H
+          curl -L -O https://raw.githubusercontent.com/Wacom-Developer/wacom-device-kit-windows/master/Wintab%20Tablet%20Controls/SampleCode/Wintab/PKTDEF.H
+          cd -
+
       - name: Build with Maven
+        env:
+          WintabSdkDir: ${{ github.workspace }}/wintab-sdk
         run: mvn --batch-mode --file pom.xml --also-make --projects ${{ matrix.project }} clean package
 
       - name: Upload Artifact
