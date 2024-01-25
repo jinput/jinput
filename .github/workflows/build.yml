@@ -37,7 +37,7 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Build with Maven
-        run: mvn --batch-mode --file pom.xml --also-make --projects ${{ matrix.project }} clean install
+        run: mvn --batch-mode --file pom.xml --also-make --projects ${{ matrix.project }} clean package
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -60,19 +60,27 @@ jobs:
           java-version: 16
           java-package: jdk
 
-      - name: Download linux natives
+      - name: Clean
+        run: mvn --batch-mode --file pom.xml --also-make --projects windows,linux,osx,uberjar clean
+
+      - name: Unpack linux natives
         uses: actions/download-artifact@v4
         with:
           name: linux-natives
           path: plugins/linux/target
-      - name: Download macos natives
+      - name: Unpack macos natives
         uses: actions/download-artifact@v4
         with:
           name: macos-natives
           path: plugins/OSX/target
-      - name: Download windows natives
+      - name: Unpack windows natives
         uses: actions/download-artifact@v4
         with:
           name: windows-natives
           path: plugins/windows/target
-      - run: find . -name \*.jar
+
+      - name: Package
+        run: mvn --batch-mode --file pom.xml --also-make --projects windows,linux,osx,uberjar package
+
+      - name: Find jars
+        run: find . -name \*.jar
