@@ -61,7 +61,7 @@ jobs:
           java-package: jdk
 
       - name: Clean
-        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles --projects plugins/awt,uberjar clean
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx --projects plugins/awt,uberjar clean
 
       - name: Unpack linux natives
         uses: actions/download-artifact@v4
@@ -80,7 +80,7 @@ jobs:
           path: plugins/windows/target
 
       - name: Package
-        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles --projects plugins/awt,uberjar -Dmaven.antrun.skip package
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx --projects plugins/awt,uberjar -Dmaven.antrun.skip package
 
       - name: Find jars
         run: find . -name \*.jar
