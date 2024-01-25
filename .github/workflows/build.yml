@@ -106,7 +106,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coreapi
-          path: coreapi/target/*.jar
+          path: coreAPI/target/*.jar
 
       - name: Upload Uberjar Artifacts
         uses: actions/upload-artifact@v4
