@@ -102,5 +102,8 @@ jobs:
       - name: Package
         run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar -Dmaven.antrun.skip package
 
-      - name: Find jars
-        run: find . -name \*.jar
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: uberjar/target/jinput-*.jar
