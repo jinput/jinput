@@ -102,8 +102,14 @@ jobs:
       - name: Package
         run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar -Dmaven.antrun.skip package
 
-      - name: Upload Artifact
+      - name: Upload CoreAPI Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.artifact }}
+          name: coreapi
+          path: coreapi/target/jinput-*.jar
+
+      - name: Upload Uberjar Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: uberjar
           path: uberjar/target/jinput-*.jar
