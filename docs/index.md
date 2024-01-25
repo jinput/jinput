@@ -3,6 +3,7 @@ layout: default
 ---
 [![Maven Central](https://img.shields.io/maven-central/v/net.java.jinput/coreapi.svg)](https://maven-badges.herokuapp.com/maven-central/net.java.jinput/coreapi)
 [![Javadocs](http://www.javadoc.io/badge/net.java.jinput/coreapi.svg)](http://www.javadoc.io/doc/net.java.jinput/coreapi)
+[![JInput CI](https://github.com/jinput/jinput/actions/workflows/build.yml/badge.svg)](https://github.com/jinput/jinput/actions/workflows/build.yml)
 
 # Welcome to the Java Input API Project!
 
