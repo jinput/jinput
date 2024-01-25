@@ -1,10 +1,10 @@
-name: Java CI
+name: JInput CI
 
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  build:
-    name: ${{ matrix.name }} build
+  build-natives:
+    name: ${{ matrix.name }} natives build
     strategy:
       matrix:
         include:
@@ -38,10 +38,32 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Build with Maven
-        run: mvn --batch-mode install --file pom.xml --projects applet,coreAPI,${{ matrix.project }}
+        run: mvn --batch-mode --file pom.xml --also-make --projects ${{ matrix.project }} clean install
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
           path: ${{ matrix.project }}/target/*.jar
+
+  build:
+    needs: build-natives
+    name: Packaged build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 11
+          java-package: jdk
+          architecture: x64
+
+      - name: Download native artifacts
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+      - run: find . -name \*.jar
