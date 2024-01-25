@@ -16,7 +16,7 @@ jobs:
             os: windows-latest
             artifact: windows-natives
             project: plugins/windows
-          - name: wintab
+          - name: Wintab
             os: windows-latest
             artifact: wintab-natives
             project: plugins/wintab
@@ -41,7 +41,7 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Download and Extract Wintab SDK
-        if: matrix.name == 'wintab'
+        if: matrix.name == 'Wintab'
         run: |
           mkdir wintab-sdk
           cd wintab-sdk
@@ -76,7 +76,7 @@ jobs:
           java-package: jdk
 
       - name: Clean
-        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx --projects plugins/awt,uberjar clean
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar clean
 
       - name: Unpack linux natives
         uses: actions/download-artifact@v4
@@ -93,9 +93,14 @@ jobs:
         with:
           name: windows-natives
           path: plugins/windows/target
+      - name: Unpack wintab natives
+        uses: actions/download-artifact@v4
+        with:
+          name: wintab-natives
+          path: plugins/wintab/target
 
       - name: Package
-        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx --projects plugins/awt,uberjar -Dmaven.antrun.skip package
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar -Dmaven.antrun.skip package
 
       - name: Find jars
         run: find . -name \*.jar
