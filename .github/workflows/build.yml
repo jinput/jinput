@@ -11,22 +11,30 @@ jobs:
           - name: Linux
             os: ubuntu-latest
             artifact: linux-natives
-            project: plugins/linux
+            project: 'applet,coreAPI,plugins/linux'
+            path: plugins/linux
           - name: Windows
             os: windows-latest
             artifact: windows-natives
-            project: plugins/windows
+            project: 'applet,coreAPI,plugins/windows'
+            path: plugins/windows
+          - name: Windows tablet
+            os: windows-latest
+            artifact: windows-tablet-natives
+            project: 'applet,coreAPI,plugins/windows,plugins/wintab'
+            path: plugins/wintab
           - name: macOS
             os: macos-latest
             artifact: macos-natives
-            project: plugins/OSX
+            project: 'applet,coreAPI,plugins/OSX'
+            path: plugins/OSX
     runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: 11
@@ -37,11 +45,26 @@ jobs:
         if: matrix.os == 'windows-latest'
         uses: ilammy/msvc-dev-cmd@v1
 
+      - name: Install Zstandard
+        if: matrix.name == 'Windows tablet'
+        run: choco install zstandard
+
+      - name: Download and Extract Wintab SDK
+        if: matrix.name == 'Windows tablet'
+        run: |
+          mkdir wintab-sdk
+          curl -L -O https://mirror.msys2.org/mingw/mingw32/mingw-w64-i686-wintab-sdk-1.4-3-any.pkg.tar.zst
+          zstd -d mingw-w64-i686-wintab-sdk-1.4-3-any.pkg.tar.zst -o wintab-sdk.tar
+          tar -xf wintab-sdk.tar -C wintab-sdk
+          mv wintab-sdk/mingw32/include/* wintab-sdk/
+
       - name: Build with Maven
-        run: mvn --batch-mode install --file pom.xml --projects applet,coreAPI,${{ matrix.project }}
+        run: mvn --batch-mode install --file pom.xml --projects ${{ matrix.project }}
+        env:
+          WintabSdkDir: ${{ github.workspace }}/wintab-sdk
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
-          path: ${{ matrix.project }}/target/*.jar
+          path: ${{ matrix.path }}/target/*.jar
