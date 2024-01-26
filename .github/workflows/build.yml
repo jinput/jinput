@@ -76,7 +76,7 @@ jobs:
           java-package: jdk
 
       - name: Clean
-        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar clean
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar,tests,examples clean
 
       - name: Unpack linux natives
         uses: actions/download-artifact@v4
@@ -100,7 +100,7 @@ jobs:
           path: plugins/wintab/target
 
       - name: Package
-        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar -Dmaven.antrun.skip package
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar,tests,examples -Dmaven.antrun.skip package
 
       - name: Upload CoreAPI Artifacts
         uses: actions/upload-artifact@v4
