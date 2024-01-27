@@ -118,6 +118,7 @@ jobs:
           path: uberjar/target/jinput-*.jar
 
       - name: Setup snapshot deploy
+        if: github.ref == 'refs/heads/master'
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -130,6 +131,7 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Snapshot deploy
+        if: github.ref == 'refs/heads/master'
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
