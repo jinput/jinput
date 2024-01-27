@@ -79,7 +79,7 @@ jobs:
           java-package: jdk
 
       - name: Clean
-        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar clean
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar,tests,examples clean
 
       - name: Unpack linux natives
         uses: actions/download-artifact@v4
@@ -103,7 +103,7 @@ jobs:
           path: plugins/wintab/target/natives
 
       - name: Package
-        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar -Dmaven.antrun.skip package
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar,tests,examples -Dmaven.antrun.skip package
 
       - name: Upload CoreAPI Artifacts
         uses: actions/upload-artifact@v4
@@ -116,3 +116,24 @@ jobs:
         with:
           name: uberjar
           path: uberjar/target/jinput-*.jar
+
+      - name: Setup snapshot deploy
+        if: github.ref == 'refs/heads/master'
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 16
+          java-package: jdk
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Snapshot deploy
+        if: github.ref == 'refs/heads/master'
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar,tests,examples -Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs deploy
