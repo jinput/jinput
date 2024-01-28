@@ -71,13 +71,13 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Configure Git User
         run: |
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
-
-      - name: Checkout
-        uses: actions/checkout@v4
 
       - name: Setup JDK
         uses: actions/setup-java@v4
