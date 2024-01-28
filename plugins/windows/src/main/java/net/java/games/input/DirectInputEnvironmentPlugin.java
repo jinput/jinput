@@ -42,8 +42,6 @@ import net.java.games.util.plugins.Plugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,35 +62,23 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 	 * 
 	 */
 	static void loadLibrary(final String lib_name) {
-		AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
-						try {
-    						String lib_path = System.getProperty("net.java.games.input.librarypath");
-    						if (lib_path != null)
-    							System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
-    						else
-    							System.loadLibrary(lib_name);
-					    } catch (UnsatisfiedLinkError e) {
-					        e.printStackTrace();
-					        supported = false;
-					    }
-						return null;
-				});
+		try {
+			String lib_path = System.getProperty("net.java.games.input.librarypath");
+			if (lib_path != null)
+				System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
+			else
+				System.loadLibrary(lib_name);
+		} catch (UnsatisfiedLinkError e) {
+			e.printStackTrace();
+			supported = false;
+		}
 	}
     
-	static String getPrivilegedProperty(final String property) {
-	       return AccessController.doPrivileged((PrivilegedAction<String>) () -> System.getProperty(property));
-		}
-		
-
-	static String getPrivilegedProperty(final String property, final String default_value) {
-       return AccessController.doPrivileged((PrivilegedAction<String>) () -> System.getProperty(property, default_value));
-	}
-		
 	static {
-		String osName = getPrivilegedProperty("os.name", "").trim();
+		String osName = System.getProperty("os.name", "").trim();
 		if(osName.startsWith("Windows")) {
 			supported = true;
-			if("x86".equals(getPrivilegedProperty("os.arch"))) {
+			if("x86".equals(System.getProperty("os.arch"))) {
 				loadLibrary("jinput-dx8");
 			} else {
 				loadLibrary("jinput-dx8_64");
@@ -122,10 +108,7 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 			}
 			this.window = window;
 			this.controllers = controllers;
-			AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
-							Runtime.getRuntime().addShutdownHook(new ShutdownHook());
-							return null;
-					});
+			Runtime.getRuntime().addShutdownHook(new ShutdownHook());
 		} else {
 			// These are final fields, so can't set them, then over ride 
 			// them if we are supported.
