@@ -115,7 +115,7 @@ jobs:
           name: wintab-natives
           path: plugins/wintab/target/natives
 
-      - name: Snapshot deploy
+      - name: Release
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
