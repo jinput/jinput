@@ -11,3 +11,5 @@ eclipse_bin/
 *.iml
 .idea/
 dependency-reduced-pom.xml
+*.releaseBackup
+release.properties
