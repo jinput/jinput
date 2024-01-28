@@ -115,15 +115,16 @@ jobs:
 #          name: wintab-natives
 #          path: plugins/wintab/target/natives
 
+      - name: Set Release Version
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles windows,linux,osx,wintab --projects plugins/awt,uberjar,tests,examples versions:set -DremoveSnapshot
+
       - name: Release
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
         run: |
-          mvn --batch-mode --file pom.xml --also-make --activate-profiles windows,linux,osx,wintab --projects plugins/awt,uberjar,tests,examples versions:set -DremoveSnapshot
           RELEASE_VERSION=$(mvn -Dexpression=project.version help:evaluate | grep -e '^[[:digit:]]')
           git tag -a $RELEASE_VERSION -m 'Release tag $RELEASE_VERSION'
 #          mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab,release --projects plugins/awt,uberjar,tests,examples -Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs deploy
