@@ -122,11 +122,11 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          mvn --batch-mode --file pom.xml --activate-profiles windows,linux,osx,wintab --projects plugins/awt,uberjar,tests,examples versions:set -DremoveSnapshot
+          mvn --batch-mode --file pom.xml --also-make --activate-profiles windows,linux,osx,wintab --projects plugins/awt,uberjar,tests,examples versions:set -DremoveSnapshot
           RELEASE_VERSION=$(mvn -Dexpression=project.version help:evaluate | grep -e '^[[:digit:]]')
           git tag -a $RELEASE_VERSION -m 'Release tag $RELEASE_VERSION'
 #          mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab,release --projects plugins/awt,uberjar,tests,examples -Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs deploy
-#          mvn --batch-mode --file pom.xml --activate-profiles windows,linux,osx,wintab --projects plugins/awt,uberjar,tests,examples versions:revert
-#          mvn --batch-mode --file pom.xml --activate-profiles windows,linux,osx,wintab --projects plugins/awt,uberjar,tests,examples versions:set -DnextSnapshot
+#          mvn --batch-mode --file pom.xml --also-make --activate-profiles windows,linux,osx,wintab --projects plugins/awt,uberjar,tests,examples versions:revert
+#          mvn --batch-mode --file pom.xml --also-make --activate-profiles windows,linux,osx,wintab --projects plugins/awt,uberjar,tests,examples versions:set -DnextSnapshot
 #          git commit -m 'Next development release' .
 #          git push origin HEAD:master --follow-tags
