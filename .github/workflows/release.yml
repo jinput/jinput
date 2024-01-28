@@ -118,6 +118,9 @@ jobs:
       - name: Set Release Version
         run: mvn --batch-mode --file pom.xml --also-make --activate-profiles windows,linux,osx,wintab --projects plugins/awt,uberjar,tests,examples versions:set -DremoveSnapshot
 
+      - name: Set environment
+        run: echo "RELEASE_VERSION=$(mvn -Dexpression=project.version help:evaluate | grep -e '^[[:digit:]]')" >> $GITHUB_ENV
+
       - name: Release
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
@@ -125,7 +128,6 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          RELEASE_VERSION=$(mvn -Dexpression=project.version help:evaluate | grep -e '^[[:digit:]]')
           git tag -a $RELEASE_VERSION -m 'Release tag $RELEASE_VERSION'
 #          mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab,release --projects plugins/awt,uberjar,tests,examples -Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs deploy
 #          mvn --batch-mode --file pom.xml --also-make --activate-profiles windows,linux,osx,wintab --projects plugins/awt,uberjar,tests,examples versions:revert
