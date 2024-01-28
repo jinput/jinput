@@ -2,13 +2,20 @@
 <project name="OS X Plugin, Native code" basedir="." default="compileNativeJinputLib">
 	<description>OSX JInput Native Plugin</description>
 
+    <!-- This builds a fat jnilib for x86_64 Intel and arm64 Apple Silicon contents -->
+
+    <!-- For historical reasons, this uses "x86_64" in the name of the target jnilib and target subdirectory. -->
+    
 	<target name="init">
 		<mkdir dir="target/natives/x86_64"/>
 	</target>
 
+    <property environment="env"/>
+    
 	<target name="compile">
 		<apply dir="${dstdir}" executable="${compiler}" os="Mac OS X" skipemptyfilesets="true" failonerror="true" dest="${dstdir}">
-			<arg line="${cflags} -O2 -Wall -c -fPIC -I${sdkroot}/System/Library/Frameworks/JavaVM.framework/Versions/A/Headers -I../../../../common/src/native -I../../generated-sources/natives/"/>
+		    <!-- Depending on the JRE you have installed, you may need to change the path in the following line in two places -->
+			<arg line="${cflags} -O2 -Wall -c -fPIC -I../../../../common/src/native/ -I ../../generated-sources/natives/ -I${env.JAVA_HOME}/include -I${env.JAVA_HOME}/include/darwin "/>
 			<mapper type="glob" from="*.c" to="*.o"/>
 			<fileset dir="src/main/native" includes="*.c"/>
 			<fileset dir="../common/src/native" includes="*.c"/>
@@ -17,7 +24,7 @@
 	
 	<target name="link">
 		<apply dir="${objdir}" parallel="true" executable="${linker}" os="Mac OS X" failonerror="true" skipemptyfilesets="true">
-			<arg line="${linkerflags} -dynamiclib -o ${libname} -framework JavaVM -framework CoreFoundation -framework IOKit -framework CoreServices"/>
+			<arg line="${linkerflags} -dynamiclib -o ${libname} -framework CoreFoundation -framework IOKit -framework CoreServices"/>
 			<fileset dir="${objdir}" includes="*.o"/>
 		</apply>
 		<apply dir="${objdir}" executable="strip" os="Mac OS X" failonerror="true">
@@ -27,19 +34,19 @@
 	</target>
 	
 	<target name="compileNativeJinputLib" depends="init">
-		<property name="x86_64_sdkroot" location="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk"/>
-		<property name="x86_64_flags" value="-isysroot ${x86_64_sdkroot} -arch x86_64 -mmacosx-version-min=10.5"/>
+		<property name="sdkroot" location="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"/>
+		<property name="ld_flags" value="-isysroot ${sdkroot} -arch arm64 -arch x86_64 -mmacosx-version-min=10.5"/>
 		<antcall target="compile">
 			<param name="dstdir" location="target/natives/x86_64"/>
 			<param name="compiler" value="gcc"/>
-			<param name="sdkroot" location="${x86_64_sdkroot}"/>
-			<param name="cflags" value="${x86_64_flags}"/>
+			<param name="sdkroot" location="${sdkroot}"/>
+			<param name="cflags" value="${ld_flags}"/>
 		</antcall>
 		<antcall target="link">
 			<param name="objdir" location="target/natives/x86_64"/>
 			<param name="libname" value="libjinput-osx-x86_64.jnilib"/>
 			<param name="linker" value="gcc"/>
-			<param name="linkerflags" value="${x86_64_flags}"/>
+			<param name="linkerflags" value="${ld_flags}"/>
 		</antcall>
 		<apply dir="target/natives" parallel="true" executable="lipo" os="Mac OS X" failonerror="true" skipemptyfilesets="true" >
 			<arg value="-create"/>

@@ -44,7 +44,7 @@ import java.util.Arrays;
  * @author elias
  * @version 1.0
  */
-final class IDirectInputDevice {
+final class IDirectInputDevice implements AutoCloseable {
 	public final static int GUID_XAxis = 1;
 	public final static int GUID_YAxis = 2;
 	public final static int GUID_ZAxis = 3;
@@ -534,8 +534,7 @@ final class IDirectInputDevice {
 			throw new IOException("Device is released");
 	}
 
-    @SuppressWarnings("deprecation")
-	protected void finalize() {
+	public void close() {
 		release();
 	}
 }
