@@ -119,7 +119,7 @@ jobs:
 
   deploy:
     needs: build-natives
-    name: Packaged build
+    name: Deploy Snapshot
     environment: OSSRH
     runs-on: ubuntu-latest
     steps:
