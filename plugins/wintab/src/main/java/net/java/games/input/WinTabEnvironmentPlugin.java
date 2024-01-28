@@ -28,12 +28,10 @@ package net.java.games.input;
 import net.java.games.util.plugins.Plugin;
 
 import java.io.File;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WinTabEnvironmentPlugin extends ControllerEnvironment implements Plugin {
+public final class WinTabEnvironmentPlugin extends ControllerEnvironment implements Plugin {
 	private static boolean supported = false;
 	
 	/**
@@ -44,32 +42,20 @@ public class WinTabEnvironmentPlugin extends ControllerEnvironment implements Pl
 	 * 
 	 */
 	static void loadLibrary(final String lib_name) {
-		AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
-					    try {
-    						String lib_path = System.getProperty("net.java.games.input.librarypath");
-    						if (lib_path != null)
-    							System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
-    						else
-    							System.loadLibrary(lib_name);
-					    } catch (UnsatisfiedLinkError e) {
-					        e.printStackTrace();
-					        supported = false;
-					    }
-						return null;
-				});
+		try {
+			String lib_path = System.getProperty("net.java.games.input.librarypath");
+			if (lib_path != null)
+				System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
+			else
+				System.loadLibrary(lib_name);
+		} catch (UnsatisfiedLinkError e) {
+			e.printStackTrace();
+			supported = false;
+		}
 	}
 
-	static String getPrivilegedProperty(final String property) {
-		return AccessController.doPrivileged((PrivilegedAction<String>)() -> System.getProperty(property));
-	}
-
-
-	static String getPrivilegedProperty(final String property, final String default_value) {
-		return AccessController.doPrivileged((PrivilegedAction<String>)() -> System.getProperty(property, default_value));
-	}
-		
     static {
-    	String osName = getPrivilegedProperty("os.name", "").trim();
+    	String osName = System.getProperty("os.name", "").trim();
     	if(osName.startsWith("Windows")) {
     		supported = true;
     		loadLibrary("jinput-wintab");
@@ -80,7 +66,6 @@ public class WinTabEnvironmentPlugin extends ControllerEnvironment implements Pl
 	private final List<WinTabDevice> active_devices = new ArrayList<>();
 	private final WinTabContext winTabContext;
 
-	/** Creates new DirectInputEnvironment */
 	public WinTabEnvironmentPlugin() {
 		if(isSupported()) {
 			DummyWindow window;
@@ -102,10 +87,7 @@ public class WinTabEnvironmentPlugin extends ControllerEnvironment implements Pl
 			}
 			this.controllers = controllers;
 			this.winTabContext = winTabContext;
-			AccessController.doPrivileged((PrivilegedAction<Void>)() -> {
-							Runtime.getRuntime().addShutdownHook(new ShutdownHook());
-							return null;
-					});
+			Runtime.getRuntime().addShutdownHook(new ShutdownHook());
 		} else {
 			winTabContext = null;
 			controllers = new Controller[]{};

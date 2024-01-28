@@ -34,8 +34,6 @@ import java.util.ArrayList;
 import java.io.IOException;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 /** Environment plugin for linux
  * @author elias
@@ -58,36 +56,24 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
      *
      */
     static void loadLibrary(final String lib_name) {
-        AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
-                        String lib_path = System.getProperty("net.java.games.input.librarypath");
-                        try {
-                            if(lib_path != null)
-                                System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
-                            else
-                                System.loadLibrary(lib_name);
-                        } catch(UnsatisfiedLinkError e) {
-                            log("Failed to load library: " + e.getMessage());
-                            e.printStackTrace();
-                            supported = false;
-                        }
-                        return null;
-                });
-    }
-
-    static String getPrivilegedProperty(final String property) {
-        return AccessController.doPrivileged((PrivilegedAction<String>)() -> System.getProperty(property));
-    }
-
-
-    static String getPrivilegedProperty(final String property, final String default_value) {
-        return AccessController.doPrivileged((PrivilegedAction<String>)() -> System.getProperty(property, default_value));
+        String lib_path = System.getProperty("net.java.games.input.librarypath");
+        try {
+            if(lib_path != null)
+                System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
+            else
+                System.loadLibrary(lib_name);
+        } catch(UnsatisfiedLinkError e) {
+            log("Failed to load library: " + e.getMessage());
+            e.printStackTrace();
+            supported = false;
+        }
     }
 
     static {
-        String osName = getPrivilegedProperty("os.name", "").trim();
+        String osName = System.getProperty("os.name", "").trim();
         if(osName.equals("Linux")) {
             supported = true;
-            if("i386".equals(getPrivilegedProperty("os.arch"))) {
+            if("i386".equals(System.getProperty("os.arch"))) {
                 loadLibrary(LIBNAME);
             } else {
                 loadLibrary(LIBNAME + POSTFIX64BIT);
@@ -103,10 +89,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
         if(isSupported()) {
             this.controllers = enumerateControllers();
             log("Linux plugin claims to have found " + controllers.length + " controllers");
-            AccessController.doPrivileged((PrivilegedAction<Void>)() -> {
-                            Runtime.getRuntime().addShutdownHook(new ShutdownHook());
-                            return null;
-                    });
+            Runtime.getRuntime().addShutdownHook(new ShutdownHook());
         } else {
             controllers = new Controller[0];
         }
@@ -390,7 +373,7 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
         for(int i = 0; i < joystick_device_files.length; i++) {
             File event_file = joystick_device_files[i];
             try {
-                String path = getAbsolutePathPrivileged(event_file);
+                String path = event_file.getAbsolutePath();
                 LinuxJoystickDevice device = new LinuxJoystickDevice(path);
                 Controller controller = createJoystickFromJoystickDevice(device);
                 if(controller != null) {
@@ -406,40 +389,34 @@ public final class LinuxEnvironmentPlugin extends ControllerEnvironment implemen
 
     private final static File[] enumerateJoystickDeviceFiles(final String dev_path) {
         final File dev = new File(dev_path);
-        return listFilesPrivileged(dev, new FilenameFilter() {
+        return listFiles(dev, new FilenameFilter() {
             public final boolean accept(File dir, String name) {
                 return name.startsWith("js");
             }
         });
     }
 
-    private static String getAbsolutePathPrivileged(final File file) {
-        return AccessController.doPrivileged((PrivilegedAction<String>) () -> file.getAbsolutePath());
-    }
-
-    private static File[] listFilesPrivileged(final File dir, final FilenameFilter filter) {
-        return AccessController.doPrivileged((PrivilegedAction<File[]>) () -> {
-                File[] files = dir.listFiles(filter);
-                if(files == null) {
-                    log("dir " + dir.getName() + " exists: " + dir.exists() + ", is writable: " + dir.isDirectory());
-                    files = new File[]{};
-                } else {
-                    Arrays.sort(files, Comparator.comparing(File::getName));
-                }
-                return files;
-        });
+    private static File[] listFiles(final File dir, final FilenameFilter filter) {
+        File[] files = dir.listFiles(filter);
+        if(files == null) {
+            log("dir " + dir.getName() + " exists: " + dir.exists() + ", is writable: " + dir.isDirectory());
+            files = new File[]{};
+        } else {
+            Arrays.sort(files, Comparator.comparing(File::getName));
+        }
+        return files;
     }
 
     private final void enumerateEventControllers(List<Controller> controllers) {
         final File dev = new File("/dev/input");
-        File[] event_device_files = listFilesPrivileged(dev, (File dir, String name) -> name.startsWith("event"));
+        File[] event_device_files = listFiles(dev, (File dir, String name) -> name.startsWith("event"));
 
         if(event_device_files == null)
             return;
         for(int i = 0; i < event_device_files.length; i++) {
             File event_file = event_device_files[i];
             try {
-                String path = getAbsolutePathPrivileged(event_file);
+                String path = event_file.getAbsolutePath();
                 LinuxEventDevice device = new LinuxEventDevice(path);
                 try {
                     Controller controller = createControllerFromDevice(device);

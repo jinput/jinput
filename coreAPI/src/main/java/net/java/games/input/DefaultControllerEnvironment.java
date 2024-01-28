@@ -35,8 +35,6 @@ package net.java.games.input;
 import net.java.games.util.plugins.Plugins;
 
 import java.io.File;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -62,25 +60,13 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 	 * 
 	 */
 	static void loadLibrary(final String lib_name) {
-		AccessController.doPrivileged((PrivilegedAction<String>) () -> {
-						String lib_path = System.getProperty("net.java.games.input.librarypath");
-						if (lib_path != null)
-							System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
-						else
-							System.loadLibrary(lib_name);
-						return null;
-				});
+		String lib_path = System.getProperty("net.java.games.input.librarypath");
+		if (lib_path != null)
+			System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
+		else
+			System.loadLibrary(lib_name);
 	}
     
-	static String getPrivilegedProperty(final String property) {
-	       return AccessController.doPrivileged((PrivilegedAction<String>) () ->  System.getProperty(property));
-		}
-		
-
-	static String getPrivilegedProperty(final String property, final String default_value) {
-       return AccessController.doPrivileged((PrivilegedAction<String>) () -> System.getProperty(property, default_value));
-	}
-		
     /**
      * List of all controllers in this environment
      */
@@ -102,11 +88,11 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
         if (controllers == null) {
             // Controller list has not been scanned.
             controllers = new ArrayList<>();
-            AccessController.doPrivileged((PrivilegedAction<Void>) () -> scanControllers());
+            scanControllers();
             //Check the properties for specified controller classes
-            String pluginClasses = getPrivilegedProperty("jinput.plugins", "") + " " + getPrivilegedProperty("net.java.games.input.plugins", "");
-			if(!getPrivilegedProperty("jinput.useDefaultPlugin", "true").toLowerCase().trim().equals("false") && !getPrivilegedProperty("net.java.games.input.useDefaultPlugin", "true").toLowerCase().trim().equals("false")) {
-				String osName = getPrivilegedProperty("os.name", "").trim();
+            String pluginClasses = System.getProperty("jinput.plugins", "") + " " + System.getProperty("net.java.games.input.plugins", "");
+			if(!System.getProperty("jinput.useDefaultPlugin", "true").toLowerCase().trim().equals("false") && !System.getProperty("net.java.games.input.useDefaultPlugin", "true").toLowerCase().trim().equals("false")) {
+				String osName = System.getProperty("os.name", "").trim();
 
 				switch(osName) {
 					case "Linux": {
@@ -180,14 +166,14 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
     
     /* This is jeff's new plugin code using Jeff's Plugin manager */
     private Void scanControllers() {
-        String pluginPathName = getPrivilegedProperty("jinput.controllerPluginPath");
+        String pluginPathName = System.getProperty("jinput.controllerPluginPath");
         if(pluginPathName == null) {
             pluginPathName = "controller";
         }
         
-        scanControllersAt(getPrivilegedProperty("java.home") +
+        scanControllersAt(System.getProperty("java.home") +
             File.separator + "lib"+File.separator + pluginPathName);
-        scanControllersAt(getPrivilegedProperty("user.dir")+
+        scanControllersAt(System.getProperty("user.dir")+
             File.separator + pluginPathName);
 
         return null;

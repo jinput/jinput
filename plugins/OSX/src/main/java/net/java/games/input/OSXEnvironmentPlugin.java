@@ -41,8 +41,6 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import net.java.games.util.plugins.Plugin;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 /** OSX HIDManager implementation
 * @author elias
@@ -61,32 +59,20 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 	 * 
 	 */
 	static void loadLibrary(final String lib_name) {
-		AccessController.doPrivileged((PrivilegedAction<Void>) () -> {
-					    try {
-    						String lib_path = System.getProperty("net.java.games.input.librarypath");
-    						if (lib_path != null)
-    							System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
-    						else
-    							System.loadLibrary(lib_name);
-					    } catch (UnsatisfiedLinkError e) {
-					        e.printStackTrace();
-					        supported = false;
-					    }
-						return null;
-				});
+		try {
+			String lib_path = System.getProperty("net.java.games.input.librarypath");
+			if (lib_path != null)
+				System.load(lib_path + File.separator + System.mapLibraryName(lib_name));
+			else
+				System.loadLibrary(lib_name);
+		} catch (UnsatisfiedLinkError e) {
+			e.printStackTrace();
+			supported = false;
+		}
 	}
     
-	static String getPrivilegedProperty(final String property) {
-	       return AccessController.doPrivileged((PrivilegedAction<String>)() -> System.getProperty(property));
-		}
-		
-
-	static String getPrivilegedProperty(final String property, final String default_value) {
-       return AccessController.doPrivileged((PrivilegedAction<String>)() -> System.getProperty(property, default_value));
-	}
-		
     static {
-    	String osName = getPrivilegedProperty("os.name", "").trim();
+    	String osName = System.getProperty("os.name", "").trim();
     	if(osName.equals("Mac OS X")) {
     		// Could check isMacOSXEqualsOrBetterThan in here too.
     		supported = true;
