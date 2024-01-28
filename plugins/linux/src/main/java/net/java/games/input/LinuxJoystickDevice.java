@@ -32,7 +32,7 @@ import java.util.HashMap;
 /**
  * @author elias
  */
-final class LinuxJoystickDevice implements LinuxDevice {
+final class LinuxJoystickDevice implements LinuxDevice,AutoCloseable {
 	public final static int JS_EVENT_BUTTON     = 0x01;    /* button pressed/released */
 	public final static int JS_EVENT_AXIS       = 0x02;    /* joystick moved */
 	public final static int JS_EVENT_INIT       = 0x80;    /* initial state of device */
@@ -231,8 +231,4 @@ final class LinuxJoystickDevice implements LinuxDevice {
 			throw new IOException("Device is closed");
 	}
 
-    @SuppressWarnings("deprecation")
-	protected void finalize() throws IOException {
-		close();
-	}
 }

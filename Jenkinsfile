@@ -2,8 +2,8 @@ pipeline {
     agent none
     triggers { pollSCM('H/15 * * * *') }
     tools {
-        maven 'Maven 3.5.3'
-        jdk 'OpenJDK 9'
+        maven 'Maven 3.9.5'
+        jdk 'OpenJDK 16'
     }
     options { buildDiscarder(logRotator(numToKeepStr: '5')) }
     parameters {
@@ -96,10 +96,9 @@ pipeline {
                 sh 'echo $GPG_SECRET_KEYS | base64 --decode | gpg --batch --import'
                 sh 'echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust'
                 withMaven(
-                        maven: 'Maven 3.5.3',
-                        jdk: 'OpenJDK 9',
-                        globalMavenSettingsConfig: 'global-maven-settings-ossrh',
-                        mavenOpts: '-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts' //Work around for JDK9 missing cacerts
+                        maven: 'Maven 3.9.5',
+                        jdk: 'OpenJDK 16',
+                        globalMavenSettingsConfig: 'global-maven-settings-ossrh'
                 ) {
                     sh "mvn -P windows,linux,osx,wintab -Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs deploy"
                 }
@@ -122,10 +121,9 @@ pipeline {
                 sh 'echo $GPG_SECRET_KEYS | base64 --decode | gpg --batch --import'
                 sh 'echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust'
                 withMaven(
-                        maven: 'Maven 3.5.3',
-                        jdk: 'OpenJDK 9',
-                        globalMavenSettingsConfig: 'global-maven-settings-ossrh',
-                        mavenOpts: '-Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts' //Work around for JDK9 missing cacerts
+                        maven: 'Maven 3.9.5',
+                        jdk: 'OpenJDK 16',
+                        globalMavenSettingsConfig: 'global-maven-settings-ossrh'
                 ) {
                     sh "mvn -P windows,linux,osx,wintab versions:set -DremoveSnapshot"
                     script {
