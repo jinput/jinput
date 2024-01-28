@@ -47,21 +47,21 @@ public interface Rumbler {
     /**
      * Rumble with the specified intensity.
      */
-    public abstract void rumble(float intensity);
+    void rumble(float intensity);
     
     /**
      * Get the string name of the axis the rumbler is attached to
      *
      * @return The axis name
      */
-    public String getAxisName();
+    String getAxisName();
     
     /**
      * Get the axis identifier the rumbler is attached to
      *
      * @return The axis identifier
      */
-    public Component.Identifier getAxisIdentifier();
+    Component.Identifier getAxisIdentifier();
     
     
 } // interface Rumbler

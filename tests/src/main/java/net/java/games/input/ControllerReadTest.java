@@ -41,6 +41,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridLayout;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -51,12 +52,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
-public class ControllerReadTest extends JFrame{
+public class ControllerReadTest extends JFrame {
+	@Serial
 	private static final long serialVersionUID = -7129976919159465311L;
 
-	private abstract static class AxisPanel extends JPanel{
+	private abstract static class AxisPanel extends JPanel {
+		@Serial
 		private static final long serialVersionUID = -2117191506803328790L;
-		Component axis;
+		transient Component axis;
 		float data;
 
 		public AxisPanel(Component ax){
@@ -79,6 +82,7 @@ public class ControllerReadTest extends JFrame{
 	}
 
 	private static class DigitalAxisPanel extends AxisPanel {
+		@Serial
 		private static final long serialVersionUID = -4006900519933869168L;
 		JLabel digitalState = new JLabel("<unread>");
 
@@ -103,6 +107,7 @@ public class ControllerReadTest extends JFrame{
 	}
 
 	private static class DigitalHatPanel extends AxisPanel {
+		@Serial
 		private static final long serialVersionUID = -3293100130201231029L;
 		JLabel digitalState = new JLabel("<unread>");
 
@@ -147,6 +152,7 @@ public class ControllerReadTest extends JFrame{
 		}
 	}
 	private static class AnalogAxisPanel extends AxisPanel {
+		@Serial
 		private static final long serialVersionUID = -3220244985697453835L;
 		JLabel analogState = new JLabel("<unread>");
 
@@ -167,9 +173,10 @@ public class ControllerReadTest extends JFrame{
 
 
 	private static class ControllerWindow extends JFrame {
+		@Serial
 		private static final long serialVersionUID = 5812903945250431578L;
-		Controller ca;
-		List<AxisPanel> axisList = new ArrayList<>();
+		transient Controller ca;
+		transient List<AxisPanel> axisList = new ArrayList<>();
 		boolean disabled = false;
 
 		public ControllerWindow(JFrame frame,Controller ca){
@@ -240,7 +247,7 @@ public class ControllerReadTest extends JFrame{
 			for(Iterator<AxisPanel> i =axisList.iterator();i.hasNext();){
 				try {
 					i.next().poll();
-				}catch (Exception e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -248,7 +255,7 @@ public class ControllerReadTest extends JFrame{
 	}
 
 	static final long HEARTBEATMS =100; // 10th of a second
-	List<ControllerWindow> controllers = new ArrayList<>();
+	transient List<ControllerWindow> controllers = new ArrayList<>();
 
 	public ControllerReadTest() {
 		super("Controller Read Test. PomProperties: " + PomProperties.getVersion());

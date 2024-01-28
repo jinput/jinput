@@ -59,7 +59,7 @@ public final class EventQueue {
 	/**
 	 * This is an internal method and should not be called by applications using the API
 	 */
-	final synchronized void add(Event event) {
+	synchronized void add(Event event) {
 		queue[tail].set(event);
 		tail = increase(tail);
 	}
@@ -68,14 +68,14 @@ public final class EventQueue {
 	 * Check if the queue is full
 	 * @return true if the queue is full
 	 */
-	final synchronized boolean isFull() {
+	synchronized boolean isFull() {
 		return increase(tail) == head;
 	}
 
 	/**
 	 * This is an internal method and should not be called by applications using the API
 	 */
-	private final int increase(int x) {
+	private int increase(int x) {
 		return (x + 1)%queue.length;
 	}
 
@@ -85,7 +85,7 @@ public final class EventQueue {
 	 * @param event The event to populate
 	 * @return false if there were no events left on the queue, otherwise true.
 	 */
-	public final synchronized boolean getNextEvent(Event event) {
+	public synchronized boolean getNextEvent(Event event) {
 		if (head == tail)
 			return false;
 		event.set(queue[head]);

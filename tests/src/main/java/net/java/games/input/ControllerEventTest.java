@@ -36,6 +36,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridLayout;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -48,12 +49,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
-public class ControllerEventTest extends JFrame{
+
+public class ControllerEventTest extends JFrame {
+	@Serial
 	private static final long serialVersionUID = -8266185848160199092L;
 
-	private static abstract class AxisPanel extends JPanel{
+	private static abstract class AxisPanel extends JPanel {
+		@Serial
 		private static final long serialVersionUID = -6200599064870672000L;
-		Component axis;
+		transient Component axis;
 		float data;
 
 		public AxisPanel(Component ax){
@@ -76,6 +80,7 @@ public class ControllerEventTest extends JFrame{
 	}
 
 	private static class DigitalAxisPanel extends AxisPanel {
+		@Serial
 		private static final long serialVersionUID = -4729666037860134626L;
 		JLabel digitalState = new JLabel("<unread>");
 
@@ -100,6 +105,7 @@ public class ControllerEventTest extends JFrame{
 	}
 
 	private static class DigitalHatPanel extends AxisPanel {
+		@Serial
 		private static final long serialVersionUID = -6582605379682496832L;
 		JLabel digitalState = new JLabel("<unread>");
 
@@ -144,7 +150,7 @@ public class ControllerEventTest extends JFrame{
 		}
 	}
 	private static class AnalogAxisPanel extends AxisPanel {
-		private static final long serialVersionUID = 7536173405896285590L;
+		@Serial private static final long serialVersionUID = 7536173405896285590L;
 		JLabel analogState = new JLabel("<unread>");
 
 		public AnalogAxisPanel(Component ax) {
@@ -164,9 +170,10 @@ public class ControllerEventTest extends JFrame{
 
 
 	private static class ControllerWindow extends JFrame {
+		@Serial
 		private static final long serialVersionUID = 8623977198558568961L;
-		Controller ca;
-		Map<Component, AxisPanel> axes_to_panels = new HashMap<>();
+		transient Controller ca;
+		transient Map<Component, AxisPanel> axes_to_panels = new HashMap<>();
 		boolean disabled = false;
 
 		public ControllerWindow(JFrame frame,Controller ca){
@@ -242,7 +249,7 @@ public class ControllerEventTest extends JFrame{
 	}
 
 	static final long HEARTBEATMS =100; // 10th of a second
-	List<ControllerWindow> controllers = new ArrayList<>();
+	transient List<ControllerWindow> controllers = new ArrayList<>();
 
 	public ControllerEventTest() {
 		super("Controller Event Test. PomProperties: " + PomProperties.getVersion());

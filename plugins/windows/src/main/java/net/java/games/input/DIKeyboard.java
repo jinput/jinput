@@ -52,15 +52,15 @@ final class DIKeyboard extends Keyboard {
 		this.device = device;
 	}
 
-	protected final boolean getNextDeviceEvent(Event event) throws IOException {
+	protected boolean getNextDeviceEvent(Event event) throws IOException {
 		return DIControllers.getNextDeviceEvent(event, device);
 	}
 
-	public final void pollDevice() throws IOException {
+	public void pollDevice() throws IOException {
 		device.pollAll();
 	}
 
-	protected final void setDeviceEventQueueSize(int size) throws IOException {
+	protected void setDeviceEventQueueSize(int size) throws IOException {
 		device.setBufferSize(size);
 	}
 }
