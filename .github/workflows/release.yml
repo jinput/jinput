@@ -122,7 +122,7 @@ jobs:
         run: echo "RELEASE_VERSION=$(mvn -Dexpression=project.version help:evaluate | grep -e '^[[:digit:]]')" >> $GITHUB_ENV
 
       - name: Tag release
-        run: git tag -a $RELEASE_VERSION -m 'Release tag $RELEASE_VERSION'
+        run: git tag -a $RELEASE_VERSION -m "Release tag $RELEASE_VERSION"
 
       - name: Release
         env:
