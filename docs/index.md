@@ -3,6 +3,7 @@ layout: default
 ---
 [![Maven Central](https://img.shields.io/maven-central/v/net.java.jinput/coreapi.svg)](https://maven-badges.herokuapp.com/maven-central/net.java.jinput/coreapi)
 [![Javadocs](http://www.javadoc.io/badge/net.java.jinput/coreapi.svg)](http://www.javadoc.io/doc/net.java.jinput/coreapi)
+[![JInput CI](https://github.com/jinput/jinput/actions/workflows/build.yml/badge.svg)](https://github.com/jinput/jinput/actions/workflows/build.yml)
 
 # Welcome to the Java Input API Project!
 
@@ -48,7 +49,7 @@ You'll also need to add the build plugin in your `build/plugins` section of your
 A full pom might look like [this one](https://github.com/jinput/jinput/blob/master/examples/example.pom.xml)
 
 ### Without maven
-The jar file with the java code in should be in maven central, you'll need the [jinput.jar](http://repo1.maven.org/maven2/net/java/jinput/jinput/{{site.jinput_version}}/jinput-{{site.jinput_version}}.jar) and [jinput-natives-all.jar](http://repo1.maven.org/maven2/net/java/jinput/jinput/{{site.jinput_version}}/jinput-{{site.jinput_version}}-natives-all.jar) that contains the native binaries.
+The jar file with the java code in should be in maven central, you'll need the [jinput.jar](https://repo1.maven.org/maven2/net/java/jinput/jinput/{{site.jinput_version}}/jinput-{{site.jinput_version}}.jar) and [jinput-natives-all.jar](https://repo1.maven.org/maven2/net/java/jinput/jinput/{{site.jinput_version}}/jinput-{{site.jinput_version}}-natives-all.jar) that contains the native binaries.
 
 ## Running
 

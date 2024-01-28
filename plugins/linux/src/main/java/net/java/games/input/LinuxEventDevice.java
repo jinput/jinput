@@ -34,7 +34,7 @@ import java.util.ArrayList;
 /**
  * @author elias
  */
-final class LinuxEventDevice implements LinuxDevice {
+final class LinuxEventDevice implements LinuxDevice,AutoCloseable {
 	private final Map<LinuxAxisDescriptor, LinuxComponent> component_map = new HashMap<>();
 	private final Rumbler[] rumblers;
 	private final long fd;
@@ -358,10 +358,5 @@ final class LinuxEventDevice implements LinuxDevice {
 	private final void checkClosed() throws IOException {
 		if (closed)
 			throw new IOException("Device is closed");
-	}
-
-	@SuppressWarnings("deprecation")
-	protected void finalize() throws IOException {
-		close();
 	}
 }

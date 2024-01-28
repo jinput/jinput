@@ -17,11 +17,6 @@
             <artifactId>coreapi</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>net.java.jinput</groupId>
-            <artifactId>applet</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
