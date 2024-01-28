@@ -38,8 +38,6 @@
  *****************************************************************************/
 package net.java.games.input;
 
-import java.io.IOException;
-
 /** Java wrapper of a SetupAPI device
  * @author elias
  * @version 1.0
@@ -53,11 +51,11 @@ final class SetupAPIDevice {
 		this.device_name = device_name;
 	}
 
-	public final String getName() {
+	public String getName() {
 		return device_name;
 	}
 
-	public final String getInstanceId() {
+	public String getInstanceId() {
 		return device_instance_id;
 	}
 }

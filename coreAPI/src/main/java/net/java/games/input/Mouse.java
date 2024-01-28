@@ -38,9 +38,6 @@
  *****************************************************************************/
 package net.java.games.input;
 
-import java.util.List;
-import java.util.ArrayList;
-
 /**
  * A Mouse is a type of controller consisting of two child controllers,
  * a ball and a button pad.  This includes devices such as touch pads,

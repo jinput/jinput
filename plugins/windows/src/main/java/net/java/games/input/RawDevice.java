@@ -121,7 +121,7 @@ final class RawDevice {
 	}
 
 	/* Careful, this is called from the event queue thread */
-	public final synchronized void addMouseEvent(long millis, int flags, int button_flags, int button_data, long raw_buttons, long last_x, long last_y, long extra_information) {
+	public synchronized void addMouseEvent(long millis, int flags, int button_flags, int button_data, long raw_buttons, long last_x, long last_y, long extra_information) {
 		if (mouse_events.hasRemaining()) {
 			RawMouseEvent event = mouse_events.get();
 			event.set(millis, flags, button_flags, button_data, raw_buttons,  last_x, last_y, extra_information);
@@ -129,14 +129,14 @@ final class RawDevice {
 	}
 
 	/* Careful, this is called from the event queue thread */
-	public final synchronized void addKeyboardEvent(long millis, int make_code, int flags, int vkey, int message, long extra_information) {
+	public synchronized void addKeyboardEvent(long millis, int make_code, int flags, int vkey, int message, long extra_information) {
 		if (keyboard_events.hasRemaining()) {
 			RawKeyboardEvent event = keyboard_events.get();
 			event.set(millis, make_code, flags, vkey, message, extra_information);
 		}
 	}
 
-	public final synchronized void pollMouse() {
+	public synchronized void pollMouse() {
 		relative_x = relative_y = wheel = 0;
 		mouse_events.flip();
 		while (mouse_events.hasRemaining()) {
@@ -150,7 +150,7 @@ final class RawDevice {
 		mouse_events.compact();
 	}
 
-	public final synchronized void pollKeyboard() {
+	public synchronized void pollKeyboard() {
 		keyboard_events.flip();
 		while (keyboard_events.hasRemaining()) {
 			RawKeyboardEvent event = keyboard_events.get();
@@ -163,7 +163,7 @@ final class RawDevice {
 		keyboard_events.compact();
 	}
 
-	private final boolean updateButtonState(int button_id, int button_flags, int down_flag, int up_flag) {
+	private boolean updateButtonState(int button_id, int button_flags, int down_flag, int up_flag) {
 		if (button_id >= button_states.length)
 			return false;
 		if ((button_flags & down_flag) != 0) {
@@ -176,7 +176,7 @@ final class RawDevice {
 			return false;
 	}
 	
-	private final boolean processKeyboardEvent(RawKeyboardEvent event) {
+	private boolean processKeyboardEvent(RawKeyboardEvent event) {
 		int message = event.getMessage();
 		int vkey = event.getVKey();
 		if (vkey >= key_states.length)
@@ -191,11 +191,11 @@ final class RawDevice {
 			return false;
 	}
 
-	public final boolean isKeyDown(int vkey) {
+	public boolean isKeyDown(int vkey) {
 		return key_states[vkey];
 	}
 
-	private final boolean processMouseEvent(RawMouseEvent event) {
+	private boolean processMouseEvent(RawMouseEvent event) {
 		boolean has_update = false;
 		int button_flags = event.getButtonFlags();
 		has_update = updateButtonState(0, button_flags, RI_MOUSE_BUTTON_1_DOWN, RI_MOUSE_BUTTON_1_UP) || has_update;
@@ -224,27 +224,27 @@ final class RawDevice {
 		return has_update;
 	}
 
-	public final int getWheel() {
+	public int getWheel() {
 		return wheel;
 	}
 
-	public final int getEventRelativeX() {
+	public int getEventRelativeX() {
 		return event_relative_x;
 	}
 	
-	public final int getEventRelativeY() {
+	public int getEventRelativeY() {
 		return event_relative_y;
 	}
 	
-	public final int getRelativeX() {
+	public int getRelativeX() {
 		return relative_x;
 	}
 	
-	public final int getRelativeY() {
+	public int getRelativeY() {
 		return relative_y;
 	}
 	
-	public final synchronized boolean getNextKeyboardEvent(RawKeyboardEvent event) {
+	public synchronized boolean getNextKeyboardEvent(RawKeyboardEvent event) {
 		processed_keyboard_events.flip();
 		if (!processed_keyboard_events.hasRemaining()) {
 			processed_keyboard_events.compact();
@@ -256,7 +256,7 @@ final class RawDevice {
 		return true;
 	}
 
-	public final synchronized boolean getNextMouseEvent(RawMouseEvent event) {
+	public synchronized boolean getNextMouseEvent(RawMouseEvent event) {
 		processed_mouse_events.flip();
 		if (!processed_mouse_events.hasRemaining()) {
 			processed_mouse_events.compact();
@@ -277,34 +277,34 @@ final class RawDevice {
 		return true;
 	}
 	
-	public final boolean getButtonState(int button_id) {
+	public boolean getButtonState(int button_id) {
 		if (button_id >= button_states.length)
 			return false;
 		return button_states[button_id];
 	}
 
-	public final void setBufferSize(int size) {
+	public void setBufferSize(int size) {
 		keyboard_events = new DataQueue<>(size, RawKeyboardEvent.class);
 		mouse_events = new DataQueue<>(size, RawMouseEvent.class);
 		processed_keyboard_events = new DataQueue<>(size, RawKeyboardEvent.class);
 		processed_mouse_events = new DataQueue<>(size, RawMouseEvent.class);
 	}
 
-	public final int getType() {
+	public int getType() {
 		return type;
 	}
 
-	public final long getHandle() {
+	public long getHandle() {
 		return handle;
 	}
 
-	public final String getName() throws IOException {
+	public String getName() throws IOException {
 		return nGetName(handle);
 	}
-	private final static native String nGetName(long handle) throws IOException;
+	private static native String nGetName(long handle) throws IOException;
 
-	public final RawDeviceInfo getInfo() throws IOException {
+	public RawDeviceInfo getInfo() throws IOException {
 		return nGetInfo(this, handle);
 	}
-	private final static native RawDeviceInfo nGetInfo(RawDevice device, long handle) throws IOException;
+	private static native RawDeviceInfo nGetInfo(RawDevice device, long handle) throws IOException;
 }

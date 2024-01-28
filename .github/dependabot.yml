@@ -1,0 +1,36 @@
+version: 2
+updates:
+  - package-ecosystem: "maven"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+
+  - package-ecosystem: "maven"
+    directory: "/applet"
+    schedule:
+      interval: "monthly"
+
+  - package-ecosystem: "maven"
+    directory: "/coreAPI"
+    schedule:
+      interval: "monthly"
+
+  - package-ecosystem: "maven"
+    directory: "/examples"
+    schedule:
+      interval: "monthly"
+
+  - package-ecosystem: "maven"
+    directory: "/plugins"
+    schedule:
+      interval: "monthly"
+
+  - package-ecosystem: "maven"
+    directory: "/tests"
+    schedule:
+      interval: "monthly"
+
+  - package-ecosystem: "maven"
+    directory: "/uberjar"
+    schedule:
+      interval: "monthly"

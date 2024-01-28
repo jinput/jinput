@@ -61,23 +61,23 @@ final class DIEffectInfo {
 		this.name = name;
 	}
 
-	public final byte[] getGUID() {
+	public byte[] getGUID() {
 		return guid;
 	}
 
-	public final int getGUIDId() {
+	public int getGUIDId() {
 		return guid_id;
 	}
 
-	public final int getDynamicParams() {
+	public int getDynamicParams() {
 		return dynamic_params;
 	}
 
-	public final int getEffectType() {
+	public int getEffectType() {
 		return effect_type;
 	}
 
-	public final String getName() {
+	public String getName() {
 		return name;
 	}
 }

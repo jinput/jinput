@@ -89,7 +89,7 @@ final class DIDeviceObject {
 		}
 	}
 
-	public final synchronized int getRelativePollValue(int current_abs_value) {
+	public synchronized int getRelativePollValue(int current_abs_value) {
 		if (device.areAxesRelative())
 			return current_abs_value;
 		int rel_value = current_abs_value - last_poll_value;
@@ -97,7 +97,7 @@ final class DIDeviceObject {
 		return rel_value;
 	}
 
-	public final synchronized int getRelativeEventValue(int current_abs_value) {
+	public synchronized int getRelativeEventValue(int current_abs_value) {
 		if (device.areAxesRelative())
 			return current_abs_value;
 		int rel_value = current_abs_value - last_event_value;
@@ -105,75 +105,75 @@ final class DIDeviceObject {
 		return rel_value;
 	}
 
-	public final int getGUIDType() {
+	public int getGUIDType() {
 		return guid_type;
 	}
 
-	public final int getFormatOffset() {
+	public int getFormatOffset() {
 		return format_offset;
 	}
 
-	public final IDirectInputDevice getDevice() {
+	public IDirectInputDevice getDevice() {
 		return device;
 	}
 
-	public final int getDIIdentifier() {
+	public int getDIIdentifier() {
 		return identifier;
 	}
 
-	public final Component.Identifier getIdentifier() {
+	public Component.Identifier getIdentifier() {
 		return id;
 	}
 
-	public final String getName() {
+	public String getName() {
 		return name;
 	}
 
-	public final int getInstance() {
+	public int getInstance() {
 		return instance;
 	}
 
-	public final int getType() {
+	public int getType() {
 		return type;
 	}
 
-	public final byte[] getGUID() {
+	public byte[] getGUID() {
 		return guid;
 	}
 
-	public final int getFlags() {
+	public int getFlags() {
 		return flags;
 	}
 
-	public final long getMin() {
+	public long getMin() {
 		return min;
 	}
 
-	public final long getMax() {
+	public long getMax() {
 		return max;
 	}
 
-	public final float getDeadzone() {
+	public float getDeadzone() {
 		return deadzone;
 	}
 
-	public final boolean isButton() {
+	public boolean isButton() {
 		return (type & IDirectInputDevice.DIDFT_BUTTON) != 0;
 	}
 	
-	public final boolean isAxis() {
+	public boolean isAxis() {
 		return (type & IDirectInputDevice.DIDFT_AXIS) != 0;
 	}
 	
-	public final boolean isRelative() {
+	public boolean isRelative() {
 		return isAxis() && (type & IDirectInputDevice.DIDFT_RELAXIS) != 0;
 	}
 
-	public final boolean isAnalog() {
+	public boolean isAnalog() {
 		return isAxis() && id != Component.Identifier.Axis.POV;
 	}
 
-	public final float convertValue(float value) {
+	public float convertValue(float value) {
 		if (getDevice().getType() == IDirectInputDevice.DI8DEVTYPE_MOUSE && id == Component.Identifier.Axis.Z) {
 			return value/WHEEL_SCALE;
 		} else if (isButton()) {

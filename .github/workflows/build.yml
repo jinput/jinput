@@ -1,0 +1,178 @@
+name: JInput CI
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build-natives:
+    name: ${{ matrix.name }} natives build
+    strategy:
+      matrix:
+        include:
+          - name: Linux
+            os: ubuntu-latest
+            artifact: linux-natives
+            project: plugins/linux
+          - name: Windows
+            os: windows-latest
+            artifact: windows-natives
+            project: plugins/windows
+          - name: Wintab
+            os: windows-latest
+            artifact: wintab-natives
+            project: plugins/wintab
+          - name: macOS
+            os: macos-latest
+            artifact: macos-natives
+            project: plugins/OSX
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 21
+          java-package: jdk
+
+      - name: Setup MSVC Dev Cmd
+        if: matrix.os == 'windows-latest'
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Download and Extract Wintab SDK
+        if: matrix.name == 'Wintab'
+        run: |
+          mkdir wintab-sdk
+          cd wintab-sdk
+          curl -L -O https://raw.githubusercontent.com/Wacom-Developer/wacom-device-kit-windows/master/Wintab%20Tablet%20Controls/SampleCode/Wintab/WINTAB.H
+          curl -L -O https://raw.githubusercontent.com/Wacom-Developer/wacom-device-kit-windows/master/Wintab%20Tablet%20Controls/SampleCode/Wintab/PKTDEF.H
+          cd -
+
+      - name: Build with Maven
+        env:
+          WintabSdkDir: ${{ github.workspace }}/wintab-sdk
+        run: mvn --batch-mode --file pom.xml --also-make --projects ${{ matrix.project }} clean compile
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: |
+            ${{ matrix.project }}/target/natives/*.so*
+            ${{ matrix.project }}/target/natives/*.dll
+            ${{ matrix.project }}/target/natives/*.jnilib
+
+  build:
+    needs: build-natives
+    name: Packaged build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 21
+          java-package: jdk
+
+      - name: Clean
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar,tests,examples clean
+
+      - name: Unpack linux natives
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-natives
+          path: plugins/linux/target/natives
+      - name: Unpack macos natives
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-natives
+          path: plugins/OSX/target/natives
+      - name: Unpack windows natives
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-natives
+          path: plugins/windows/target/natives
+      - name: Unpack wintab natives
+        uses: actions/download-artifact@v4
+        with:
+          name: wintab-natives
+          path: plugins/wintab/target/natives
+
+      - name: Package
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar,tests,examples -Dmaven.antrun.skip package
+
+      - name: Upload CoreAPI Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: coreapi
+          path: coreAPI/target/*.jar
+
+      - name: Upload Uberjar Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: uberjar
+          path: uberjar/target/jinput-*.jar
+
+  deploy:
+    needs: build-natives
+    name: Deploy Snapshot
+    environment: OSSRH
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 21
+          java-package: jdk
+
+      - name: Clean
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar,tests,examples clean
+
+      - name: Unpack linux natives
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-natives
+          path: plugins/linux/target/natives
+      - name: Unpack macos natives
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-natives
+          path: plugins/OSX/target/natives
+      - name: Unpack windows natives
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-natives
+          path: plugins/windows/target/natives
+      - name: Unpack wintab natives
+        uses: actions/download-artifact@v4
+        with:
+          name: wintab-natives
+          path: plugins/wintab/target/natives
+
+      - name: Setup snapshot deploy
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 21
+          java-package: jdk
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Snapshot deploy
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar,tests,examples -Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs deploy
