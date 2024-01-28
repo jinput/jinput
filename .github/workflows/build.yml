@@ -122,6 +122,7 @@ jobs:
     name: Deploy Snapshot
     environment: OSSRH
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -132,12 +133,36 @@ jobs:
           distribution: 'temurin'
           java-version: 21
           java-package: jdk
+
+      - name: Clean
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar,tests,examples clean
+
+      - name: Unpack linux natives
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-natives
+          path: plugins/linux/target/natives
+      - name: Unpack macos natives
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-natives
+          path: plugins/OSX/target/natives
+      - name: Unpack windows natives
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-natives
+          path: plugins/windows/target/natives
+      - name: Unpack wintab natives
+        uses: actions/download-artifact@v4
+        with:
+          name: wintab-natives
+          path: plugins/wintab/target/natives
+
       - name: Setup snapshot deploy
-        if: github.ref == 'refs/heads/master'
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: 16
+          java-version: 21
           java-package: jdk
           server-id: ossrh
           server-username: MAVEN_USERNAME
@@ -146,7 +171,6 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Snapshot deploy
-        if: github.ref == 'refs/heads/master'
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
