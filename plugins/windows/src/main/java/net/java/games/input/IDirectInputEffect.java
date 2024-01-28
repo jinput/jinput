@@ -44,7 +44,7 @@ import java.io.IOException;
  * @author elias
  * @version 1.0
  */
-final class IDirectInputEffect implements Rumbler {
+final class IDirectInputEffect implements Rumbler,AutoCloseable {
 	private final long address;
 	private final DIEffectInfo info;
 	private boolean released;
@@ -115,8 +115,7 @@ final class IDirectInputEffect implements Rumbler {
 	}
 	private static native int nStop(long address);
 
-	@SuppressWarnings("deprecation")
-	protected void finalize() {
+	public void close() {
 		release();
 	}
 }
