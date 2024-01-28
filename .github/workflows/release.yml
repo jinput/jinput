@@ -121,6 +121,10 @@ jobs:
       - name: Set environment
         run: echo "RELEASE_VERSION=$(mvn -Dexpression=project.version help:evaluate | grep -e '^[[:digit:]]')" >> $GITHUB_ENV
 
+      - name: Update docs
+        run: |
+          sed -i "/^jinput_version.*/c\jinput_version: $RELEASE_VERSION" docs/_config.yml
+
       - name: Tag release
         run: git tag -a $RELEASE_VERSION -m "Release tag $RELEASE_VERSION"
 
