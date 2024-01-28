@@ -117,6 +117,21 @@ jobs:
           name: uberjar
           path: uberjar/target/jinput-*.jar
 
+  deploy:
+    needs: build-natives
+    name: Packaged build
+    environment: OSSRH
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 21
+          java-package: jdk
       - name: Setup snapshot deploy
         if: github.ref == 'refs/heads/master'
         uses: actions/setup-java@v4
