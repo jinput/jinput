@@ -67,7 +67,7 @@ public class ReadFirstMouse {
 			System.out.println(buffer.toString());
 
 			/*
-			 * Sleep for 20 millis, this is just so the example doesn't thrash
+			 * Sleep for 20 millis, this is just so the example doesn't trash
 			 * the system.
 			 */
 			try {
