@@ -30,7 +30,7 @@ public class RumbleTest {
     /** Creates a new instance of RumbleTest */
     public RumbleTest() {
         ControllerEnvironment ca = ControllerEnvironment.getDefaultEnvironment();
-        System.out.println("JInput version: " + Version.getVersion());
+        System.out.println("JInput version: " + PomProperties.getVersion());
         Controller[] controllers = ca.getControllers();
         for(int i=0;i<controllers.length;i++) {
             System.out.println("Scanning " + controllers[i].getName());
