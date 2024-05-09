@@ -33,7 +33,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: 21
+          java-version: 8
           java-package: jdk
 
       - name: Setup MSVC Dev Cmd
@@ -75,7 +75,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: 21
+          java-version: 8
           java-package: jdk
 
       - name: Clean
@@ -131,7 +131,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: 21
+          java-version: 8
           java-package: jdk
 
       - name: Clean
@@ -162,7 +162,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: 21
+          java-version: 8
           java-package: jdk
           server-id: ossrh
           server-username: MAVEN_USERNAME
