@@ -115,10 +115,39 @@ jobs:
           name: wintab-natives
           path: plugins/wintab/target/natives
 
-      - name: Snapshot deploy
+      - name: Set Release Version
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles windows,linux,osx,wintab --projects plugins/awt,uberjar,tests,examples versions:set -DremoveSnapshot
+
+      - name: Set environment
+        run: echo "RELEASE_VERSION=$(mvn -Dexpression=project.version help:evaluate | grep -e '^[[:digit:]]')" >> $GITHUB_ENV
+
+      - name: Update docs
+        run: |
+          sed -i "/^jinput_version.*/c\jinput_version: $RELEASE_VERSION" docs/_config.yml
+
+      - name: Commit docs change
+        run: git commit -m "Update docs for release $RELEASE_VERSION" docs/_config.yml
+
+      - name: Tag release
+        run: git tag -a $RELEASE_VERSION -m "Release tag $RELEASE_VERSION"
+
+      - name: Release
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab,release --projects plugins/awt,uberjar,tests,examples -Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs deploy
+
+      - name: Reset version
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles windows,linux,osx,wintab --projects plugins/awt,uberjar,tests,examples versions:revert
+
+      - name: Set next development version
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles windows,linux,osx,wintab --projects plugins/awt,uberjar,tests,examples versions:set -DnextSnapshot
+
+      - name: Commit next dev versions
+        run: git commit -m 'Next development release' .
+
+      - name: Git push
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab,release --projects plugins/awt,uberjar,tests,examples -Darguments="-Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs" release:prepare release:perform
+        run: git push origin HEAD:master --follow-tags
