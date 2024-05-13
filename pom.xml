@@ -4,7 +4,7 @@
     <artifactId>jinput-parent</artifactId>
     <packaging>pom</packaging>
     <name>JInput</name>
-    <version>2.0.10-SNAPSHOT</version>
+    <version>2.0.11-SNAPSHOT</version>
     <description>Library for access to input devices.</description>
     <url>https://github.com/jinput/jinput</url>
     <licenses>
@@ -80,7 +80,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.4.1</version>
                     <configuration>
                         <archive>
                             <manifestEntries>
@@ -148,7 +148,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>3.5.2</version>
                 </plugin>
             </plugins>
         </pluginManagement>
