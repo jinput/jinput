@@ -42,7 +42,7 @@ public class ControllerTextTest {
     /** Creates a new instance of ControllerScanner */
     public ControllerTextTest() {
         ce = ControllerEnvironment.getDefaultEnvironment();
-        System.out.println("JInput version: " + Version.getVersion());
+        System.out.println("JInput version: " + PomProperties.getVersion());
         System.out.println("Controller Env = "+ce.toString());
         
         
