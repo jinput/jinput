@@ -38,6 +38,7 @@
 *****************************************************************************/
 package net.java.games.input;
 
+import java.awt.*;
 import java.io.IOException;
 
 /** Represents an OSX Mouse
@@ -65,4 +66,7 @@ final class LinuxMouse extends Mouse {
 	protected final boolean getNextDeviceEvent(Event event) throws IOException {
 		return LinuxControllers.getNextDeviceEvent(event, device);
 	}
+
+	@Override
+	protected void setDeviceEventQueueSize(int size) {}
 }

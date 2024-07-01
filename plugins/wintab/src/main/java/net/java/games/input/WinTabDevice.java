@@ -66,7 +66,7 @@ public class WinTabDevice extends AbstractController {
 	public Type getType() {
 		return Type.TRACKPAD;
 	}
-	
+
 	public void processPacket(WinTabPacket packet) {
 		Component[] components = getComponents();
 		for(int i=0;i<components.length;i++) {

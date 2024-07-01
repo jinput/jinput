@@ -38,6 +38,7 @@
 *****************************************************************************/
 package net.java.games.input;
 
+import java.awt.*;
 import java.io.IOException;
 
 /** Represents an OSX Mouse
