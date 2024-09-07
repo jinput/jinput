@@ -52,7 +52,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
-public final class ControllerReadTest extends JFrame {
+public class ControllerReadTest extends JFrame {
 	@Serial
 	private static final long serialVersionUID = -7129976919159465311L;
 
@@ -258,7 +258,7 @@ public final class ControllerReadTest extends JFrame {
 	transient List<ControllerWindow> controllers = new ArrayList<>();
 
 	public ControllerReadTest() {
-		super("Controller Read Test. Version: " + Version.getVersion());
+		super("Controller Read Test. PomProperties: " + PomProperties.getVersion());
 		ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment();
 		Controller[] ca = ce.getControllers();
 		for(int i =0;i<ca.length;i++){
