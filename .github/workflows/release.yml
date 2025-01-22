@@ -95,22 +95,22 @@ jobs:
         run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar,tests,examples clean
 
       - name: Unpack linux natives
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.1.3
         with:
           name: linux-natives
           path: plugins/linux/target/natives
       - name: Unpack macos natives
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.1.3
         with:
           name: macos-natives
           path: plugins/OSX/target/natives
       - name: Unpack windows natives
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.1.3
         with:
           name: windows-natives
           path: plugins/windows/target/natives
       - name: Unpack wintab natives
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.1.3
         with:
           name: wintab-natives
           path: plugins/wintab/target/natives
