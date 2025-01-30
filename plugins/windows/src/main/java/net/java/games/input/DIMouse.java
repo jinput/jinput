@@ -63,5 +63,4 @@ final class DIMouse extends Mouse {
 	protected void setDeviceEventQueueSize(int size) throws IOException {
 		device.setBufferSize(size);
 	}
-
 }

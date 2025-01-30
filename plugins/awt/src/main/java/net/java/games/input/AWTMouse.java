@@ -165,7 +165,7 @@ final class AWTMouse extends Mouse implements AWTEventListener {
 		}
 	}
 
-    public synchronized void eventDispatched(AWTEvent event) {
+	public synchronized void eventDispatched(AWTEvent event) {
 		awt_events.add(event);
 	}
 
