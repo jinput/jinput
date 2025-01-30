@@ -76,13 +76,8 @@ public abstract class ControllerEnvironment {
     /**
      * The default controller environment
      */
-    private static ControllerEnvironment defaultEnvironment =
-        new DefaultControllerEnvironment();
-    
-    /**
-     * List of controller listeners
-     */
-    protected final ArrayList<ControllerListener> controllerListeners = new ArrayList<>();
+    private static ControllerEnvironment defaultEnvironment = new DefaultControllerEnvironment();
+
     
     /**
      * Protected constructor for subclassing.
@@ -102,51 +97,11 @@ public abstract class ControllerEnvironment {
     public abstract Controller[] getControllers();
     
     /**
-     * Adds a listener for controller state change events.
-     */
-    public void addControllerListener(ControllerListener l) {
-        assert l != null;
-        controllerListeners.add(l);
-    }
-    
-    /**
      * Returns the isSupported status of this environment.
      * What makes an environment supported or not is up to the
      * particular plugin, but may include OS or available hardware.
      */
     public abstract boolean isSupported();
-    
-    /**
-     * Removes a listener for controller state change events.
-     */
-    public void removeControllerListener(ControllerListener l) {
-        assert l != null;
-        controllerListeners.remove(l);
-    }
-    
-    /**
-     * Creates and sends an event to the controller listeners that a controller
-     * has been added.
-     */
-    protected void fireControllerAdded(Controller c) {
-        ControllerEvent ev = new ControllerEvent(c);
-        Iterator<ControllerListener> it = controllerListeners.iterator();
-        while (it.hasNext()) {
-            it.next().controllerAdded(ev);
-        }
-    }
-    
-    /**
-     * Creates and sends an event to the controller listeners that a controller
-     * has been lost.
-     */
-    protected void fireControllerRemoved(Controller c) {
-        ControllerEvent ev = new ControllerEvent(c);
-        Iterator<ControllerListener> it = controllerListeners.iterator();
-        while (it.hasNext()) {
-            it.next().controllerRemoved(ev);
-        }
-    }
     
     /**
      * Returns the default environment for input controllers.
