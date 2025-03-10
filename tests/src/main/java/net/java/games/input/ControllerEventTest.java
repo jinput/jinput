@@ -49,7 +49,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
-public final class ControllerEventTest extends JFrame {
+
+public class ControllerEventTest extends JFrame {
 	@Serial
 	private static final long serialVersionUID = -8266185848160199092L;
 
@@ -251,7 +252,7 @@ public final class ControllerEventTest extends JFrame {
 	transient List<ControllerWindow> controllers = new ArrayList<>();
 
 	public ControllerEventTest() {
-		super("Controller Event Test. Version: " + Version.getVersion());
+		super("Controller Event Test. PomProperties: " + PomProperties.getVersion());
 		ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment();
 		Controller[] ca = ce.getControllers();
 		for(int i =0;i<ca.length;i++){
