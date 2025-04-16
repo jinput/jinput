@@ -50,11 +50,9 @@ import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
 public final class ControllerEventTest extends JFrame {
-	@Serial
 	private static final long serialVersionUID = -8266185848160199092L;
 
 	private static abstract class AxisPanel extends JPanel {
-		@Serial
 		private static final long serialVersionUID = -6200599064870672000L;
 		transient Component axis;
 		float data;
@@ -79,7 +77,6 @@ public final class ControllerEventTest extends JFrame {
 	}
 
 	private static class DigitalAxisPanel extends AxisPanel {
-		@Serial
 		private static final long serialVersionUID = -4729666037860134626L;
 		JLabel digitalState = new JLabel("<unread>");
 
@@ -104,7 +101,6 @@ public final class ControllerEventTest extends JFrame {
 	}
 
 	private static class DigitalHatPanel extends AxisPanel {
-		@Serial
 		private static final long serialVersionUID = -6582605379682496832L;
 		JLabel digitalState = new JLabel("<unread>");
 
@@ -149,7 +145,7 @@ public final class ControllerEventTest extends JFrame {
 		}
 	}
 	private static class AnalogAxisPanel extends AxisPanel {
-		@Serial private static final long serialVersionUID = 7536173405896285590L;
+		private static final long serialVersionUID = 7536173405896285590L;
 		JLabel analogState = new JLabel("<unread>");
 
 		public AnalogAxisPanel(Component ax) {
@@ -169,7 +165,6 @@ public final class ControllerEventTest extends JFrame {
 
 
 	private static class ControllerWindow extends JFrame {
-		@Serial
 		private static final long serialVersionUID = 8623977198558568961L;
 		transient Controller ca;
 		transient Map<Component, AxisPanel> axes_to_panels = new HashMap<>();
