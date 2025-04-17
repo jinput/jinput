@@ -79,8 +79,21 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
      */
     public DefaultControllerEnvironment() {
     }
-    
-    /**
+
+	/**
+	 * Returns a list of all controllers available to this environment,
+	 * or an empty array if there are no controllers in this environment.
+	 *
+	 * @param rescan if true, the list of controllers will be rescanned
+	 */
+	public Controller[] getControllers(boolean rescan) {
+		if (rescan) {
+			controllers = null;
+		}
+		return getControllers();
+	}
+
+	/**
      * Returns a list of all controllers available to this environment,
      * or an empty array if there are no controllers in this environment.
      */
