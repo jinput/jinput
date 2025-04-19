@@ -20,7 +20,10 @@
             <arg value="-m"/>
         </exec>
         <condition property="libname" value="${libname64}" else="${libname32}">
-            <equals arg1="${hwplatform}" arg2="x86_64"/>
+            <or>
+                <equals arg1="${hwplatform}" arg2="x86_64"/>
+                <equals arg1="${hwplatform}" arg2="aarch64"/>
+            </or>
         </condition>
         <apply dir="target/natives" executable="cc" os="Linux" dest="target/natives" skipemptyfilesets="true" failonerror="true">
             <arg line="-O2 -Wall -c -fPIC"/>
