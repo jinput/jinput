@@ -6,7 +6,7 @@
         <groupId>net.java.jinput</groupId>
         <artifactId>jinput-parent</artifactId>
         <version>2.0.11-SNAPSHOT</version>
-        <relativePath>../</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>examples</artifactId>
     <packaging>jar</packaging>
@@ -48,7 +48,7 @@
                             <executable>java</executable>
                             <arguments>
                                 <argument>-classpath</argument>
-                                <classpath/>
+                                <classpath></classpath>
                                 <argument>-Djava.library.path=${project.build.directory}/natives</argument>
                                 <argument>-Djinput.loglevel=OFF</argument>
                                 <argument>net.java.games.input.example.ReadAllEvents</argument>
