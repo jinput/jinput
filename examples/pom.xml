@@ -11,15 +11,6 @@
         <relativePath>../</relativePath>
     </parent>
 
-    <repositories>
-        <repository>
-            <id>central-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases><enabled>false</enabled></releases>
-            <snapshots><enabled>true</enabled></snapshots>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -52,7 +43,6 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
-                        <version>3.5.0</version>
                         <executions>
                             <execution>
                                 <goals>
