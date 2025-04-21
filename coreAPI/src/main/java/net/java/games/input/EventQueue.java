@@ -25,7 +25,7 @@
  * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
  * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
  * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
- * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS 
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
  * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
  * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
@@ -39,11 +39,11 @@
 package net.java.games.input;
 
 /**
- * A FIFO queue for input events. 
+ * A FIFO queue for input events.
  */
 public final class EventQueue {
 	private final Event[] queue;
-	
+
 	private int head;
 	private int tail;
 
@@ -81,7 +81,7 @@ public final class EventQueue {
 
 	/**
 	 * Populates the provided event with the details of the event on the head of the queue.
-	 * 
+	 *
 	 * @param event The event to populate
 	 * @return false if there were no events left on the queue, otherwise true.
 	 */

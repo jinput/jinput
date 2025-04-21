@@ -2,9 +2,9 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.java.jinput</groupId>
     <artifactId>jinput-parent</artifactId>
+    <version>2.0.11-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>JInput</name>
-    <version>2.0.11-SNAPSHOT</version>
     <description>Library for access to input devices.</description>
     <url>https://github.com/jinput/jinput</url>
     <licenses>
@@ -20,26 +20,47 @@
             <url>https://github.com/jinput/jinput/graphs/contributors</url>
         </developer>
     </developers>
+
+    <modules>
+        <module>coreAPI</module>
+        <module>plugins</module>
+        <module>uberjar</module>
+        <module>examples</module>
+        <module>tests</module>
+    </modules>
     <scm>
-        <url>https://github.com/jinput/jinput.git</url>
         <connection>scm:git:https://github.com/jinput/jinput.git</connection>
         <developerConnection>scm:git:https://github.com/jinput/jinput.git</developerConnection>
+        <url>https://github.com/jinput/jinput.git</url>
     </scm>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
         <repository>
             <id>ossrh</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>8</maven.compiler.release>
+        <jutils.version>1.0.0</jutils.version>
+        <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
+        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+        <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
+        <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
+        <maven-nativedependencies-plugin.version>0.0.7</maven-nativedependencies-plugin.version>
+        <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
+        <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
+        <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
+        <editorconfig-maven-plugin.version>0.1.3</editorconfig-maven-plugin.version>
+        <exec-maven-plugin.version>3.5.0</exec-maven-plugin.version>
+        <sortpom-maven-plugin.version>4.0.0</sortpom-maven-plugin.version>
     </properties>
 
     <repositories>
@@ -60,25 +81,17 @@
             <dependency>
                 <groupId>net.java.jutils</groupId>
                 <artifactId>jutils</artifactId>
-                <version>1.0.0</version>
+                <version>${jutils.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <modules>
-        <module>coreAPI</module>
-        <module>plugins</module>
-        <module>uberjar</module>
-        <module>examples</module>
-        <module>tests</module>
-    </modules>
 
     <build>
         <pluginManagement>
             <plugins>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.14.0</version>
+                    <version>${maven-compiler-plugin.version}</version>
                     <configuration>
                         <showDeprecation>true</showDeprecation>
                         <showWarnings>true</showWarnings>
@@ -92,7 +105,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.4.2</version>
+                    <version>${maven-jar-plugin.version}</version>
                     <configuration>
                         <archive>
                             <manifestEntries>
@@ -103,7 +116,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>${maven-source-plugin.version}</version>
                     <executions>
                         <execution>
                             <id>attach-sources</id>
@@ -115,28 +128,28 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.11.2</version>
+                    <version>${maven-javadoc-plugin.version}</version>
                     <configuration>
                         <additionalOptions>-Xdoclint:none</additionalOptions>
                     </configuration>
                     <executions>
                         <execution>
                             <id>attach-javadocs</id>
-                            <phase>package</phase>
                             <goals>
                                 <goal>jar</goal>
                             </goals>
+                            <phase>package</phase>
                         </execution>
                     </executions>
                 </plugin>
                 <plugin>
                     <artifactId>maven-antrun-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>${maven-antrun-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>com.googlecode.mavennatives</groupId>
                     <artifactId>maven-nativedependencies-plugin</artifactId>
-                    <version>0.0.7</version>
+                    <version>${maven-nativedependencies-plugin.version}</version>
                     <executions>
                         <execution>
                             <id>unpacknatives</id>
@@ -149,7 +162,7 @@
                 <plugin>
                     <groupId>org.sonatype.plugins</groupId>
                     <artifactId>nexus-staging-maven-plugin</artifactId>
-                    <version>1.7.0</version>
+                    <version>${nexus-staging-maven-plugin.version}</version>
                     <extensions>true</extensions>
                     <configuration>
                         <serverId>ossrh</serverId>
@@ -160,33 +173,78 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>${maven-shade-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>${exec-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven-gpg-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.ec4j.maven</groupId>
+                    <artifactId>editorconfig-maven-plugin</artifactId>
+                    <version>${editorconfig-maven-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.ekryd.sortpom</groupId>
+                    <artifactId>sortpom-maven-plugin</artifactId>
+                    <version>${sortpom-maven-plugin.version}</version>
+                    <configuration>
+                        <nrOfIndentSpace>4</nrOfIndentSpace>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
             <plugin>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>3.2.7</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
                     <gpgArguments>
                         <arg>--pinentry-mode</arg>
                         <arg>loopback</arg>
                     </gpgArguments>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                        <phase>deploy</phase>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.ec4j.maven</groupId>
+                <artifactId>editorconfig-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.ekryd.sortpom</groupId>
+                <artifactId>sortpom-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>sort</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

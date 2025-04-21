@@ -1,26 +1,26 @@
 /*
  * Copyright (C) 2004 Jeremy Booth (jeremy@newdawnsoftware.com)
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
- * Redistributions of source code must retain the above copyright notice, this 
- * list of conditions and the following disclaimer. Redistributions in binary 
- * form must reproduce the above copyright notice, this list of conditions and 
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer. Redistributions in binary
+ * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials provided
- * with the distribution. 
+ * with the distribution.
  * The name of the author may not be used to endorse or promote products derived
- * from this software without specific prior written permission. 
+ * from this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO 
- * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+ * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  */
 
@@ -68,7 +68,7 @@ final class AWTMouse extends Mouse implements AWTEventListener {
 		if (button != null)
 			button.setValue(value);
 	}
-	
+
 	private Button getButton(int button_enum) {
 		switch (button_enum) {
 			case MouseEvent.BUTTON1:
@@ -171,7 +171,7 @@ final class AWTMouse extends Mouse implements AWTEventListener {
 
 	final static class Axis extends AbstractComponent {
 		private float value;
-		
+
 		public Axis(Component.Identifier.Axis axis_id) {
 			super(axis_id.getName(), axis_id);
 		}
@@ -182,7 +182,7 @@ final class AWTMouse extends Mouse implements AWTEventListener {
 
 		public boolean isAnalog() {
 			return true;
-		} 
+		}
 
 		protected void setValue(float value) {
 			this.value = value;
@@ -195,7 +195,7 @@ final class AWTMouse extends Mouse implements AWTEventListener {
 
 	final static class Button extends AbstractComponent {
 		private float value;
-		
+
 		public Button(Component.Identifier.Button button_id) {
 			super(button_id.getName(), button_id);
 		}
@@ -214,6 +214,6 @@ final class AWTMouse extends Mouse implements AWTEventListener {
 
 		public boolean isRelative() {
 			return false;
-		}  
+		}
 	}
 }

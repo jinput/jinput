@@ -46,7 +46,7 @@ import java.io.IOException;
 */
 final class LinuxJoystickAbstractController extends AbstractController {
 	private final LinuxJoystickDevice device;
-	
+
 	protected LinuxJoystickAbstractController(LinuxJoystickDevice device, Component[] components, Controller[] children, Rumbler[] rumblers) {
 		super(device.getName(), components, children, rumblers);
 		this.device = device;

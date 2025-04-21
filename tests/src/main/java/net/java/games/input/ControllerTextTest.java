@@ -24,7 +24,7 @@
  * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
  * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
  * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
- * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS 
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
  * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
  * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
@@ -44,8 +44,8 @@ public class ControllerTextTest {
         ce = ControllerEnvironment.getDefaultEnvironment();
         System.out.println("JInput version: " + Version.getVersion());
         System.out.println("Controller Env = "+ce.toString());
-        
-        
+
+
         Controller[] ca = ce.getControllers();
         for(int i =0;i<ca.length;i++){
             System.out.println(ca[i].getName());
@@ -71,14 +71,14 @@ public class ControllerTextTest {
             }
             System.out.println("---------------------------------");
         }
-        
+
     }
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         new ControllerTextTest();
     }
-    
+
 }

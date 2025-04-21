@@ -1,24 +1,16 @@
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>examples</artifactId>
-    <packaging>jar</packaging>
-    <name>JInput - examples</name>
 
     <parent>
         <groupId>net.java.jinput</groupId>
         <artifactId>jinput-parent</artifactId>
         <version>2.0.11-SNAPSHOT</version>
-        <relativePath>../</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
-
-    <repositories>
-        <repository>
-            <id>central-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases><enabled>false</enabled></releases>
-            <snapshots><enabled>true</enabled></snapshots>
-        </repository>
-    </repositories>
+    <artifactId>examples</artifactId>
+    <packaging>jar</packaging>
+    <name>JInput - examples</name>
 
     <dependencies>
         <dependency>
@@ -52,7 +44,16 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
-                        <version>3.5.0</version>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath></classpath>
+                                <argument>-Djava.library.path=${project.build.directory}/natives</argument>
+                                <argument>-Djinput.loglevel=OFF</argument>
+                                <argument>net.java.games.input.example.ReadAllEvents</argument>
+                            </arguments>
+                        </configuration>
                         <executions>
                             <execution>
                                 <goals>
@@ -60,16 +61,6 @@
                                 </goals>
                             </execution>
                         </executions>
-                        <configuration>
-                            <executable>java</executable>
-                            <arguments>
-                                <argument>-classpath</argument>
-                                <classpath/>
-                                <argument>-Djava.library.path=${project.build.directory}/natives</argument>
-                                <argument>-Djinput.loglevel=OFF</argument>
-                                <argument>net.java.games.input.example.ReadAllEvents</argument>
-                            </arguments>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>

@@ -24,7 +24,7 @@
  * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
  * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
  * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
- * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS 
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
  * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
  * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
@@ -135,7 +135,7 @@ public final class ControllerReadTest extends JFrame {
 				digitalState.setText("DOWN+LEFT");
 			} else if ( data == Component.POV.LEFT) {
 				digitalState.setBackground(Color.green);
-				digitalState.setText("LEFT");    
+				digitalState.setText("LEFT");
 			} else if ( data == Component.POV.UP_LEFT) {
 				digitalState.setBackground(Color.green);
 				digitalState.setText("UP+LEFT");
@@ -186,7 +186,7 @@ public final class ControllerReadTest extends JFrame {
 				p.setLayout(new GridLayout(width,0));
 				for(int j=0;j<components.length;j++){
 					addAxis(p,components[j]);
-				}  
+				}
 				c.add(new JScrollPane(p),BorderLayout.CENTER);
 			}
 			setSize(400,400);
@@ -201,7 +201,7 @@ public final class ControllerReadTest extends JFrame {
 		private void setDisabled(boolean b){
 			disabled = b;
 			if (!disabled){
-				this.setTitle(ca.getName()); 
+				this.setTitle(ca.getName());
 				System.out.println(ca.getName()+" enabled");
 			} else {
 				this.setTitle(ca.getName()+" DISABLED!");
@@ -217,7 +217,7 @@ public final class ControllerReadTest extends JFrame {
 			} else {
 				if (ax.getIdentifier() == Component.Identifier.Axis.POV) {
 					p2 = new DigitalHatPanel(ax);
-				} else {     
+				} else {
 					p2 = new DigitalAxisPanel(ax);
 				}
 			}
@@ -232,7 +232,7 @@ public final class ControllerReadTest extends JFrame {
 					setDisabled(true);
 				}
 				return;
-			} 
+			}
 			if (disabled()){
 				setDisabled(false);
 			}
@@ -294,7 +294,7 @@ public final class ControllerReadTest extends JFrame {
 
 	private void createControllerWindow(Controller c){
 		controllers.add(new ControllerWindow(this,c));
-	}    
+	}
 
 	/**
 	 * @param args the command line arguments
