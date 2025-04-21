@@ -18,7 +18,7 @@
     <target depends="init,compile" name="jar">
         <jar jarfile="bin/awtinput.jar" compress="true" basedir="classes">
             <include name="**/*.class"/>
-        </jar> 
+        </jar>
     </target>
 
     <target depends="jar" description="Build everything." name="all">
@@ -26,7 +26,7 @@
 
     <target name="javadoc" depends="init" description="Javadoc for AWT plugin for JInput.">
         <mkdir dir="apidocs"/>
-        <javadoc packagenames="net.java.games.input.*" 
+        <javadoc packagenames="net.java.games.input.*"
                  destdir="apidocs"
                  additionalparam="-source 1.4"
                  link="../../../coreAPI/apidocs">
