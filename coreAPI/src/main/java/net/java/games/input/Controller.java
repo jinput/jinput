@@ -25,7 +25,7 @@
  * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
  * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
  * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
- * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS 
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
  * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
  * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
@@ -46,7 +46,7 @@ package net.java.games.input;
  * controllers.
  */
 public interface Controller {
-    
+
     /**
      * Returns the controllers connected to make up this controller, or
      * an empty array if this controller contains no child controllers.
@@ -114,36 +114,36 @@ public interface Controller {
      * Returns a human-readable name for this Controller.
      */
     String getName();
-    
+
     /**
      * Types of controller objects.
      */
     class Type {
-        
+
         /**
          * Name of controller type
          */
         private final String name;
-        
+
         /**
          * Protected constructor
          */
         protected Type(String name) {
             this.name = name;
         }
-        
+
         /**
          * Returns a non-localized string description of this controller type.
          */
         public String toString() {
             return name;
         }
-        
+
          /**
          * Unkown controller type.
          */
         public static final Type UNKNOWN = new Type("Unknown");
-        
+
         /**
          * Mouse controller.
          */
@@ -153,7 +153,7 @@ public interface Controller {
          * A keyboard controller
          */
         public static final Type KEYBOARD = new Type("Keyboard");
-        
+
         /**
          * Fingerstick controller; note that this may be sometimes treated as a
          * type of mouse or stick.
@@ -199,31 +199,31 @@ public interface Controller {
          */
         public static final Type WHEEL = new Type("Wheel");
     } // class Controller.Type
-    
+
     /**
      * Common controller port types.
      */
     final class PortType {
-        
+
         /**
          * Name of port type
          */
         private final String name;
-        
+
         /**
          * Protected constructor
          */
         protected PortType(String name) {
             this.name = name;
         }
-        
+
         /**
          * Returns a non-localized string description of this port type.
          */
         public String toString() {
             return name;
         }
-        
+
         /**
          * Unknown port type
          */
@@ -248,16 +248,16 @@ public interface Controller {
          * Serial port
          */
         public static final PortType SERIAL = new PortType("Serial port");
-        
+
         /**
          * i8042
          */
         public static final PortType I8042 = new PortType("i8042 (PS/2)");
-        
+
         /**
          * Parallel port
          */
         public static final PortType PARALLEL = new PortType("Parallel port");
-        
+
     } // class Controller.PortType
 } // interface Controller

@@ -50,7 +50,7 @@ final class LinuxPOV extends LinuxComponent {
 
 	private float last_x;
 	private float last_y;
-	
+
 	public LinuxPOV(LinuxEventComponent component_x, LinuxEventComponent component_y) {
 		super(component_x);
 		this.component_x = component_x;

@@ -1,26 +1,26 @@
 /*
  * Copyright (C) 2003 Jeremy Booth (jeremy@newdawnsoftware.com)
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
- * Redistributions of source code must retain the above copyright notice, this 
- * list of conditions and the following disclaimer. Redistributions in binary 
- * form must reproduce the above copyright notice, this list of conditions and 
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer. Redistributions in binary
+ * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials provided
- * with the distribution. 
+ * with the distribution.
  * The name of the author may not be used to endorse or promote products derived
- * from this software without specific prior written permission. 
+ * from this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO 
- * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+ * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  */
 package net.java.games.input;
@@ -52,7 +52,7 @@ final class LinuxEventDevice implements LinuxDevice,AutoCloseable {
 	 * it doesn't hurt to have multiple threads read/write from/to it
 	 */
 	private final byte[] key_states = new byte[NativeDefinitions.KEY_MAX/8 + 1];
-	
+
     public LinuxEventDevice(String filename) throws IOException {
 		long fd;
 		boolean detect_rumblers = true;
@@ -193,7 +193,7 @@ final class LinuxEventDevice implements LinuxDevice,AutoCloseable {
 		nEraseEffect(fd, id);
 	}
 	private final static native void nEraseEffect(long fd, int ff_id) throws IOException;
-	
+
 	public final synchronized void writeEvent(int type, int code, int value) throws IOException {
 		checkClosed();
 		nWriteEvent(fd, type, code, value);
@@ -211,16 +211,16 @@ final class LinuxEventDevice implements LinuxDevice,AutoCloseable {
 	public final Controller.PortType getPortType() throws IOException {
 		return input_id.getPortType();
 	}
-	
+
 	public final LinuxInputID getInputID() {
 		return input_id;
 	}
-	
+
 	private final LinuxInputID getDeviceInputID() throws IOException {
 		return nGetInputID(fd);
 	}
 	private final static native LinuxInputID nGetInputID(long fd) throws IOException;
-	
+
 	public final int getNumEffects() throws IOException {
 		return nGetNumEffects(fd);
 	}
@@ -236,7 +236,7 @@ final class LinuxEventDevice implements LinuxDevice,AutoCloseable {
 		return nGetNextEvent(fd, linux_event);
 	}
 	private final static native boolean nGetNextEvent(long fd, LinuxEvent linux_event) throws IOException;
-	
+
 	public final synchronized void getAbsInfo(int abs_axis, LinuxAbsInfo abs_info) throws IOException {
 		checkClosed();
 		nGetAbsInfo(fd, abs_axis, abs_info);
@@ -252,7 +252,7 @@ final class LinuxEventDevice implements LinuxDevice,AutoCloseable {
 			}
 		}
 	}
-	
+
 	private final void addAbsoluteAxes(List<LinuxEventComponent> components) throws IOException {
 		byte[] bits = getAbsoluteAxesBits();
 		for (int i = 0; i < bits.length*8; i++) {
@@ -288,31 +288,31 @@ final class LinuxEventDevice implements LinuxDevice,AutoCloseable {
 			addRelativeAxes(components);
 		return components;
 	}
-	
+
 	private final byte[] getForceFeedbackBits() throws IOException {
 		byte[] bits = new byte[NativeDefinitions.FF_MAX/8 + 1];
 		nGetBits(fd, NativeDefinitions.EV_FF, bits);
 		return bits;
 	}
-	
+
 	private final byte[] getKeysBits() throws IOException {
 		byte[] bits = new byte[NativeDefinitions.KEY_MAX/8 + 1];
 		nGetBits(fd, NativeDefinitions.EV_KEY, bits);
 		return bits;
 	}
-	
+
 	private final byte[] getAbsoluteAxesBits() throws IOException {
 		byte[] bits = new byte[NativeDefinitions.ABS_MAX/8 + 1];
 		nGetBits(fd, NativeDefinitions.EV_ABS, bits);
 		return bits;
 	}
-	
+
 	private final byte[] getRelativeAxesBits() throws IOException {
 		byte[] bits = new byte[NativeDefinitions.REL_MAX/8 + 1];
 		nGetBits(fd, NativeDefinitions.EV_REL, bits);
 		return bits;
 	}
-	
+
 	private final byte[] getEventTypeBits() throws IOException {
 		byte[] bits = new byte[NativeDefinitions.EV_MAX/8 + 1];
 		nGetBits(fd, 0, bits);
@@ -328,7 +328,7 @@ final class LinuxEventDevice implements LinuxDevice,AutoCloseable {
 	public final boolean isKeySet(int bit) {
 		return isBitSet(key_states, bit);
 	}
-	
+
 	public final static boolean isBitSet(byte[] bits, int bit) {
 		return (bits[bit/8] & (1<<(bit%8))) != 0;
 	}
@@ -336,7 +336,7 @@ final class LinuxEventDevice implements LinuxDevice,AutoCloseable {
 	public final String getName() {
 		return name;
 	}
-	
+
 	private final String getDeviceName() throws IOException {
 		return nGetName(fd);
 	}

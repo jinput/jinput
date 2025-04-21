@@ -47,7 +47,7 @@ import java.io.IOException;
 final class LinuxMouse extends Mouse {
 	private final PortType port;
 	private final LinuxEventDevice device;
-	
+
 	protected LinuxMouse(LinuxEventDevice device, Component[] components, Controller[] children, Rumbler[] rumblers) throws IOException {
 		super(device.getName(), components, children, rumblers);
 		this.device = device;

@@ -25,7 +25,7 @@
  * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
  * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
  * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
- * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS 
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
  * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
  * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
@@ -52,12 +52,12 @@ import java.util.logging.Logger;
  * controllers with the default environment as "plug-ins".  A plug-in is
  * created by subclassing ControllerEnvironment with a class that has a public
  * no-argument constructor, implements the net.java.games.util.plugins.Plugin
- * interface and has a name ending in "Plugin".  
+ * interface and has a name ending in "Plugin".
  * (See net.java.games.input.DirectInputEnvironmentPlugin in the DXplugin
  *  part of the source tree for an example.)
  *
  * When the DefaultControllerEnvrionment is instanced it uses the plugin library
- * to look for Plugins in both [java.home]/lib/controller and 
+ * to look for Plugins in both [java.home]/lib/controller and
  * [user.dir]/controller.  This allows controller plugins to be installed either
  * globally for the entire Java environment or locally for just one particular
  * Java app.
@@ -78,12 +78,12 @@ public abstract class ControllerEnvironment {
      */
     private static ControllerEnvironment defaultEnvironment =
         new DefaultControllerEnvironment();
-    
+
     /**
      * List of controller listeners
      */
     protected final ArrayList<ControllerListener> controllerListeners = new ArrayList<>();
-    
+
     /**
      * Protected constructor for subclassing.
      */
@@ -94,13 +94,13 @@ public abstract class ControllerEnvironment {
             Logger.getLogger(loggerName).setLevel(level);
         }
     }
-    
+
     /**
      * Returns a list of all controllers available to this environment,
      * or an empty array if there are no controllers in this environment.
      */
     public abstract Controller[] getControllers();
-    
+
     /**
      * Adds a listener for controller state change events.
      */
@@ -108,14 +108,14 @@ public abstract class ControllerEnvironment {
         assert l != null;
         controllerListeners.add(l);
     }
-    
+
     /**
      * Returns the isSupported status of this environment.
      * What makes an environment supported or not is up to the
      * particular plugin, but may include OS or available hardware.
      */
     public abstract boolean isSupported();
-    
+
     /**
      * Removes a listener for controller state change events.
      */
@@ -123,7 +123,7 @@ public abstract class ControllerEnvironment {
         assert l != null;
         controllerListeners.remove(l);
     }
-    
+
     /**
      * Creates and sends an event to the controller listeners that a controller
      * has been added.
@@ -135,7 +135,7 @@ public abstract class ControllerEnvironment {
             it.next().controllerAdded(ev);
         }
     }
-    
+
     /**
      * Creates and sends an event to the controller listeners that a controller
      * has been lost.
@@ -147,7 +147,7 @@ public abstract class ControllerEnvironment {
             it.next().controllerRemoved(ev);
         }
     }
-    
+
     /**
      * Returns the default environment for input controllers.
      * This usually corresponds to the environment for the local machine.

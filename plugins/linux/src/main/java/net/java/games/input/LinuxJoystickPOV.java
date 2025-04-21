@@ -12,21 +12,21 @@ public class LinuxJoystickPOV extends LinuxJoystickAxis {
 		this.hatX = hatX;
 		this.hatY = hatY;
 	}
-	
+
 	protected LinuxJoystickAxis getXAxis() {
 		return hatX;
 	}
-	
+
 	protected LinuxJoystickAxis getYAxis() {
 		return hatY;
 	}
-	
-	
-	
+
+
+
 	protected void updateValue() {
 		float last_x = hatX.getPollData();
 		float last_y = hatY.getPollData();
-		
+
 		resetHasPolled();
 		if (last_x == -1 && last_y == -1)
 			setValue(Component.POV.UP_LEFT);

@@ -19,7 +19,7 @@
  * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
  * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
  * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
- * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS 
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
  * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
  * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
@@ -42,24 +42,24 @@ import java.util.Map;
  */
 public abstract class AbstractController implements Controller {
 	final static int EVENT_QUEUE_DEPTH = 32;
-	
+
 	private final static Event event = new Event();
-	
+
     /**
      * Human-readable name for this Controller
      */
     private final String name;
-    
+
     /**
      * Array of components
      */
     private final Component[] components;
-    
+
     /**
      * Array of child controllers
      */
     private final Controller[] children;
-    
+
     /**
      * Array of rumblers
      */
@@ -71,7 +71,7 @@ public abstract class AbstractController implements Controller {
 	private final Map<Component.Identifier, Component> id_to_components = new HashMap<>();
 
 	private EventQueue event_queue = new EventQueue(EVENT_QUEUE_DEPTH);
-    
+
     /**
      * Protected constructor for a controller containing the specified
      * axes, child controllers, and rumblers
@@ -152,14 +152,14 @@ public abstract class AbstractController implements Controller {
     public final String getName() {
         return name;
     }
-    
+
     /**
      * Returns a non-localized string description of this controller.
      */
     public String toString() {
         return name;
     }
-    
+
     /** Returns the type of the Controller.
      */
     public Type getType() {
@@ -227,6 +227,6 @@ public abstract class AbstractController implements Controller {
 			ControllerEnvironment.log("Failed to poll device: " + e.getMessage());
 			return false;
 		}
-	} 
-	
+	}
+
 } // class AbstractController

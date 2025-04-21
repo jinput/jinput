@@ -47,7 +47,7 @@ import java.io.IOException;
 final class LinuxKeyboard extends Keyboard {
 	private final PortType port;
 	private final LinuxEventDevice device;
-	
+
 	protected LinuxKeyboard(LinuxEventDevice device, Component[] components, Controller[] children, Rumbler[] rumblers) throws IOException {
 		super(device.getName(), components, children, rumblers);
 		this.device = device;

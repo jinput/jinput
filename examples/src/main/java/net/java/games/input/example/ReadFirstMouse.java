@@ -9,7 +9,7 @@ import net.java.games.input.ControllerEnvironment;
  * detected. It will show how to get the available controllers, how to check the
  * type of the controller, how to read the components of the controller, and how
  * to get the data from the component.
- * 
+ *
  * @author Endolf
  */
 public class ReadFirstMouse {
