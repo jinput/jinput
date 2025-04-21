@@ -41,7 +41,7 @@ import java.util.HashMap;
 */
 final class ButtonUsage implements Usage {
 	private final static Map<Integer, ButtonUsage> map = new HashMap<>();
-	
+
 	private final int button_id;
 
 	public final static ButtonUsage map(int button_id) {
@@ -53,7 +53,7 @@ final class ButtonUsage implements Usage {
 		map.put(button_id_obj, new_button);
 		return new_button;
 	}
-	
+
 	private ButtonUsage(int button_id) {
 		this.button_id = button_id;
 	}
@@ -128,7 +128,7 @@ final class ButtonUsage implements Usage {
 				return null;
 		}
 	}
-	
+
 	public final String toString() {
 		return "ButtonUsage (" + button_id + ")";
 	}

@@ -47,7 +47,7 @@ import java.io.IOException;
 final class DIAbstractController extends AbstractController {
 	private final IDirectInputDevice device;
 	private final Controller.Type type;
-	
+
 	protected DIAbstractController(IDirectInputDevice device, Component[] components, Controller[] children, Rumbler[] rumblers, Controller.Type type) {
 		super(device.getProductName(), components, children, rumblers);
 		this.device = device;
@@ -61,7 +61,7 @@ final class DIAbstractController extends AbstractController {
 	protected boolean getNextDeviceEvent(Event event) throws IOException {
 		return DIControllers.getNextDeviceEvent(event, device);
 	}
-	
+
 	protected void setDeviceEventQueueSize(int size) throws IOException {
 		device.setBufferSize(size);
 	}

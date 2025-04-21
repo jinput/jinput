@@ -1,8 +1,6 @@
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>windows-plugin</artifactId>
-    <packaging>jar</packaging>
-    <name>JInput - Windows Plugin</name>
 
     <parent>
         <groupId>net.java.jinput</groupId>
@@ -10,6 +8,9 @@
         <version>2.0.11-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+    <artifactId>windows-plugin</artifactId>
+    <packaging>jar</packaging>
+    <name>JInput - Windows Plugin</name>
 
     <dependencies>
         <dependency>
@@ -34,15 +35,15 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>compile</phase>
-                        <configuration>
-                            <target>
-                                <ant dir="${project.build.sourceDirectory}/../native"/>
-                            </target>
-                        </configuration>
                         <goals>
                             <goal>run</goal>
                         </goals>
+                        <phase>compile</phase>
+                        <configuration>
+                            <target>
+                                <ant dir="${project.build.sourceDirectory}/../native"></ant>
+                            </target>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -50,10 +51,10 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>package</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                        <phase>package</phase>
                         <configuration>
                             <classesDirectory>${project.build.directory}/natives</classesDirectory>
                             <classifier>natives-windows</classifier>
