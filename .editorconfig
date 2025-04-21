@@ -19,5 +19,18 @@ indent_style = tab
 tab_width = 4
 trim_trailing_whitespace = true
 
+[*.xml]
+tab_width = 4
+trim_trailing_whitespace = true
+
 [*.{cmd,bat,ps1}]
 end_of_line = crlf
+
+# Ignored files
+[*.bak]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+indent_style = unset
+indent_size = unset
