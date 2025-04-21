@@ -19,7 +19,7 @@
  * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
  * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
  * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
- * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS 
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
  * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
  * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
@@ -179,13 +179,13 @@ final class IDirectInputDevice implements AutoCloseable {
 	public final static int DIEP_NORESTART			  = 0x40000000;
 	public final static int DIEP_NODOWNLOAD			 = 0x80000000;
 	public final static int DIEB_NOTRIGGER			= 0xFFFFFFFF;
-	
+
 	public final static int INFINITE				= 0xFFFFFFFF;
 
 	public final static int DI_DEGREES				  = 100;
 	public final static int DI_FFNOMINALMAX			 = 10000;
 	public final static int DI_SECONDS				  = 1000000;
-	
+
 	public final static int DIPROPRANGE_NOMIN = 0x80000000;
 	public final static int DIPROPRANGE_NOMAX = 0x7FFFFFFF;
 
@@ -342,7 +342,7 @@ final class IDirectInputDevice implements AutoCloseable {
 		data.set(next_event);
 		return true;
 	}
-	
+
 	private void poll() throws IOException {
 		int res = nPoll(address);
 		if (res != DI_OK && res != DI_NOEFFECT) {
@@ -381,7 +381,7 @@ final class IDirectInputDevice implements AutoCloseable {
 		return true;
 	}
 	private static native int nGetDeviceData(long address, int flags, DataQueue<DIDeviceObjectData> queue, Object[] queue_elements, int position, int remaining);
-	
+
 	private void getDeviceState(int[] device_state) throws IOException {
 		int res = nGetDeviceState(address, device_state);
 		if (res != DI_OK) {
@@ -405,7 +405,7 @@ final class IDirectInputDevice implements AutoCloseable {
 			throw new IOException("Failed to set data format (" + Integer.toHexString(res) + ")");
 	}
 	private static native int nSetDataFormat(long address, int flags, DIDeviceObject[] device_objects);
-	
+
 	public String getProductName() {
 		return product_name;
 	}
@@ -424,7 +424,7 @@ final class IDirectInputDevice implements AutoCloseable {
 			throw new IOException("Failed to enumerate effects (" + Integer.toHexString(res) + ")");
 	}
 	private native int nEnumEffects(long address, int flags);
-	
+
 	/* Called from native side from nEnumEffects */
 	private void addEffect(byte[] guid, int guid_id, int effect_type, int static_params, int dynamic_params, String name) {
 		effects.add(new DIEffectInfo(this, guid, guid_id, effect_type, static_params, dynamic_params, name));
@@ -469,7 +469,7 @@ final class IDirectInputDevice implements AutoCloseable {
 		int button_id = button_counter++;
 		return DIIdentifierMap.getButtonIdentifier(button_id);
 	}
-	
+
 	private Component.Identifier getIdentifier(int guid_type, int type, int instance) {
 		switch (guid_type) {
 			case IDirectInputDevice.GUID_XAxis:
@@ -496,7 +496,7 @@ final class IDirectInputDevice implements AutoCloseable {
 				return Component.Identifier.Axis.UNKNOWN;
 		}
 	}
-	
+
 	public synchronized void setBufferSize(int size) throws IOException {
 		checkReleased();
 		unacquire();

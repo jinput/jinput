@@ -45,7 +45,7 @@ final class OSXHIDQueue {
 	private final long queue_address;
 
 	private boolean released;
-	
+
 	public OSXHIDQueue(long address, int queue_depth) throws IOException {
 		this.queue_address = address;
 		try {
@@ -62,7 +62,7 @@ final class OSXHIDQueue {
 		close();
 		createQueue(queue_depth);
 	}
-	
+
 	private final void createQueue(int queue_depth) throws IOException {
 		open(queue_depth);
 		try {
@@ -96,7 +96,7 @@ final class OSXHIDQueue {
 		nStop(queue_address);
 	}
 	private final static native void nStop(long queue_address) throws IOException;
-	
+
 	public final synchronized void release() throws IOException {
 		if (!released) {
 			released = true;

@@ -48,7 +48,7 @@ final class OSXHIDDevice {
 	private final static Logger log = Logger.getLogger(OSXHIDDevice.class.getName());
 	private final static int AXIS_DEFAULT_MIN_VALUE = 0;
 	private final static int AXIS_DEFAULT_MAX_VALUE = 64*1024;
-	
+
 	private final static String kIOHIDTransportKey                  = "Transport";
 	private final static String kIOHIDVendorIDKey                   = "VendorID";
 	private final static String kIOHIDVendorIDSourceKey             = "VendorIDSource";
@@ -138,7 +138,7 @@ final class OSXHIDDevice {
 		long scaled_max = getLongFromProperties(element_properties, kIOHIDElementScaledMaxKey, Long.MAX_VALUE);*/
 		UsagePair device_usage_pair = getUsagePair();
 		boolean default_relative = device_usage_pair != null && (device_usage_pair.getUsage() == GenericDesktopUsage.POINTER || device_usage_pair.getUsage() == GenericDesktopUsage.MOUSE);
-		
+
 		boolean is_relative = getBooleanFromProperties(element_properties, kIOHIDElementIsRelativeKey, default_relative);
 /*		boolean is_wrapping = getBooleanFromProperties(element_properties, kIOHIDElementIsWrappingKey);
 		boolean is_non_linear = getBooleanFromProperties(element_properties, kIOHIDElementIsNonLinearKey);
@@ -169,13 +169,13 @@ final class OSXHIDDevice {
 			addElements(elements, element_properties);
 		}
 	}
-	
+
 	public final List<OSXHIDElement> getElements() {
 		List<OSXHIDElement> elements = new ArrayList<>();
 		addElements(elements, properties);
 		return elements;
 	}
-	
+
 	private final static long getLongFromProperties(Map<String,?> properties, String key, long default_value) {
 		Long long_obj = (Long)properties.get(key);
 		if (long_obj == null)
@@ -211,7 +211,7 @@ final class OSXHIDDevice {
 		int usage_id = getIntFromProperties(properties, kIOHIDPrimaryUsageKey);
 		return createUsagePair(usage_page_id, usage_id);
 	}
-	
+
 	private final void dumpProperties() {
 		log.info(toString());
 		dumpMap("", properties);
@@ -225,7 +225,7 @@ final class OSXHIDDevice {
 		}
 		log.info(prefix + "}");
 	}
-	
+
 	private final static void dumpMap(String prefix, Map<String,?> map) {
 		Iterator<String> keys = map.keySet().iterator();
 		while (keys.hasNext()) {

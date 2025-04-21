@@ -25,7 +25,7 @@
  * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
  * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
  * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
- * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS 
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
  * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
  * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
@@ -175,7 +175,7 @@ final class RawDevice {
 		} else
 			return false;
 	}
-	
+
 	private boolean processKeyboardEvent(RawKeyboardEvent event) {
 		int message = event.getMessage();
 		int vkey = event.getVKey();
@@ -231,19 +231,19 @@ final class RawDevice {
 	public int getEventRelativeX() {
 		return event_relative_x;
 	}
-	
+
 	public int getEventRelativeY() {
 		return event_relative_y;
 	}
-	
+
 	public int getRelativeX() {
 		return relative_x;
 	}
-	
+
 	public int getRelativeY() {
 		return relative_y;
 	}
-	
+
 	public synchronized boolean getNextKeyboardEvent(RawKeyboardEvent event) {
 		processed_keyboard_events.flip();
 		if (!processed_keyboard_events.hasRemaining()) {
@@ -276,7 +276,7 @@ final class RawDevice {
 		processed_mouse_events.compact();
 		return true;
 	}
-	
+
 	public boolean getButtonState(int button_id) {
 		if (button_id >= button_states.length)
 			return false;

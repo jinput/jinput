@@ -5,13 +5,13 @@
     <!-- This builds a fat jnilib for x86_64 Intel and arm64 Apple Silicon contents -->
 
     <!-- For historical reasons, this uses "x86_64" in the name of the target jnilib and target subdirectory. -->
-    
+
 	<target name="init">
 		<mkdir dir="target/natives/x86_64"/>
 	</target>
 
     <property environment="env"/>
-    
+
 	<target name="compile">
 		<apply dir="${dstdir}" executable="${compiler}" os="Mac OS X" skipemptyfilesets="true" failonerror="true" dest="${dstdir}">
 		    <!-- Depending on the JRE you have installed, you may need to change the path in the following line in two places -->
@@ -21,7 +21,7 @@
 			<fileset dir="../common/src/native" includes="*.c"/>
 		</apply>
 	</target>
-	
+
 	<target name="link">
 		<apply dir="${objdir}" parallel="true" executable="${linker}" os="Mac OS X" failonerror="true" skipemptyfilesets="true">
 			<arg line="${linkerflags} -dynamiclib -o ${libname} -framework CoreFoundation -framework IOKit -framework CoreServices"/>
@@ -32,7 +32,7 @@
 			<fileset dir="." includes="${libname}"/>
 		</apply>
 	</target>
-	
+
 	<target name="compileNativeJinputLib" depends="init">
 		<property name="sdkroot" location="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"/>
 		<property name="ld_flags" value="-isysroot ${sdkroot} -arch arm64 -arch x86_64 -mmacosx-version-min=10.5"/>

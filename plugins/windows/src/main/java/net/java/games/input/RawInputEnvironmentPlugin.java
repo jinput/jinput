@@ -25,7 +25,7 @@
  * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
  * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
  * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
- * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS 
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
  * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
  * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
@@ -51,7 +51,7 @@ import java.util.List;
  * @version 1.0
  */
 public final class RawInputEnvironmentPlugin extends ControllerEnvironment implements Plugin {
-	
+
 	private static boolean supported = false;
 
 	/**
@@ -59,7 +59,7 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 	 * It will try to load from either the path given by
 	 * the net.java.games.input.librarypath property
 	 * or through System.loadLibrary().
-	 * 
+	 *
 	 */
 	static void loadLibrary(final String lib_name) {
 		try {
@@ -73,7 +73,7 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 			supported = false;
 		}
 	}
-    
+
 	static {
 		String osName = System.getProperty("os.name", "").trim();
 		if(osName.startsWith("Windows")) {
@@ -119,7 +119,7 @@ public final class RawInputEnvironmentPlugin extends ControllerEnvironment imple
 		}
 		return null;
 	}
-	
+
 	private static void createControllersFromDevices(RawInputEventQueue queue, List<Controller> controllers, List<RawDevice> devices, List<SetupAPIDevice> setupapi_devices) throws IOException {
 		List<RawDevice> active_devices = new ArrayList<>();
 		for (int i = 0; i < devices.size(); i++) {
