@@ -21,7 +21,8 @@
             <id>linux</id>
             <activation>
                 <os>
-                    <name>linux</name>
+                    <family>linux</family>
+                    <arch>x86_64</arch>
                 </os>
             </activation>
             <modules>
@@ -33,10 +34,8 @@
             <activation>
                 <os>
                     <family>linux</family>
+                    <arch>aarch64</arch>
                 </os>
-<!--                <property>-->
-<!--                    <name>env.WINTABSDKDIR</name>-->
-<!--                </property>-->
             </activation>
             <modules>
                 <module>linarm</module>
