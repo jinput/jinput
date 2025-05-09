@@ -29,6 +29,20 @@
             </modules>
         </profile>
         <profile>
+            <id>linarm</id>
+            <activation>
+                <os>
+                    <family>linux</family>
+                </os>
+<!--                <property>-->
+<!--                    <name>env.WINTABSDKDIR</name>-->
+<!--                </property>-->
+            </activation>
+            <modules>
+                <module>linarm</module>
+            </modules>
+        </profile>
+        <profile>
             <id>windows</id>
             <activation>
                 <os>

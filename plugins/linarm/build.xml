@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="compileNativeJinputLib" name="Linux Plugin">
+    <property name="libname64" value="libjinput-linux64.so"/>
+    <property name="libname32" value="libjinput-linux.so"/>
+
+    <target name="init">
+        <mkdir dir="target/natives"/>
+    </target>
+
+    <target name="createNativeDefinitions.java">
+        <exec dir="src/main/native" executable="gawk" os="Linux" output="../java/net/java/games/input/NativeDefinitions.java">
+            <arg line="-f"/>
+            <arg line="getDefinitions"/>
+            <arg line="/usr/include/linux/input.h"/>
+        </exec>
+    </target>
+
+    <target depends="init" name="compileNativeJinputLib">
+        <exec executable="uname" outputproperty="hwplatform">
+            <arg value="-m"/>
+        </exec>
+        <condition property="libname" value="${libname64}" else="${libname32}">
+            <equals arg1="${hwplatform}" arg2="x86_64"/>
+        </condition>
+        <apply dir="target/natives" executable="cc" os="Linux" dest="target/natives" skipemptyfilesets="true" failonerror="true">
+            <arg line="-O2 -Wall -c -fPIC"/>
+            <arg value="-I${java.home}/include"/>
+            <arg value="-I${java.home}/include/linux"/>
+            <arg value="-I${java.home}/../include"/>
+            <arg value="-I${java.home}/../include/linux"/>
+            <arg value="-I../../../common/src/native"/>
+            <arg value="-I../generated-sources/natives"/>
+            <mapper type="glob" from="*.c" to="*.o"/>
+            <fileset dir="src/main/native" includes="*.c"/>
+            <fileset dir="../common/src/native" includes="*.c"/>
+        </apply>
+        <apply dir="target/natives" parallel="true" executable="cc" os="Linux" failonerror="true">
+            <arg line="-shared -O2 -Wall -o ${libname}"/>
+            <fileset dir="target/natives" includes="*.o"/>
+        </apply>
+        <apply dir="target/natives" parallel="true" executable="strip" os="Linux" failonerror="true">
+            <fileset file="target/natives/${libname}"/>
+        </apply>
+    </target>
+</project>
