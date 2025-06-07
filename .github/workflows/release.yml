@@ -13,6 +13,10 @@ jobs:
             os: ubuntu-latest
             artifact: linux-natives
             project: plugins/linux
+          - name: LinARM
+            os: ubuntu-24.04-arm
+            artifact: linarm-natives
+            project: plugins/linarm
           - name: Windows
             os: windows-latest
             artifact: windows-natives
@@ -92,13 +96,18 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Clean
-        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar,tests,examples clean
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,linarm,windows,osx,wintab --projects plugins/awt,uberjar,tests,examples clean
 
       - name: Unpack linux natives
         uses: actions/download-artifact@v4.1.3
         with:
           name: linux-natives
           path: plugins/linux/target/natives
+      - name: Unpack linux ARM natives
+        uses: actions/download-artifact@v4.1.3
+        with:
+          name: linarm-natives
+          path: plugins/linarm/target/natives
       - name: Unpack macos natives
         uses: actions/download-artifact@v4.1.3
         with:
@@ -116,7 +125,7 @@ jobs:
           path: plugins/wintab/target/natives
 
       - name: Set Release Version
-        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles windows,linux,osx,wintab --projects plugins/awt,uberjar,tests,examples versions:set -DremoveSnapshot
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles windows,linux,linarm,osx,wintab --projects plugins/awt,uberjar,tests,examples versions:set -DremoveSnapshot
 
       - name: Set environment
         run: echo "RELEASE_VERSION=$(mvn -Dexpression=project.version help:evaluate | grep -e '^[[:digit:]]')" >> $GITHUB_ENV
@@ -136,13 +145,13 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab,release --projects plugins/awt,uberjar,tests,examples -Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs deploy
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,linarm,windows,osx,wintab,release --projects plugins/awt,uberjar,tests,examples -Dmaven.antrun.skip -Dmaven.test.skip -DskipTests -DskipITs deploy
 
       - name: Reset version
-        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles windows,linux,osx,wintab --projects plugins/awt,uberjar,tests,examples versions:revert
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles windows,linux,linarm,osx,wintab --projects plugins/awt,uberjar,tests,examples versions:revert
 
       - name: Set next development version
-        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles windows,linux,osx,wintab --projects plugins/awt,uberjar,tests,examples versions:set -DnextSnapshot
+        run: mvn --batch-mode --file pom.xml --also-make --activate-profiles windows,linux,linarm,osx,wintab --projects plugins/awt,uberjar,tests,examples versions:set -DnextSnapshot
 
       - name: Commit next dev versions
         run: git commit -m 'Next development release' .
