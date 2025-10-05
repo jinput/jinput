@@ -3,8 +3,7 @@
  *
  * Copyright 2002 Sun Microsystems, Inc. All rights reserved.
  * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
-/*****************************************************************************
+ *
  * Copyright (c) 2003 Sun Microsystems, Inc.  All Rights Reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -59,7 +58,7 @@ public final class EventQueue {
 	/**
 	 * This is an internal method and should not be called by applications using the API
 	 */
-	synchronized void add(Event event) {
+	public synchronized void add(Event event) {
 		queue[tail].set(event);
 		tail = increase(tail);
 	}
@@ -68,7 +67,7 @@ public final class EventQueue {
 	 * Check if the queue is full
 	 * @return true if the queue is full
 	 */
-	synchronized boolean isFull() {
+	public synchronized boolean isFull() {
 		return increase(tail) == head;
 	}
 

@@ -17,7 +17,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>jinput</artifactId>
             <version>${project.version}</version>
-            <type>pom</type>
         </dependency>
     </dependencies>
 
@@ -51,7 +50,7 @@
                                 <classpath></classpath>
                                 <argument>-Djava.library.path=${project.build.directory}/natives</argument>
                                 <argument>-Djinput.loglevel=OFF</argument>
-                                <argument>net.java.games.input.example.ReadAllEvents</argument>
+                                <argument>net.java.games.input.wintab.windows.osx.linux.example.ReadAllEvents</argument>
                             </arguments>
                         </configuration>
                         <executions>
