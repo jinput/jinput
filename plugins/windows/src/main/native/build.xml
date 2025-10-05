@@ -37,7 +37,7 @@
 			<arg value="/LIBPATH:${java.home}\lib"/>
 			<arg value="/LIBPATH:${sdkhomelib}"/>
 			<arg line="/DLL ${libs}"/>
-			<fileset dir="${compiled-natives}" includes="winutil.obj,util.obj,net_java_games_input_DummyWindow.obj,${include-pattern}"/>
+			<fileset dir="${compiled-natives}" includes="winutil.obj,util.obj,net_java_games_input_windows_DummyWindow.obj,${include-pattern}"/>
 		</apply>
 	</target>
 
@@ -70,12 +70,12 @@
 		<antcall target="link">
 			<param name="dllname" value="${dx8dllname}"/>
 			<param name="libs" value="${dx8libs}"/>
-            <param name="include-pattern" value="net_java_games_input_IDirect*.obj"/>
+            <param name="include-pattern" value="net_java_games_input_windows_IDirect*.obj"/>
 		</antcall>
 		<antcall target="link">
 			<param name="dllname" value="${rawdllname}"/>
 			<param name="libs" value="${rawlibs}"/>
-			<param name="include-pattern" value="net_java_games_input_Raw*.obj"/>
+			<param name="include-pattern" value="net_java_games_input_windows_Raw*.obj"/>
 		</antcall>
     </target>
 </project>

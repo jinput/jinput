@@ -48,8 +48,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>8</maven.compiler.release>
-        <jutils.version>1.0.0</jutils.version>
+        <maven.compiler.release>9</maven.compiler.release>
+        <jutils.version>1.0.1-SNAPSHOT</jutils.version>
         <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
         <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
@@ -63,16 +63,6 @@
         <exec-maven-plugin.version>3.5.1</exec-maven-plugin.version>
         <sortpom-maven-plugin.version>4.0.0</sortpom-maven-plugin.version>
     </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>net.java.jutils</groupId>
-                <artifactId>jutils</artifactId>
-                <version>${jutils.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <repositories>
         <repository>
@@ -109,9 +99,9 @@
                     <version>${maven-jar-plugin.version}</version>
                     <configuration>
                         <archive>
-                            <manifestEntries>
-                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            </manifestEntries>
+                            <manifest>
+                              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            </manifest>
                         </archive>
                     </configuration>
                 </plugin>
