@@ -60,7 +60,7 @@
         <maven-shade-plugin.version>3.6.1</maven-shade-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
         <editorconfig-maven-plugin.version>0.1.17</editorconfig-maven-plugin.version>
-        <exec-maven-plugin.version>3.6.0</exec-maven-plugin.version>
+        <exec-maven-plugin.version>3.6.2</exec-maven-plugin.version>
         <sortpom-maven-plugin.version>4.0.0</sortpom-maven-plugin.version>
     </properties>
 
