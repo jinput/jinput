@@ -21,11 +21,24 @@
             <id>linux</id>
             <activation>
                 <os>
-                    <name>linux</name>
+                    <family>linux</family>
+                    <arch>amd64</arch>
                 </os>
             </activation>
             <modules>
                 <module>linux</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>linarm</id>
+            <activation>
+                <os>
+                    <family>linux</family>
+                    <arch>aarch64</arch>
+                </os>
+            </activation>
+            <modules>
+                <module>linarm</module>
             </modules>
         </profile>
         <profile>
