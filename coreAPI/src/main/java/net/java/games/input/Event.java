@@ -38,39 +38,113 @@
  *****************************************************************************/
 package net.java.games.input;
 
+import java.util.Objects;
+
 public final class Event {
+	/** {@link Component} that generated this {@code Event}. */
     private Component component;
+
+	/**
+	 * <p>A value associated with this {@code Event}.</p>
+	 *
+	 * <p>
+	 *     This could represent any number of things, depending on the {@link Component} that generated this
+	 *     {@code Event}. Rotation of a joystick, pressure on a button, etc.
+	 * </p>
+	 */
     private float value;
+
+	/**
+	 * <p>This represents the time elapsed since the last {@code Event}, in nanoseconds.</p>
+	 *
+	 * <p>
+	 *     e.g. If an {@code Event} happens, then one millisecond later another {@code Event} happens, the {@code nanos}
+	 * 	   of the second {@code Event} will be 1,000,000 (1 millisecond).
+	 * </p>
+	 */
 	private long nanos;
 
-    public void set(Event other) {
+	@Override
+	public String toString() {
+		return "Event: component = " + component + " | value = " + value;
+	}
+
+	/**
+	 * Sets the state of this {@code Event}.
+	 *
+	 * @param component {@link Component} that generated this {@code Event}.
+	 * @param value A value associated with this {@code Event}.
+	 * @param nanos Time elapsed since the last {@code Event}, in nanoseconds.
+	 */
+    public void set(final Component component, final float value, final long nanos) {
+		setComponent(component);
+		setValue(value);
+		setNanos(nanos);
+	}
+
+	/**
+	 * Sets the state of this {@code Event} to the state of the specified {@code Event}.
+	 *
+	 * @param other {@code Event} to copy the state from.
+	 */
+	public void set(final Event other) {
 		this.set(other.getComponent(), other.getValue(), other.getNanos());
-    }
+	}
 
-    public void set(Component component, float value, long nanos) {
-		this.component = component;
-		this.value = value;
-		this.nanos = nanos;
-    }
-
+	/**
+	 * Retrieves the {@link Component} that generated this {@code Event}.
+	 *
+	 * @return {@link Component} that generated this {@code Event}.
+	 */
 	public Component getComponent() {
 		return component;
 	}
 
+	/**
+	 * Retrieves the value associated with this {@code Event}.
+	 *
+	 * @return Value associated with this {@code Event}.
+	 */
 	public float getValue() {
 		return value;
 	}
 
 	/**
-	 * Return the time the event happened, in nanoseconds.
-	 * The time is relative and therefore can only be used
-	 * to compare with other event times.
+	 * Retrieves the time elapsed since the last {@code Event}, in nanoseconds.
+	 *
+	 * @return The time elapsed since the last {@code Event}, in nanoseconds.
 	 */
 	public long getNanos() {
 		return nanos;
 	}
 
-	public String toString() {
-		return "Event: component = " + component + " | value = " + value;
+	/**
+	 * Sets the {@link Component} that generated this {@code Event}.
+	 *
+	 * @param component {@link Component} that generated this {@code Event}.
+	 *
+	 * @throws NullPointerException If {@code component} is {@code null}.
+	 */
+	public void setComponent(final Component component) {
+		Objects.requireNonNull(component);
+		this.component = component;
+	}
+
+	/**
+	 * Sets the time elapsed since the last {@code Event}, in nanoseconds.
+	 *
+	 * @param nanos The time elapsed since the last {@code Event}, in nanoseconds.
+	 */
+	public void setNanos(final long nanos) {
+		this.nanos = nanos;
+	}
+
+	/**
+	 * Sets the value associated with this {@code Event}.
+	 *
+	 * @param value A value associated with this {@code Event}.
+	 */
+	public void setValue(final float value) {
+		this.value = value;
 	}
 }
