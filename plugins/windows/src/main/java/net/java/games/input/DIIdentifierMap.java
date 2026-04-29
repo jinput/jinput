@@ -540,6 +540,8 @@ final class DIIdentifierMap {
 			return Component.Identifier.Button.RIGHT;
 		} else if (button_id == Component.Identifier.Button._2) {
 			return Component.Identifier.Button.MIDDLE;
+		} else if (button_id == null) {
+			return Component.Identifier.Button.UNKNOWN;
 		} else
 			return button_id;
 	}

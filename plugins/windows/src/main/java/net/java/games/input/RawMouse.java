@@ -49,7 +49,7 @@ final class RawMouse extends Mouse {
 	 * changes, we'll make a simple state machine
 	 * to keep track of which change to  report next
 	 */
-	
+
 	// Another event should be read
 	private final static int EVENT_DONE = 1;
 	// The X axis should be reported next
@@ -73,7 +73,7 @@ final class RawMouse extends Mouse {
 
 	private final RawMouseEvent current_event = new RawMouseEvent();
 	private int event_state = EVENT_DONE;
-	
+
 	protected RawMouse(String name, RawDevice device, Component[] components, Controller[] children, Rumbler[] rumblers) throws IOException {
 		super(name, components, children, rumblers);
 		this.device = device;
@@ -156,14 +156,14 @@ final class RawMouse extends Mouse {
 			}
 		}
 	}
-	
+
 	protected void setDeviceEventQueueSize(int size) throws IOException {
 		device.setBufferSize(size);
 	}
 
 	final static class Axis extends AbstractComponent {
 		private final RawDevice device;
-		
+
 		public Axis(RawDevice device, Component.Identifier.Axis axis) {
 			super(axis.getName(), axis);
 			this.device = device;
@@ -188,7 +188,7 @@ final class RawMouse extends Mouse {
 				throw new RuntimeException("Unknown raw axis: " + getIdentifier());
 		}
 	}
-	
+
 	final static class Button extends AbstractComponent {
 		private final RawDevice device;
 		private final int button_id;

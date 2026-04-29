@@ -54,7 +54,7 @@ final class OSXHIDElement {
 	private final int max;
 	private final Component.Identifier identifier;
 	private final boolean is_relative;
-	
+
 	public OSXHIDElement(OSXHIDDevice device, UsagePair usage_pair, long element_cookie, ElementType element_type, int min, int max, boolean is_relative) {
 		this.device = device;
 		this.usage_pair = usage_pair;
@@ -69,7 +69,7 @@ final class OSXHIDElement {
 	private final Component.Identifier computeIdentifier() {
 		if (usage_pair.getUsagePage() == UsagePage.GENERIC_DESKTOP) {
 			return ((GenericDesktopUsage)usage_pair.getUsage()).getIdentifier();
-		} else if (usage_pair.getUsagePage() == UsagePage.BUTTON) { 
+		} else if (usage_pair.getUsagePage() == UsagePage.BUTTON) {
 			return ((ButtonUsage)usage_pair.getUsage()).getIdentifier();
 		} else if (usage_pair.getUsagePage() == UsagePage.KEYBOARD_OR_KEYPAD) {
 			return ((KeyboardUsage)usage_pair.getUsage()).getIdentifier();
@@ -100,7 +100,7 @@ final class OSXHIDElement {
 	private UsagePair getUsagePair() {
 		return usage_pair;
 	}
-	
+
 	final void getElementValue(OSXEvent event) throws IOException {
 		device.getElementValue(element_cookie, event);
 	}

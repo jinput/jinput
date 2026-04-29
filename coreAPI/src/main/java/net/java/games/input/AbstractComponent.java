@@ -25,7 +25,7 @@
  * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
  * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
  * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
- * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS 
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
  * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
  * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
@@ -49,13 +49,13 @@ public abstract class AbstractComponent implements Component {
      * Human-readable name for this Axis
      */
     private final String name;
-    
+
     private final Identifier id;
 
 	private boolean has_polled;
 	private float value;
 	private float event_value;
-    
+
     /**
      * Protected constructor
      * @param name A name for the axis
@@ -64,14 +64,14 @@ public abstract class AbstractComponent implements Component {
         this.name = name;
         this.id = id;
     }
-        
+
     /**
      * Returns the type or identifier of the axis.
      */
     public Identifier getIdentifier() {
         return id;
     }
-    
+
     /**
      * Returns whether or not the axis is analog, or false if it is digital.
      * @return false by default, can be overridden
@@ -117,7 +117,7 @@ public abstract class AbstractComponent implements Component {
     final void setPollData(float value) {
         this.value = value;
     }
- 
+
     final float getEventValue() {
         return event_value;
     }
@@ -125,14 +125,14 @@ public abstract class AbstractComponent implements Component {
     final void setEventValue(float event_value) {
         this.event_value = event_value;
     }
- 
+
     /**
      * Returns a human-readable name for this axis.
      */
     public String getName() {
         return name;
     }
-    
+
     /**
      * Returns a non-localized string description of this axis.
      */
@@ -141,5 +141,5 @@ public abstract class AbstractComponent implements Component {
     }
 
 	protected abstract float poll() throws IOException;
-    
+
 } // AbstractAxis

@@ -46,7 +46,7 @@ import java.io.IOException;
 */
 final class DIKeyboard extends Keyboard {
 	private final IDirectInputDevice device;
-	
+
 	protected DIKeyboard(IDirectInputDevice device, Component[] components, Controller[] children, Rumbler[] rumblers) {
 		super(device.getProductName(), components, children, rumblers);
 		this.device = device;

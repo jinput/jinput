@@ -41,26 +41,26 @@ import java.lang.reflect.Method;
 final class UsagePage {
 	private final static UsagePage[] map = new UsagePage[0xFF];
 
-	public final static UsagePage UNDEFINED  = new UsagePage(0x00); 
-	public final static UsagePage GENERIC_DESKTOP = new UsagePage(0x01, GenericDesktopUsage.class); 
-	public final static UsagePage SIMULATION = new UsagePage(0x02); 
+	public final static UsagePage UNDEFINED  = new UsagePage(0x00);
+	public final static UsagePage GENERIC_DESKTOP = new UsagePage(0x01, GenericDesktopUsage.class);
+	public final static UsagePage SIMULATION = new UsagePage(0x02);
 	public final static UsagePage VR = new UsagePage(0x03);
 	public final static UsagePage SPORT  = new UsagePage(0x04);
 	public final static UsagePage GAME   = new UsagePage(0x05);
-	/* Reserved 0x06 */ 
+	/* Reserved 0x06 */
 	public final static UsagePage KEYBOARD_OR_KEYPAD   = new UsagePage(0x07, KeyboardUsage.class); /* USB Device Class Definition for Human Interface Devices (HID). Note: the usage type for all key codes is Selector (Sel). */
-	public final static UsagePage LEDS   = new UsagePage(0x08); 
-	public final static UsagePage BUTTON = new UsagePage(0x09, ButtonUsage.class); 
+	public final static UsagePage LEDS   = new UsagePage(0x08);
+	public final static UsagePage BUTTON = new UsagePage(0x09, ButtonUsage.class);
 	public final static UsagePage ORDINAL    = new UsagePage(0x0A);
-	public final static UsagePage TELEPHONY  = new UsagePage(0x0B); 
-	public final static UsagePage CONSUMER   = new UsagePage(0x0C); 
-	public final static UsagePage DIGITIZER  = new UsagePage(0x0D); 
-	/* Reserved 0x0E */ 
+	public final static UsagePage TELEPHONY  = new UsagePage(0x0B);
+	public final static UsagePage CONSUMER   = new UsagePage(0x0C);
+	public final static UsagePage DIGITIZER  = new UsagePage(0x0D);
+	/* Reserved 0x0E */
 	public final static UsagePage PID    = new UsagePage(0x0F); /* USB Physical Interface Device definitions for force feedback and related devices. */
-	public final static UsagePage UNICODE    = new UsagePage(0x10); 
+	public final static UsagePage UNICODE    = new UsagePage(0x10);
 	/* Reserved 0x11 - 0x13 */
 	public final static UsagePage ALPHANUMERIC_DISPLAY    = new UsagePage(0x14);
-	/* Reserved 0x15 - 0x7F */  
+	/* Reserved 0x15 - 0x7F */
 	/* Monitor 0x80 - 0x83   USB Device Class Definition for Monitor Devices */
 	/* Power 0x84 - 0x87     USB Device Class Definition for Power Devices */
 	public final static UsagePage POWER_DEVICE = new UsagePage(0x84);                /* Power Device Page */
@@ -70,7 +70,7 @@ final class UsagePage {
 	public final static UsagePage SCALE  = new UsagePage(0x8D); /* (Point of Sale) USB Device Class Definition for Scale Devices */
 	/* ReservedPointofSalepages 0x8E - 0X8F */
 	public final static UsagePage CAMERACONTROL= new UsagePage(0x90); /* USB Device Class Definition for Image Class Devices */
-	public final static UsagePage ARCADE = new UsagePage(0x91); /* OAAF Definitions for arcade and coinop related Devices */                                                                                                                         
+	public final static UsagePage ARCADE = new UsagePage(0x91); /* OAAF Definitions for arcade and coinop related Devices */
 	private final Class<? extends Usage> usage_class;
 	private final int usage_page_id;
 
@@ -89,7 +89,7 @@ final class UsagePage {
 	private UsagePage(int page_id) {
 		this(page_id, null);
 	}
-	
+
 	public final String toString() {
 		return "UsagePage (0x" + Integer.toHexString(usage_page_id) + ")";
 	}

@@ -19,7 +19,7 @@
  * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
  * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
  * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
- * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS 
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
  * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
  * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
@@ -36,7 +36,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridLayout;
-import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -50,11 +49,9 @@ import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
 public final class ControllerEventTest extends JFrame {
-	@Serial
 	private static final long serialVersionUID = -8266185848160199092L;
 
 	private static abstract class AxisPanel extends JPanel {
-		@Serial
 		private static final long serialVersionUID = -6200599064870672000L;
 		transient Component axis;
 		float data;
@@ -79,7 +76,6 @@ public final class ControllerEventTest extends JFrame {
 	}
 
 	private static class DigitalAxisPanel extends AxisPanel {
-		@Serial
 		private static final long serialVersionUID = -4729666037860134626L;
 		JLabel digitalState = new JLabel("<unread>");
 
@@ -104,7 +100,6 @@ public final class ControllerEventTest extends JFrame {
 	}
 
 	private static class DigitalHatPanel extends AxisPanel {
-		@Serial
 		private static final long serialVersionUID = -6582605379682496832L;
 		JLabel digitalState = new JLabel("<unread>");
 
@@ -137,7 +132,7 @@ public final class ControllerEventTest extends JFrame {
 				digitalState.setText("DOWN+LEFT");
 			} else if ( data == Component.POV.LEFT) {
 				digitalState.setBackground(Color.green);
-				digitalState.setText("LEFT");    
+				digitalState.setText("LEFT");
 			} else if ( data == Component.POV.UP_LEFT) {
 				digitalState.setBackground(Color.green);
 				digitalState.setText("UP+LEFT");
@@ -149,7 +144,7 @@ public final class ControllerEventTest extends JFrame {
 		}
 	}
 	private static class AnalogAxisPanel extends AxisPanel {
-		@Serial private static final long serialVersionUID = 7536173405896285590L;
+		private static final long serialVersionUID = 7536173405896285590L;
 		JLabel analogState = new JLabel("<unread>");
 
 		public AnalogAxisPanel(Component ax) {
@@ -169,7 +164,6 @@ public final class ControllerEventTest extends JFrame {
 
 
 	private static class ControllerWindow extends JFrame {
-		@Serial
 		private static final long serialVersionUID = 8623977198558568961L;
 		transient Controller ca;
 		transient Map<Component, AxisPanel> axes_to_panels = new HashMap<>();
@@ -189,7 +183,7 @@ public final class ControllerEventTest extends JFrame {
 				p.setLayout(new GridLayout(width,0));
 				for(int j=0;j<components.length;j++){
 					addAxis(p,components[j]);
-				}  
+				}
 				c.add(new JScrollPane(p),BorderLayout.CENTER);
 			}
 			setSize(400,400);
@@ -204,7 +198,7 @@ public final class ControllerEventTest extends JFrame {
 		private void setDisabled(boolean b){
 			disabled = b;
 			if (!disabled){
-				this.setTitle(ca.getName()); 
+				this.setTitle(ca.getName());
 				System.out.println(ca.getName()+" enabled");
 			} else {
 				this.setTitle(ca.getName()+" DISABLED!");
@@ -220,7 +214,7 @@ public final class ControllerEventTest extends JFrame {
 			} else {
 				if (ax.getIdentifier() == Component.Identifier.Axis.POV) {
 					p2 = new DigitalHatPanel(ax);
-				} else {     
+				} else {
 					p2 = new DigitalAxisPanel(ax);
 				}
 			}
@@ -234,7 +228,7 @@ public final class ControllerEventTest extends JFrame {
 					setDisabled(true);
 				}
 				return;
-			} 
+			}
 			if (disabled()){
 				setDisabled(false);
 			}
@@ -293,7 +287,7 @@ public final class ControllerEventTest extends JFrame {
 
 	private void createControllerWindow(Controller c){
 		controllers.add(new ControllerWindow(this,c));
-	}    
+	}
 
 	/**
 	 * @param args the command line arguments

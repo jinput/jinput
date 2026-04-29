@@ -26,7 +26,7 @@
 package net.java.games.input;
 
 public class RumbleTest {
-    
+
     /** Creates a new instance of RumbleTest */
     public RumbleTest() {
         ControllerEnvironment ca = ControllerEnvironment.getDefaultEnvironment();
@@ -70,16 +70,16 @@ public class RumbleTest {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                 }
-            }            
+            }
         }
         System.exit(0);
     }
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         new RumbleTest();
     }
-    
+
 }

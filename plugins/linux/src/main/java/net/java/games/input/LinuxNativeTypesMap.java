@@ -1,26 +1,26 @@
 /**
  * Copyright (C) 2003 Jeremy Booth (jeremy@newdawnsoftware.com)
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
- * Redistributions of source code must retain the above copyright notice, this 
- * list of conditions and the following disclaimer. Redistributions in binary 
- * form must reproduce the above copyright notice, this list of conditions and 
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer. Redistributions in binary
+ * form must reproduce the above copyright notice, this list of conditions and
  * the following disclaimer in the documentation and/or other materials provided
- * with the distribution. 
+ * with the distribution.
  * The name of the author may not be used to endorse or promote products derived
- * from this software without specific prior written permission. 
+ * from this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO 
- * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, 
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+ * EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
  * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR 
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF 
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
  */
 package net.java.games.input;
@@ -35,22 +35,22 @@ import java.util.logging.Logger;
 class LinuxNativeTypesMap {
     private static LinuxNativeTypesMap INSTANCE = new LinuxNativeTypesMap();
     private static Logger log = Logger.getLogger(LinuxNativeTypesMap.class.getName());
-    
+
     private final Component.Identifier relAxesIDs[];
     private final Component.Identifier absAxesIDs[];
     private final Component.Identifier buttonIDs[];
-    
+
     /** create an empty, uninitialsed map
-     */    
+     */
     private LinuxNativeTypesMap() {
         buttonIDs = new Component.Identifier[NativeDefinitions.KEY_MAX];
         relAxesIDs = new Component.Identifier[NativeDefinitions.REL_MAX];
         absAxesIDs = new Component.Identifier[NativeDefinitions.ABS_MAX];
 		reInit();
     }
-    
+
     /** Do the work.
-     */    
+     */
     private void reInit() {
         buttonIDs[NativeDefinitions.KEY_ESC] = Component.Identifier.Key.ESCAPE;
         buttonIDs[NativeDefinitions.KEY_1] = Component.Identifier.Key._1;
@@ -259,7 +259,7 @@ class LinuxNativeTypesMap {
         buttonIDs[NativeDefinitions.KEY_UNKNOWN] = Component.Identifier.Key.UNLABELED;
         /*buttonIDs[NativeDefinitions.KEY_BRIGHTNESSDOWN] = "Brightness Down";
         buttonIDs[NativeDefinitions.KEY_BRIGHTNESSUP] = "Brightness Up";*/
-        
+
         //Misc keys
         buttonIDs[NativeDefinitions.BTN_0] = Component.Identifier.Button._0;
         buttonIDs[NativeDefinitions.BTN_1] = Component.Identifier.Button._1;
@@ -271,7 +271,7 @@ class LinuxNativeTypesMap {
         buttonIDs[NativeDefinitions.BTN_7] = Component.Identifier.Button._7;
         buttonIDs[NativeDefinitions.BTN_8] = Component.Identifier.Button._8;
         buttonIDs[NativeDefinitions.BTN_9] = Component.Identifier.Button._9;
-        
+
         // Mouse
         buttonIDs[NativeDefinitions.BTN_LEFT] = Component.Identifier.Button.LEFT;
         buttonIDs[NativeDefinitions.BTN_RIGHT] = Component.Identifier.Button.RIGHT;
@@ -280,7 +280,7 @@ class LinuxNativeTypesMap {
         buttonIDs[NativeDefinitions.BTN_EXTRA] = Component.Identifier.Button.EXTRA;
         buttonIDs[NativeDefinitions.BTN_FORWARD] = Component.Identifier.Button.FORWARD;
         buttonIDs[NativeDefinitions.BTN_BACK] = Component.Identifier.Button.BACK;
-        
+
         // Joystick
         buttonIDs[NativeDefinitions.BTN_TRIGGER] = Component.Identifier.Button.TRIGGER;
         buttonIDs[NativeDefinitions.BTN_THUMB] = Component.Identifier.Button.THUMB;
@@ -295,7 +295,7 @@ class LinuxNativeTypesMap {
         buttonIDs[NativeDefinitions.BTN_BASE5] = Component.Identifier.Button.BASE5;
         buttonIDs[NativeDefinitions.BTN_BASE6] = Component.Identifier.Button.BASE6;
         buttonIDs[NativeDefinitions.BTN_DEAD] = Component.Identifier.Button.DEAD;
-        
+
         // Gamepad
         buttonIDs[NativeDefinitions.BTN_A] = Component.Identifier.Button.A;
         buttonIDs[NativeDefinitions.BTN_B] = Component.Identifier.Button.B;
@@ -366,7 +366,7 @@ class LinuxNativeTypesMap {
         buttonIDs[NativeDefinitions.BTN_TOUCH] = Component.Identifier.Button.TOUCH;
         buttonIDs[NativeDefinitions.BTN_STYLUS] = Component.Identifier.Button.STYLUS;
         buttonIDs[NativeDefinitions.BTN_STYLUS2] = Component.Identifier.Button.STYLUS2;
-        
+
         relAxesIDs[NativeDefinitions.REL_X] = Component.Identifier.Axis.X;
         relAxesIDs[NativeDefinitions.REL_Y] = Component.Identifier.Axis.Y;
         relAxesIDs[NativeDefinitions.REL_Z] = Component.Identifier.Axis.Z;
@@ -375,7 +375,7 @@ class LinuxNativeTypesMap {
         relAxesIDs[NativeDefinitions.REL_HWHEEL] = Component.Identifier.Axis.SLIDER;
         relAxesIDs[NativeDefinitions.REL_DIAL] = Component.Identifier.Axis.SLIDER;
         relAxesIDs[NativeDefinitions.REL_MISC] = Component.Identifier.Axis.SLIDER;
-        
+
         absAxesIDs[NativeDefinitions.ABS_X] = Component.Identifier.Axis.X;
         absAxesIDs[NativeDefinitions.ABS_Y] = Component.Identifier.Axis.Y;
         absAxesIDs[NativeDefinitions.ABS_Z] = Component.Identifier.Axis.Z;
@@ -406,52 +406,52 @@ class LinuxNativeTypesMap {
 
 	public final static Controller.Type guessButtonTrait(int button_code) {
 		switch (button_code) {
-			case NativeDefinitions.BTN_TRIGGER : 
-			case NativeDefinitions.BTN_THUMB : 
-			case NativeDefinitions.BTN_THUMB2 : 
-			case NativeDefinitions.BTN_TOP : 
-			case NativeDefinitions.BTN_TOP2 : 
-			case NativeDefinitions.BTN_PINKIE : 
-			case NativeDefinitions.BTN_BASE : 
-			case NativeDefinitions.BTN_BASE2 : 
-			case NativeDefinitions.BTN_BASE3 : 
-			case NativeDefinitions.BTN_BASE4 : 
-			case NativeDefinitions.BTN_BASE5 : 
-			case NativeDefinitions.BTN_BASE6 : 
-			case NativeDefinitions.BTN_DEAD : 
+			case NativeDefinitions.BTN_TRIGGER :
+			case NativeDefinitions.BTN_THUMB :
+			case NativeDefinitions.BTN_THUMB2 :
+			case NativeDefinitions.BTN_TOP :
+			case NativeDefinitions.BTN_TOP2 :
+			case NativeDefinitions.BTN_PINKIE :
+			case NativeDefinitions.BTN_BASE :
+			case NativeDefinitions.BTN_BASE2 :
+			case NativeDefinitions.BTN_BASE3 :
+			case NativeDefinitions.BTN_BASE4 :
+			case NativeDefinitions.BTN_BASE5 :
+			case NativeDefinitions.BTN_BASE6 :
+			case NativeDefinitions.BTN_DEAD :
 				return Controller.Type.STICK;
-			case NativeDefinitions.BTN_A : 
-			case NativeDefinitions.BTN_B : 
-			case NativeDefinitions.BTN_C : 
-			case NativeDefinitions.BTN_X : 
-			case NativeDefinitions.BTN_Y : 
-			case NativeDefinitions.BTN_Z : 
-			case NativeDefinitions.BTN_TL : 
-			case NativeDefinitions.BTN_TR : 
-			case NativeDefinitions.BTN_TL2 : 
-			case NativeDefinitions.BTN_TR2 : 
+			case NativeDefinitions.BTN_A :
+			case NativeDefinitions.BTN_B :
+			case NativeDefinitions.BTN_C :
+			case NativeDefinitions.BTN_X :
+			case NativeDefinitions.BTN_Y :
+			case NativeDefinitions.BTN_Z :
+			case NativeDefinitions.BTN_TL :
+			case NativeDefinitions.BTN_TR :
+			case NativeDefinitions.BTN_TL2 :
+			case NativeDefinitions.BTN_TR2 :
 			case NativeDefinitions.BTN_SELECT :
             case NativeDefinitions.BTN_START :
 			case NativeDefinitions.BTN_MODE :
-			case NativeDefinitions.BTN_THUMBL : 
+			case NativeDefinitions.BTN_THUMBL :
 			case NativeDefinitions.BTN_THUMBR :
 				return Controller.Type.GAMEPAD;
-			case NativeDefinitions.BTN_0 : 
-			case NativeDefinitions.BTN_1 : 
-			case NativeDefinitions.BTN_2 : 
-			case NativeDefinitions.BTN_3 : 
-			case NativeDefinitions.BTN_4 : 
-			case NativeDefinitions.BTN_5 : 
-			case NativeDefinitions.BTN_6 : 
-			case NativeDefinitions.BTN_7 : 
-			case NativeDefinitions.BTN_8 : 
-			case NativeDefinitions.BTN_9 : 
+			case NativeDefinitions.BTN_0 :
+			case NativeDefinitions.BTN_1 :
+			case NativeDefinitions.BTN_2 :
+			case NativeDefinitions.BTN_3 :
+			case NativeDefinitions.BTN_4 :
+			case NativeDefinitions.BTN_5 :
+			case NativeDefinitions.BTN_6 :
+			case NativeDefinitions.BTN_7 :
+			case NativeDefinitions.BTN_8 :
+			case NativeDefinitions.BTN_9 :
 				return Controller.Type.UNKNOWN;
-			case NativeDefinitions.BTN_LEFT : 
-			case NativeDefinitions.BTN_RIGHT : 
-			case NativeDefinitions.BTN_MIDDLE : 
-			case NativeDefinitions.BTN_SIDE : 
-			case NativeDefinitions.BTN_EXTRA : 
+			case NativeDefinitions.BTN_LEFT :
+			case NativeDefinitions.BTN_RIGHT :
+			case NativeDefinitions.BTN_MIDDLE :
+			case NativeDefinitions.BTN_SIDE :
+			case NativeDefinitions.BTN_EXTRA :
 				return Controller.Type.MOUSE;
 				//				case NativeDefinitions.KEY_RESERVED:
 			case NativeDefinitions.KEY_ESC:
@@ -769,11 +769,11 @@ class LinuxNativeTypesMap {
 				return Controller.Type.UNKNOWN;
 		}
 	}
-			
+
     /** Return port type from a native port type int id
      * @param nativeid The native port type
      * @return The jinput port type
-     */    
+     */
     public static Controller.PortType getPortType(int nativeid) {
         // Have to do this one this way as there is no BUS_MAX
         switch (nativeid) {
@@ -791,11 +791,11 @@ class LinuxNativeTypesMap {
                 return Controller.PortType.UNKNOWN;
         }
     }
-    
+
     /** Gets the identifier for a relative axis
      * @param nativeID The axis type ID
      * @return The jinput id
-     */    
+     */
     public static Component.Identifier getRelAxisID(int nativeID) {
         Component.Identifier retval = null;
 		try {
@@ -809,11 +809,11 @@ class LinuxNativeTypesMap {
         }
         return retval;
     }
-    
+
     /** Gets the identifier for a absolute axis
      * @param nativeID The native axis type id
      * @return The jinput id
-     */    
+     */
     public static Component.Identifier getAbsAxisID(int nativeID) {
 		Component.Identifier retval = null;
 		try {
@@ -827,11 +827,11 @@ class LinuxNativeTypesMap {
         }
         return retval;
     }
-    
+
     /** Gets the identifier for a button
      * @param nativeID The native button type id
      * @return The jinput id
-     */    
+     */
     public static Component.Identifier getButtonID(int nativeID) {
         Component.Identifier retval = null;
 		try {

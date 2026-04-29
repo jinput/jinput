@@ -25,7 +25,7 @@
  * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
  * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
  * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
- * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS 
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
  * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
  * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
@@ -47,7 +47,7 @@ import java.io.IOException;
 final class DIDeviceObject {
 	//DirectInput scales wheel deltas by 120
 	private final static int WHEEL_SCALE = 120;
-	
+
 	private final IDirectInputDevice device;
 	private final byte[] guid;
 	private final int identifier;
@@ -65,7 +65,7 @@ final class DIDeviceObject {
 	/* These are used for emulating relative axes */
 	private int last_poll_value;
 	private int last_event_value;
-	
+
 	public DIDeviceObject(IDirectInputDevice device, Component.Identifier id, byte[] guid, int guid_type, int identifier, int type, int instance, int flags, String name, int format_offset) throws IOException {
 		this.device = device;
 		this.id = id;
@@ -160,11 +160,11 @@ final class DIDeviceObject {
 	public boolean isButton() {
 		return (type & IDirectInputDevice.DIDFT_BUTTON) != 0;
 	}
-	
+
 	public boolean isAxis() {
 		return (type & IDirectInputDevice.DIDFT_AXIS) != 0;
 	}
-	
+
 	public boolean isRelative() {
 		return isAxis() && (type & IDirectInputDevice.DIDFT_RELAXIS) != 0;
 	}

@@ -45,7 +45,7 @@ import java.util.List;
 final class RawKeyboard extends Keyboard {
 	private final RawKeyboardEvent raw_event = new RawKeyboardEvent();
 	private final RawDevice device;
-	
+
 	protected RawKeyboard(String name, RawDevice device, Controller[] children, Rumbler[] rumblers) throws IOException {
 		super(name, createKeyboardComponents(device), children, rumblers);
 		this.device = device;
@@ -101,7 +101,7 @@ final class RawKeyboard extends Keyboard {
 	final static class Key extends AbstractComponent {
 		private final RawDevice device;
 		private final int vkey_code;
-		
+
 		public Key(RawDevice device, int vkey_code, Component.Identifier.Key key_id) {
 			super(key_id.getName(), key_id);
 			this.device = device;
@@ -118,6 +118,6 @@ final class RawKeyboard extends Keyboard {
 
 		public boolean isRelative() {
 			return false;
-		} 
+		}
 	}
 }

@@ -13,3 +13,4 @@ eclipse_bin/
 dependency-reduced-pom.xml
 *.releaseBackup
 release.properties
+*.bak

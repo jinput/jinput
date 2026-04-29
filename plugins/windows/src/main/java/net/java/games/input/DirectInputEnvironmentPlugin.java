@@ -25,7 +25,7 @@
  * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
  * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
  * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
- * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS 
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
  * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
  * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
@@ -51,15 +51,15 @@ import java.util.List;
  * @version 1.0
  */
 public final class DirectInputEnvironmentPlugin extends ControllerEnvironment implements Plugin {
-	
+
 	private static boolean supported = false;
-		
+
 	/**
 	 * Static utility method for loading native libraries.
 	 * It will try to load from either the path given by
 	 * the net.java.games.input.librarypath property
 	 * or through System.loadLibrary().
-	 * 
+	 *
 	 */
 	static void loadLibrary(final String lib_name) {
 		try {
@@ -73,7 +73,7 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 			supported = false;
 		}
 	}
-    
+
 	static {
 		String osName = System.getProperty("os.name", "").trim();
 		if(osName.startsWith("Windows")) {
@@ -91,7 +91,7 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 	private final DummyWindow window;
 
 	/** Creates new DirectInputEnvironment */
-	public DirectInputEnvironmentPlugin() {		
+	public DirectInputEnvironmentPlugin() {
 		DummyWindow window = null;
 		Controller[] controllers = new Controller[]{};
 		if(isSupported()) {
@@ -110,7 +110,7 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 			this.controllers = controllers;
 			Runtime.getRuntime().addShutdownHook(new ShutdownHook());
 		} else {
-			// These are final fields, so can't set them, then over ride 
+			// These are final fields, so can't set them, then over ride
 			// them if we are supported.
 			this.window = null;
 			this.controllers = controllers;
@@ -140,7 +140,7 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 		controller_components.toArray(components);
 		return components;
 	}
-		
+
 	private Mouse createMouseFromDevice(IDirectInputDevice device) {
 		Component[] components = createComponents(device, true);
 		Mouse mouse = new DIMouse(device, components, new Controller[]{}, device.getRumblers());
@@ -181,7 +181,7 @@ public final class DirectInputEnvironmentPlugin extends ControllerEnvironment im
 				return createControllerFromDevice(device, Controller.Type.UNKNOWN);
 		}
 	}
-	
+
 	private Controller[] enumControllers(DummyWindow window) throws IOException {
 		List<Controller> controllers = new ArrayList<>();
 		IDirectInput dinput = new IDirectInput(window);

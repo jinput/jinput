@@ -48,7 +48,7 @@ final class OSXAbstractController extends AbstractController {
 	private final PortType port;
 	private final OSXHIDQueue queue;
 	private final Type type;
-	
+
 	protected OSXAbstractController(OSXHIDDevice device, OSXHIDQueue queue, Component[] components, Controller[] children, Rumbler[] rumblers, Type type) {
 		super(device.getProductName(), components, children, rumblers);
 		this.queue = queue;

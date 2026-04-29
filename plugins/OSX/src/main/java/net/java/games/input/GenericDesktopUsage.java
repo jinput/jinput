@@ -94,7 +94,7 @@ final class GenericDesktopUsage implements Usage {
 	/* 0x94 - 0xFFFF Reserved */
 
 	private final int usage_id;
-	
+
 	public final static GenericDesktopUsage map(int usage_id) {
 		if (usage_id < 0 || usage_id >= map.length)
 			return null;

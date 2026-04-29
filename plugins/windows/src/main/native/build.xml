@@ -45,7 +45,7 @@
 		<property name="rawlibs" value="Kernel32.lib User32.lib Setupapi.lib"/>
 		<property name="dx8libs" value="Kernel32.lib dinput8.lib dxguid.lib User32.lib"/>
 		<property name="commonhome" location="../../../../common"/>
-		
+
 		<condition property="dx8dllname" value="jinput-dx8.dll" else="jinput-dx8_64.dll">
 			<equals arg1="${os.arch}" arg2="x86"/>
 		</condition>

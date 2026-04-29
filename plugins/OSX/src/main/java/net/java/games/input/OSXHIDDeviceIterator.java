@@ -47,7 +47,7 @@ import java.io.IOException;
 */
 final class OSXHIDDeviceIterator {
 	private final long iterator_address;
-	
+
 	public OSXHIDDeviceIterator() throws IOException {
 		this.iterator_address = nCreateIterator();
 	}

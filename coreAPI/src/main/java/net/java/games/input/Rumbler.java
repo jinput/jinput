@@ -25,7 +25,7 @@
  * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
  * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
  * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
- * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS 
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
  * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
  * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
@@ -48,20 +48,20 @@ public interface Rumbler {
      * Rumble with the specified intensity.
      */
     void rumble(float intensity);
-    
+
     /**
      * Get the string name of the axis the rumbler is attached to
      *
      * @return The axis name
      */
     String getAxisName();
-    
+
     /**
      * Get the axis identifier the rumbler is attached to
      *
      * @return The axis identifier
      */
     Component.Identifier getAxisIdentifier();
-    
-    
+
+
 } // interface Rumbler

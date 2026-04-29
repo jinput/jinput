@@ -47,7 +47,7 @@ import java.io.IOException;
 final class OSXKeyboard extends Keyboard {
 	private final PortType port;
 	private final OSXHIDQueue queue;
-	
+
 	protected OSXKeyboard(OSXHIDDevice device, OSXHIDQueue queue, Component[] components, Controller[] children, Rumbler[] rumblers) {
 		super(device.getProductName(), components, children, rumblers);
 		this.queue = queue;
@@ -57,7 +57,7 @@ final class OSXKeyboard extends Keyboard {
 	protected final boolean getNextDeviceEvent(Event event) throws IOException {
 		return OSXControllers.getNextDeviceEvent(event, queue);
 	}
-	
+
 	protected final void setDeviceEventQueueSize(int size) throws IOException {
 		queue.setQueueDepth(size);
 	}

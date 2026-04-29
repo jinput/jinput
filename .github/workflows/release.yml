@@ -95,22 +95,22 @@ jobs:
         run: mvn --batch-mode --file pom.xml --also-make --activate-profiles linux,windows,osx,wintab --projects plugins/awt,uberjar,tests,examples clean
 
       - name: Unpack linux natives
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.1.3
         with:
           name: linux-natives
           path: plugins/linux/target/natives
       - name: Unpack macos natives
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.1.3
         with:
           name: macos-natives
           path: plugins/OSX/target/natives
       - name: Unpack windows natives
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.1.3
         with:
           name: windows-natives
           path: plugins/windows/target/natives
       - name: Unpack wintab natives
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.1.3
         with:
           name: wintab-natives
           path: plugins/wintab/target/natives
@@ -120,6 +120,13 @@ jobs:
 
       - name: Set environment
         run: echo "RELEASE_VERSION=$(mvn -Dexpression=project.version help:evaluate | grep -e '^[[:digit:]]')" >> $GITHUB_ENV
+
+      - name: Update docs
+        run: |
+          sed -i "/^jinput_version.*/c\jinput_version: $RELEASE_VERSION" docs/_config.yml
+
+      - name: Commit docs change
+        run: git commit -m "Update docs for release $RELEASE_VERSION" docs/_config.yml
 
       - name: Tag release
         run: git tag -a $RELEASE_VERSION -m "Release tag $RELEASE_VERSION"

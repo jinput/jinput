@@ -46,7 +46,7 @@ import java.io.IOException;
 */
 class LinuxComponent extends AbstractComponent {
 	private final LinuxEventComponent component;
-	
+
 	public LinuxComponent(LinuxEventComponent component) {
 		super(component.getIdentifier().getName(), component.getIdentifier());
 		this.component = component;

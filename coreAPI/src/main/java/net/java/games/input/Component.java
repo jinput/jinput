@@ -25,7 +25,7 @@
  * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
  * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
  * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
- * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS 
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
  * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
  * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
@@ -84,40 +84,40 @@ public interface Component {
      * Returns a human-readable name for this axis.
      */
     String getName();
-    
+
     /**
      * Identifiers for different Axes.
      */
     class Identifier {
-        
+
         /**
          * Name of axis type
          */
         private final String name;
-        
+
         /**
          * Protected constructor
          */
         protected Identifier(String name) {
             this.name = name;
         }
-        
+
         /**
          * Returns a non-localized string description of this axis type.
          */
         public String getName() {
             return name;
         }
-        
+
         /**
          * Returns a non-localized string description of this axis type.
          */
         public String toString() {
             return name;
         }
-        
+
         public static class Axis extends Identifier {
-        
+
             /**
              * @param name
              */
@@ -129,29 +129,29 @@ public interface Component {
              * An axis for specifying vertical data.
              */
             public static final Axis X = new Axis("x");
-            
+
             /**
              * An axis for specifying horizontal data.
              */
             public static final Axis Y = new Axis("y");
-            
+
             /**
              * An axis for specifying third dimensional up/down
              * data, or linear data in any direction that is
              * neither horizontal nor vertical.
              */
             public static final Axis Z = new Axis("z");
-            
+
             /**
              * An axis for specifying left-right rotational data.
              */
             public static final Axis RX = new Axis("rx");
-            
+
             /**
              * An axis for specifying forward-back rotational data.
              */
             public static final Axis RY = new Axis("ry");
-            
+
             /**
              * An axis for specifying up-down rotational data
              * (rudder control).
@@ -267,7 +267,7 @@ public interface Component {
              * An axis for specifying up-down angular velocity data.
              */
             public static final Axis RZ_VELOCITY = new Axis("rz-velocity");
-        
+
             /**
              * An axis for a point-of-view control.
              */
@@ -279,51 +279,51 @@ public interface Component {
             public static final Axis UNKNOWN = new Axis("unknown");
 
         }
-        
+
         public static class Button extends Identifier {
-            
+
             public Button(String name) {
                 super(name);
             }
-            
+
             /** First device button
-             */        
+             */
             public static final Button _0 = new Button("0");
-            
+
             /** Second device button
-             */        
+             */
             public static final Button _1 = new Button("1");
-            
+
             /** Thrid device button
-             */        
+             */
             public static final Button _2 = new Button("2");
-            
+
             /** Fourth device button
-             */        
+             */
             public static final Button _3 = new Button("3");
-            
+
             /** Fifth device button
-             */        
+             */
             public static final Button _4 = new Button("4");
-            
+
             /** Sixth device button
-             */        
+             */
             public static final Button _5 = new Button("5");
-            
+
             /** Seventh device button
-             */        
+             */
             public static final Button _6 = new Button("6");
-            
+
             /** Eighth device button
-             */        
+             */
             public static final Button _7 = new Button("7");
-            
+
             /** Ninth device button
-             */        
+             */
             public static final Button _8 = new Button("8");
-            
+
             /** 10th device button
-             */        
+             */
             public static final Button _9 = new Button("9");
             public static final Button _10 = new Button("10");
             public static final Button _11 = new Button("11");
@@ -347,102 +347,102 @@ public interface Component {
             public static final Button _29 = new Button("29");
             public static final Button _30 = new Button("30");
             public static final Button _31 = new Button("31");
-            
+
             /** Joystick trigger button
-             */        
+             */
             public static final Button TRIGGER = new Button("Trigger");
-            
+
             /** Joystick thumb button
-             */        
+             */
             public static final Button THUMB = new Button("Thumb");
-            
+
             /** Second joystick thumb button
-             */        
+             */
             public static final Button THUMB2 = new Button("Thumb 2");
-            
+
             /** Joystick top button
-             */        
+             */
             public static final Button TOP = new Button("Top");
-            
+
             /** Second joystick top button
-             */        
+             */
             public static final Button TOP2 = new Button("Top 2");
-            
+
             /** The joystick button you play with with you little finger (Pinkie on *that* side
              * of the pond :P)
-             */        
+             */
             public static final Button PINKIE = new Button("Pinkie");
-            
+
             /** Joystick button on the base of the device
-             */        
+             */
             public static final Button BASE = new Button("Base");
-            
+
             /** Second joystick button on the base of the device
-             */        
+             */
             public static final Button BASE2 = new Button("Base 2");
-            
+
             /** Thrid joystick button on the base of the device
-             */        
+             */
             public static final Button BASE3 = new Button("Base 3");
-            
+
             /** Fourth joystick button on the base of the device
-             */        
+             */
             public static final Button BASE4 = new Button("Base 4");
-            
+
             /** Fifth joystick button on the base of the device
-             */        
+             */
             public static final Button BASE5 = new Button("Base 5");
-            
+
             /** Sixth joystick button on the base of the device
-             */        
+             */
             public static final Button BASE6 = new Button("Base 6");
-            
+
             /** erm, dunno, but it's in the defines so it might exist.
-             */        
+             */
             public static final Button DEAD = new Button("Dead");
-            
+
             /** 'A' button on a gamepad
-             */        
+             */
             public static final Button A = new Button("A");
-            
+
             /** 'B' button on a gamepad
-             */        
+             */
             public static final Button B = new Button("B");
-            
+
             /** 'C' button on a gamepad
-             */        
+             */
             public static final Button C = new Button("C");
-            
+
             /** 'X' button on a gamepad
-             */        
+             */
             public static final Button X = new Button("X");
-            
+
             /** 'Y' button on a gamepad
-             */        
+             */
             public static final Button Y = new Button("Y");
-            
+
             /** 'Z' button on a gamepad
-             */        
+             */
             public static final Button Z = new Button("Z");
-            
+
             /** Left thumb button on a gamepad
-             */        
+             */
             public static final Button LEFT_THUMB = new Button("Left Thumb");
-            
+
             /** Right thumb button on a gamepad
-             */        
+             */
             public static final Button RIGHT_THUMB = new Button("Right Thumb");
-            
+
             /** Second left thumb button on a gamepad
-             */        
+             */
             public static final Button LEFT_THUMB2 = new Button("Left Thumb 2");
-            
+
             /** Second right thumb button on a gamepad
-             */        
+             */
             public static final Button RIGHT_THUMB2 = new Button("Right Thumb 2");
-            
+
             /** 'Select' button on a gamepad
-             */        
+             */
             public static final Button SELECT = new Button("Select");
 
             /** 'Start' button on a gamepad
@@ -450,61 +450,61 @@ public interface Component {
             public static final Button START = new Button("Start");
 
             /** 'Mode' button on a gamepad
-             */        
+             */
             public static final Button MODE = new Button("Mode");
-            
+
             /** Another left thumb button on a gamepad (how many thumbs do you have??)
-             */        
+             */
             public static final Button LEFT_THUMB3 = new Button("Left Thumb 3");
-            
+
             /** Another right thumb button on a gamepad
-             */        
+             */
             public static final Button RIGHT_THUMB3 = new Button("Right Thumb 3");
-            
+
             /** Digitiser pen tool button
-             */        
+             */
             public static final Button TOOL_PEN = new Button("Pen");
-            
+
             /** Digitiser rubber (eraser) tool button
-             */        
+             */
             public static final Button TOOL_RUBBER = new Button("Rubber");
-            
+
             /** Digitiser brush tool button
-             */        
+             */
             public static final Button TOOL_BRUSH = new Button("Brush");
-            
+
             /** Digitiser pencil tool button
-             */        
+             */
             public static final Button TOOL_PENCIL = new Button("Pencil");
-            
+
             /** Digitiser airbrush tool button
-             */        
+             */
             public static final Button TOOL_AIRBRUSH = new Button("Airbrush");
-            
+
             /** Digitiser finger tool button
-             */        
+             */
             public static final Button TOOL_FINGER = new Button("Finger");
-            
+
             /** Digitiser mouse tool button
-             */        
+             */
             public static final Button TOOL_MOUSE = new Button("Mouse");
-            
+
             /** Digitiser lens tool button
-             */        
+             */
             public static final Button TOOL_LENS = new Button("Lens");
-            
+
             /** Digitiser touch button
-             */        
+             */
             public static final Button TOUCH = new Button("Touch");
-            
+
             /** Digitiser stylus button
-             */        
+             */
             public static final Button STYLUS = new Button("Stylus");
-            
+
             /** Second digitiser stylus button
-             */        
+             */
             public static final Button STYLUS2 = new Button("Stylus 2");
-            
+
             /**
              * An unknown button
              */
@@ -600,7 +600,7 @@ public interface Component {
             protected Key(String name) {
                 super(name);
             }
-            
+
             /**
              * Standard keyboard (LATIN-1) keys
              * UNIX X11 keysym values are listed to the right
@@ -733,7 +733,7 @@ public interface Component {
         } // class StandardKeyboard.KeyID
 
     } // class Axis.Identifier
-    
+
     /**
      * POV enum for different positions.
      */

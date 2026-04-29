@@ -59,7 +59,7 @@ final class DIComponent extends AbstractComponent {
 	public boolean isAnalog() {
 		return object.isAnalog();
 	}
-	
+
 	public float getDeadZone() {
 		return object.getDeadzone();
 	}

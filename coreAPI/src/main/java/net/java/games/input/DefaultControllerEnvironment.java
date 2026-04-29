@@ -19,7 +19,7 @@
  * ANY IMPLIED WARRANT OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE OR
  * NON-INFRINGEMEN, ARE HEREBY EXCLUDED.  SUN MICROSYSTEMS, INC. ("SUN") AND
  * ITS LICENSORS SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED BY LICENSEE AS
- * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS 
+ * A RESULT OF USING, MODIFYING OR DESTRIBUTING THIS SOFTWARE OR ITS
  * DERIVATIVES.  IN NO EVENT WILL SUN OR ITS LICENSORS BE LIABLE FOR ANY LOST
  * REVENUE, PROFIT OR DATA, OR FOR DIRECT, INDIRECT, SPECIAL, CONSEQUENTIAL,
  * INCIDENTAL OR PUNITIVE DAMAGES.  HOWEVER CAUSED AND REGARDLESS OF THE THEORY
@@ -49,15 +49,15 @@ import java.util.logging.Logger;
  */
 class DefaultControllerEnvironment extends ControllerEnvironment {
 	static String libPath;
-	
+
 	private static Logger log = Logger.getLogger(DefaultControllerEnvironment.class.getName());
-	
+
 	/**
 	 * Static utility method for loading native libraries.
 	 * It will try to load from either the path given by
 	 * the net.java.games.input.librarypath property
 	 * or through System.loadLibrary().
-	 * 
+	 *
 	 */
 	static void loadLibrary(final String lib_name) {
 		String lib_path = System.getProperty("net.java.games.input.librarypath");
@@ -66,12 +66,12 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 		else
 			System.loadLibrary(lib_name);
 	}
-    
+
     /**
      * List of all controllers in this environment
      */
     private ArrayList<Controller> controllers;
-    
+
 	private Collection<String> loadedPluginNames = new ArrayList<>();
 
     /**
@@ -79,7 +79,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
      */
     public DefaultControllerEnvironment() {
     }
-    
+
     /**
      * Returns a list of all controllers available to this environment,
      * or an empty array if there are no controllers in this environment.
@@ -136,7 +136,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 
 			StringTokenizer pluginClassTok = new StringTokenizer(pluginClasses, " \t\n\r\f,;:");
 			while(pluginClassTok.hasMoreTokens()) {
-				String className = pluginClassTok.nextToken();					
+				String className = pluginClassTok.nextToken();
 				try {
 					if(!loadedPluginNames.contains(className)) {
 						log.fine("Loading: " + className);
@@ -163,14 +163,14 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
         }
         return ret;
     }
-    
+
     /* This is jeff's new plugin code using Jeff's Plugin manager */
     private Void scanControllers() {
         String pluginPathName = System.getProperty("jinput.controllerPluginPath");
         if(pluginPathName == null) {
             pluginPathName = "controller";
         }
-        
+
         scanControllersAt(System.getProperty("java.home") +
             File.separator + "lib"+File.separator + pluginPathName);
         scanControllersAt(System.getProperty("user.dir")+
@@ -178,7 +178,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
 
         return null;
     }
-    
+
     private void scanControllersAt(String path) {
         File file = new File(path);
         if (!file.exists()) {
@@ -208,7 +208,7 @@ class DefaultControllerEnvironment extends ControllerEnvironment {
             e.printStackTrace();
         }
     }
-        
+
     /**
      * Add the array of controllers to our list of controllers.
      */

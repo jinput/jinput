@@ -48,15 +48,15 @@ import net.java.games.util.plugins.Plugin;
 * @version 1.0
 */
 public final class OSXEnvironmentPlugin extends ControllerEnvironment implements Plugin {
-	
+
 	private static boolean supported = false;
-	
+
 	/**
 	 * Static utility method for loading native libraries.
 	 * It will try to load from either the path given by
 	 * the net.java.games.input.librarypath property
 	 * or through System.loadLibrary().
-	 * 
+	 *
 	 */
 	static void loadLibrary(final String lib_name) {
 		try {
@@ -70,7 +70,7 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 			supported = false;
 		}
 	}
-    
+
     static {
     	String osName = System.getProperty("os.name", "").trim();
     	if(osName.equals("Mac OS X")) {
@@ -171,7 +171,7 @@ public final class OSXEnvironmentPlugin extends ControllerEnvironment implements
 			return null;
 		}
 	}
-	
+
 	private final static AbstractController createControllerFromDevice(OSXHIDDevice device, List<OSXHIDElement> elements, Controller.Type type) throws IOException {
 		List<OSXComponent> components = new ArrayList<>();
 		OSXHIDQueue queue = device.createQueue(AbstractController.EVENT_QUEUE_DEPTH);

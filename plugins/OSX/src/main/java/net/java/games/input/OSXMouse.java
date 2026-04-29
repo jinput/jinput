@@ -47,7 +47,7 @@ import java.io.IOException;
 final class OSXMouse extends Mouse {
 	private final PortType port;
 	private final OSXHIDQueue queue;
-	
+
 	protected OSXMouse(OSXHIDDevice device, OSXHIDQueue queue, Component[] components, Controller[] children, Rumbler[] rumblers) {
 		super(device.getProductName(), components, children, rumblers);
 		this.queue = queue;
