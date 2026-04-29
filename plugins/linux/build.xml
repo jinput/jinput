@@ -20,7 +20,10 @@
             <arg value="-m"/>
         </exec>
         <condition property="libname" value="${libname64}" else="${libname32}">
-            <equals arg1="${hwplatform}" arg2="x86_64"/>
+            <or>
+                <equals arg1="${hwplatform}" arg2="x86_64"/>
+                <equals arg1="${hwplatform}" arg2="aarch64"/>
+            </or>
         </condition>
         <apply dir="target/natives" executable="cc" os="Linux" dest="target/natives" skipemptyfilesets="true" failonerror="true">
             <arg line="-O2 -Wall -c -fPIC"/>
@@ -42,4 +45,16 @@
             <fileset file="target/natives/${libname}"/>
         </apply>
     </target>
+
+    <!-- New: copy the freshly built .so into a JMRI lib folder, renaming
+         it to libjinput-linux64.so (the name JMRI's loader requests).
+         Only runs when the Maven profile passes jmri.lib.dir. -->
+    <target name="installToJmri" depends="compileNativeJinputLib" if="jmri.lib.dir">
+        <echo message="Installing ${libname} to ${jmri.lib.dir}/libjinput-linux64.so"/>
+        <copy file="target/natives/${libname}"
+              tofile="${jmri.lib.dir}/libjinput-linux64.so"
+              overwrite="true"
+              verbose="true"/>
+    </target>
 </project>
+
