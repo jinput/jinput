@@ -13,10 +13,6 @@
     <name>JInput - core API</name>
 
     <dependencies>
-        <dependency>
-            <groupId>net.java.jutils</groupId>
-            <artifactId>jutils</artifactId>
-        </dependency>
     </dependencies>
 
     <build>

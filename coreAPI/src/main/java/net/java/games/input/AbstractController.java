@@ -41,7 +41,7 @@ import java.util.Map;
  * contains a fixed number of axes, controllers, and rumblers.
  */
 public abstract class AbstractController implements Controller {
-	final static int EVENT_QUEUE_DEPTH = 32;
+	public final static int EVENT_QUEUE_DEPTH = 32;
 
 	private final static Event event = new Event();
 
@@ -174,7 +174,7 @@ public abstract class AbstractController implements Controller {
 			setDeviceEventQueueSize(size);
 			event_queue = new EventQueue(size);
 		} catch (IOException e) {
-			ControllerEnvironment.log("Failed to create new event queue of size " + size + ": " + e);
+			AbstractControllerEnvironment.log("Failed to create new event queue of size " + size + ": " + e);
 		}
 	}
 
@@ -224,7 +224,7 @@ public abstract class AbstractController implements Controller {
 			}
 			return true;
 		} catch (IOException e) {
-			ControllerEnvironment.log("Failed to poll device: " + e.getMessage());
+			AbstractControllerEnvironment.log("Failed to poll device: " + e.getMessage());
 			return false;
 		}
 	}

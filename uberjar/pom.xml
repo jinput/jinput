@@ -6,7 +6,7 @@
         <groupId>net.java.jinput</groupId>
         <artifactId>jinput-parent</artifactId>
         <version>2.0.11-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../</relativePath>
     </parent>
     <artifactId>jinput</artifactId>
     <packaging>jar</packaging>
@@ -121,6 +121,14 @@
                             </filters>
                             <createSourcesJar>true</createSourcesJar>
                             <shadedArtifactAttached>false</shadedArtifactAttached>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Automatic-Module-Name>net.java.jinput</Automatic-Module-Name>
+                                    </manifestEntries>
+                                </transformer>
+                            </transformers>
                         </configuration>
                     </execution>
                     <execution>
@@ -137,6 +145,9 @@
                                         <include>**/*.jnilib</include>
                                         <include>META-INF/**/*</include>
                                     </includes>
+                                    <excludes>
+                                        <exclude>META-INF/services/*</exclude>
+                                    </excludes>
                                 </filter>
                                 <filter>
                                     <artifact>net.java.jinput:linux-plugin</artifact>
@@ -144,6 +155,9 @@
                                         <include>**/*.so</include>
                                         <include>META-INF/**/*</include>
                                     </includes>
+                                    <excludes>
+                                        <exclude>META-INF/services/*</exclude>
+                                    </excludes>
                                 </filter>
                                 <filter>
                                     <artifact>net.java.jinput:windows-plugin</artifact>
@@ -151,6 +165,9 @@
                                         <include>**/*.dll</include>
                                         <include>META-INF/**/*</include>
                                     </includes>
+                                    <excludes>
+                                        <exclude>META-INF/services/*</exclude>
+                                    </excludes>
                                 </filter>
                                 <filter>
                                     <artifact>net.java.jinput:wintab-plugin</artifact>
@@ -158,6 +175,9 @@
                                         <include>**/*.dll</include>
                                         <include>META-INF/**/*</include>
                                     </includes>
+                                    <excludes>
+                                        <exclude>META-INF/services/*</exclude>
+                                    </excludes>
                                 </filter>
                             </filters>
                             <artifactSet>
@@ -170,6 +190,13 @@
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <shadedClassifierName>natives-all</shadedClassifierName>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Automatic-Module-Name>net.java.jinput.natives</Automatic-Module-Name>
+                                    </manifestEntries>
+                                </transformer>
+                            </transformers>
                         </configuration>
                     </execution>
                 </executions>

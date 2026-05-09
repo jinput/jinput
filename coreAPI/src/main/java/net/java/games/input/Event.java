@@ -3,8 +3,7 @@
  *
  * Copyright 2002 Sun Microsystems, Inc. All rights reserved.
  * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
-/*****************************************************************************
+ *
  * Copyright (c) 2003 Sun Microsystems, Inc.  All Rights Reserved.
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,6 +41,8 @@ public final class Event {
     private Component component;
     private float value;
 	private long nanos;
+
+	public Event() {}
 
     public void set(Event other) {
 		this.set(other.getComponent(), other.getValue(), other.getNanos());

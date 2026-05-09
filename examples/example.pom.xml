@@ -68,7 +68,7 @@
                         <classpath/>
                         <argument>-Djava.library.path=${project.build.directory}/natives</argument>
                         <argument>-Djinput.loglevel=OFF</argument>
-                        <argument>net.java.games.input.example.ReadAllEvents</argument>
+                        <argument>net.java.games.input.wintab.windows.osx.linux.example.ReadAllEvents</argument>
                     </arguments>
                 </configuration>
             </plugin>
